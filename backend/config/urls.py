@@ -3,16 +3,15 @@ from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 api_v1 = [
-    path("health/", include("core.urls")),
+    path("", include("core.urls")),
     path("auth/", include("accounts.urls")),
     path("", include("profiles.urls")),
     path("", include("skills.urls")),
     path("", include("matching.urls")),
     path("", include("exchanges.urls")),
     path("", include("projects.urls")),
-    # TODO(DL-32): reports (/reports)
+    path("", include("reports.urls")),
     path("", include("search.urls")),
-    # TODO(DL-28): dashboard (/dashboard)
 ]
 
 urlpatterns = [

@@ -196,6 +196,8 @@ REST_FRAMEWORK = {
         # Scope for login / registration views: use ScopedRateThrottle with
         # throttle_scope = "auth".
         "auth": "5/minute",
+        # Signalements : plafond journalier pour éviter le détournement (DL-32).
+        "reports": "10/day",
     },
 }
 
