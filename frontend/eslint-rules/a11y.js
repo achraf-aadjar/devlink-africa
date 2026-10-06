@@ -11,6 +11,7 @@
 
 /** Récupère la valeur littérale d'un attribut JSX, ou undefined. */
 function literalValue(attribute) {
+  if (!attribute) return undefined
   const value = attribute.value
   if (value === null) return true // <input disabled />
   if (value.type === 'Literal') return value.value
@@ -22,8 +23,17 @@ function literalValue(attribute) {
 
 function attributeNamed(node, name) {
   return node.attributes.find(
-    (attribute) => attribute.type === 'JSXAttribute' && attribute.name.name === name,
+    (attribute) => attribute.type === 'JSXAttribute' && attribute.name?.name === name,
   )
+}
+
+/**
+ * true si l'élément reçoit un spread ({...rest}) : on ne peut alors pas savoir
+ * statiquement quels attributs sont passés, donc on n'émet aucune erreur. C'est
+ * le cas de nos composants d'interface, qui transmettent les props reçues.
+ */
+function hasSpread(node) {
+  return node.attributes.some((attribute) => attribute.type === 'JSXSpreadAttribute')
 }
 
 function elementName(node) {
@@ -44,6 +54,7 @@ const imgRequiresAlt = {
     return {
       JSXOpeningElement(node) {
         if (elementName(node) !== 'img') return
+        if (hasSpread(node)) return
         if (!attributeNamed(node, 'alt')) context.report({ node, messageId: 'missing' })
       },
     }
@@ -64,6 +75,7 @@ const anchorRequiresHref = {
     return {
       JSXOpeningElement(node) {
         if (elementName(node) !== 'a') return
+        if (hasSpread(node)) return
         const href = attributeNamed(node, 'href')
         if (!href || literalValue(href) === '' || literalValue(href) === '#') {
           context.report({ node, messageId: 'missing' })
@@ -87,6 +99,7 @@ const targetBlankRequiresNoopener = {
     return {
       JSXOpeningElement(node) {
         if (elementName(node) !== 'a') return
+        if (hasSpread(node)) return
         const target = attributeNamed(node, 'target')
         if (!target || literalValue(target) !== '_blank') return
 
@@ -114,6 +127,7 @@ const buttonRequiresType = {
     return {
       JSXOpeningElement(node) {
         if (elementName(node) !== 'button') return
+        if (hasSpread(node)) return
         if (!attributeNamed(node, 'type')) context.report({ node, messageId: 'missing' })
       },
     }
@@ -132,7 +146,7 @@ const controlRequiresLabel = {
     schema: [],
     messages: {
       missing:
-        'Ce champ n\'a pas de nom accessible : utilisez <Field>, un aria-label, ou un <label for>.',
+        "Ce champ n'a pas de nom accessible : utilisez <Field>, un aria-label, ou un <label for>.",
     },
   },
   create(context) {
@@ -140,6 +154,7 @@ const controlRequiresLabel = {
       JSXOpeningElement(node) {
         const name = elementName(node)
         if (name !== 'input' && name !== 'select' && name !== 'textarea') return
+        if (hasSpread(node)) return
 
         const type = attributeNamed(node, 'type')
         // Un bouton ou un champ caché n'a pas besoin d'étiquette.
@@ -175,12 +190,21 @@ const clickableNeedsKeyboard = {
     },
   },
   create(context) {
-    const INTERACTIVE = new Set(['button', 'a', 'input', 'select', 'textarea', 'summary', 'details'])
+    const INTERACTIVE = new Set([
+      'button',
+      'a',
+      'input',
+      'select',
+      'textarea',
+      'summary',
+      'details',
+    ])
     return {
       JSXOpeningElement(node) {
         const name = elementName(node)
         // Les composants React (majuscule) gèrent leur propre accessibilité.
         if (!name || /^[A-Z]/.test(name) || INTERACTIVE.has(name)) return
+        if (hasSpread(node)) return
         if (!attributeNamed(node, 'onClick')) return
 
         const hasRole = attributeNamed(node, 'role')
