@@ -137,3 +137,18 @@ Chaque règle a été vérifiée sur un fichier d'essai contenant les six fautes
 **Ce que nous perdons.** Les règles plus fines du plugin (vérification des attributs ARIA, rôles valides, etc.). Pour compenser, DL-34 prévoit une vérification manuelle de l'accessibilité : navigation entière au clavier et contrastes.
 
 **À signaler à l'équipe** : si l'organisateur répond à DL-10 que la MPL-2.0 est acceptée, cette décision pourra être revue.
+
+---
+
+## 2026-10-08 — Carte de l'Afrique en tuiles, et non en SVG géographique
+
+**Décision.** La carte de DL-37 est une grille de tuiles carrées, une par pays, placées à la main selon leur position approximative sur le continent (`frontend/src/features/countries/components/AfricaTileMap.tsx`).
+
+**Pourquoi.** Le ticket demandait une carte SVG. Nous n'en utilisons pas, pour deux raisons :
+
+1. **La licence.** Les fichiers de contours géographiques disponibles sont presque tous sous une licence à réciprocité, sous licence de données non permissive, ou sans licence claire. Le cahier des charges interdit d'importer la moindre donnée cartographique tierce sans licence permissive déclarée dans `LICENSES.md`. Une carte dessinée par nous supprime le problème.
+2. **Le poids.** Un tracé précis de 54 pays pèse plusieurs centaines de kilo-octets. Nos tuiles ne coûtent rien, ce qui compte pour des connexions parfois lentes.
+
+**Ce que nous perdons.** L'exactitude géographique. L'intérêt de cette carte est de donner un repère visuel et de rendre chaque pays cliquable, pas de servir d'atlas : la liste reste l'outil de navigation principal, juste en dessous.
+
+**Conformité au ticket.** Les deux critères d'acceptation sont respectés : la grille fonctionne sur mobile (9 colonnes, aucun débordement) et les pays sans donnée restent gris mais cliquables.

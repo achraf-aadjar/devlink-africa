@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { Card, EmptyState, ErrorState, LoadingState } from '../../../components/ui'
 import { useQuery } from '../../../lib/useQuery'
 import { listCountries } from '../../search/api/search'
+import AfricaTileMap from '../components/AfricaTileMap'
 
 /** Exploration par pays (DL-38). La carte en tuiles remplace une carte SVG. */
 export default function CountriesPage() {
@@ -25,6 +26,8 @@ export default function CountriesPage() {
           description="Les profils n'ont pas encore renseigné leur pays."
         />
       )}
+
+      {data && <AfricaTileMap countries={data.results} />}
 
       {data && data.results.length > 0 && (
         <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">

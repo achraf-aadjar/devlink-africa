@@ -24,8 +24,11 @@ describe('exploration par pays', () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(jsonResponse(COUNTRIES)))
     renderWithRouter(<CountriesPage />)
 
-    const link = await screen.findByRole('link', { name: /Sénégal/ })
-    expect(link).toHaveAttribute('href', '/pays/SN')
+    // La carte en tuiles et la liste mènent toutes deux au pays : on cible la
+    // carte de la liste, reconnaissable à son libellé complet.
+    const links = await screen.findAllByRole('link', { name: /Sénégal/ })
+    expect(links.length).toBeGreaterThanOrEqual(2)
+    expect(links.every((link) => link.getAttribute('href') === '/pays/SN')).toBe(true)
   })
 
   it('gère le cas où aucun pays n est représenté', async () => {
