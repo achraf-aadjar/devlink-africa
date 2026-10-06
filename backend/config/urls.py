@@ -11,7 +11,7 @@ api_v1 = [
     path("", include("exchanges.urls")),
     path("", include("projects.urls")),
     # TODO(DL-32): reports (/reports)
-    # TODO(DL-25): search (/search/users, /search/projects)
+    path("", include("search.urls")),
     # TODO(DL-28): dashboard (/dashboard)
 ]
 

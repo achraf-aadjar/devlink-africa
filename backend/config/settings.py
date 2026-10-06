@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     "projects",
     "exchanges",
     "matching",
+    "search",
     "reports",
     "core",
 ]
