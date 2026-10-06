@@ -371,3 +371,23 @@ def test_the_country_code_is_case_insensitive():
     make_user("ada@example.org", country="SN")
 
     assert APIClient().get(f"{COUNTRIES}sn/").json()["developers_count"] == 1
+
+
+def test_the_country_choices_list_covers_all_allowed_countries():
+    """Le formulaire de profil a besoin de tous les pays, pas seulement
+    de ceux qui comptent déjà un habitant."""
+    response = APIClient().get(f"{COUNTRIES}all/")
+
+    assert response.status_code == 200
+    results = response.json()["results"]
+    codes = {item["code"] for item in results}
+    assert "SN" in codes and "TD" in codes
+    assert len(results) > 50
+    assert all(item["name"] and item["flag"] for item in results)
+
+
+def test_the_country_choices_are_sorted_by_name():
+    results = APIClient().get(f"{COUNTRIES}all/").json()["results"]
+
+    names = [item["name"] for item in results]
+    assert names == sorted(names)

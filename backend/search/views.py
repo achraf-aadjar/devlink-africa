@@ -17,6 +17,7 @@ from skills.models import UserSkill
 from .selectors import (
     ALLOWED_AVAILABILITY,
     ALLOWED_DOMAINS,
+    all_countries,
     country_detail,
     list_countries,
     search_projects,
@@ -118,6 +119,16 @@ class CountryListView(APIView):
     @extend_schema(responses={200: CountrySerializer(many=True)}, summary="Lister les pays")
     def get(self, request):
         return Response({"results": CountrySerializer(list_countries(), many=True).data})
+
+
+class CountryChoicesView(APIView):
+    """GET /countries/all/ : tous les pays autorisés, pour les formulaires."""
+
+    permission_classes = [AllowAny]
+
+    @extend_schema(responses={200: CountrySerializer(many=True)}, summary="Lister les pays sélectionnables")
+    def get(self, request):
+        return Response({"results": all_countries()})
 
 
 class CountryDetailView(APIView):

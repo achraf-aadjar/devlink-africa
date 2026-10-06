@@ -206,6 +206,23 @@ def list_countries() -> list[dict]:
     ]
 
 
+def all_countries() -> list[dict]:
+    """Tous les pays autorisés, pour les listes de choix d'un formulaire.
+
+    À distinguer de `list_countries`, qui ne renvoie que les pays réellement
+    représentés sur la plateforme (page d'exploration).
+    """
+    from core.validators import ALLOWED_COUNTRIES
+
+    return sorted(
+        (
+            {"code": code, "name": country_name(code), "flag": country_flag(code)}
+            for code in ALLOWED_COUNTRIES
+        ),
+        key=lambda item: item["name"],
+    )
+
+
 def country_detail(code: str) -> dict:
     """Détail d'un pays. Un pays sans donnée renvoie des compteurs à zéro."""
     code = code.upper()

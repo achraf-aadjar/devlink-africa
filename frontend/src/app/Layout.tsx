@@ -14,6 +14,7 @@ const PRIVATE_LINKS = [
 const PUBLIC_LINKS = [
   { to: '/recherche', label: 'Recherche' },
   { to: '/projets', label: 'Projets' },
+  { to: '/pays', label: 'Pays' },
 ]
 
 const linkClass = ({ isActive }: { isActive: boolean }) =>

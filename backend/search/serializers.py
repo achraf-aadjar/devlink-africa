@@ -57,8 +57,8 @@ class CountrySerializer(serializers.Serializer):
     code = serializers.CharField()
     name = serializers.CharField()
     flag = serializers.CharField()
-    developers_count = serializers.IntegerField()
-    projects_count = serializers.IntegerField()
+    developers_count = serializers.IntegerField(required=False)
+    projects_count = serializers.IntegerField(required=False)
 
 
 class TopSkillSerializer(serializers.Serializer):
