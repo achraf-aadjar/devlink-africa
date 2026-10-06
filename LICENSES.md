@@ -1,8 +1,9 @@
 # Licences des dépendances
 
-Règle du concours (art. 6) : licences permissives uniquement. Généré le 2026-10-06 ; contrôle : `make licenses`.
+Règle du concours (art. 6) : licences permissives uniquement. Mis à jour le 2026-10-07.
+Contrôle automatique : `make licenses` (ou `scripts/check_licenses.sh all`), également lancé par la CI sur chaque pull request.
 
-## Python (backend/requirements.txt, y compris dépendances transitives)
+## Python (backend/requirements.txt, dépendances transitives incluses)
 
 | Paquet | Version | Licence |
 |---|---|---|
@@ -50,14 +51,20 @@ Règle du concours (art. 6) : licences permissives uniquement. Généré le 2026
 | Paquet | Version | Licence |
 |---|---|---|
 | @eslint/js | 9.39.5 | MIT |
+| @testing-library/dom | 10.4.2 | MIT |
+| @testing-library/jest-dom | 7.0.1 | MIT |
+| @testing-library/react | 16.3.3 | MIT |
+| @testing-library/user-event | 14.6.7 | MIT |
 | @types/react | 19.3.0 | MIT |
 | @types/react-dom | 19.3.0 | MIT |
 | @vitejs/plugin-react | 4.7.0 | MIT |
+| @vitest/coverage-v8 | 3.2.7 | MIT |
 | autoprefixer | 10.6.1 | MIT |
 | eslint | 9.39.5 | MIT |
 | eslint-plugin-react-hooks | 7.1.1 | MIT |
 | eslint-plugin-react-refresh | 0.5.7 | MIT |
 | globals | 17.13.0 | MIT |
+| jsdom | 30.1.2 | MIT |
 | postcss | 8.5.29 | MIT |
 | prettier | 3.9.9 | MIT |
 | react | 19.3.0 | MIT |
@@ -69,16 +76,33 @@ Règle du concours (art. 6) : licences permissives uniquement. Généré le 2026
 | vite | 6.4.4 | MIT |
 | vitest | 3.2.7 | MIT |
 
-Les 329 paquets Node transitifs sont contrôlés par `scripts/check_licenses.sh node`.
-
-## Exceptions justifiées (`licenses-allowlist.txt`)
-
-- **caniuse-lite** (CC-BY-4.0) : données de compatibilité des navigateurs, utilisées à la compilation seulement (Browserslist/autoprefixer), non incluses dans le livrable exécuté.
+Les 432 paquets Node de l'arbre complet (transitifs inclus) sont contrôlés par `scripts/check_licenses.sh node`.
 
 ## PostgreSQL
 
-Le pilote est **pg8000** (BSD-3-Clause) avec le backend Django **django-pg8000** (MIT-0), plus les dépendances scramp (MIT-0), asn1crypto (MIT), python-dateutil (Apache-2.0/BSD), pytz (MIT), six (MIT). Le serveur PostgreSQL (licence PostgreSQL) tourne dans Docker et n'est pas distribué avec le code.
+Le pilote est **pg8000** (BSD-3-Clause) avec le backend Django **django-pg8000** (MIT-0), plus scramp (MIT-0), asn1crypto (MIT), python-dateutil (Apache-2.0/BSD), pytz (MIT), six (MIT). `psycopg` et `psycopg2` (LGPL) sont exclus. Le serveur PostgreSQL lui-même (licence PostgreSQL, permissive) tourne dans un conteneur et n'est pas distribué avec notre code.
 
-## Interdits
+## Exceptions justifiées (`licenses-allowlist.txt`)
 
- psycopg / psycopg2 (LGPL), mysqlclient (GPL), vite ≥ 7 et tailwindcss ≥ 4 (lightningcss, MPL-2.0), Next.js, sharp. Aucun n'est installé.
+- **caniuse-lite** (CC-BY-4.0) : données de compatibilité des navigateurs, utilisées à la compilation seulement (Browserslist et autoprefixer), non incluses dans le livrable exécuté.
+
+## Dépendances écartées pour cause de licence
+
+| Paquet | Licence | Pourquoi écarté |
+|---|---|---|
+| psycopg, psycopg2 | LGPL | Pilote PostgreSQL : remplacé par pg8000 (BSD-3) |
+| mysqlclient | GPL | Non utilisé |
+| vite ≥ 7, tailwindcss ≥ 4 | MPL-2.0 (via lightningcss) | Versions figées : vite@6, tailwindcss@3 |
+| sharp, libvips | LGPL | Aucun traitement d'image côté serveur |
+| **eslint-plugin-jsx-a11y** | MPL-2.0 (via axe-core) | **Retiré le 2026-10-07** : remplacé par six règles maison dans `frontend/eslint-rules/a11y.js`. Voir `docs/DECISIONS.md`. |
+| hypothesis | MPL-2.0 | Non utilisé |
+| requests, httpx | MPL-2.0 (via certifi) | Les appels sortants utiliseront `urllib` (bibliothèque standard) |
+| Next.js | — | Hors stack |
+
+## Polices et éléments graphiques
+
+Aucune ressource tierce. Les polices sont celles du système (`system-ui`), les icônes sont des SVG écrits par nous. Aucune donnée cartographique importée : la carte de DL-37 sera dessinée par l'équipe.
+
+## Code préexistant
+
+Aucun. Tout le code de ce dépôt a été écrit pour le concours (art. 6 et 11).

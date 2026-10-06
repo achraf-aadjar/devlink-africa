@@ -4,13 +4,15 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 api_v1 = [
     path("health/", include("core.urls")),
-    # TODO(ticket #?): accounts / auth (inscription, connexion, jetons JWT)
-    # TODO(ticket #?): profiles
-    # TODO(ticket #?): skills
-    # TODO(ticket #?): matching (Dev Match)
-    # TODO(ticket #?): exchanges
-    # TODO(ticket #?): projects
-    # TODO(ticket #?): reports
+    path("auth/", include("accounts.urls")),
+    # TODO(DL-14): profiles (GET/PATCH /me, GET /users/{id})
+    # TODO(DL-15): skills (/skills, /me/skills)
+    # TODO(DL-24): matching (/matches, /matches/{id})
+    # TODO(DL-18): exchanges (/exchanges)
+    # TODO(DL-16): projects (/projects)
+    # TODO(DL-32): reports (/reports)
+    # TODO(DL-25): search (/search/users, /search/projects)
+    # TODO(DL-28): dashboard (/dashboard)
 ]
 
 urlpatterns = [

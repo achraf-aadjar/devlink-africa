@@ -1,5 +1,8 @@
-import PagePlaceholder from '../components/PagePlaceholder'
-
 export default function ExchangesPage() {
-  return <PagePlaceholder title="Échanges" />
+  return (
+    <section>
+      <h1 className="text-2xl font-bold text-ink-900">Mes échanges</h1>
+      {/* TODO(DL-23) : contenu de cet écran. */}
+    </section>
+  )
 }

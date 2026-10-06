@@ -1,0 +1,97 @@
+"""Vues de l'authentification : validation, appel au service, réponse (DL-03)."""
+
+from __future__ import annotations
+
+from drf_spectacular.utils import extend_schema
+from rest_framework import status
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_simplejwt.views import TokenRefreshView
+
+from core.throttling import AuthRateThrottle
+
+from . import services
+from .serializers import (
+    AccessTokenSerializer,
+    LoginSerializer,
+    RefreshSerializer,
+    RegisterSerializer,
+    TokenPairSerializer,
+    UserSerializer,
+)
+
+
+class RegisterView(APIView):
+    """POST /auth/register : crée un compte et renvoie une paire de jetons."""
+
+    permission_classes = [AllowAny]
+    throttle_classes = [AuthRateThrottle]
+
+    @extend_schema(
+        request=RegisterSerializer,
+        responses={201: TokenPairSerializer},
+        summary="Créer un compte",
+    )
+    def post(self, request):
+        data = RegisterSerializer(data=request.data)
+        data.is_valid(raise_exception=True)
+        payload = data.validated_data
+
+        user = services.register_user(
+            email=payload["email"],
+            password=payload["password"],
+            full_name=payload.get("full_name", ""),
+        )
+        body = {**services.issue_tokens(user), "user": UserSerializer(user).data}
+        return Response(body, status=status.HTTP_201_CREATED)
+
+
+class LoginView(APIView):
+    """POST /auth/login : vérifie les identifiants et renvoie les jetons."""
+
+    permission_classes = [AllowAny]
+    throttle_classes = [AuthRateThrottle]
+
+    @extend_schema(
+        request=LoginSerializer,
+        responses={200: TokenPairSerializer},
+        summary="Se connecter",
+    )
+    def post(self, request):
+        data = LoginSerializer(data=request.data)
+        data.is_valid(raise_exception=True)
+
+        user = services.login_user(**data.validated_data)
+        body = {**services.issue_tokens(user), "user": UserSerializer(user).data}
+        return Response(body, status=status.HTTP_200_OK)
+
+
+class RefreshView(TokenRefreshView):
+    """POST /auth/refresh : échange un jeton de rafraîchissement contre un accès."""
+
+    permission_classes = [AllowAny]
+    throttle_classes = [AuthRateThrottle]
+
+    @extend_schema(
+        request=RefreshSerializer,
+        responses={200: AccessTokenSerializer},
+        summary="Renouveler le jeton d'accès",
+    )
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
+
+
+class LogoutView(APIView):
+    """POST /auth/logout : révoque le jeton de rafraîchissement."""
+
+    permission_classes = [IsAuthenticated]
+    throttle_classes = [AuthRateThrottle]
+
+    @extend_schema(request=RefreshSerializer, responses={204: None}, summary="Se déconnecter")
+    def post(self, request):
+        data = RefreshSerializer(data=request.data)
+        data.is_valid(raise_exception=True)
+
+        services.logout_user(user=request.user, refresh_token=data.validated_data["refresh"])
+        return Response(status=status.HTTP_204_NO_CONTENT)
