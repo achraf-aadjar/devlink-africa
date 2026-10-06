@@ -7,7 +7,7 @@ api_v1 = [
     path("auth/", include("accounts.urls")),
     path("", include("profiles.urls")),
     path("", include("skills.urls")),
-    # TODO(DL-24): matching (/matches, /matches/{id})
+    path("", include("matching.urls")),
     path("", include("exchanges.urls")),
     path("", include("projects.urls")),
     # TODO(DL-32): reports (/reports)

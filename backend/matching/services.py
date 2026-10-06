@@ -13,13 +13,14 @@ from __future__ import annotations
 import logging
 
 from django.contrib.auth import get_user_model
-from django.db import transaction
+from django.db import IntegrityError, transaction
 from django.db.models import Q
 
+from core.exceptions import Conflict
 from profiles.models import Profile
 from skills.models import UserSkill
 
-from .models import Match
+from .models import Match, MatchFeedback
 from .scoring import MatchExplanation, ProfileInput, SkillRef, score_pair
 
 logger = logging.getLogger(__name__)
@@ -183,3 +184,18 @@ def recompute_for_user(user_id: int) -> int:
     kept = len(to_save) + len(to_update)
     logger.info("matches_recomputed user=%s kept=%s removed=%s", user_id, kept, len(to_delete))
     return kept
+
+
+def add_feedback(*, match: Match, author, is_relevant: bool, comment: str = "") -> MatchFeedback:
+    """Enregistre un retour sur un match (DL-39).
+
+    Un seul retour par utilisateur et par match. Ce retour est conservé pour
+    analyse et **n'influence pas** le score : l'algorithme reste explicable.
+    """
+    try:
+        with transaction.atomic():
+            return MatchFeedback.objects.create(
+                match=match, author=author, is_relevant=is_relevant, comment=comment
+            )
+    except IntegrityError as error:
+        raise Conflict("Vous avez déjà donné votre avis sur ce match.", code="duplicate_feedback") from error
