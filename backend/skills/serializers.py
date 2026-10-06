@@ -45,9 +45,17 @@ class UserSkillSerializer(serializers.ModelSerializer):
 
 
 class UserSkillWriteSerializer(StrictModelSerializer):
-    """Entrée de POST /me/skills/."""
+    """Entrée de POST /me/skills/.
+
+    `level` est optionnel : un souhait d'apprentissage part naturellement de
+    BEGINNER (voir docs/api.md § 5).
+    """
 
     skill = serializers.PrimaryKeyRelatedField(queryset=Skill.objects.all())
+    kind = serializers.ChoiceField(choices=UserSkill.Kind.choices)
+    level = serializers.ChoiceField(
+        choices=UserSkill.Level.choices, required=False, default=UserSkill.Level.BEGINNER
+    )
 
     class Meta:
         model = UserSkill
