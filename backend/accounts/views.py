@@ -14,6 +14,8 @@ from core.throttling import AuthRateThrottle
 from . import services
 from .serializers import (
     AccessTokenSerializer,
+    DeleteAccountSerializer,
+    ExportSerializer,
     LoginSerializer,
     RefreshSerializer,
     RegisterSerializer,
@@ -94,4 +96,28 @@ class LogoutView(APIView):
         data.is_valid(raise_exception=True)
 
         services.logout_user(user=request.user, refresh_token=data.validated_data["refresh"])
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ExportMyDataView(APIView):
+    """GET /me/export/ : copie de mes données (droit d'accès, DL-40)."""
+
+    permission_classes = [IsAuthenticated]
+
+    @extend_schema(responses={200: ExportSerializer}, summary="Exporter mes données")
+    def get(self, request):
+        return Response(services.export_user_data(user=request.user))
+
+
+class DeleteAccountView(APIView):
+    """DELETE /me/delete/ : effacement du compte (droit d'effacement, DL-40)."""
+
+    permission_classes = [IsAuthenticated]
+
+    @extend_schema(request=DeleteAccountSerializer, responses={204: None}, summary="Supprimer mon compte")
+    def delete(self, request):
+        data = DeleteAccountSerializer(data=request.data)
+        data.is_valid(raise_exception=True)
+
+        services.delete_account(user=request.user, password=data.validated_data["password"])
         return Response(status=status.HTTP_204_NO_CONTENT)

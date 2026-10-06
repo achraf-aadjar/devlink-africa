@@ -91,3 +91,22 @@ class AccessTokenSerializer(serializers.Serializer):
     """Sortie de /auth/refresh."""
 
     access = serializers.CharField()
+
+
+class DeleteAccountSerializer(StrictSerializer):
+    """Entrée de DELETE /me/delete/ : le mot de passe confirme l'intention."""
+
+    password = serializers.CharField(write_only=True, max_length=128, trim_whitespace=False)
+
+
+class ExportSerializer(StrictSerializer):
+    """Sortie de GET /me/export/ : la copie des données de l'utilisateur."""
+
+    exported_at = serializers.DateTimeField()
+    user = serializers.DictField()
+    profile = serializers.DictField()
+    skills = serializers.ListField(child=serializers.DictField())
+    projects = serializers.ListField(child=serializers.DictField())
+    join_requests = serializers.ListField(child=serializers.DictField())
+    exchanges = serializers.ListField(child=serializers.DictField())
+    reports_made = serializers.ListField(child=serializers.DictField())

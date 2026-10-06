@@ -6,6 +6,7 @@ import type { Availability, Domain } from '../../../lib/types'
 import { useQuery } from '../../../lib/useQuery'
 import { getMe, updateMe } from '../api/profile'
 import CountrySelect from '../components/CountrySelect'
+import PersonalDataCard from '../components/PersonalDataCard'
 
 type Errors = Partial<Record<string, string>>
 
@@ -182,6 +183,8 @@ export default function ProfilePage() {
           </div>
         </form>
       </Card>
+
+      <PersonalDataCard />
     </section>
   )
 }
