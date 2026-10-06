@@ -27,4 +27,8 @@ def update_me(*, user, data: dict):
     if changed:
         profile.save(update_fields=[*changed, "updated_at"])
 
+    # `user.profile` peut être une autre instance, chargée avant la mise à jour :
+    # on y attache celle que l'on vient d'écrire, pour que la réponse de la vue
+    # reflète bien les valeurs enregistrées.
+    user.profile = profile
     return user
