@@ -10,6 +10,7 @@ from matching.serializers import MatchListSerializer
 from projects.serializers import JoinRequestSerializer, ProjectSerializer
 
 from .selectors import dashboard_for
+from .serializers import DashboardSerializer
 
 
 class HealthView(APIView):
@@ -33,7 +34,7 @@ class DashboardView(APIView):
 
     permission_classes = [IsAuthenticated]
 
-    @extend_schema(summary="Lire mon tableau de bord")
+    @extend_schema(responses={200: DashboardSerializer}, summary="Lire mon tableau de bord")
     def get(self, request):
         data = dashboard_for(request.user)
         context = {"viewer_id": request.user.pk}

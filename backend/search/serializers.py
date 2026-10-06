@@ -59,3 +59,17 @@ class CountrySerializer(serializers.Serializer):
     flag = serializers.CharField()
     developers_count = serializers.IntegerField()
     projects_count = serializers.IntegerField()
+
+
+class TopSkillSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    name = serializers.CharField()
+    count = serializers.IntegerField()
+
+
+class CountryDetailSerializer(CountrySerializer):
+    """Détail d'un pays : les compteurs, les technologies, et des aperçus."""
+
+    top_skills = TopSkillSerializer(many=True)
+    developers = SearchUserSerializer(many=True)
+    projects = serializers.ListField(child=serializers.DictField())

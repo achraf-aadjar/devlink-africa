@@ -11,6 +11,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from . import services
+from .models import Match
 from .selectors import get_match_for, list_matches
 from .serializers import (
     MatchDetailSerializer,
@@ -27,6 +28,9 @@ class MatchListView(ListAPIView):
     serializer_class = MatchListSerializer
 
     def get_queryset(self):
+        # Pendant la génération du schéma, la requête n'a pas d'utilisateur.
+        if not self.request.user.is_authenticated:
+            return Match.objects.none()
         return list_matches(user=self.request.user)
 
     def get_serializer_context(self):

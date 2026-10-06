@@ -27,3 +27,29 @@ class StrictSerializer(StrictFieldsMixin, serializers.Serializer):
 
 class StrictModelSerializer(StrictFieldsMixin, serializers.ModelSerializer):
     pass
+
+
+class DashboardCountersSerializer(serializers.Serializer):
+    offered_skills = serializers.IntegerField()
+    wanted_skills = serializers.IntegerField()
+    matches = serializers.IntegerField()
+
+
+class DashboardBlockSerializer(serializers.Serializer):
+    """Bloc d'aperçu du tableau de bord : un compteur et quelques éléments."""
+
+    count = serializers.IntegerField(required=False)
+    received = serializers.IntegerField(required=False)
+    sent = serializers.IntegerField(required=False)
+    items = serializers.ListField(child=serializers.DictField())
+
+
+class DashboardSerializer(serializers.Serializer):
+    """Sortie de GET /dashboard/ (DL-28)."""
+
+    profile_completeness = serializers.IntegerField()
+    recommended_matches = serializers.ListField(child=serializers.DictField())
+    pending_exchanges = DashboardBlockSerializer()
+    pending_join_requests = DashboardBlockSerializer()
+    my_projects = serializers.ListField(child=serializers.DictField())
+    counters = DashboardCountersSerializer()

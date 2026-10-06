@@ -22,7 +22,7 @@ from .selectors import (
     search_projects,
     search_users,
 )
-from .serializers import CountrySerializer, SearchUserSerializer
+from .serializers import CountryDetailSerializer, CountrySerializer, SearchUserSerializer
 
 
 def _check_choice(value: str | None, allowed, field: str) -> str | None:
@@ -125,7 +125,7 @@ class CountryDetailView(APIView):
 
     permission_classes = [AllowAny]
 
-    @extend_schema(summary="Explorer un pays")
+    @extend_schema(responses={200: CountryDetailSerializer}, summary="Explorer un pays")
     def get(self, request, code: str):
         _check_country(code)
         detail = country_detail(code)

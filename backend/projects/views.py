@@ -142,6 +142,9 @@ class ProjectJoinRequestsView(ListAPIView):
     serializer_class = JoinRequestSerializer
 
     def get_queryset(self):
+        # Pendant la génération du schéma, ni utilisateur ni paramètre d'URL.
+        if getattr(self, "swagger_fake_view", False) or "pk" not in self.kwargs:
+            return ProjectJoinRequest.objects.none()
         # Filtré sur le propriétaire : un projet qui n'est pas le mien donne 404.
         project = get_object_or_404(Project, pk=self.kwargs["pk"], owner=self.request.user)
         return list_join_requests(project=project)

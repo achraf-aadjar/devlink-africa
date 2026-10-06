@@ -52,6 +52,10 @@ class ExchangeListView(ListAPIView):
     serializer_class = ExchangeSerializer
 
     def get_queryset(self):
+        # Pendant la génération du schéma, la requête n'a pas d'utilisateur.
+        if not self.request.user.is_authenticated:
+            return Exchange.objects.none()
+
         params = self.request.query_params
         direction = params.get("direction")
         if direction and direction not in DIRECTIONS:

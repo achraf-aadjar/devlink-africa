@@ -215,6 +215,21 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "API de la plateforme d'échange de compétences DevLink Africa.",
     "VERSION": "0.1.0",
     "SERVE_INCLUDE_SCHEMA": False,
+    # Plusieurs modèles ont un champ « status » ou « kind » : on nomme chaque
+    # énumération, sinon drf-spectacular invente des noms illisibles.
+    "ENUM_NAME_OVERRIDES": {
+        "ProjectStatusEnum": "projects.models.Project.Status",
+        "JoinRequestStatusEnum": "projects.models.ProjectJoinRequest.Status",
+        "ExchangeStatusEnum": "exchanges.models.Exchange.Status",
+        "ExchangeTypeEnum": "exchanges.models.Exchange.Type",
+        "ReportStatusEnum": "reports.models.Report.Status",
+        "ReportReasonEnum": "reports.models.Report.Reason",
+        "ReportTargetTypeEnum": "reports.models.Report.TargetType",
+        "SkillKindEnum": "skills.models.UserSkill.Kind",
+        "SkillLevelEnum": "skills.models.UserSkill.Level",
+        "SkillCategoryEnum": "skills.models.Skill.Category",
+        "SkillProofKindEnum": "skills.models.SkillProof.Kind",
+    },
 }
 
 API_VERSION = SPECTACULAR_SETTINGS["VERSION"]
