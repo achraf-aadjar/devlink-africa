@@ -1,0 +1,19 @@
+# Installation : pip install pre-commit && pre-commit install
+# (pre-commit : MIT ; ruff-pre-commit : MIT ; prettier : MIT)
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.10
+    hooks:
+      - id: ruff-check
+        args: [--fix]
+        files: ^backend/
+      - id: ruff-format
+        files: ^backend/
+  - repo: local
+    hooks:
+      - id: prettier
+        name: prettier
+        entry: npm --prefix frontend exec -- prettier --write --ignore-unknown
+        language: system
+        files: ^frontend/
+        exclude: ^frontend/package-lock\.json$

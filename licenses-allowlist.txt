@@ -1,0 +1,3 @@
+# Exceptions justifiées à la règle des licences (une entrée par ligne : "nom" ou "nom@version").
+# Chaque exception DOIT être justifiée en commentaire et validée en revue de PR.
+caniuse-lite   # CC-BY-4.0 : données de compatibilité des navigateurs, utilisées à la compilation seulement (non distribuées dans le livrable)

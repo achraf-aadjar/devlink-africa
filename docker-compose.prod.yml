@@ -1,0 +1,29 @@
+# Production (VPS Datacloud). Les secrets viennent de deploy/.env (jamais commité).
+services:
+  backend:
+    build: ./backend
+    env_file: deploy/.env
+    environment:
+      DATABASE_PATH: /data/db.sqlite3
+    volumes:
+      - sqlite_data:/data
+    expose:
+      - "8000"
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /var/www/certbot:/var/www/certbot:ro
+    restart: unless-stopped
+
+volumes:
+  sqlite_data:
