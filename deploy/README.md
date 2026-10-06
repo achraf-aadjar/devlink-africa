@@ -6,7 +6,7 @@
 
 - `web` : nginx (build React statique + proxy vers `/api`, `/admin`, `/static`), ports 80 et 443.
 - `backend` : Gunicorn (Django), utilisateur non root, port 8000 interne uniquement.
-- Base SQLite (mode WAL) dans le volume Docker `sqlite_data` monté sur `/data`.
+- `db` : PostgreSQL 17, données dans le volume Docker `pg_data` (jamais exposé à l'extérieur).
 
 ## Étapes
 
@@ -17,6 +17,7 @@
 5. **Remplacer `example.org`** par votre domaine dans `deploy/nginx.conf` (3 occurrences) et dans `deploy/.env`.
 6. **Créer `deploy/.env`** : `cp deploy/.env.example deploy/.env`, puis renseigner :
    - `SECRET_KEY` : `python3 -c "import secrets; print(secrets.token_urlsafe(64))"`
+   - `DB_PASSWORD` : un mot de passe long et aléatoire (le même sert au service `db`).
    - `ALLOWED_HOSTS`, `CORS_ALLOWED_ORIGINS`, `CSRF_TRUSTED_ORIGINS` avec le domaine (https).
 7. **Obtenir le certificat TLS** (Let's Encrypt, via certbot sur l'hôte) :
    `sudo certbot certonly --webroot -w /var/www/certbot -d votre-domaine` (créez d'abord `/var/www/certbot`).
@@ -26,13 +27,13 @@
 9. **Créer l'administrateur** : `docker compose -f docker-compose.prod.yml exec backend python manage.py createsuperuser`.
 10. **Vérifier** : `curl https://votre-domaine/api/v1/health/` doit renvoyer `{"status":"ok", ...}`.
 
-## Sauvegarde de la base SQLite
+## Sauvegarde de la base PostgreSQL
 
 ```bash
-docker compose -f docker-compose.prod.yml exec backend \
-  python -c "import sqlite3; s=sqlite3.connect('/data/db.sqlite3'); d=sqlite3.connect('/data/backup.sqlite3'); s.backup(d)"
-docker compose -f docker-compose.prod.yml cp backend:/data/backup.sqlite3 ./backup-$(date +%F).sqlite3
+docker compose -f docker-compose.prod.yml exec -T db pg_dump -U devlink devlink > backup-$(date +%F).sql
 ```
+
+Restauration : `docker compose -f docker-compose.prod.yml exec -T db psql -U devlink devlink < backup.sql`.
 
 ## Mise à jour
 

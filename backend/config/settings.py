@@ -106,18 +106,38 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
-# --- Database: SQLite in WAL mode -------------------------------------------
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.environ.get("DATABASE_PATH", str(BASE_DIR / "db.sqlite3")),
-        "OPTIONS": {
-            "transaction_mode": "IMMEDIATE",
-            "timeout": 5,  # seconds: sqlite busy timeout
-            "init_command": ("PRAGMA journal_mode=WAL;PRAGMA synchronous=NORMAL;PRAGMA busy_timeout=5000;"),
-        },
+# --- Database ---------------------------------------------------------------
+# PostgreSQL through pg8000 (BSD-3) and django-pg8000 (MIT-0): psycopg is LGPL
+# and forbidden by the contest rules. SQLite stays available (DB_ENGINE=sqlite)
+# for a zero-setup local run.
+DB_ENGINE = os.environ.get("DB_ENGINE", "postgresql").lower()
+
+if DB_ENGINE == "sqlite":
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": os.environ.get("DATABASE_PATH", str(BASE_DIR / "db.sqlite3")),
+            "OPTIONS": {
+                "transaction_mode": "IMMEDIATE",
+                "timeout": 5,  # seconds: sqlite busy timeout
+                "init_command": (
+                    "PRAGMA journal_mode=WAL;PRAGMA synchronous=NORMAL;PRAGMA busy_timeout=5000;"
+                ),
+            },
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "config.db",
+            "NAME": os.environ.get("DB_NAME", "devlink"),
+            "USER": os.environ.get("DB_USER", "devlink"),
+            "PASSWORD": os.environ.get("DB_PASSWORD", ""),
+            "HOST": os.environ.get("DB_HOST", "127.0.0.1"),
+            "PORT": os.environ.get("DB_PORT", "5432"),
+            "CONN_MAX_AGE": int(os.environ.get("DB_CONN_MAX_AGE", 60)),
+        }
+    }
 
 # --- Auth -------------------------------------------------------------------
 PASSWORD_HASHERS = [

@@ -9,7 +9,7 @@ Projet réalisé pour le concours **CADEV 2026 (Systalink)** par Achraf, Emmanue
 | Couche | Technologie |
 |---|---|
 | Backend | Django 5.2 LTS + Django REST framework, JWT, drf-spectacular |
-| Base de données | SQLite en mode WAL |
+| Base de données | PostgreSQL 17 via pg8000 (BSD-3) + django-pg8000 (MIT-0) ; pas de psycopg (LGPL, interdit) |
 | Frontend | React 19 + TypeScript + Vite 6 + Tailwind CSS 3 + React Router |
 | Déploiement | Gunicorn + nginx sur un VPS Datacloud (voir [deploy/README.md](deploy/README.md)) |
 
@@ -19,6 +19,7 @@ Projet réalisé pour le concours **CADEV 2026 (Systalink)** par Achraf, Emmanue
 - Node.js 24 (voir `.nvmrc`) et npm
 - `make` (macOS/Linux) ; sous Windows, utiliser les commandes PowerShell ci-dessous
 - Git
+- Docker (pour la base PostgreSQL locale : `make db`)
 
 ## Installation
 
@@ -39,7 +40,7 @@ git clone https://github.com/achraf-aadjar/devlink-africa.git && cd devlink-afri
 make setup
 ```
 
-`make setup` crée l'environnement virtuel, installe les dépendances, génère `backend/.env` (avec une `SECRET_KEY` aléatoire), applique les migrations et installe le frontend (`npm ci`).
+`make setup` crée l'environnement virtuel, installe les dépendances, génère `backend/.env` (avec une `SECRET_KEY` aléatoire), installe le frontend (`npm ci`), démarre PostgreSQL dans Docker (`docker compose up -d db`) et applique les migrations. Sans Docker, mettez `DB_ENGINE=sqlite` dans `backend/.env` pour un lancement local sans serveur.
 
 ### Windows (PowerShell)
 
@@ -52,6 +53,7 @@ py -3.13 -m venv .venv
 .venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 copy .env.example .env      # puis renseigner SECRET_KEY (voir commentaire dans le fichier)
+docker compose up -d db
 python manage.py migrate
 cd ..
 
@@ -82,7 +84,8 @@ make dev-frontend    # http://localhost:5173  (proxy /api → localhost:8000)
 ## Tests et qualité
 
 ```bash
-make test       # pytest (backend) + vitest (frontend)
+make test       # pytest (backend, SQLite en mémoire) + vitest (frontend)
+make test-pg    # pytest sur PostgreSQL (après make db)
 make lint       # ruff + eslint + prettier
 make licenses   # contrôle des licences Python et Node
 make build      # build de production du frontend + collectstatic
@@ -106,7 +109,7 @@ deploy/         nginx, guide de déploiement
 - Seules les licences **permissives** sont admises (MIT, Apache-2.0, BSD, ISC, PSF…).
 - Toute licence à réciprocité (**GPL, AGPL, LGPL**) rend le projet **irrecevable** ; nous évitons aussi la **MPL-2.0**.
 - Chaque dépendance, directe ou transitive, se vérifie **avant** de l'ajouter (`make licenses`, exceptions justifiées dans `licenses-allowlist.txt`).
-- Interdits : psycopg/psycopg2, mysqlclient, vite ≥ 7, tailwindcss ≥ 4, Next.js, sharp.
+- Interdits : psycopg/psycopg2 (d'où pg8000 pour PostgreSQL), mysqlclient, vite ≥ 7, tailwindcss ≥ 4, Next.js, sharp.
 - Tout usage d'IA est consigné dans [AI_USAGE.md](AI_USAGE.md). Détail des licences : [LICENSES.md](LICENSES.md).
 
 Voir [CONTRIBUTING.md](CONTRIBUTING.md) pour contribuer.

@@ -1,12 +1,28 @@
 # Production (VPS Datacloud). Les secrets viennent de deploy/.env (jamais commité).
 services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: ${DB_USER:-devlink}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD manquant dans deploy/.env}
+      POSTGRES_DB: ${DB_NAME:-devlink}
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-devlink}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
   backend:
     build: ./backend
     env_file: deploy/.env
     environment:
-      DATABASE_PATH: /data/db.sqlite3
-    volumes:
-      - sqlite_data:/data
+      DB_HOST: db
+    depends_on:
+      db:
+        condition: service_healthy
     expose:
       - "8000"
     restart: unless-stopped
@@ -26,4 +42,4 @@ services:
     restart: unless-stopped
 
 volumes:
-  sqlite_data:
+  pg_data:

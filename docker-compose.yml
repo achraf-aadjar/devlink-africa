@@ -1,0 +1,15 @@
+# Base PostgreSQL pour le développement local (identifiants de dev uniquement).
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: devlink
+      POSTGRES_PASSWORD: devlink
+      POSTGRES_DB: devlink
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

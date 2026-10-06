@@ -11,6 +11,19 @@ permissions:
 jobs:
   backend:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: devlink
+          POSTGRES_PASSWORD: devlink
+          POSTGRES_DB: devlink
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U devlink"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
     defaults:
       run:
         working-directory: backend
@@ -27,11 +40,18 @@ jobs:
         env:
           SECRET_KEY: ci-only
           DEBUG: "True"
+          DB_PASSWORD: devlink
       - run: python manage.py makemigrations --check --dry-run
         env:
           SECRET_KEY: ci-only
           DEBUG: "True"
+          DB_PASSWORD: devlink
       - run: pytest
+      - run: pytest
+        env:
+          DB_ENGINE: postgresql
+          DB_PASSWORD: devlink
+          DB_HOST: 127.0.0.1
 
   frontend:
     runs-on: ubuntu-latest
