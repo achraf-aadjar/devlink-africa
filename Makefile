@@ -5,13 +5,25 @@ PYTHON ?= $(shell command -v python3.13 || command -v python3)
 VENV := backend/.venv
 BIN := $(VENV)/bin
 
-.PHONY: help setup db dev-backend dev-frontend test test-pg lint typecheck licenses build check
+.PHONY: help setup db wait-db dev-backend dev-frontend test test-pg lint typecheck licenses build check
 
 help:
 	@echo "Cibles : setup db dev-backend dev-frontend test test-pg lint typecheck licenses build check"
 
 db:
 	docker compose up -d db
+
+# Attend que la base accepte les connexions *depuis l'hôte* : pg_isready dans le
+# conteneur répond avant que le port soit publié, d'où l'essai sur 127.0.0.1.
+wait-db:
+	@echo "Attente de PostgreSQL sur $${DB_HOST:-127.0.0.1}:$${DB_PORT:-5432}..."
+	@for i in $$(seq 1 60); do \
+		if $(BIN)/python -c "import socket; s=socket.create_connection(('127.0.0.1',5432),1); s.close()" 2>/dev/null; then \
+			exit 0; \
+		fi; \
+		sleep 1; \
+	done; \
+	echo "PostgreSQL ne répond pas après 60 s. Lancez 'docker compose logs db'." >&2; exit 1
 
 setup:
 	$(PYTHON) -m venv $(VENV)
@@ -24,8 +36,7 @@ setup:
 		echo "backend/.env créé avec une SECRET_KEY aléatoire."; }
 	cd frontend && npm ci
 	$(MAKE) db
-	@echo "Attente de PostgreSQL..."
-	@until docker compose exec -T db pg_isready -U devlink >/dev/null 2>&1; do sleep 1; done
+	$(MAKE) wait-db
 	cd backend && .venv/bin/python manage.py migrate
 
 dev-backend:
@@ -39,7 +50,7 @@ test:
 	cd frontend && npm test
 
 # Tests backend sur PostgreSQL (nécessite 'make db' et DB_PASSWORD dans backend/.env ou l'environnement)
-test-pg:
+test-pg: wait-db
 	cd backend && DB_ENGINE=postgresql DB_PASSWORD=$${DB_PASSWORD:-devlink} .venv/bin/pytest
 
 lint:
