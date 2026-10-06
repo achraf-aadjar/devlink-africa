@@ -5,7 +5,7 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 api_v1 = [
     path("health/", include("core.urls")),
     path("auth/", include("accounts.urls")),
-    # TODO(DL-14): profiles (GET/PATCH /me, GET /users/{id})
+    path("", include("profiles.urls")),
     # TODO(DL-15): skills (/skills, /me/skills)
     # TODO(DL-24): matching (/matches, /matches/{id})
     # TODO(DL-18): exchanges (/exchanges)

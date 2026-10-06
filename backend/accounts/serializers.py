@@ -10,6 +10,8 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework import serializers
 
+from core.serializers import StrictSerializer
+
 from .models import User
 
 MIN_PASSWORD_LENGTH = 10
@@ -22,19 +24,6 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ("id", "email", "full_name", "date_joined")
         read_only_fields = fields
-
-
-class StrictSerializer(serializers.Serializer):
-    """Sérialiseur qui refuse tout champ non déclaré (durcissement, DL-19)."""
-
-    def to_internal_value(self, data):
-        if isinstance(data, dict):
-            unknown = sorted(set(data) - set(self.fields))
-            if unknown:
-                raise serializers.ValidationError(
-                    {field: ["Ce champ n'est pas accepté."] for field in unknown}
-                )
-        return super().to_internal_value(data)
 
 
 class RegisterSerializer(StrictSerializer):
