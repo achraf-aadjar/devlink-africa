@@ -13,12 +13,17 @@ help:
 db:
 	docker compose up -d db
 
-# Attend que la base accepte les connexions *depuis l'hôte* : pg_isready dans le
-# conteneur répond avant que le port soit publié, d'où l'essai sur 127.0.0.1.
+# Attend que la base accepte une vraie requête.
+#
+# Deux pièges évités ici : `pg_isready` dans le conteneur répond avant que le
+# port soit publié vers l'hôte, et le port peut accepter une connexion TCP alors
+# que PostgreSQL termine encore son initialisation et refuse les requêtes. On
+# teste donc un vrai SELECT depuis l'hôte, avec le pilote du projet.
 wait-db:
 	@echo "Attente de PostgreSQL sur $${DB_HOST:-127.0.0.1}:$${DB_PORT:-5432}..."
 	@for i in $$(seq 1 60); do \
-		if $(BIN)/python -c "import socket; s=socket.create_connection(('127.0.0.1',5432),1); s.close()" 2>/dev/null; then \
+		if $(BIN)/python -c "import os, pg8000.dbapi as d; c=d.connect(host=os.environ.get('DB_HOST','127.0.0.1'), port=int(os.environ.get('DB_PORT','5432')), user=os.environ.get('DB_USER','devlink'), password=os.environ.get('DB_PASSWORD','devlink'), database=os.environ.get('DB_NAME','devlink')); cur=c.cursor(); cur.execute('SELECT 1'); cur.fetchone(); c.close()" 2>/dev/null; then \
+			echo "PostgreSQL est prêt."; \
 			exit 0; \
 		fi; \
 		sleep 1; \
