@@ -31,6 +31,8 @@ Alignements du code sur le contrat :
 
 ### DL-07 · Design system et navigation — **terminé**
 
+**Écart** : `eslint-plugin-jsx-a11y`, imposé par le cahier, tire `axe-core` (MPL-2.0), interdite par le règlement. Le plugin est retiré et remplacé par six règles maison. Voir `docs/DECISIONS.md`.
+
 Jetons Tailwind (accent terre cuite, gris chauds, polices système), neuf composants dans `components/ui/`, navigation responsive avec menu mobile, lien d'évitement, page de démonstration sur `/design`.
 
 ### DL-08 · Pages inscription et connexion — **terminé**
@@ -40,6 +42,26 @@ Jetons Tailwind (accent terre cuite, gris chauds, polices système), neuf compos
 ### DL-05 · Fichiers de déploiement — **préparés** (la mise en ligne reste à Achraf)
 
 `backend/Dockerfile`, `frontend/Dockerfile`, `deploy/nginx.conf`, `docker-compose.prod.yml`, `deploy/README.md`.
+
+## Contrôles de fin de Phase 1 (clone propre, `make check`)
+
+| Contrôle | Résultat |
+|---|---|
+| `make setup` | exit 0 |
+| Backend, tests SQLite | 35 passés, 1 ignoré |
+| Backend, tests PostgreSQL | 36 passés |
+| Couverture backend | 95 % global, 97 % sur accounts, core et matching |
+| `ruff check` et `ruff format` | propre |
+| `manage.py check` | aucun problème |
+| `makemigrations --check` | aucun changement |
+| Schéma OpenAPI | 0 avertissement, 0 erreur |
+| Frontend, tests | 28 passés |
+| Couverture frontend | 94 % |
+| ESLint `--max-warnings 0`, Prettier | propre |
+| `tsc --noEmit` | propre |
+| `vite build` | réussi (90 ko gzip) |
+| Licences | 38 Python, 368 Node, 0 problème |
+| Scan de secrets | 0 trouvé |
 
 ## À faire par l'équipe (hors de ma portée)
 
