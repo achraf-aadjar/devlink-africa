@@ -9,7 +9,6 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenRefreshView
 
-from core.authentication import BearerJWTAuthentication
 from core.throttling import AuthRateThrottle
 
 from . import services
@@ -27,8 +26,6 @@ class RegisterView(APIView):
     """POST /auth/register : crée un compte et renvoie une paire de jetons."""
 
     permission_classes = [AllowAny]
-    # Classe déclarée (sans utilisateur attendu) pour que DRF renvoie 401 et non 403.
-    authentication_classes = [BearerJWTAuthentication]
     throttle_classes = [AuthRateThrottle]
 
     @extend_schema(
@@ -54,8 +51,6 @@ class LoginView(APIView):
     """POST /auth/login : vérifie les identifiants et renvoie les jetons."""
 
     permission_classes = [AllowAny]
-    # Classe déclarée (sans utilisateur attendu) pour que DRF renvoie 401 et non 403.
-    authentication_classes = [BearerJWTAuthentication]
     throttle_classes = [AuthRateThrottle]
 
     @extend_schema(
@@ -76,8 +71,6 @@ class RefreshView(TokenRefreshView):
     """POST /auth/refresh : échange un jeton de rafraîchissement contre un accès."""
 
     permission_classes = [AllowAny]
-    # Classe déclarée (sans utilisateur attendu) pour que DRF renvoie 401 et non 403.
-    authentication_classes = [BearerJWTAuthentication]
     throttle_classes = [AuthRateThrottle]
 
     @extend_schema(

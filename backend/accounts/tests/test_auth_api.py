@@ -302,3 +302,16 @@ def test_a_failed_login_is_audited_without_the_email(client, caplog):
     messages = [r.getMessage() for r in caplog.records if r.name == "accounts.audit"]
     assert any("login_failed" in m for m in messages)
     assert all(VALID_PAYLOAD["email"] not in m for m in messages)
+
+
+@pytest.mark.django_db
+def test_refresh_rotates_and_revokes_the_previous_token(client):
+    """Le contrat annonce une rotation : l'ancien jeton ne doit plus servir."""
+    first = client.post(REGISTER, VALID_PAYLOAD, format="json").json()["refresh"]
+
+    rotated = client.post(REFRESH, {"refresh": first}, format="json")
+
+    assert rotated.status_code == 200
+    assert rotated.json()["refresh"] != first
+    reuse = client.post(REFRESH, {"refresh": first}, format="json")
+    assert reuse.status_code == 401
