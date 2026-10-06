@@ -9,7 +9,7 @@ api_v1 = [
     path("", include("skills.urls")),
     # TODO(DL-24): matching (/matches, /matches/{id})
     # TODO(DL-18): exchanges (/exchanges)
-    # TODO(DL-16): projects (/projects)
+    path("", include("projects.urls")),
     # TODO(DL-32): reports (/reports)
     # TODO(DL-25): search (/search/users, /search/projects)
     # TODO(DL-28): dashboard (/dashboard)

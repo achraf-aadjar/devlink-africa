@@ -14,8 +14,14 @@ class Project(models.Model):
     description = models.TextField(blank=True)
     needs = models.ManyToManyField("skills.Skill", blank=True, related_name="projects_needing")
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.OPEN)
+    repo_url = models.URLField(blank=True, help_text="Dépôt du code (https uniquement).")
+    demo_url = models.URLField(blank=True, help_text="Démonstration en ligne (https uniquement).")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        indexes = [models.Index(fields=["status"]), models.Index(fields=["-created_at"])]
 
     def __str__(self):
         return self.title
@@ -36,8 +42,15 @@ class ProjectJoinRequest(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        ordering = ["-created_at"]
         constraints = [
-            models.UniqueConstraint(fields=["project", "applicant"], name="unique_join_request"),
+            # Une seule demande *en attente* par personne et par projet : un
+            # refus ne doit pas interdire une nouvelle candidature plus tard.
+            models.UniqueConstraint(
+                fields=["project", "applicant"],
+                condition=models.Q(status="PENDING"),
+                name="unique_pending_join_request",
+            ),
         ]
 
     def __str__(self):
