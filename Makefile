@@ -5,10 +5,10 @@ PYTHON ?= $(shell command -v python3.13 || command -v python3)
 VENV := backend/.venv
 BIN := $(VENV)/bin
 
-.PHONY: help setup db dev-backend dev-frontend test test-pg lint licenses build
+.PHONY: help setup db dev-backend dev-frontend test test-pg lint typecheck licenses build check
 
 help:
-	@echo "Cibles : setup db dev-backend dev-frontend test test-pg lint licenses build"
+	@echo "Cibles : setup db dev-backend dev-frontend test test-pg lint typecheck licenses build check"
 
 db:
 	docker compose up -d db
@@ -45,6 +45,14 @@ test-pg:
 lint:
 	cd backend && .venv/bin/ruff check . && .venv/bin/ruff format --check .
 	cd frontend && npm run lint
+
+typecheck:
+	cd frontend && npm run typecheck
+
+# Tous les contrôles de la définition de « terminé » (voir CONTRIBUTING.md).
+check: lint typecheck test licenses
+	cd backend && .venv/bin/python manage.py check && .venv/bin/python manage.py makemigrations --check --dry-run
+	cd frontend && npm run build
 
 licenses:
 	scripts/check_licenses.sh all

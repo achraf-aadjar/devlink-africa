@@ -11,6 +11,9 @@ permissions:
 jobs:
   backend:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
     services:
       postgres:
         image: postgres:17-alpine
@@ -24,9 +27,11 @@ jobs:
           --health-interval 5s
           --health-timeout 5s
           --health-retries 10
-    defaults:
-      run:
-        working-directory: backend
+    env:
+      SECRET_KEY: ci-only-not-a-real-secret
+      DEBUG: "True"
+      DB_PASSWORD: devlink
+      DB_HOST: 127.0.0.1
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -35,23 +40,35 @@ jobs:
           cache: pip
           cache-dependency-path: backend/requirements.txt
       - run: pip install -r requirements.txt
-      - run: ruff check . && ruff format --check .
-      - run: python manage.py check
-        env:
-          SECRET_KEY: ci-only
-          DEBUG: "True"
-          DB_PASSWORD: devlink
-      - run: python manage.py makemigrations --check --dry-run
-        env:
-          SECRET_KEY: ci-only
-          DEBUG: "True"
-          DB_PASSWORD: devlink
-      - run: pytest
-      - run: pytest
+
+      - name: Lint et format (ruff)
+        run: ruff check . && ruff format --check .
+
+      - name: Contrôles Django
+        run: |
+          python manage.py check
+          python manage.py makemigrations --check --dry-run
+
+      - name: Schéma OpenAPI sans avertissement
+        run: python manage.py spectacular --file /tmp/schema.yml --fail-on-warn
+
+      - name: Tests sur SQLite
+        run: pytest
+
+      - name: Tests sur PostgreSQL
         env:
           DB_ENGINE: postgresql
-          DB_PASSWORD: devlink
-          DB_HOST: 127.0.0.1
+        run: pytest
+
+      # Seuils imposés par le cahier des charges : 85 % global, 90 % sur le
+      # matching et les services. Ne jamais les baisser pour faire passer la CI.
+      - name: Couverture
+        env:
+          DB_ENGINE: postgresql
+        run: |
+          coverage run -m pytest
+          coverage report --fail-under=85
+          coverage report --fail-under=90 --include="*/matching/*,*/services.py"
 
   frontend:
     runs-on: ubuntu-latest
@@ -66,7 +83,10 @@ jobs:
           cache: npm
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
-      - run: npm run lint
+      - name: Lint (ESLint sans avertissement, Prettier)
+        run: npm run lint
+      - name: Types
+        run: npm run typecheck
       - run: npm test
       - run: npm run build
 
@@ -83,4 +103,12 @@ jobs:
       - run: pip install -r backend/requirements.txt
       - run: npm ci
         working-directory: frontend
-      - run: PYTHON=python scripts/check_licenses.sh all
+      - name: Licences Python et Node (aucune GPL, AGPL, LGPL ni MPL)
+        run: PYTHON=python scripts/check_licenses.sh all
+
+  secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Recherche de secrets commités
+        run: scripts/check_secrets.sh

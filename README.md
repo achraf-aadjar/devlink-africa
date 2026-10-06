@@ -1,5 +1,7 @@
 # DevLink Africa
 
+[![CI](https://github.com/achraf-aadjar/devlink-africa/actions/workflows/ci.yml/badge.svg)](https://github.com/achraf-aadjar/devlink-africa/actions/workflows/ci.yml)
+
 Plateforme d'échange de compétences entre développeurs africains : profil → compétences → recherche → Dev Match expliqué → échange → projets.
 
 Projet réalisé pour le concours **CADEV 2026 (Systalink)** par Achraf, Emmanuel et Omar. Clôture de la soumission : **25 octobre 2026, 17 h GMT** (objectif : le 24).
@@ -86,6 +88,7 @@ make dev-frontend    # http://localhost:5173  (proxy /api → localhost:8000)
 ```bash
 make test       # pytest (backend, SQLite en mémoire) + vitest (frontend)
 make test-pg    # pytest sur PostgreSQL (après make db)
+make typecheck  # tsc --noEmit (frontend)
 make lint       # ruff + eslint + prettier
 make licenses   # contrôle des licences Python et Node
 make build      # build de production du frontend + collectstatic
@@ -96,9 +99,14 @@ Hook pre-commit (optionnel) : `pip install pre-commit && pre-commit install`.
 ## Structure
 
 ```
-backend/        Django (config/, accounts, profiles, skills, projects, exchanges, matching, reports, core)
-frontend/       React + Vite (src/{api,components,pages,hooks,lib})
-docs/           Documentation (api.md)
+backend/        Django : config/ (réglages, urls), apps accounts, profiles, skills, projects,
+                exchanges, matching, reports, core
+                Chaque app : models, serializers, services, selectors, views, urls, tests
+frontend/       React + Vite : src/app (routeur, session), src/features/<domaine>,
+                src/components/ui, src/lib (client d'API typé)
+docs/           Documentation : api.md (contrat gelé), ARCHITECTURE.md, DECISIONS.md,
+                securite.md, PROGRESS.md
+backlog/        Les 65 tickets (TICKETS.md), planning, tickets.json
 scripts/        check_licenses.sh (+ .py, .mjs)
 deploy/         nginx, guide de déploiement
 .github/        CI et modèle de PR
@@ -111,5 +119,16 @@ deploy/         nginx, guide de déploiement
 - Chaque dépendance, directe ou transitive, se vérifie **avant** de l'ajouter (`make licenses`, exceptions justifiées dans `licenses-allowlist.txt`).
 - Interdits : psycopg/psycopg2 (d'où pg8000 pour PostgreSQL), mysqlclient, vite ≥ 7, tailwindcss ≥ 4, Next.js, sharp.
 - Tout usage d'IA est consigné dans [AI_USAGE.md](AI_USAGE.md). Détail des licences : [LICENSES.md](LICENSES.md).
+
+## Documentation
+
+| Fichier | Contenu |
+|---|---|
+| [docs/api.md](docs/api.md) | Contrat d'API v1 **gelé** : la source de vérité |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Couches, chemin d'une requête, modèle de données, Dev Match expliqué |
+| [docs/DECISIONS.md](docs/DECISIONS.md) | Les choix techniques et leurs raisons |
+| [docs/securite.md](docs/securite.md) | Ce qui est protégé, comment le vérifier |
+| [docs/PROGRESS.md](docs/PROGRESS.md) | Avancement ticket par ticket |
+| [backlog/TICKETS.md](backlog/TICKETS.md) | Les 65 tickets et leurs critères d'acceptation |
 
 Voir [CONTRIBUTING.md](CONTRIBUTING.md) pour contribuer.
