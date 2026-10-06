@@ -1,0 +1,1278 @@
+{
+ "sprints": [
+  {
+   "id": "S1",
+   "title": "Sprint 1 · Fondations",
+   "start": "2026-10-06",
+   "due": "2026-10-08"
+  },
+  {
+   "id": "S2",
+   "title": "Sprint 2 · Cœur fonctionnel",
+   "start": "2026-10-09",
+   "due": "2026-10-15"
+  },
+  {
+   "id": "S3",
+   "title": "Sprint 3 · Compléments",
+   "start": "2026-10-16",
+   "due": "2026-10-19"
+  },
+  {
+   "id": "S4",
+   "title": "Sprint 4 · IA (si le jalon du 15 oct est tenu)",
+   "start": "2026-10-20",
+   "due": "2026-10-21"
+  },
+  {
+   "id": "S5",
+   "title": "Sprint 5 · Finalisation et soumission",
+   "start": "2026-10-22",
+   "due": "2026-10-24"
+  },
+  {
+   "id": "S6",
+   "title": "Sprint 6 · Vote des pairs",
+   "start": "2026-10-25",
+   "due": "2026-10-26"
+  }
+ ],
+ "tickets": [
+  {
+   "sprint": "S1",
+   "prio": "P0",
+   "hours": 0.5,
+   "epic": "Fondations",
+   "title": "Protéger la branche main sur GitHub",
+   "desc": "Dans les réglages GitHub : protéger la branche main (1 revue obligatoire, pas de push direct). Le README, AI_USAGE.md et le modèle de pull request sont déjà faits par la préparation de l'environnement.",
+   "ac": [
+    "Push direct sur main refusé, 1 revue obligatoire",
+    "Les 3 membres ont un accès en écriture au dépôt"
+   ],
+   "dep": [],
+   "due": "2026-10-08",
+   "key": "DL-01",
+   "assignee": "Achraf",
+   "sprint_name": "Sprint 1 · Fondations"
+  },
+  {
+   "sprint": "S1",
+   "prio": "P0",
+   "hours": 5.0,
+   "epic": "Fondations",
+   "title": "Modèles Django, migrations et base de données",
+   "desc": "Créer le projet Django dans backend/ et les modèles du modèle de données de la présentation : utilisateur (email comme identifiant), profil, compétence, compétence d'utilisateur (proposée ou recherchée, niveau), projet, échange, match. Base SQLite en mode WAL pour démarrer, car le pilote psycopg de PostgreSQL est sous licence LGPL (voir le ticket licences). Aucun champ propre à PostgreSQL, pour pouvoir changer de base plus tard si l'organisateur l'autorise.",
+   "ac": [
+    "python manage.py migrate crée toutes les tables",
+    "Les modèles reprennent le modèle de données de la présentation",
+    "Aucune dépendance à psycopg",
+    "Réglages lus dans des variables d'environnement, aucun secret dans le dépôt",
+    "Catalogue de compétences chargé par une migration de données"
+   ],
+   "dep": [],
+   "due": "2026-10-08",
+   "key": "DL-02",
+   "assignee": "Achraf",
+   "sprint_name": "Sprint 1 · Fondations"
+  },
+  {
+   "sprint": "S1",
+   "prio": "P0",
+   "hours": 6.0,
+   "epic": "Auth et profil",
+   "title": "Authentification : inscription, connexion, déconnexion",
+   "desc": "Routes /auth/register, /auth/login, /auth/logout avec Django REST framework et djangorestframework-simplejwt. Mots de passe hachés avec Argon2 (argon2-cffi), jeton d'accès à durée limitée.",
+   "ac": [
+    "Email unique (409 si doublon), mot de passe d'au moins 10 caractères",
+    "Limitation de débit sur /auth/* (throttling DRF, 5 essais par minute et par IP)",
+    "Aucun mot de passe ni jeton dans les logs",
+    "Tests automatiques (pytest-django) des cas passants et en erreur"
+   ],
+   "dep": [
+    "DL-02"
+   ],
+   "due": "2026-10-08",
+   "key": "DL-03",
+   "assignee": "Achraf",
+   "sprint_name": "Sprint 1 · Fondations"
+  },
+  {
+   "sprint": "S1",
+   "prio": "P0",
+   "hours": 3.0,
+   "epic": "Fondations",
+   "title": "Figer le contrat d'API v1",
+   "desc": "Relire docs/api.md avec Emmanuel et Omar, compléter les champs manquants (types d'échange, preuves, signalement, dashboard) et geler le contrat. Générer le schéma OpenAPI avec drf-spectacular (BSD-3).",
+   "ac": [
+    "docs/api.md validé par les 3 membres",
+    "La page de documentation générée est cohérente avec docs/api.md",
+    "Exemple JSON pour chaque route",
+    "Après gel : toute modification passe par une PR et l'accord des 3"
+   ],
+   "dep": [],
+   "due": "2026-10-07",
+   "key": "DL-04",
+   "assignee": "Achraf",
+   "sprint_name": "Sprint 1 · Fondations"
+  },
+  {
+   "sprint": "S1",
+   "prio": "P0",
+   "hours": 6.0,
+   "epic": "Déploiement",
+   "title": "Premier déploiement sur Datacloud (VPS Dakar + HTTPS)",
+   "desc": "Commander le VPS à Dakar avec le code promo 40 % (les VPS hors Dakar sont exclus de la remise). Gunicorn derrière nginx, build React servi par nginx, HTTPS, URL publique, déploiement depuis main, secrets hors du dépôt.",
+   "ac": [
+    "https://<url>/health répond depuis Internet",
+    "Déploiement reproductible par un script ou une action GitHub",
+    "Justificatif d'achat Datacloud conservé (condition de recevabilité, art. 6)"
+   ],
+   "dep": [
+    "DL-02"
+   ],
+   "due": "2026-10-08",
+   "key": "DL-05",
+   "assignee": "Achraf",
+   "sprint_name": "Sprint 1 · Fondations"
+  },
+  {
+   "sprint": "S1",
+   "prio": "P0",
+   "hours": 4.0,
+   "epic": "Frontend",
+   "title": "Initialiser React (Vite, TypeScript), Tailwind et client API",
+   "desc": "Créer l'application dans frontend/ avec Vite, React, TypeScript et React Router. Client d'API typé avec gestion du jeton. Versions imposées par la règle des licences : vite@6, @vitejs/plugin-react@4, tailwindcss@3. Vite 8 et Tailwind 4 embarquent lightningcss, sous licence MPL-2.0 (à réciprocité).",
+   "ac": [
+    "L'application démarre et s'affiche",
+    "Variable VITE_API_URL configurable",
+    "Versions de vite, plugin-react et tailwindcss figées dans package.json",
+    "scripts/check_licenses.sh sans licence GPL, AGPL, LGPL ni MPL"
+   ],
+   "dep": [],
+   "due": "2026-10-08",
+   "key": "DL-06",
+   "assignee": "Emmanuel",
+   "sprint_name": "Sprint 1 · Fondations"
+  },
+  {
+   "sprint": "S1",
+   "prio": "P0",
+   "hours": 5.0,
+   "epic": "Frontend",
+   "title": "Design system et navigation",
+   "desc": "Couleurs, typographie, boutons, champs, cartes, badges de compétence, barre de navigation, états chargement/erreur/vide.",
+   "ac": [
+    "Composants réutilisables documentes dans une page de démo",
+    "Navigation responsive",
+    "Contrastes lisibles"
+   ],
+   "dep": [
+    "DL-06"
+   ],
+   "due": "2026-10-08",
+   "key": "DL-07",
+   "assignee": "Emmanuel",
+   "sprint_name": "Sprint 1 · Fondations"
+  },
+  {
+   "sprint": "S1",
+   "prio": "P0",
+   "hours": 5.0,
+   "epic": "Auth et profil",
+   "title": "Pages inscription et connexion",
+   "desc": "Formulaires reliés à l'API, gestion du jeton, routes protégées, messages d'erreur clairs.",
+   "ac": [
+    "Inscription puis connexion de bout en bout",
+    "Pages privées inaccessibles sans connexion",
+    "Validation côté client alignée sur l'API"
+   ],
+   "dep": [
+    "DL-03",
+    "DL-06"
+   ],
+   "due": "2026-10-08",
+   "key": "DL-08",
+   "assignee": "Emmanuel",
+   "sprint_name": "Sprint 1 · Fondations"
+  },
+  {
+   "sprint": "S1",
+   "prio": "P0",
+   "hours": 6.0,
+   "epic": "UX",
+   "title": "Maquettes des 4 écrans de démo",
+   "desc": "Profil, liste des matchs, détail d'un match (explication), Project Hub. Mobile et ordinateur.",
+   "ac": [
+    "Maquettes validées par l'équipe le 8 oct",
+    "Parcours de démo en 8 étapes décrit en une page (docs/démo.md)"
+   ],
+   "dep": [],
+   "due": "2026-10-08",
+   "key": "DL-09",
+   "assignee": "Emmanuel",
+   "sprint_name": "Sprint 1 · Fondations"
+  },
+  {
+   "sprint": "S1",
+   "prio": "P0",
+   "hours": 1.0,
+   "epic": "Conformité",
+   "title": "Écrire à l'organisateur (cadev@systalink.com)",
+   "desc": "Poser les questions : date de publication du jury (art. 3 et art. 7), dates du vote du public, liste des Pays éligibles, Linux et SQLite comme services d'exécution. Et surtout : le pilote psycopg de Django pour PostgreSQL (LGPL) est-il accepté ? Une dépendance sous MPL-2.0 est-elle acceptée ?",
+   "ac": [
+    "Courriel envoyé le 6 oct",
+    "Réponses archivées dans docs/organisateur.md"
+   ],
+   "dep": [],
+   "due": "2026-10-06",
+   "key": "DL-10",
+   "assignee": "Omar",
+   "sprint_name": "Sprint 1 · Fondations"
+  },
+  {
+   "sprint": "S1",
+   "prio": "P0",
+   "hours": 5.0,
+   "epic": "Matching",
+   "title": "Service de matching branché sur la base + cas limites",
+   "desc": "Fonction qui charge deux profils depuis la base (ORM Django) et appelle le module de scoring (matching/scoring.py, repris du squelette). Compléter les tests.",
+   "ac": [
+    "Tests : profil vide, une seule compétence, doublons, majuscules, match à sens unique, profils identiques",
+    "Score symétrique (A,B) = (B,A)",
+    "Aucun score > 100 ni < 0"
+   ],
+   "dep": [
+    "DL-02"
+   ],
+   "due": "2026-10-08",
+   "key": "DL-11",
+   "assignee": "Omar",
+   "sprint_name": "Sprint 1 · Fondations"
+  },
+  {
+   "sprint": "S1",
+   "prio": "P0",
+   "hours": 6.0,
+   "epic": "Données de démo",
+   "title": "20 profils et 8 projets de démo réalistes",
+   "desc": "Données fictives, clairement étiquetées, réparties sur plusieurs pays francophones d'Afrique.",
+   "ac": [
+    "8 pays au minimum",
+    "is_demo = true et mention 'Profil de démonstration' visible dans l'interface",
+    "Commande manage.py seed_demo rejouable sans doublons",
+    "3 paires avec un match > 75 % et 3 paires avec un match partiel",
+    "Aucune vraie personne ni vrai nom d'entreprise"
+   ],
+   "dep": [
+    "DL-02"
+   ],
+   "due": "2026-10-08",
+   "key": "DL-12",
+   "assignee": "Omar",
+   "sprint_name": "Sprint 1 · Fondations"
+  },
+  {
+   "sprint": "S1",
+   "prio": "P0",
+   "hours": 3.0,
+   "epic": "Qualité",
+   "title": "CI : tests et audit des licences à chaque PR",
+   "desc": "GitHub Actions : pytest et scripts/check_licenses.sh sur chaque pull request.",
+   "ac": [
+    "La CI échoue si une licence GPL/AGPL/LGPL apparait",
+    "La CI échoue si un test échoue",
+    "Badge de statut dans le README"
+   ],
+   "dep": [],
+   "due": "2026-10-08",
+   "key": "DL-13",
+   "assignee": "Omar",
+   "sprint_name": "Sprint 1 · Fondations"
+  },
+  {
+   "sprint": "S2",
+   "prio": "P0",
+   "hours": 4.0,
+   "epic": "Auth et profil",
+   "title": "API profil : GET/PATCH /me, GET /users/{id}",
+   "desc": "Lecture et modification du profil, profil public.",
+   "ac": [
+    "Pays valide, disponibilités parmi MENTORING/COLLABORATION/OPEN_SOURCE/FREELANCE",
+    "Bio limitée en taille",
+    "Un utilisateur ne modifie que son profil",
+    "Le profil public n'expose jamais l'email"
+   ],
+   "dep": [
+    "DL-03"
+   ],
+   "due": "2026-10-15",
+   "key": "DL-14",
+   "assignee": "Achraf",
+   "sprint_name": "Sprint 2 · Cœur fonctionnel"
+  },
+  {
+   "sprint": "S2",
+   "prio": "P0",
+   "hours": 4.0,
+   "epic": "Compétences",
+   "title": "API compétences : /skills, /me/skills",
+   "desc": "Catalogue par catégorie, ajout et suppression de compétences proposées (OFFERED) ou recherchées (WANTED) avec niveau.",
+   "ac": [
+    "Unicité (utilisateur, compétence, type)",
+    "Niveau BEGINNER/INTERMEDIATE/ADVANCED",
+    "Déclenche le recalcul des matchs (ticket Omar)"
+   ],
+   "dep": [
+    "DL-03"
+   ],
+   "due": "2026-10-15",
+   "key": "DL-15",
+   "assignee": "Achraf",
+   "sprint_name": "Sprint 2 · Cœur fonctionnel"
+  },
+  {
+   "sprint": "S2",
+   "prio": "P0",
+   "hours": 5.0,
+   "epic": "Project Hub",
+   "title": "API projets : CRUD et filtres",
+   "desc": "GET/POST /projects, GET/PATCH/DELETE /projects/{id}. Besoins, statut, dépôt Git, démo.",
+   "ac": [
+    "Seul le propriétaire modifie ou supprime",
+    "Filtres pays, technologie, statut",
+    "URLs validées (https uniquement)"
+   ],
+   "dep": [
+    "DL-03"
+   ],
+   "due": "2026-10-15",
+   "key": "DL-16",
+   "assignee": "Achraf",
+   "sprint_name": "Sprint 2 · Cœur fonctionnel"
+  },
+  {
+   "sprint": "S2",
+   "prio": "P1",
+   "hours": 5.0,
+   "epic": "Project Hub",
+   "title": "Demandes pour rejoindre un projet",
+   "desc": "Modèle ProjectJoinRequest. POST /projects/{id}/join, PATCH pour accepter ou refuser (propriétaire).",
+   "ac": [
+    "Une seule demande en attente par personne et par projet",
+    "Le propriétaire voit les demandes de son projet uniquement",
+    "Notification visible dans le dashboard"
+   ],
+   "dep": [
+    "DL-16"
+   ],
+   "due": "2026-10-15",
+   "key": "DL-17",
+   "assignee": "Achraf",
+   "sprint_name": "Sprint 2 · Cœur fonctionnel"
+  },
+  {
+   "sprint": "S2",
+   "prio": "P0",
+   "hours": 5.0,
+   "epic": "Échanges",
+   "title": "API échanges et types d'échange",
+   "desc": "Modèle Exchange avec champ type (PAIR_PROGRAMMING, CODE_REVIEW, MENTORAT, DEBUGGING, PROJET_COMMUN, PREPARATION_ENTRETIEN, ECHANGE_COMPETENCES, DISCUSSION). Routes : POST /matches/{id}/request, GET /exchanges, PATCH /exchanges/{id}.",
+   "ac": [
+    "Une seule demande en attente par paire d'utilisateurs",
+    "Seul le destinataire accepte ou refuse",
+    "On ne peut pas s'envoyer une demande à soi-même"
+   ],
+   "dep": [
+    "DL-03"
+   ],
+   "due": "2026-10-15",
+   "key": "DL-18",
+   "assignee": "Achraf",
+   "sprint_name": "Sprint 2 · Cœur fonctionnel"
+  },
+  {
+   "sprint": "S2",
+   "prio": "P0",
+   "hours": 4.0,
+   "epic": "Sécurité",
+   "title": "Permissions et validation transversales",
+   "desc": "Permissions DRF (utilisateur connecté, propriétaire uniquement), sérialiseurs stricts, ORM Django uniquement.",
+   "ac": [
+    "Tests de permissions sur chaque ressource (accès à la ressource d'un autre = 403/404)",
+    "Aucun SQL brut concaténé dans le code"
+   ],
+   "dep": [
+    "DL-14"
+   ],
+   "due": "2026-10-15",
+   "key": "DL-19",
+   "assignee": "Achraf",
+   "sprint_name": "Sprint 2 · Cœur fonctionnel"
+  },
+  {
+   "sprint": "S2",
+   "prio": "P0",
+   "hours": 6.0,
+   "epic": "Auth et profil",
+   "title": "Page profil (Dev Passport)",
+   "desc": "Voir et modifier son profil, profil public d'un autre développeur.",
+   "ac": [
+    "Édition pays, bio, disponibilités, domaines, avatar",
+    "Profil public avec compétences et projets",
+    "Étiquette 'démo' sur les profils de démonstration"
+   ],
+   "dep": [
+    "DL-14",
+    "DL-07"
+   ],
+   "due": "2026-10-15",
+   "key": "DL-20",
+   "assignee": "Emmanuel",
+   "sprint_name": "Sprint 2 · Cœur fonctionnel"
+  },
+  {
+   "sprint": "S2",
+   "prio": "P0",
+   "hours": 6.0,
+   "epic": "Compétences",
+   "title": "Page compétences : Je sais / Je veux apprendre",
+   "desc": "Ajout de compétences par catégorie avec niveau, deux listes distinctes.",
+   "ac": [
+    "Ajout et suppression sans rechargement",
+    "Badges par niveau",
+    "Mise à jour visible des matchs après modification"
+   ],
+   "dep": [
+    "DL-15",
+    "DL-07"
+   ],
+   "due": "2026-10-15",
+   "key": "DL-21",
+   "assignee": "Emmanuel",
+   "sprint_name": "Sprint 2 · Cœur fonctionnel"
+  },
+  {
+   "sprint": "S2",
+   "prio": "P0",
+   "hours": 8.0,
+   "epic": "Project Hub",
+   "title": "Project Hub : liste, fiche, création, 'Rejoindre'",
+   "desc": "Liste filtrable, fiche projet, formulaire de création et d'édition, bouton Rejoindre.",
+   "ac": [
+    "Filtres pays, technologie, statut",
+    "Fiche avec besoins, dépôt, démo",
+    "Le propriétaire gère ses demandes"
+   ],
+   "dep": [
+    "DL-16",
+    "DL-07"
+   ],
+   "due": "2026-10-15",
+   "key": "DL-22",
+   "assignee": "Emmanuel",
+   "sprint_name": "Sprint 2 · Cœur fonctionnel"
+  },
+  {
+   "sprint": "S2",
+   "prio": "P0",
+   "hours": 5.0,
+   "epic": "Échanges",
+   "title": "Échanges : proposition, liste, réponse",
+   "desc": "Fenêtre de proposition (type et message), onglets reçues/envoyées, accepter/refuser.",
+   "ac": [
+    "Message obligatoire et limite en taille",
+    "Statut visible pour les deux personnes"
+   ],
+   "dep": [
+    "DL-18",
+    "DL-07"
+   ],
+   "due": "2026-10-15",
+   "key": "DL-23",
+   "assignee": "Emmanuel",
+   "sprint_name": "Sprint 2 · Cœur fonctionnel"
+  },
+  {
+   "sprint": "S2",
+   "prio": "P0",
+   "hours": 6.0,
+   "epic": "Matching",
+   "title": "API matching : /matches et /matches/{id}",
+   "desc": "Liste triée par score, détail avec raisons, ce que chacun peut apprendre à l'autre. Recalcul à l'inscription et à chaque changement de compétences.",
+   "ac": [
+    "Réponse conforme à l'exemple de docs/api.md",
+    "Match a sens unique plafonné sans réciprocité",
+    "Recalcul incrémental (pas de recalcul de toute la base à chaque requête)",
+    "Pagination"
+   ],
+   "dep": [
+    "DL-11",
+    "DL-15"
+   ],
+   "due": "2026-10-15",
+   "key": "DL-24",
+   "assignee": "Omar",
+   "sprint_name": "Sprint 2 · Cœur fonctionnel"
+  },
+  {
+   "sprint": "S2",
+   "prio": "P0",
+   "hours": 6.0,
+   "epic": "Recherche",
+   "title": "API recherche : /search/users et /search/projects",
+   "desc": "Recherche textuelle par l'ORM Django sur nom, bio, titre et description, plus filtres pays, technologie, niveau, disponibilité, domaine, compétences recherchées. Aucune fonction propre à PostgreSQL.",
+   "ac": [
+    "Combinaison de filtres",
+    "Résultats paginés",
+    "Moins de 300 ms sur les données de démo"
+   ],
+   "dep": [
+    "DL-12"
+   ],
+   "due": "2026-10-15",
+   "key": "DL-25",
+   "assignee": "Omar",
+   "sprint_name": "Sprint 2 · Cœur fonctionnel"
+  },
+  {
+   "sprint": "S2",
+   "prio": "P0",
+   "hours": 6.0,
+   "epic": "Matching",
+   "title": "Pages matchs : liste et détail avec explication",
+   "desc": "Cartes avec score et raisons, détail avec répartition des points par critère, bouton 'Proposer un échange'.",
+   "ac": [
+    "Explication lisible en moins de 5 secondes",
+    "État vide utile (aucun match : que faire ?)",
+    "Responsive"
+   ],
+   "dep": [
+    "DL-24",
+    "DL-09"
+   ],
+   "due": "2026-10-15",
+   "key": "DL-26",
+   "assignee": "Omar",
+   "sprint_name": "Sprint 2 · Cœur fonctionnel"
+  },
+  {
+   "sprint": "S2",
+   "prio": "P0",
+   "hours": 5.0,
+   "epic": "Recherche",
+   "title": "Page de recherche développeurs et projets",
+   "desc": "Barre de recherche, filtres, onglets utilisateurs/projets.",
+   "ac": [
+    "Filtres conservés dans l'URL",
+    "Résultats cliquables vers profil et fiche projet"
+   ],
+   "dep": [
+    "DL-25",
+    "DL-07"
+   ],
+   "due": "2026-10-15",
+   "key": "DL-27",
+   "assignee": "Omar",
+   "sprint_name": "Sprint 2 · Cœur fonctionnel"
+  },
+  {
+   "sprint": "S3",
+   "prio": "P0",
+   "hours": 3.0,
+   "epic": "Dashboard",
+   "title": "API dashboard agrégée",
+   "desc": "GET /dashboard : matchs recommandés, demandes en attente, mes projets, complétude du profil.",
+   "ac": [
+    "Une seule requête côté client",
+    "Temps de réponse < 300 ms"
+   ],
+   "dep": [
+    "DL-24",
+    "DL-18"
+   ],
+   "due": "2026-10-19",
+   "key": "DL-28",
+   "assignee": "Achraf",
+   "sprint_name": "Sprint 3 · Compléments"
+  },
+  {
+   "sprint": "S3",
+   "prio": "P0",
+   "hours": 5.0,
+   "epic": "Sécurité",
+   "title": "Durcissement sécurité",
+   "desc": "Limitation de débit globale, CORS strict (django-cors-headers), en-têtes de sécurité Django, limite de taille des requêtes, journal d'audit, revue OWASP rapide.",
+   "ac": [
+    "Aucun secret dans le dépôt (vérification par scan)",
+    "python manage.py check --deploy sans avertissement",
+    "Tests d'injection et XSS de base",
+    "Rapport court dans docs/sécurité.md"
+   ],
+   "dep": [
+    "DL-19"
+   ],
+   "due": "2026-10-19",
+   "key": "DL-29",
+   "assignee": "Achraf",
+   "sprint_name": "Sprint 3 · Compléments"
+  },
+  {
+   "sprint": "S3",
+   "prio": "P0",
+   "hours": 4.0,
+   "epic": "Déploiement",
+   "title": "Surveillance et sauvegardes",
+   "desc": "/health détaillé, logs structurés, test de disponibilité externe, sauvegarde quotidienne de la base (commande .backup de SQLite) avec test de restauration.",
+   "ac": [
+    "Alerte si le site tombe",
+    "Restauration testée au moins une fois"
+   ],
+   "dep": [
+    "DL-05"
+   ],
+   "due": "2026-10-19",
+   "key": "DL-30",
+   "assignee": "Achraf",
+   "sprint_name": "Sprint 3 · Compléments"
+  },
+  {
+   "sprint": "S3",
+   "prio": "P1",
+   "hours": 5.0,
+   "epic": "Compétences",
+   "title": "Compétences avec preuves : API",
+   "desc": "Modèle SkillProof (projet, dépôt GitHub, contribution open source, certification, challenge) et routes CRUD.",
+   "ac": [
+    "URL validée",
+    "Une preuve appartient à l'utilisateur qui l'ajoute",
+    "Plusieurs preuves possibles par compétence"
+   ],
+   "dep": [
+    "DL-15"
+   ],
+   "due": "2026-10-19",
+   "key": "DL-31",
+   "assignee": "Achraf",
+   "sprint_name": "Sprint 3 · Compléments"
+  },
+  {
+   "sprint": "S3",
+   "prio": "P1",
+   "hours": 4.0,
+   "epic": "Sécurité",
+   "title": "Signalement : API",
+   "desc": "Modèle Report, POST /reports pour un profil ou un projet, avec motif.",
+   "ac": [
+    "Un signalement par personne et par cible",
+    "Limite de débit pour éviter l'abus"
+   ],
+   "dep": [
+    "DL-19"
+   ],
+   "due": "2026-10-19",
+   "key": "DL-32",
+   "assignee": "Achraf",
+   "sprint_name": "Sprint 3 · Compléments"
+  },
+  {
+   "sprint": "S3",
+   "prio": "P0",
+   "hours": 6.0,
+   "epic": "Dashboard",
+   "title": "Dashboard",
+   "desc": "Matchs recommandés, demandes en attente, mes projets, complétude du profil.",
+   "ac": [
+    "Charge en moins de 2 s",
+    "Chaque carte renvoie vers l'action utile"
+   ],
+   "dep": [
+    "DL-28",
+    "DL-26"
+   ],
+   "due": "2026-10-19",
+   "key": "DL-33",
+   "assignee": "Emmanuel",
+   "sprint_name": "Sprint 3 · Compléments"
+  },
+  {
+   "sprint": "S3",
+   "prio": "P0",
+   "hours": 6.0,
+   "epic": "UX",
+   "title": "Responsive, accessibilité et états vides",
+   "desc": "Passage mobile sur tous les écrans, navigation clavier, contrastes, messages d'erreur et états vides.",
+   "ac": [
+    "Aucun défilement horizontal sur mobile",
+    "Tous les formulaires utilisables au clavier"
+   ],
+   "dep": [
+    "DL-22",
+    "DL-20",
+    "DL-21",
+    "DL-23"
+   ],
+   "due": "2026-10-19",
+   "key": "DL-34",
+   "assignee": "Emmanuel",
+   "sprint_name": "Sprint 3 · Compléments"
+  },
+  {
+   "sprint": "S3",
+   "prio": "P1",
+   "hours": 4.0,
+   "epic": "Compétences",
+   "title": "Compétences avec preuves : interface",
+   "desc": "Ajout de preuves a une compétence, affichage d'un badge 'preuve' sur le profil public.",
+   "ac": [
+    "Lien externe ouvert dans un nouvel onglet avec rel=noopener"
+   ],
+   "dep": [
+    "DL-31"
+   ],
+   "due": "2026-10-19",
+   "key": "DL-35",
+   "assignee": "Emmanuel",
+   "sprint_name": "Sprint 3 · Compléments"
+  },
+  {
+   "sprint": "S3",
+   "prio": "P1",
+   "hours": 3.0,
+   "epic": "Sécurité",
+   "title": "Bouton Signaler",
+   "desc": "Fenêtre de signalement sur les profils et les projets.",
+   "ac": [
+    "Confirmation visible après l'envoi"
+   ],
+   "dep": [
+    "DL-32"
+   ],
+   "due": "2026-10-19",
+   "key": "DL-36",
+   "assignee": "Emmanuel",
+   "sprint_name": "Sprint 3 · Compléments"
+  },
+  {
+   "sprint": "S3",
+   "prio": "P2",
+   "hours": 8.0,
+   "epic": "Dimension africaine",
+   "title": "Carte de l'Afrique interactive",
+   "desc": "Carte SVG ; un clic sur un pays ouvre l'exploration du pays.",
+   "ac": [
+    "Fonctionne sur mobile",
+    "Pays sans données grises mais cliquables"
+   ],
+   "dep": [
+    "DL-38"
+   ],
+   "due": "2026-10-19",
+   "key": "DL-37",
+   "assignee": "Omar",
+   "sprint_name": "Sprint 3 · Compléments"
+  },
+  {
+   "sprint": "S3",
+   "prio": "P1",
+   "hours": 6.0,
+   "epic": "Dimension africaine",
+   "title": "Exploration par pays (API et page)",
+   "desc": "Page /pays/{code} : développeurs, projets, technologies les plus présentes.",
+   "ac": [
+    "Statistiques calculées en base",
+    "Pays sans données : message clair"
+   ],
+   "dep": [
+    "DL-25"
+   ],
+   "due": "2026-10-19",
+   "key": "DL-38",
+   "assignee": "Omar",
+   "sprint_name": "Sprint 3 · Compléments"
+  },
+  {
+   "sprint": "S3",
+   "prio": "P1",
+   "hours": 3.0,
+   "epic": "Matching",
+   "title": "Retour sur les matchs (utile / pas utile)",
+   "desc": "Réponse au risque 'mauvais matching' : un retour par match, stocké pour analyse.",
+   "ac": [
+    "Un retour par utilisateur et par match",
+    "Aucun impact sur le score du MVP"
+   ],
+   "dep": [
+    "DL-26"
+   ],
+   "due": "2026-10-19",
+   "key": "DL-39",
+   "assignee": "Omar",
+   "sprint_name": "Sprint 3 · Compléments"
+  },
+  {
+   "sprint": "S3",
+   "prio": "P0",
+   "hours": 3.0,
+   "epic": "Conformité",
+   "title": "Page de confidentialité et mentions",
+   "desc": "Données collectées, finalités, durée, droits, contact (loi sénégalaise n° 2008-12). Lien en pied de page et à l'inscription.",
+   "ac": [
+    "Page accessible sans connexion",
+    "Case de consentement à l'inscription"
+   ],
+   "dep": [
+    "DL-08"
+   ],
+   "due": "2026-10-19",
+   "key": "DL-40",
+   "assignee": "Omar",
+   "sprint_name": "Sprint 3 · Compléments"
+  },
+  {
+   "sprint": "S4",
+   "prio": "P1",
+   "hours": 2.0,
+   "epic": "IA",
+   "title": "Limites et budget des appels IA",
+   "desc": "Rate limiting spécifique et plafond quotidien des appels.",
+   "ac": [
+    "Dépassement = repli sans IA, pas d'erreur"
+   ],
+   "dep": [
+    "DL-43"
+   ],
+   "due": "2026-10-21",
+   "key": "DL-41",
+   "assignee": "Achraf",
+   "sprint_name": "Sprint 4 · IA (si le jalon du 15 oct est tenu)"
+  },
+  {
+   "sprint": "S4",
+   "prio": "P1",
+   "hours": 5.0,
+   "epic": "IA",
+   "title": "Interface des fonctions IA",
+   "desc": "Bouton 'Remplir depuis un texte', champ de recherche naturelle, résumé, états de repli.",
+   "ac": [
+    "Chaque fonction a un état 'IA indisponible'"
+   ],
+   "dep": [
+    "DL-44",
+    "DL-45"
+   ],
+   "due": "2026-10-21",
+   "key": "DL-42",
+   "assignee": "Emmanuel",
+   "sprint_name": "Sprint 4 · IA (si le jalon du 15 oct est tenu)"
+  },
+  {
+   "sprint": "S4",
+   "prio": "P1",
+   "hours": 4.0,
+   "epic": "IA",
+   "title": "Couche IA avec interrupteur et repli",
+   "desc": "Client abstrait, variable AI_ENABLED, délais maximum, repli sans IA, journal des appels. Les clés restent côté serveur.",
+   "ac": [
+    "Le produit fonctionne entièrement avec AI_ENABLED=false",
+    "Aucune donnée personnelle inutile dans les requêtes",
+    "Licence du SDK vérifiée",
+    "Appel consigné dans AI_USAGE.md"
+   ],
+   "dep": [],
+   "due": "2026-10-21",
+   "key": "DL-43",
+   "assignee": "Omar",
+   "sprint_name": "Sprint 4 · IA (si le jalon du 15 oct est tenu)"
+  },
+  {
+   "sprint": "S4",
+   "prio": "P1",
+   "hours": 5.0,
+   "epic": "IA",
+   "title": "Extraction de compétences depuis un texte libre",
+   "desc": "À l'inscription, proposer des compétences déduites d'un texte, validées par l'utilisateur.",
+   "ac": [
+    "Rien n'est enregistré sans validation",
+    "Échec de l'IA = formulaire classique"
+   ],
+   "dep": [
+    "DL-43"
+   ],
+   "due": "2026-10-21",
+   "key": "DL-44",
+   "assignee": "Omar",
+   "sprint_name": "Sprint 4 · IA (si le jalon du 15 oct est tenu)"
+  },
+  {
+   "sprint": "S4",
+   "prio": "P1",
+   "hours": 5.0,
+   "epic": "IA",
+   "title": "Recherche en langage naturel",
+   "desc": "Convertir une phrase en critères (technologie, domaine, pays, niveau) puis appeler la recherche classique.",
+   "ac": [
+    "Critères affichés et modifiables",
+    "Repli vers la recherche classique"
+   ],
+   "dep": [
+    "DL-43",
+    "DL-25"
+   ],
+   "due": "2026-10-21",
+   "key": "DL-45",
+   "assignee": "Omar",
+   "sprint_name": "Sprint 4 · IA (si le jalon du 15 oct est tenu)"
+  },
+  {
+   "sprint": "S4",
+   "prio": "P2",
+   "hours": 3.0,
+   "epic": "IA",
+   "title": "Résumé de projet",
+   "desc": "Présentation courte générée à partir d'une description longue, modifiable.",
+   "ac": [
+    "Le propriétaire valide le résumé"
+   ],
+   "dep": [
+    "DL-43"
+   ],
+   "due": "2026-10-21",
+   "key": "DL-46",
+   "assignee": "Omar",
+   "sprint_name": "Sprint 4 · IA (si le jalon du 15 oct est tenu)"
+  },
+  {
+   "sprint": "S4",
+   "prio": "P2",
+   "hours": 3.0,
+   "epic": "IA",
+   "title": "Explication du match rédigée",
+   "desc": "Phrase d'explication en plus des raisons calculées.",
+   "ac": [
+    "Les raisons calculées restent la source de vérité"
+   ],
+   "dep": [
+    "DL-43",
+    "DL-24"
+   ],
+   "due": "2026-10-21",
+   "key": "DL-47",
+   "assignee": "Omar",
+   "sprint_name": "Sprint 4 · IA (si le jalon du 15 oct est tenu)"
+  },
+  {
+   "sprint": "S5",
+   "prio": "P0",
+   "hours": 4.0,
+   "epic": "Déploiement",
+   "title": "Version de production figée",
+   "desc": "Sauvegarde de la base, variables de production, vérification HTTPS et URL stable, retour arrière.",
+   "ac": [
+    "URL stable",
+    "VPS payé jusqu'au 2 novembre au minimum (vérifier la durée)",
+    "Procédure de retour arrière écrite"
+   ],
+   "dep": [
+    "DL-30"
+   ],
+   "due": "2026-10-22",
+   "key": "DL-48",
+   "assignee": "Achraf",
+   "sprint_name": "Sprint 5 · Finalisation et soumission"
+  },
+  {
+   "sprint": "S5",
+   "prio": "P0",
+   "hours": 6.0,
+   "epic": "Qualité",
+   "title": "Corrections et stabilisation (backend)",
+   "desc": "Corriger les bugs remontés par Emmanuel. Aucune nouvelle fonctionnalité.",
+   "ac": [
+    "Zéro bug bloquant sur le parcours de démo"
+   ],
+   "dep": [],
+   "due": "2026-10-24",
+   "key": "DL-49",
+   "assignee": "Achraf",
+   "sprint_name": "Sprint 5 · Finalisation et soumission"
+  },
+  {
+   "sprint": "S5",
+   "prio": "P0",
+   "hours": 2.0,
+   "epic": "Conformité",
+   "title": "Compiler AI_USAGE.md et LICENSES.md finaux",
+   "desc": "Rassembler les entrées des 3 membres, vérifier la cohérence.",
+   "ac": [
+    "Chaque usage d'IA liste (outil, partie du projet, membre)",
+    "Code préalable d'un membre declare s'il existe"
+   ],
+   "dep": [],
+   "due": "2026-10-23",
+   "key": "DL-50",
+   "assignee": "Achraf",
+   "sprint_name": "Sprint 5 · Finalisation et soumission"
+  },
+  {
+   "sprint": "S5",
+   "prio": "P0",
+   "hours": 2.0,
+   "epic": "Conformité",
+   "title": "Soumettre le projet sur Datacloud (au plus tard le 24 oct)",
+   "desc": "Soumission par le représentant de l'équipe, avec composants, licences et déclaration IA.",
+   "ac": [
+    "Soumission faite le 24 oct, pas le 25",
+    "Capture de confirmation conservée"
+   ],
+   "dep": [
+    "DL-48",
+    "DL-50",
+    "DL-59"
+   ],
+   "due": "2026-10-24",
+   "key": "DL-51",
+   "assignee": "Achraf",
+   "sprint_name": "Sprint 5 · Finalisation et soumission"
+  },
+  {
+   "sprint": "S5",
+   "prio": "P0",
+   "hours": 3.0,
+   "epic": "Concours",
+   "title": "Préparer ma partie du pitch et répondre aux questions",
+   "desc": "Répéter le parcours de démo en 8 étapes (2 fois au minimum). Savoir expliquer sa partie sans aide, y compris le code généré par IA.",
+   "ac": [
+    "Explication de 2 minutes de ma partie",
+    "Réponses aux questions techniques probables"
+   ],
+   "dep": [],
+   "due": "2026-10-23",
+   "key": "DL-52",
+   "assignee": "Achraf",
+   "sprint_name": "Sprint 5 · Finalisation et soumission"
+  },
+  {
+   "sprint": "S5",
+   "prio": "P0",
+   "hours": 1.0,
+   "epic": "Conformité",
+   "title": "Déclaration de titularité",
+   "desc": "Confirmer que le projet n'appartient a aucun employeur, client ou établissement d'enseignement. Si tu es étudiant, vérifier le règlement de l'école sur la propriété intellectuelle et obtenir une autorisation écrite si nécessaire.",
+   "ac": [
+    "Déclaration exacte (toute fausse déclaration = disqualification)",
+    "Autorisation écrite jointe si nécessaire"
+   ],
+   "dep": [],
+   "due": "2026-10-23",
+   "key": "DL-53",
+   "assignee": "Achraf",
+   "sprint_name": "Sprint 5 · Finalisation et soumission"
+  },
+  {
+   "sprint": "S5",
+   "prio": "P0",
+   "hours": 6.0,
+   "epic": "Qualité",
+   "title": "Test de bout en bout du parcours de démo",
+   "desc": "Les 8 étapes sur l'URL publique, sur mobile et deux navigateurs.",
+   "ac": [
+    "Liste des bugs remise aux autres membres le 22 oct",
+    "Parcours rejoué sans erreur après corrections"
+   ],
+   "dep": [
+    "DL-48"
+   ],
+   "due": "2026-10-22",
+   "key": "DL-54",
+   "assignee": "Emmanuel",
+   "sprint_name": "Sprint 5 · Finalisation et soumission"
+  },
+  {
+   "sprint": "S5",
+   "prio": "P0",
+   "hours": 6.0,
+   "epic": "Qualité",
+   "title": "Corrections et stabilisation (frontend)",
+   "desc": "Corriger les bugs de l'interface. Aucune nouvelle fonctionnalité.",
+   "ac": [
+    "Zéro bug bloquant sur le parcours de démo"
+   ],
+   "dep": [],
+   "due": "2026-10-24",
+   "key": "DL-55",
+   "assignee": "Emmanuel",
+   "sprint_name": "Sprint 5 · Finalisation et soumission"
+  },
+  {
+   "sprint": "S5",
+   "prio": "P0",
+   "hours": 3.0,
+   "epic": "Conformité",
+   "title": "README final et captures",
+   "desc": "Architecture, installation, captures d'écran, parcours de démo.",
+   "ac": [
+    "Un tiers peut lancer le projet avec le README seul"
+   ],
+   "dep": [],
+   "due": "2026-10-24",
+   "key": "DL-56",
+   "assignee": "Emmanuel",
+   "sprint_name": "Sprint 5 · Finalisation et soumission"
+  },
+  {
+   "sprint": "S5",
+   "prio": "P0",
+   "hours": 3.0,
+   "epic": "Concours",
+   "title": "Préparer ma partie du pitch et répondre aux questions",
+   "desc": "Répéter le parcours de démo en 8 étapes (2 fois au minimum). Savoir expliquer sa partie sans aide, y compris le code généré par IA.",
+   "ac": [
+    "Explication de 2 minutes de ma partie",
+    "Réponses aux questions techniques probables"
+   ],
+   "dep": [],
+   "due": "2026-10-23",
+   "key": "DL-57",
+   "assignee": "Emmanuel",
+   "sprint_name": "Sprint 5 · Finalisation et soumission"
+  },
+  {
+   "sprint": "S5",
+   "prio": "P0",
+   "hours": 1.0,
+   "epic": "Conformité",
+   "title": "Déclaration de titularité",
+   "desc": "Confirmer que le projet n'appartient a aucun employeur, client ou établissement d'enseignement. Si tu es étudiant, vérifier le règlement de l'école sur la propriété intellectuelle et obtenir une autorisation écrite si nécessaire.",
+   "ac": [
+    "Déclaration exacte (toute fausse déclaration = disqualification)",
+    "Autorisation écrite jointe si nécessaire"
+   ],
+   "dep": [],
+   "due": "2026-10-23",
+   "key": "DL-58",
+   "assignee": "Emmanuel",
+   "sprint_name": "Sprint 5 · Finalisation et soumission"
+  },
+  {
+   "sprint": "S5",
+   "prio": "P0",
+   "hours": 4.0,
+   "epic": "Conformité",
+   "title": "Audit complet des licences",
+   "desc": "Dépendances directes et transitives, Python et Node. Conserver les rapports. Déclarer caniuse-lite (CC-BY-4.0, données de compatibilité des navigateurs utilisées à la compilation).",
+   "ac": [
+    "Aucune licence GPL, AGPL, LGPL ni MPL",
+    "licenses-python.csv et licenses-node.csv conservés",
+    "Réponse écrite de l'organisateur archivée sur psycopg et PostgreSQL si on les utilise"
+   ],
+   "dep": [
+    "DL-10"
+   ],
+   "due": "2026-10-22",
+   "key": "DL-59",
+   "assignee": "Omar",
+   "sprint_name": "Sprint 5 · Finalisation et soumission"
+  },
+  {
+   "sprint": "S5",
+   "prio": "P0",
+   "hours": 5.0,
+   "epic": "Qualité",
+   "title": "Corrections et stabilisation (matching et recherche)",
+   "desc": "Corriger les bugs et vérifier la crédibilité des scores sur les données de démo.",
+   "ac": [
+    "Aucun score incohérent sur les profils de démo"
+   ],
+   "dep": [],
+   "due": "2026-10-24",
+   "key": "DL-60",
+   "assignee": "Omar",
+   "sprint_name": "Sprint 5 · Finalisation et soumission"
+  },
+  {
+   "sprint": "S5",
+   "prio": "P0",
+   "hours": 3.0,
+   "epic": "Concours",
+   "title": "Préparer ma partie du pitch et répondre aux questions",
+   "desc": "Répéter le parcours de démo en 8 étapes (2 fois au minimum). Savoir expliquer sa partie sans aide, y compris le code généré par IA.",
+   "ac": [
+    "Explication de 2 minutes de ma partie",
+    "Réponses aux questions techniques probables"
+   ],
+   "dep": [],
+   "due": "2026-10-23",
+   "key": "DL-61",
+   "assignee": "Omar",
+   "sprint_name": "Sprint 5 · Finalisation et soumission"
+  },
+  {
+   "sprint": "S5",
+   "prio": "P0",
+   "hours": 1.0,
+   "epic": "Conformité",
+   "title": "Déclaration de titularité",
+   "desc": "Confirmer que le projet n'appartient a aucun employeur, client ou établissement d'enseignement. Si tu es étudiant, vérifier le règlement de l'école sur la propriété intellectuelle et obtenir une autorisation écrite si nécessaire.",
+   "ac": [
+    "Déclaration exacte (toute fausse déclaration = disqualification)",
+    "Autorisation écrite jointe si nécessaire"
+   ],
+   "dep": [],
+   "due": "2026-10-23",
+   "key": "DL-62",
+   "assignee": "Omar",
+   "sprint_name": "Sprint 5 · Finalisation et soumission"
+  },
+  {
+   "sprint": "S6",
+   "prio": "P0",
+   "hours": 0.5,
+   "epic": "Concours",
+   "title": "Voter dans le délai (25 oct 18 h - 26 oct 23 h 59 GMT)",
+   "desc": "Le vote est obligatoire pour chaque membre : un seul oubli exclut toute l'équipe. Voter des l'ouverture, ne pas attendre.",
+   "ac": [
+    "Vote effectué le 25 oct, avant 23 h 59 le 26 oct",
+    "Capture de confirmation envoyée au groupe"
+   ],
+   "dep": [],
+   "due": "2026-10-26",
+   "key": "DL-63",
+   "assignee": "Achraf",
+   "sprint_name": "Sprint 6 · Vote des pairs"
+  },
+  {
+   "sprint": "S6",
+   "prio": "P0",
+   "hours": 0.5,
+   "epic": "Concours",
+   "title": "Voter dans le délai (25 oct 18 h - 26 oct 23 h 59 GMT)",
+   "desc": "Le vote est obligatoire pour chaque membre : un seul oubli exclut toute l'équipe. Voter des l'ouverture, ne pas attendre.",
+   "ac": [
+    "Vote effectué le 25 oct, avant 23 h 59 le 26 oct",
+    "Capture de confirmation envoyée au groupe"
+   ],
+   "dep": [],
+   "due": "2026-10-26",
+   "key": "DL-64",
+   "assignee": "Emmanuel",
+   "sprint_name": "Sprint 6 · Vote des pairs"
+  },
+  {
+   "sprint": "S6",
+   "prio": "P0",
+   "hours": 0.5,
+   "epic": "Concours",
+   "title": "Voter dans le délai (25 oct 18 h - 26 oct 23 h 59 GMT)",
+   "desc": "Le vote est obligatoire pour chaque membre : un seul oubli exclut toute l'équipe. Voter des l'ouverture, ne pas attendre.",
+   "ac": [
+    "Vote effectué le 25 oct, avant 23 h 59 le 26 oct",
+    "Capture de confirmation envoyée au groupe"
+   ],
+   "dep": [],
+   "due": "2026-10-26",
+   "key": "DL-65",
+   "assignee": "Omar",
+   "sprint_name": "Sprint 6 · Vote des pairs"
+  }
+ ]
+}
