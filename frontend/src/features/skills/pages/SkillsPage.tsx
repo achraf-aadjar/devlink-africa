@@ -6,6 +6,7 @@ import { ApiError } from '../../../lib/api'
 import { CATEGORY_LABELS, LEVEL_LABELS } from '../../../lib/labels'
 import type { SkillKind, SkillLevel, UserSkill } from '../../../lib/types'
 import { useQuery } from '../../../lib/useQuery'
+import SkillExtractor from '../../ai/components/SkillExtractor'
 import { addSkill, getMySkills, listCatalog, removeSkill, updateSkillLevel } from '../api/skills'
 
 const LEVEL_OPTIONS = Object.entries(LEVEL_LABELS).map(([value, label]) => ({ value, label }))
@@ -87,6 +88,8 @@ export default function SkillsPage() {
           {formError}
         </p>
       )}
+
+      <SkillExtractor onAccept={handleAdd} />
 
       <div className="grid gap-6 lg:grid-cols-2">
         <SkillColumn

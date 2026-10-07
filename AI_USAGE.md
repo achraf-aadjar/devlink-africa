@@ -26,6 +26,8 @@ Le jury évalue la **maîtrise du code par l'équipe, y compris du code génér�
 | 2026-10-08 | Claude Code (Anthropic) | DL-40 · Données personnelles | Export JSON et suppression de compte confirmée par mot de passe. | Achraf | à relire en PR |
 | 2026-10-08 | Claude Code (Anthropic) | DL-29, DL-30 · Sécurité et surveillance | Durcissement (`check --deploy` propre), tests d'injection et de XSS, health détaillé, scripts de sauvegarde et de surveillance. | Achraf | à relire en PR |
 | 2026-10-08 | Claude Code (Anthropic) | DL-54 · Test de bout en bout | Rejoue les huit étapes du parcours de démonstration par l'API. | Achraf | à relire par Emmanuel |
+| 2026-10-07 | Claude Code (Anthropic) | DL-41, DL-43 à DL-47 · Fonctions d'IA | Couche d'abstraction avec interrupteur et repli, quatre fonctions (extraction de compétences, recherche naturelle, résumé de projet, explication reformulée), plafond journalier. Appels par `urllib` : aucune dépendance ajoutée. 36 tests. | Achraf | **à relire par Omar** |
+| 2026-10-07 | Claude Code (Anthropic) | DL-42 · Interface des fonctions IA | Composants qui ne s'affichent que si le service est actif, et expliquent calmement l'indisponibilité. 11 tests. | Achraf | à relire par Emmanuel |
 | 2026-10-08 | Claude Code (Anthropic) | Documentation pour le jury | `docs/EXPLICATION_JURY.md`, `docs/demo.md`, `deploy/README.md` complet. | Achraf | **à relire par les 3** |
 
 ## Ce que l'équipe doit relire en priorité

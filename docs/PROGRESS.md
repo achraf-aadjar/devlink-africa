@@ -9,11 +9,11 @@ Une entrée par ticket : état, écarts avec le plan, questions ouvertes.
 | Contrôle | Résultat |
 |---|---|
 | `make setup` | exit 0 |
-| Tests backend (SQLite) | 428 passés, 1 ignoré |
-| Tests backend (PostgreSQL) | 429 passés |
+| Tests backend (SQLite) | 464 passés, 1 ignoré |
+| Tests backend (PostgreSQL) | 465 passés |
 | Couverture backend | 98 % global, 99 % sur matching et services |
-| Tests frontend | 111 passés |
-| Couverture frontend | 90 % |
+| Tests frontend | 122 passés |
+| Couverture frontend | 89 % |
 | `ruff check` et `ruff format` | propre |
 | ESLint `--max-warnings 0` et Prettier | propre |
 | `tsc --noEmit` | propre |
@@ -137,13 +137,33 @@ Preuves de compétence, signalement avec plafond journalier, responsive et acces
 
 ---
 
-## Phase 4 · IA — **non faite, volontairement**
+## Phase 4 · IA — **terminée, désactivée par défaut**
 
-Le cahier la plaçait en dernier, facultative, « uniquement si les phases 1 à 3 sont terminées et vertes ». Nous avons préféré consolider la boucle principale, les tests et la sécurité.
+### DL-43 · Couche d'abstraction — terminé
 
-**Conséquence assumée** : le produit ne dépend d'aucune façon d'un service d'IA, ce qui était l'exigence première du cahier (« les fonctions principales ne doivent jamais dépendre de l'IA »).
+`backend/ai/client.py`. **Aucune dépendance ajoutée** : appels par `urllib` de la bibliothèque standard, car les SDK et `requests`/`httpx` tirent `certifi` (MPL-2.0), interdite par le règlement. Le contrôle de licences reste à zéro problème.
 
-Si l'équipe veut les ajouter, les tickets DL-41 à DL-47 restent ouverts. Contrainte à ne pas oublier : ni SDK ni `requests`/`httpx`, car ils tirent `certifi` (MPL-2.0). Il faudrait passer par `urllib`.
+`AI_ENABLED=False` par défaut. Un test vérifie, route par route, que le produit est entièrement utilisable sans IA.
+
+### DL-41 · Limites et budget — terminé
+
+Plafond journalier global (`AI_DAILY_LIMIT`, 200 par défaut) et limite horaire par utilisateur (20). Un dépassement renvoie `503 ai_quota_exceeded`, donc au chemin classique, jamais une erreur bloquante.
+
+### DL-44 à DL-47 · Les quatre fonctions — terminées
+
+Extraction de compétences, recherche en langage naturel, résumé de projet, explication reformulée.
+
+**Principe appliqué partout** : l'IA propose, l'utilisateur valide. Aucune fonction n'écrit en base.
+
+**Garde-fou** : les suggestions sont contraintes au catalogue et aux énumérations. Des tests le vérifient avec des valeurs absurdes (« COBOL », « Wakanda », « GURU »), écartées en silence.
+
+**Données personnelles** : ni adresse, ni identifiant, ni nom envoyés au service. La clé part en en-tête, jamais dans le corps. Deux tests le vérifient.
+
+### DL-42 · Interface — terminé
+
+Les composants d'IA **ne s'affichent pas** quand le service est inactif : nous ne proposons jamais un bouton qui échouera. Chacun a un état « IA indisponible » qui renvoie au formulaire classique, sans dramatiser.
+
+**Ce qu'il reste à faire** : obtenir une clé d'API et la mettre dans `backend/.env` (`AI_ENABLED=True`, `AI_API_KEY=...`). Je ne peux pas l'obtenir, et elle ne doit jamais être commitée. Le parcours de démonstration ne dépend d'aucune de ces fonctions.
 
 ---
 

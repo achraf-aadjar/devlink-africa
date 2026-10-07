@@ -6,6 +6,7 @@ import { ApiError } from '../../../lib/api'
 import { countryFlag } from '../../../lib/labels'
 import { useQuery } from '../../../lib/useQuery'
 import { getMatch, sendFeedback } from '../api/matches'
+import MatchSentence from '../../ai/components/MatchSentence'
 import ExchangeRequestModal from '../components/ExchangeRequestModal'
 import MatchExplanation from '../components/MatchExplanation'
 
@@ -97,6 +98,8 @@ export default function MatchDetailPage() {
           {notice}
         </p>
       )}
+
+      <MatchSentence matchId={matchId} />
 
       <MatchExplanation
         explanation={data.explanation}

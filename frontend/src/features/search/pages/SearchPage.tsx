@@ -15,6 +15,7 @@ import { AVAILABILITY_LABELS, countryFlag, DOMAIN_LABELS, LEVEL_LABELS } from '.
 import { useQuery } from '../../../lib/useQuery'
 import { listCatalog } from '../../skills/api/skills'
 import ProjectCard from '../../projects/components/ProjectCard'
+import NaturalSearchBar from '../../ai/components/NaturalSearchBar'
 import { listCountries, searchProjects, searchUsers } from '../api/search'
 
 type Tab = 'users' | 'projects'
@@ -93,6 +94,25 @@ export default function SearchPage() {
           </button>
         ))}
       </div>
+
+      {tab === 'users' && (
+        <NaturalSearchBar
+          onCriteria={(criteria) => {
+            // Les critères devinés remplissent les filtres habituels : ils
+            // restent visibles et modifiables.
+            setDraft(criteria.q ?? '')
+            update({
+              q: criteria.q ?? '',
+              country: criteria.country ?? '',
+              skill: criteria.skill ?? '',
+              skill_wanted: criteria.skill_wanted ?? '',
+              level: criteria.level ?? '',
+              availability: criteria.availability ?? '',
+              domain: criteria.domain ?? '',
+            })
+          }}
+        />
+      )}
 
       <Card>
         <form

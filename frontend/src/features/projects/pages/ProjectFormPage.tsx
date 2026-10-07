@@ -14,6 +14,7 @@ import { PROJECT_STATUS_LABELS } from '../../../lib/labels'
 import type { ProjectStatus } from '../../../lib/types'
 import { useQuery } from '../../../lib/useQuery'
 import { listCatalog } from '../../skills/api/skills'
+import ProjectSummaryButton from '../../ai/components/ProjectSummaryButton'
 import { createProject, getProject, updateProject } from '../api/projects'
 
 const STATUS_OPTIONS = Object.entries(PROJECT_STATUS_LABELS).map(([value, label]) => ({
@@ -125,6 +126,11 @@ export default function ProjectFormPage() {
             maxLength={5000}
             hint="Le problème résolu, l'état d'avancement, ce que vous cherchez."
             onChange={(event) => setForm({ ...form, description: event.target.value })}
+          />
+
+          <ProjectSummaryButton
+            description={form.description}
+            onUse={(summary) => setForm({ ...form, description: summary })}
           />
 
           <fieldset className="flex flex-col gap-2">
