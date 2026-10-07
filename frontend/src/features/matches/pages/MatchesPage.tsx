@@ -39,7 +39,7 @@ export default function MatchesPage() {
             {data.count} développeur{data.count > 1 ? 's' : ''} correspond
             {data.count > 1 ? 'ent' : ''} à votre profil.
           </p>
-          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {data.results.map((match) => (
               <MatchCard key={match.id} match={match} />
             ))}

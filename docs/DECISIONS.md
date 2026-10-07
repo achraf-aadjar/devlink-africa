@@ -244,7 +244,29 @@ En examinant le dossier Téléchargements par date de modification, un second fi
 **Ce qui a été fait, concrètement :**
 - Fichier copié depuis `~/Downloads/`, recompressé avec `sips` (outil natif macOS, qualité 78) : 345 ko → 56 ko, sans dépendance ajoutée (`sharp` reste interdit par nos propres règles de licence).
 - Contraste vérifié par échantillonnage réel des pixels de l'image (Pillow, dix bandes de hauteur) : le texte sombre ne passe la norme AA que dans le tiers supérieur, le texte blanc ne la passe que dans la moitié inférieure. Aucune couleur de texte ne fonctionne sur toute l'image.
-- Solution retenue : un panneau quasi opaque et flouté (`bg-white/90 backdrop-blur-sm`) derrière le bloc de texte, qui garantit le contraste quel que soit le pixel de la photo en dessous, donc robuste à tous les viewports.
+- Solution retenue initialement : un panneau quasi opaque et flouté (`bg-white/90 backdrop-blur-sm`) derrière le bloc de texte. Remplacé le même jour par un voile sombre uniforme sur toute la bannière — voir l'entrée du dessous, qui explique pourquoi.
 - Déclaré dans `LICENSES.md` (section éléments graphiques) et dans `AI_USAGE.md` (art. 6, toute partie du projet produite par IA doit être journalisée).
 
 **Limite assumée.** Ce n'est pas une licence au sens classique (MIT, BSD, etc.), parce qu'une image générative n'en a pas. C'est un choix documenté et traçable, qui peut être expliqué et défendu devant le jury — ce que ne permettait pas le fichier `OIP.webp` d'origine inconnue.
+
+---
+
+## 2026-10-07 — Bannière recentrée, grilles élargies : la plateforme n'utilisait pas tout l'écran
+
+**Décision.** Deux problèmes de mise en page distincts, remontés par Achraf sur une capture d'écran à grande largeur, corrigés ensemble.
+
+**Premier problème : les pages à grille (recherche, pays, projets, matchs, tableau de bord) plafonnaient à `max-w-6xl` (1152 px).** Sur un écran de 1920 px, ça laisse environ 380 px de vide de chaque côté et les grilles de cartes n'allaient jamais au-delà de 3 à 4 colonnes, quelle que soit la largeur disponible — capturé par une comparaison avant/après avec Playwright en local (outil de diagnostic, non ajouté aux dépendances du projet, comme `reportlab` avant lui).
+
+Plutôt qu'élargir `PageContainer` pour tout le monde (ce qui aurait rendu les pages de lecture — formulaires, détail d'un projet ou d'un match — inutilement larges), deux largeurs cohabitent désormais :
+- `PageContainer` (défaut, `max-w-7xl`) pour tout ce qui se lit : formulaires, pages de détail, page d'accueil.
+- `PageContainer size="wide"` (`max-w-[90rem]`, ≈1440 px), posé par un nouvel enrobage de route `WidePage.tsx`, pour les écrans à grille dense.
+
+Les grilles elles-mêmes gagnent des paliers (`xl:`, `2xl:`) pour profiter de cette largeur : les cartes de recherche passent de 3 à 4 colonnes, les tuiles de pays de 4 à 6.
+
+**Second problème : la bannière d'accueil ne remplissait pas le ressenti d'un site professionnel.** Le contenu était cantonné dans un panneau clair en haut à gauche de la photo. Sur le modèle demandé par Achraf (page d'une autre compétition, CADev 2026 de Systalink), le texte est centré directement sur l'image pleine largeur, avec des éléments décoratifs flottants.
+
+Repris avec nos propres codes, pas une copie : un voile sombre uniforme (`bg-ink-900/65`) remplace le panneau clair — vérifié par échantillonnage réel des pixels de l'image sur dix bandes de hauteur, il garantit au moins 5:1 de contraste pour chaque couleur de texte utilisée, sur toute la hauteur de l'image (voir l'entrée du dessus pour l'origine de l'image). Le titre et le texte sont centrés. Quatre pastilles flottantes reprennent nos propres icônes et les quatre types d'échange du produit (mentorat, revue de code, pair programming, projet commun) — pas de logos ou d'autocollants empruntés à qui que ce soit.
+
+**Un bug trouvé en testant le responsive, pas seulement l'écran large.** Les pastilles flottantes étaient prévues à partir de `md:` (768 px). À cette largeur et jusqu'à `lg` (1024 px), le texte centré est déjà large (`max-w-3xl`) et ne laisse qu'une centaine de pixels de chaque côté — trop étroit pour une pastille d'environ 170 px, qui chevauchait alors le titre. Calcul refait pour trouver le seuil réel (le vide latéral ne dépasse la largeur d'une pastille qu'à partir d'environ 1216 px) : seuil remonté à `xl:` (1280 px). Sur mobile et tablette, les pastilles restent simplement masquées — c'est la ligne de texte sous les boutons (mêmes quatre libellés, sans décor) qui porte l'information à ces tailles.
+
+**Pourquoi ne pas avoir pris des chiffres réels en repère de crédibilité** (le site de référence affiche « +50 000 participants attendus »). Nos seules données sont les profils de démonstration (`seed_demo`), explicitement marqués comme tels sur chaque carte. Les présenter comme un indicateur d'usage réel aurait été trompeur sur un projet noté. La bannière s'en tient donc aux quatre types d'échange, une information vraie et vérifiable par n'importe qui sur le produit lui-même.

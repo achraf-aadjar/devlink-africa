@@ -30,7 +30,7 @@ export default function CountriesPage() {
       {data && <AfricaTileMap countries={data.results} />}
 
       {data && data.results.length > 0 && (
-        <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+        <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
           {data.results.map((country) => (
             <Card as="li" key={country.code} className="p-0">
               <Link

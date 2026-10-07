@@ -21,6 +21,7 @@ import PrivacyPage from '../pages/PrivacyPage'
 import Layout from './Layout'
 import RequireAuth from './RequireAuth'
 import StandardPage from './StandardPage'
+import WidePage from './WidePage'
 
 export default function AppRoutes() {
   return (
@@ -29,24 +30,18 @@ export default function AppRoutes() {
         {/* Accueil seul : pas de largeur imposée, pour une bannière pleine largeur. */}
         <Route index element={<HomePage />} />
 
-        {/* Toutes les autres pages : largeur de lecture standard, via StandardPage. */}
+        {/* Pages de lecture : formulaires, détail d'un seul élément. */}
         <Route element={<StandardPage />}>
           <Route path="inscription" element={<RegisterPage />} />
           <Route path="connexion" element={<LoginPage />} />
           <Route path="confidentialite" element={<PrivacyPage />} />
           <Route path="design" element={<DesignSystemPage />} />
-          <Route path="recherche" element={<SearchPage />} />
           <Route path="developpeurs/:id" element={<PublicProfilePage />} />
-          <Route path="pays" element={<CountriesPage />} />
-          <Route path="pays/:code" element={<CountryDetailPage />} />
-          <Route path="projets" element={<ProjectsPage />} />
 
           {/* Routes privées */}
           <Route element={<RequireAuth />}>
-            <Route path="tableau-de-bord" element={<DashboardPage />} />
             <Route path="profil" element={<ProfilePage />} />
             <Route path="competences" element={<SkillsPage />} />
-            <Route path="matchs" element={<MatchesPage />} />
             <Route path="matchs/:id" element={<MatchDetailPage />} />
             <Route path="echanges" element={<ExchangesPage />} />
             <Route path="projets/nouveau" element={<ProjectFormPage />} />
@@ -57,6 +52,20 @@ export default function AppRoutes() {
           <Route path="projets/:id" element={<ProjectDetailPage />} />
 
           <Route path="*" element={<NotFoundPage />} />
+        </Route>
+
+        {/* Pages à grille dense : plus de largeur pour que les cartes s'étalent
+            sur grand écran au lieu de laisser deux bandes vides. */}
+        <Route element={<WidePage />}>
+          <Route path="recherche" element={<SearchPage />} />
+          <Route path="pays" element={<CountriesPage />} />
+          <Route path="pays/:code" element={<CountryDetailPage />} />
+          <Route path="projets" element={<ProjectsPage />} />
+
+          <Route element={<RequireAuth />}>
+            <Route path="tableau-de-bord" element={<DashboardPage />} />
+            <Route path="matchs" element={<MatchesPage />} />
+          </Route>
         </Route>
       </Route>
     </Routes>
