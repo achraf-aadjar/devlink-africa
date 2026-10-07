@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, type ReactNode } from 'react'
+import Icon from '../icons/Icon'
 
 interface ModalProps {
   open: boolean
@@ -66,15 +67,7 @@ export default function Modal({ open, title, onClose, children }: ModalProps) {
             aria-label="Fermer la fenêtre"
             className="rounded p-1 text-ink-500 hover:bg-ink-100 hover:text-ink-800"
           >
-            <svg
-              viewBox="0 0 24 24"
-              className="h-5 w-5"
-              aria-hidden="true"
-              fill="none"
-              stroke="currentColor"
-            >
-              <path strokeWidth="2" strokeLinecap="round" d="M6 6l12 12M18 6L6 18" />
-            </svg>
+            <Icon name="close" size={20} />
           </button>
         </div>
         {children}

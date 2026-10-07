@@ -1,25 +1,33 @@
 import { useState } from 'react'
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
+import Icon, { type IconName } from '../components/icons/Icon'
+import Logo from '../components/icons/Logo'
 import { Button } from '../components/ui'
 import { useAuth } from '../features/auth/hooks/useAuth'
 import { cn } from '../lib/cn'
 
-const PRIVATE_LINKS = [
-  { to: '/tableau-de-bord', label: 'Tableau de bord' },
-  { to: '/competences', label: 'Compétences' },
-  { to: '/matchs', label: 'Matchs' },
-  { to: '/echanges', label: 'Échanges' },
+interface NavLinkItem {
+  to: string
+  label: string
+  icon: IconName
+}
+
+const PRIVATE_LINKS: NavLinkItem[] = [
+  { to: '/tableau-de-bord', label: 'Tableau de bord', icon: 'dashboard' },
+  { to: '/competences', label: 'Compétences', icon: 'skill' },
+  { to: '/matchs', label: 'Matchs', icon: 'match' },
+  { to: '/echanges', label: 'Échanges', icon: 'exchange' },
 ]
 
-const PUBLIC_LINKS = [
-  { to: '/recherche', label: 'Recherche' },
-  { to: '/projets', label: 'Projets' },
-  { to: '/pays', label: 'Pays' },
+const PUBLIC_LINKS: NavLinkItem[] = [
+  { to: '/recherche', label: 'Recherche', icon: 'search' },
+  { to: '/projets', label: 'Projets', icon: 'project' },
+  { to: '/pays', label: 'Pays', icon: 'country' },
 ]
 
 const linkClass = ({ isActive }: { isActive: boolean }) =>
   cn(
-    'block rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+    'flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
     isActive ? 'bg-accent-50 text-accent-800' : 'text-ink-700 hover:bg-ink-100',
   )
 
@@ -46,8 +54,8 @@ export default function Layout() {
 
       <header className="border-b border-ink-200 bg-white">
         <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3">
-          <Link to="/" className="text-lg font-bold text-ink-900">
-            DevLink <span className="text-accent-600">Africa</span>
+          <Link to="/" className="text-ink-900" aria-label="DevLink Africa, accueil">
+            <Logo size={26} />
           </Link>
 
           <nav
@@ -56,6 +64,7 @@ export default function Layout() {
           >
             {links.map((link) => (
               <NavLink key={link.to} to={link.to} className={linkClass}>
+                <Icon name={link.icon} size={17} />
                 {link.label}
               </NavLink>
             ))}
@@ -65,9 +74,11 @@ export default function Layout() {
             {isAuthenticated ? (
               <>
                 <NavLink to="/profil" className={linkClass}>
+                  <Icon name="profile" size={17} />
                   {user?.full_name || 'Mon profil'}
                 </NavLink>
                 <Button variant="ghost" size="sm" onClick={handleSignOut}>
+                  <Icon name="logout" size={16} />
                   Se déconnecter
                 </Button>
               </>

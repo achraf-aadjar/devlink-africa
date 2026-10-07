@@ -201,3 +201,28 @@ Chaque règle a été vérifiée sur un fichier d'essai contenant les six fautes
 **Pour l'activer**, il suffit de renseigner `AI_ENABLED=True` et `AI_API_KEY` dans l'environnement. La clé n'est jamais dans le dépôt, et un test vérifie qu'elle part en en-tête HTTP, pas dans le corps de la requête.
 
 **Pour la démonstration devant le jury** : le parcours des huit étapes ne passe par aucune fonction d'IA. Elles sont un complément, montrable si la clé est en place, parfaitement omissible sinon.
+
+
+---
+
+## 2026-10-07 — Identité visuelle dessinée par nous
+
+**Décision.** Logo, favicon, 30 icônes et 3 motifs d'arrière-plan, tous écrits à la main en SVG. Aucune bibliothèque d'icônes, aucune image bitmap, aucune police chargée.
+
+**Le symbole.** Deux anneaux qui se recouvrent, et leur intersection comme troisième forme. C'est l'idée exacte du produit : la complémentarité réciproque, ni l'un ni l'autre seul, mais ce qu'ils produisent ensemble.
+
+Nous avons écarté les clichés visuels sur l'Afrique (acacia, contour du continent, masque). Un cliché dit « Afrique » mais ne dit rien du produit, et vieillit mal. Une forme géométrique abstraite reste lisible à 16 pixels, se décline en monochrome, et ne ressemble à aucun logo existant.
+
+**Trois essais pour l'icône `match`.** C'est l'icône du cœur du produit, donc celle qui méritait le plus de travail :
+
+1. Deux formes qui s'emboîtent par des arcs — illisible, les arcs se replient sur eux-mêmes.
+2. Deux pièces de puzzle — illisible à 20 px, trop de détails.
+3. **Deux cercles qui se croisent** — retenue : se lit immédiatement, à toutes les tailles.
+
+C'est la leçon du travail d'icône : la densité est l'ennemie de la lisibilité. Une forme simple bien cadrée vaut mieux qu'une métaphore riche illisible.
+
+**La cohérence du jeu** vient d'une discipline, pas du talent de chaque dessin : même grille de 24 unités, même trait de 1,75, mêmes extrémités arrondies, et une marge optique de 2 unités sur chaque bord. Deux tests automatiques le vérifient : aucune coordonnée absolue hors de la grille, et aucun remplissage dans les tracés.
+
+**Les motifs d'arrière-plan** sont volontairement presque invisibles (opacité de 0,06 à 0,10). Un fond qui se remarque nuit au texte posé dessus. Un test vérifie que l'opacité ne dépasse jamais 0,15.
+
+**Pourquoi pas un générateur d'images.** Trois raisons. La licence : les images produites par un modèle génératif sont un terrain juridique flou, et l'article 6 interdit tout composant sans licence claire. Le format : du SVG écrit à la main est du code source, donc couvert par l'originalité du projet. Le poids : nos 30 icônes ajoutent 4 ko au build, là où un jeu d'images en pèserait plusieurs centaines.

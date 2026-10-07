@@ -1,3 +1,7 @@
+import Icon from '../components/icons/Icon'
+import { LogoMark } from '../components/icons/Logo'
+import { ICON_NAMES } from '../components/icons/paths'
+import { DotsPattern, RingsPattern, WeavePattern } from '../components/icons/Patterns'
 import {
   Badge,
   Button,
@@ -20,6 +24,86 @@ export default function DesignSystemPage() {
           chauds, des polices système.
         </p>
       </header>
+
+      <section aria-labelledby="marque" className="flex flex-col gap-3">
+        <h2 id="marque" className="text-lg font-semibold text-ink-800">
+          La marque
+        </h2>
+        <p className="text-sm text-ink-600">
+          Deux anneaux qui se recouvrent : la complémentarité réciproque, le cœur du produit. Leur
+          intersection est ce que les deux personnes produisent ensemble.
+        </p>
+        <div className="flex flex-wrap items-end gap-8">
+          {[64, 44, 32, 20, 16].map((size) => (
+            <div key={size} className="text-center">
+              <LogoMark size={size} />
+              <p className="mt-2 text-xs text-ink-500">{size} px</p>
+            </div>
+          ))}
+          <div className="text-center">
+            <div className="rounded-lg bg-ink-800 p-3">
+              <LogoMark size={44} variant="mono" className="text-accent-100" />
+            </div>
+            <p className="mt-2 text-xs text-ink-500">sur fond sombre</p>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="icones" className="flex flex-col gap-3">
+        <h2 id="icones" className="text-lg font-semibold text-ink-800">
+          Icônes
+        </h2>
+        <p className="text-sm text-ink-600">
+          {ICON_NAMES.length} icônes dessinées sur la même grille : trait de 1,75 unité, extrémités
+          arrondies, marge optique de 2 unités. Elles suivent la couleur du texte qui les entoure.
+        </p>
+        <ul className="grid grid-cols-3 gap-3 sm:grid-cols-5 lg:grid-cols-6">
+          {ICON_NAMES.map((name) => (
+            <li
+              key={name}
+              className="flex flex-col items-center gap-2 rounded-lg border border-ink-200 bg-white p-3"
+            >
+              <Icon name={name} size={24} />
+              <code className="text-center text-[0.65rem] leading-tight text-ink-500">{name}</code>
+            </li>
+          ))}
+        </ul>
+        <div className="flex flex-wrap items-center gap-4">
+          <span className="flex items-center gap-2 text-sm text-accent-700">
+            <Icon name="match" size={18} /> héritent de la couleur
+          </span>
+          <span className="flex items-center gap-2 text-sm text-red-700">
+            <Icon name="warning" size={18} /> sans réglage
+          </span>
+          <span className="flex items-center gap-2 text-sm text-emerald-800">
+            <Icon name="check" size={18} /> ni duplication
+          </span>
+        </div>
+      </section>
+
+      <section aria-labelledby="motifs" className="flex flex-col gap-3">
+        <h2 id="motifs" className="text-lg font-semibold text-ink-800">
+          Motifs d'arrière-plan
+        </h2>
+        <p className="text-sm text-ink-600">
+          Un fond ne doit jamais se remarquer : s'il attire l'œil, il nuit au texte posé dessus.
+          D'où ces opacités très basses.
+        </p>
+        <div className="grid gap-4 sm:grid-cols-3">
+          <RingsPattern className="rounded-card border border-ink-200 p-5">
+            <p className="text-sm font-medium text-ink-800">Anneaux</p>
+            <p className="text-xs text-ink-600">Page d'accueil</p>
+          </RingsPattern>
+          <WeavePattern className="rounded-card border border-ink-200 p-5">
+            <p className="text-sm font-medium text-ink-800">Tissage</p>
+            <p className="text-xs text-ink-600">En-tête du score</p>
+          </WeavePattern>
+          <DotsPattern className="rounded-card border border-ink-200 p-5">
+            <p className="text-sm font-medium text-ink-800">Points</p>
+            <p className="text-xs text-ink-600">Cartes de projet</p>
+          </DotsPattern>
+        </div>
+      </section>
 
       <section aria-labelledby="couleurs" className="flex flex-col gap-3">
         <h2 id="couleurs" className="text-lg font-semibold text-ink-800">

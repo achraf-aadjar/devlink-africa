@@ -121,7 +121,21 @@ Ces paquets ont été évalués puis refusés. C'est une part du travail de conf
 
 ## Polices, icônes et éléments graphiques
 
-**Aucune ressource tierce.** Les polices sont celles du système (`system-ui`), les icônes sont des SVG écrits par nous, les drapeaux sont des emoji du système, et la carte de l'Afrique est une grille dessinée par nous. Il n'y a donc aucune licence graphique à déclarer.
+**Aucune ressource tierce. Tout a été dessiné pour le concours.**
+
+| Élément | Où | Détail |
+|---|---|---|
+| Logo | `frontend/src/components/icons/Logo.tsx` | Deux anneaux qui se recouvrent, en SVG. Versions couleur, monochrome et horizontale. |
+| Favicon | `frontend/public/favicon.svg` | Même marque, trait épaissi pour rester lisible à 16 px. |
+| 30 icônes | `frontend/src/components/icons/paths.ts` | Même grille de 24 unités, trait de 1,75. Aucune bibliothèque d'icônes. |
+| 3 motifs de fond | `frontend/src/components/icons/Patterns.tsx` | Anneaux, tissage, points. SVG répétables, opacité de 0,06 à 0,10. |
+| Carte de l'Afrique | `frontend/src/features/countries/components/AfricaTileMap.tsx` | Grille de 54 tuiles. Aucune donnée cartographique importée. |
+| Drapeaux | `frontend/src/lib/labels.ts` | Emoji du système, construits depuis le code pays. |
+| Polices | `frontend/tailwind.config.js` | `system-ui` uniquement : aucune police chargée. |
+
+Aucune licence graphique à déclarer : tous ces éléments sont du code source écrit par l'équipe (art. 6 et 11).
+
+**Bibliothèques d'icônes écartées** : `lucide-react` était autorisé par notre cahier, mais nous ne l'avons pas ajouté. Dessiner nos icônes évite une dépendance à vérifier, allège le build, et donne un jeu propre au produit.
 
 ## Code préexistant
 
