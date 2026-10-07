@@ -71,6 +71,7 @@ INSTALLED_APPS = [
     "exchanges",
     "matching",
     "search",
+    "ai",
     "reports",
     "core",
 ]
@@ -203,6 +204,8 @@ REST_FRAMEWORK = {
         "auth": "5/minute",
         # Signalements : plafond journalier pour éviter le détournement (DL-32).
         "reports": "10/day",
+        # Fonctions d'IA : limite par utilisateur, en plus du plafond global.
+        "ai": "20/hour",
     },
 }
 
@@ -239,6 +242,18 @@ SPECTACULAR_SETTINGS = {
 
 API_VERSION = SPECTACULAR_SETTINGS["VERSION"]
 
+# --- Fonctions d'IA (DL-41, DL-43) -----------------------------------------
+# Désactivées par défaut : le produit doit fonctionner entièrement sans elles.
+# La clé vit dans l'environnement, jamais dans le dépôt.
+AI_ENABLED = env_bool("AI_ENABLED", False)
+AI_API_KEY = os.environ.get("AI_API_KEY", "")
+AI_BASE_URL = os.environ.get("AI_BASE_URL", "https://api.anthropic.com")
+AI_MODEL = os.environ.get("AI_MODEL", "claude-haiku-4-5-20251001")
+AI_TIMEOUT = float(os.environ.get("AI_TIMEOUT", 12))
+# Plafond journalier (DL-41) : un dépassement renvoie au chemin classique,
+# jamais une erreur pour l'utilisateur.
+AI_DAILY_LIMIT = int(os.environ.get("AI_DAILY_LIMIT", 200))
+
 # --- Journalisation ---------------------------------------------------------
 # Format simple et lisible. Règle 6 du cahier : ni mot de passe, ni jeton, ni
 # adresse e-mail en clair. Le journal d'audit remplace l'adresse par une
@@ -260,6 +275,8 @@ LOGGING = {
         # Audit des actions sensibles : connexion échouée, suppression de
         # compte, signalement. Toujours conservé, même en production.
         "accounts.audit": {"handlers": ["console"], "level": "INFO", "propagate": False},
+        # Journal des appels d'IA (DL-43) : volumétrie et échecs, sans contenu.
+        "ai.calls": {"handlers": ["console"], "level": "INFO", "propagate": False},
         "django.db.backends": {"level": "WARNING"},
     },
 }

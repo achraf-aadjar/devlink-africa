@@ -12,6 +12,7 @@ api_v1 = [
     path("", include("projects.urls")),
     path("", include("reports.urls")),
     path("", include("search.urls")),
+    path("", include("ai.urls")),
 ]
 
 urlpatterns = [
