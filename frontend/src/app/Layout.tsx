@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import Icon, { type IconName } from '../components/icons/Icon'
 import Logo from '../components/icons/Logo'
+import PageContainer from '../components/PageContainer'
 import { Button } from '../components/ui'
 import { useAuth } from '../features/auth/hooks/useAuth'
 import { cn } from '../lib/cn'
@@ -53,7 +54,7 @@ export default function Layout() {
       </a>
 
       <header className="border-b border-ink-200 bg-white">
-        <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3">
+        <PageContainer className="flex items-center gap-3 py-3">
           <Link to="/" className="text-ink-900" aria-label="DevLink Africa, accueil">
             <Logo size={26} />
           </Link>
@@ -112,7 +113,7 @@ export default function Layout() {
               <path strokeWidth="2" strokeLinecap="round" d="M4 7h16M4 12h16M4 17h16" />
             </svg>
           </button>
-        </div>
+        </PageContainer>
 
         {menuOpen && (
           <nav
@@ -163,12 +164,15 @@ export default function Layout() {
         )}
       </header>
 
-      <main id="contenu" className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
+      {/* Plus de max-w ici : chaque page décide de sa propre largeur via
+          PageContainer, pour pouvoir poser des sections pleine largeur
+          (bannière, fond de section) sans que ça devienne la norme partout. */}
+      <main id="contenu" className="flex-1 bg-ink-50">
         <Outlet />
       </main>
 
       <footer className="border-t border-ink-200 bg-white">
-        <div className="mx-auto flex max-w-6xl flex-col items-center gap-2 px-4 py-6 text-sm text-ink-600 sm:flex-row sm:justify-between">
+        <PageContainer className="flex flex-col items-center gap-2 py-6 text-sm text-ink-600 sm:flex-row sm:justify-between">
           <p>DevLink Africa — échange de compétences entre développeurs africains.</p>
           <nav aria-label="Liens secondaires" className="flex gap-4">
             <Link to="/confidentialite" className="underline hover:text-accent-700">
@@ -178,7 +182,7 @@ export default function Layout() {
               Design system
             </Link>
           </nav>
-        </div>
+        </PageContainer>
       </footer>
     </div>
   )

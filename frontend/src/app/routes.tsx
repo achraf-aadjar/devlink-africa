@@ -20,39 +20,44 @@ import NotFoundPage from '../pages/NotFoundPage'
 import PrivacyPage from '../pages/PrivacyPage'
 import Layout from './Layout'
 import RequireAuth from './RequireAuth'
+import StandardPage from './StandardPage'
 
 export default function AppRoutes() {
   return (
     <Routes>
       <Route element={<Layout />}>
-        {/* Routes publiques */}
+        {/* Accueil seul : pas de largeur imposée, pour une bannière pleine largeur. */}
         <Route index element={<HomePage />} />
-        <Route path="inscription" element={<RegisterPage />} />
-        <Route path="connexion" element={<LoginPage />} />
-        <Route path="confidentialite" element={<PrivacyPage />} />
-        <Route path="design" element={<DesignSystemPage />} />
-        <Route path="recherche" element={<SearchPage />} />
-        <Route path="developpeurs/:id" element={<PublicProfilePage />} />
-        <Route path="pays" element={<CountriesPage />} />
-        <Route path="pays/:code" element={<CountryDetailPage />} />
-        <Route path="projets" element={<ProjectsPage />} />
 
-        {/* Routes privées */}
-        <Route element={<RequireAuth />}>
-          <Route path="tableau-de-bord" element={<DashboardPage />} />
-          <Route path="profil" element={<ProfilePage />} />
-          <Route path="competences" element={<SkillsPage />} />
-          <Route path="matchs" element={<MatchesPage />} />
-          <Route path="matchs/:id" element={<MatchDetailPage />} />
-          <Route path="echanges" element={<ExchangesPage />} />
-          <Route path="projets/nouveau" element={<ProjectFormPage />} />
-          <Route path="projets/:id/modifier" element={<ProjectFormPage />} />
+        {/* Toutes les autres pages : largeur de lecture standard, via StandardPage. */}
+        <Route element={<StandardPage />}>
+          <Route path="inscription" element={<RegisterPage />} />
+          <Route path="connexion" element={<LoginPage />} />
+          <Route path="confidentialite" element={<PrivacyPage />} />
+          <Route path="design" element={<DesignSystemPage />} />
+          <Route path="recherche" element={<SearchPage />} />
+          <Route path="developpeurs/:id" element={<PublicProfilePage />} />
+          <Route path="pays" element={<CountriesPage />} />
+          <Route path="pays/:code" element={<CountryDetailPage />} />
+          <Route path="projets" element={<ProjectsPage />} />
+
+          {/* Routes privées */}
+          <Route element={<RequireAuth />}>
+            <Route path="tableau-de-bord" element={<DashboardPage />} />
+            <Route path="profil" element={<ProfilePage />} />
+            <Route path="competences" element={<SkillsPage />} />
+            <Route path="matchs" element={<MatchesPage />} />
+            <Route path="matchs/:id" element={<MatchDetailPage />} />
+            <Route path="echanges" element={<ExchangesPage />} />
+            <Route path="projets/nouveau" element={<ProjectFormPage />} />
+            <Route path="projets/:id/modifier" element={<ProjectFormPage />} />
+          </Route>
+
+          {/* Après les routes privées : « nouveau » ne doit pas être lu comme un identifiant. */}
+          <Route path="projets/:id" element={<ProjectDetailPage />} />
+
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
-
-        {/* Après les routes privées : « nouveau » ne doit pas être lu comme un identifiant. */}
-        <Route path="projets/:id" element={<ProjectDetailPage />} />
-
-        <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
   )

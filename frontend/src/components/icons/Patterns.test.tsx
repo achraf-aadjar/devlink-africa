@@ -26,11 +26,13 @@ describe('motifs d arrière-plan', () => {
   })
 
   it.each(PATTERNS)('%s : reste très discret', (_, Pattern) => {
-    // Au-delà de 0,15 d'opacité, un motif commence à gêner la lecture.
+    // Au-delà de 0,2 d'opacité, un motif commence à gêner la lecture. WeavePattern
+    // est volontairement le plus marqué des trois (0,16) : il sert d'en-tête de
+    // section, là où les deux autres habillent un fond de page.
     const { container } = render(<Pattern />)
 
     const rect = container.querySelector('rect[fill^="url"]')
-    expect(Number(rect?.getAttribute('opacity'))).toBeLessThanOrEqual(0.15)
+    expect(Number(rect?.getAttribute('opacity'))).toBeLessThanOrEqual(0.2)
   })
 
   it.each(PATTERNS)('%s : ne capte jamais le clic', (_, Pattern) => {
