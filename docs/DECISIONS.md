@@ -270,3 +270,20 @@ Repris avec nos propres codes, pas une copie : un voile sombre uniforme (`bg-ink
 **Un bug trouvé en testant le responsive, pas seulement l'écran large.** Les pastilles flottantes étaient prévues à partir de `md:` (768 px). À cette largeur et jusqu'à `lg` (1024 px), le texte centré est déjà large (`max-w-3xl`) et ne laisse qu'une centaine de pixels de chaque côté — trop étroit pour une pastille d'environ 170 px, qui chevauchait alors le titre. Calcul refait pour trouver le seuil réel (le vide latéral ne dépasse la largeur d'une pastille qu'à partir d'environ 1216 px) : seuil remonté à `xl:` (1280 px). Sur mobile et tablette, les pastilles restent simplement masquées — c'est la ligne de texte sous les boutons (mêmes quatre libellés, sans décor) qui porte l'information à ces tailles.
 
 **Pourquoi ne pas avoir pris des chiffres réels en repère de crédibilité** (le site de référence affiche « +50 000 participants attendus »). Nos seules données sont les profils de démonstration (`seed_demo`), explicitement marqués comme tels sur chaque carte. Les présenter comme un indicateur d'usage réel aurait été trompeur sur un projet noté. La bannière s'en tient donc aux quatre types d'échange, une information vraie et vérifiable par n'importe qui sur le produit lui-même.
+
+---
+
+## 2026-10-07 — Project Hub : un vrai lien vers le dépôt, pas un hébergement de code
+
+**Demande d'Achraf.** « Je veux comme GitHub et GitLab, les gens peuvent mettre leur projet et le modifier, un emplacement réel pour leurs projets. »
+
+**Ce qui existait déjà.** Le modèle `Project` a toujours eu `repo_url` et `demo_url` (DL-16/17), et la création/modification d'un projet fonctionnait déjà de bout en bout (`ProjectFormPage`, CRUD complet côté API). Le problème n'était donc pas fonctionnel : c'était que les cartes et la page de détail ne montraient presque rien de ce lien, et que les données de démonstration n'en avaient aucun — un projet avait l'air d'une fiche passive, pas d'un vrai dépôt qu'on consulte.
+
+**Ce que nous n'avons pas fait : héberger du code.** Reproduire GitHub/GitLab — stockage Git, navigateur de fichiers, commits, branches — est un produit à part entière, sans rapport avec le nôtre (un outil de mise en relation par compétences) ni avec le temps disponible avant la soutenance. Ça aurait aussi tout changé à l'architecture déjà construite et testée. DevLink Africa **renvoie** vers le vrai dépôt (GitHub, GitLab, ailleurs) plutôt que de le remplacer — comme le fait la quasi-totalité des plateformes de ce genre (Product Hunt, Devpost) : montrer le projet, pas l'héberger.
+
+**Ce que nous avons fait : que ce lien soit réel et visible.**
+- Carte de projet : icône, lien du dépôt affiché en clair (`github.com/org/projet`, raccourci avec `shortenUrl`), date de dernière mise à jour.
+- Page de détail : « Dépôt du code » et « Démonstration en ligne » promus en boutons bien visibles à côté de Modifier/Supprimer, plutôt qu'en liens discrets enterrés en bas de page ; ligne de métadonnées (création, mise à jour, compteurs).
+- Vérifié de bout en bout en conditions réelles (pas seulement en lisant le code) : connexion avec un compte de démonstration, modification d'un projet existant avec une vraie URL GitHub, et re-consultation de la carte et de la page de détail pour confirmer l'affichage.
+
+**Pourquoi aucune URL de dépôt n'est ajoutée aux projets de démonstration dans `seed_demo`.** Inventer des adresses GitHub plausibles mais fictives aurait affiché des liens morts (page 404) au moindre clic pendant une démonstration — un détail qui se remarque. Le champ reste vide pour ces projets, comme avant ; la fonctionnalité se prouve en l'utilisant (ci-dessus), pas en la simulant avec de fausses données.
