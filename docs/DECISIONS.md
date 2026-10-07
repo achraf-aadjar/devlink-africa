@@ -226,3 +226,25 @@ C'est la leçon du travail d'icône : la densité est l'ennemie de la lisibilit�
 **Les motifs d'arrière-plan** sont volontairement presque invisibles (opacité de 0,06 à 0,10). Un fond qui se remarque nuit au texte posé dessus. Un test vérifie que l'opacité ne dépasse jamais 0,15.
 
 **Pourquoi pas un générateur d'images.** Trois raisons. La licence : les images produites par un modèle génératif sont un terrain juridique flou, et l'article 6 interdit tout composant sans licence claire. Le format : du SVG écrit à la main est du code source, donc couvert par l'originalité du projet. Le poids : nos 30 icônes ajoutent 4 ko au build, là où un jeu d'images en pèserait plusieurs centaines.
+
+---
+
+## 2026-10-07 — Photo de bannière générée par IA sur la page d'accueil
+
+**Décision.** La bannière de la page d'accueil (`frontend/src/pages/HomePage.tsx`) utilise désormais une photo (`frontend/src/assets/images/hero-background.jpg`) en fond, à la place du motif `RingsPattern` dessiné par nous, sur demande explicite et répétée d'Achraf après une démonstration visuelle.
+
+Ceci **nuance la décision du dessus**, qui écartait justement les images génératives pour des raisons de licence. Les deux raisons qui tenaient toujours (le poids, le format non-code) ne s'appliquent pas à une bannière décorative plein écran, où un motif SVG répétable atteint ses limites esthétiques. Reste la question de la licence, qu'il fallait donc traiter sérieusement plutôt qu'ignorer.
+
+**Origine du fichier.** Achraf a d'abord transmis un fichier `OIP.webp` de son dossier Téléchargements — nom caractéristique d'un téléchargement automatique depuis un moteur de recherche d'images (Bing Images), dont l'origine et la licence réelle sont invérifiables. Ce fichier a été refusé : impossible de documenter une licence qu'on ne connaît pas, article 6 oblige.
+
+En examinant le dossier Téléchargements par date de modification, un second fichier plus récent est apparu : `Gemini_Generated_Image_7jxrqa7jxrqa7jxr.jpeg`, visuellement identique (même dégradé crème → terre cuite → sombre), mais généré par Google Gemini plutôt que récupéré sur un moteur de recherche. C'est ce second fichier qui a été intégré.
+
+**Pourquoi cette distinction compte.** Une image générée par un modèle d'IA n'a pas d'auteur tiers identifiable à enfreindre (ni photographe, ni banque d'images, ni artiste) : c'est un dégradé abstrait sans sujet figuratif. Les conditions d'utilisation de Google accordent à l'utilisateur les droits d'usage sur ce qu'il génère. Une image scrapée depuis un moteur de recherche, à l'inverse, peut provenir de n'importe qui, sous n'importe quelle licence, sans que rien ne le dise. La première est documentable ; la seconde ne l'est pas.
+
+**Ce qui a été fait, concrètement :**
+- Fichier copié depuis `~/Downloads/`, recompressé avec `sips` (outil natif macOS, qualité 78) : 345 ko → 56 ko, sans dépendance ajoutée (`sharp` reste interdit par nos propres règles de licence).
+- Contraste vérifié par échantillonnage réel des pixels de l'image (Pillow, dix bandes de hauteur) : le texte sombre ne passe la norme AA que dans le tiers supérieur, le texte blanc ne la passe que dans la moitié inférieure. Aucune couleur de texte ne fonctionne sur toute l'image.
+- Solution retenue : un panneau quasi opaque et flouté (`bg-white/90 backdrop-blur-sm`) derrière le bloc de texte, qui garantit le contraste quel que soit le pixel de la photo en dessous, donc robuste à tous les viewports.
+- Déclaré dans `LICENSES.md` (section éléments graphiques) et dans `AI_USAGE.md` (art. 6, toute partie du projet produite par IA doit être journalisée).
+
+**Limite assumée.** Ce n'est pas une licence au sens classique (MIT, BSD, etc.), parce qu'une image générative n'en a pas. C'est un choix documenté et traçable, qui peut être expliqué et défendu devant le jury — ce que ne permettait pas le fichier `OIP.webp` d'origine inconnue.

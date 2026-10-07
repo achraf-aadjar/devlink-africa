@@ -14,10 +14,17 @@ import { cn } from '../../lib/cn'
  */
 
 /**
- * Trame d'anneaux entrelacés : le motif de la marque. Pensée pour habiller une
- * bannière pleine largeur, donc elle prend toute la hauteur et la largeur de
- * son conteneur — c'est à l'appelant de donner une hauteur au conteneur (une
- * bannière, pas un paragraphe).
+ * Trame d'anneaux entrelacés sur un dégradé chaleureux : le motif de la marque,
+ * posé sur la même progression crème → terre cuite qui traverse toute notre
+ * palette. Pensée pour habiller une bannière pleine largeur, donc elle prend
+ * toute la hauteur et la largeur de son conteneur — c'est à l'appelant de
+ * donner une hauteur au conteneur (une bannière, pas un paragraphe).
+ *
+ * Le dégradé s'arrête à accent-400 : chaque palier de accent-50 à accent-400
+ * garde un contraste d'au moins 4,5:1 avec notre texte ink-900 (vérifié), ce
+ * qui permet au titre et aux boutons de rester lisibles sur toute la hauteur
+ * sans aucun réglage de couleur au cas par cas. accent-500 descend sous ce
+ * seuil, d'où l'arrêt à 400.
  */
 export function RingsPattern({
   children,
@@ -27,7 +34,12 @@ export function RingsPattern({
   className?: string
 }) {
   return (
-    <div className={cn('relative isolate overflow-hidden bg-accent-50', className)}>
+    <div
+      className={cn(
+        'relative isolate overflow-hidden bg-gradient-to-b from-accent-50 via-accent-200 to-accent-400',
+        className,
+      )}
+    >
       <svg
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 h-full w-full"
