@@ -297,3 +297,23 @@ Repris avec nos propres codes, pas une copie : un voile sombre uniforme (`bg-ink
 **Pourquoi ce n'est pas vu comme du travail perdu.** Le reste de ce qui avait été construit avec la photo tient sans elle : mise en page centrée, pastilles flottantes avec nos icônes, mot clé en couleur, bouton d'action — tout ça reste, seules les couleurs changent (texte sombre sur blanc plutôt que texte blanc sur fond sombre). C'est la même leçon que les trois essais de l'icône `match` ou le premier panneau clair en coin de bannière : le jugement visuel se fait en le voyant construit, pas en l'imaginant à l'avance, et le reconstruire une fois de plus ne coûte presque rien grâce aux pièces déjà en place (`PageContainer`, les icônes, `Button`).
 
 **Traçabilité.** `LICENSES.md` ne liste plus cette image (elle n'est plus dans le dépôt). `AI_USAGE.md` garde la ligne du 2026-10-07 avec une mention du retrait le jour même : la règle 3 du concours demande de déclarer tout usage d'IA, y compris celui qui n'a pas survécu à la relecture visuelle.
+
+---
+
+## 2026-10-07 — Correction : la photo revient, mais en clair (pas retirée)
+
+**Malentendu, corrigé le jour même.** « Design blanc » a été compris comme « retirer la photo ». Ce n'était pas ça : Achraf voulait garder la photo qu'il avait envoyée, seulement dans des teintes claires — c'est le voile **sombre** (bg-ink-900/65, entrée du 2026-10-07 plus haut) qui posait problème, pas la photo elle-même.
+
+**Correction.** La photo (`hero-background.jpg`, retirée puis restaurée depuis l'historique Git) revient en fond de bannière, mais sous un voile **blanc** (`bg-white/75`) plutôt que sombre : celui-ci éclaircit l'image au lieu de l'assombrir, y compris sa bande la plus sombre en bas. Revérifié par le même échantillonnage de pixels que la première fois : le contraste du texte sombre reste au-delà de 9:1 sur toute la hauteur (largement au-dessus du minimum AA de 4,5:1), avec une marge bien plus confortable qu'avec le voile sombre d'origine.
+
+**Leçon.** « Design blanc » peut vouloir dire « que du blanc » ou « des teintes claires » — deux choses différentes. Dans le doute sur un changement déjà fait une fois dans le mauvais sens, la bonne réaction est de redemander plutôt que de supposer que la seconde tentative confirme la première lecture.
+
+---
+
+## 2026-10-07 — Petite reprise visuelle du Project Hub
+
+**Décision.** Le style des cartes et de la page de détail d'un projet ne plaisait pas à Achraf (sans détail précis donné). Plutôt que de deviner un seul point, reprise de l'ensemble avec un regard de design :
+
+- L'icône de dossier était dans un carré gris (`bg-ink-100`), terne et sans rapport avec le reste de l'identité visuelle qui n'utilise que la teinte terre cuite de la marque. Passée en `bg-accent-50` / `text-accent-600`, comme les badges « Étape » de l'accueil.
+- La ligne de séparation (`border-t`) avant le pied de carte (porteur, date) retirée : aucune autre carte du produit n'en a, et elle alourdissait la carte sans information supplémentaire.
+- `Card` gagne une prop `interactive` (légère élévation de l'ombre au survol) — pas seulement pour les projets : posée aussi sur les cartes de match, de pays et de résultat de recherche, qui mènent toutes à une page de détail mais ne le signalaient visuellement que par un lien textuel. Cohérence voulue : une carte qui mène quelque part réagit au survol, une carte qui ne mène nulle part (une carte d'échange, par exemple) n'y réagit pas.

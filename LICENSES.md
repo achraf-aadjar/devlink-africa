@@ -132,10 +132,9 @@ Ces paquets ont été évalués puis refusés. C'est une part du travail de conf
 | Carte de l'Afrique | `frontend/src/features/countries/components/AfricaTileMap.tsx` | Grille de 54 tuiles. Aucune donnée cartographique importée. |
 | Drapeaux | `frontend/src/lib/labels.ts` | Emoji du système, construits depuis le code pays. |
 | Polices | `frontend/tailwind.config.js` | `system-ui` uniquement : aucune police chargée. |
+| Photo de bannière (accueil) | `frontend/src/assets/images/hero-background.jpg` | Générée par Google Gemini (pas de photographe ni banque d'images tiers — image abstraite sans sujet figuratif). Justification complète, et l'aller-retour retrait/restauration du 2026-10-07, dans `docs/DECISIONS.md` et `AI_USAGE.md`. |
 
-Aucune licence graphique à déclarer : tous ces éléments sont du code source écrit par l'équipe (art. 6 et 11).
-
-Une photo générée par IA a brièvement servi de fond à la bannière d'accueil (2026-10-07), puis a été retirée le même jour au profit d'un design blanc. Elle ne fait plus partie du dépôt ; l'historique complet (origine, justification de licence envisagée, puis raison du retrait) reste dans `docs/DECISIONS.md` et `AI_USAGE.md`.
+Aucune licence graphique à déclarer pour le logo, le favicon, les icônes, les motifs, la carte et les drapeaux : ce sont tous des éléments de code source écrits par l'équipe (art. 6 et 11). La photo de bannière est la seule exception, documentée séparément faute de licence classique applicable à un contenu génératif.
 
 **Bibliothèques d'icônes écartées** : `lucide-react` était autorisé par notre cahier, mais nous ne l'avons pas ajouté. Dessiner nos icônes évite une dépendance à vérifier, allège le build, et donne un jeu propre au produit.
 

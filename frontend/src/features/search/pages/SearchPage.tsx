@@ -221,7 +221,7 @@ export default function SearchPage() {
               </p>
               <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {users.data.results.map((person) => (
-                  <Card as="li" key={person.id} className="flex flex-col gap-3">
+                  <Card as="li" key={person.id} interactive className="flex flex-col gap-3">
                     <div>
                       <h2 className="font-semibold text-ink-900">
                         <Link

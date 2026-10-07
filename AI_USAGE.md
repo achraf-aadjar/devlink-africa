@@ -31,7 +31,7 @@ Le jury évalue la **maîtrise du code par l'équipe, y compris du code génér�
 | 2026-10-07 | Claude Code (Anthropic) | Organisation de l'équipe | `docs/REPARTITION_TACHES.pdf` : répartition des 17 tâches restantes entre les trois membres, calendrier commun, points de vigilance. Document d'organisation, pas de code. | Achraf | à relire par les 3 |
 | 2026-10-07 | Claude Code (Anthropic) | Identité visuelle | Logo (deux anneaux qui se recouvrent), favicon, 30 icônes sur grille commune, 3 motifs d'arrière-plan. Tout en SVG écrit à la main : aucune bibliothèque d'icônes, aucune image, aucune police tierce. 27 tests. | Achraf | **à relire par Emmanuel** |
 | 2026-10-08 | Claude Code (Anthropic) | Documentation pour le jury | `docs/EXPLICATION_JURY.md`, `docs/demo.md`, `deploy/README.md` complet. | Achraf | **à relire par les 3** |
-| 2026-10-07 | Google Gemini | Photo de bannière de l'accueil | Image générée, a remplacé un temps le motif SVG en bannière. **Retirée le même jour** : Achraf voulait un design blanc, pas la teinte sombre de la photo. Détails dans `docs/DECISIONS.md` et `LICENSES.md`. | Achraf | à relire par les 3 |
+| 2026-10-07 | Google Gemini | Photo de bannière de l'accueil | Image générée, sert de fond à la bannière d'accueil sous un voile blanc (contraste du texte vérifié par échantillonnage de pixels). Retirée puis restaurée le même jour : le premier essai l'assombrissait, ce n'était pas ce qui était demandé. Détails dans `docs/DECISIONS.md` et `LICENSES.md`. | Achraf | à relire par les 3 |
 
 ## Ce que l'équipe doit relire en priorité
 

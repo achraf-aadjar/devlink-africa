@@ -16,11 +16,11 @@ export default function ProjectCard({ project }: { project: Project }) {
   const updated = formatRelativeDate(project.updated_at)
 
   return (
-    <Card as="li" className="flex flex-col gap-3">
+    <Card as="li" interactive className="flex flex-col gap-3">
       <div className="flex items-start gap-3">
         <span
           aria-hidden="true"
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-ink-100 text-ink-600"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent-50 text-accent-600"
         >
           <Icon name="project" size={20} />
         </span>
@@ -64,7 +64,7 @@ export default function ProjectCard({ project }: { project: Project }) {
         </ul>
       )}
 
-      <div className="mt-auto flex flex-wrap items-center justify-between gap-x-3 gap-y-1 border-t border-ink-100 pt-3 text-sm text-ink-600">
+      <div className="mt-auto flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-sm text-ink-600">
         <p>
           Porté par{' '}
           <Link to={`/developpeurs/${project.owner.id}`} className="hover:underline">

@@ -122,7 +122,7 @@ export default function ProjectDetailPage() {
       <header className="flex flex-wrap items-start gap-4">
         <span
           aria-hidden="true"
-          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-ink-100 text-ink-600"
+          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-accent-50 text-accent-600"
         >
           <Icon name="project" size={28} />
         </span>

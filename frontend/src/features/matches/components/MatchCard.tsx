@@ -7,7 +7,7 @@ import type { MatchSummary } from '../../../lib/types'
 /** Carte d'un match dans la liste : score, personne, premières raisons. */
 export default function MatchCard({ match }: { match: MatchSummary }) {
   return (
-    <Card as="li" className="flex flex-col gap-3">
+    <Card as="li" interactive className="flex flex-col gap-3">
       <div className="flex items-start justify-between gap-4">
         <div>
           <h2 className="font-semibold text-ink-900">

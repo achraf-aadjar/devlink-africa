@@ -73,7 +73,7 @@ export default function CountryDetailPage() {
               <h2 className="font-semibold text-ink-900">Développeurs</h2>
               <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {data.developers.map((person) => (
-                  <Card as="li" key={person.id} className="flex flex-col gap-2">
+                  <Card as="li" key={person.id} interactive className="flex flex-col gap-2">
                     <h3 className="font-semibold text-ink-900">
                       <Link
                         to={`/developpeurs/${person.id}`}

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import heroBackground from '../assets/images/hero-background.jpg'
 import Icon, { type IconName } from '../components/icons/Icon'
 import PageContainer from '../components/PageContainer'
 import { Button, Card } from '../components/ui'
@@ -69,12 +70,20 @@ export default function HomePage() {
   return (
     <div className="flex flex-col">
       {/*
-        Bannière pleine largeur, en blanc comme le reste du site (voir
-        docs/DECISIONS.md : une version photographiée, plus sombre, a été
-        essayée puis abandonnée — Achraf voulait un design blanc, pas la
-        teinte sombre que prenait la photo en bas de page).
+        Bannière sur la photo de fond (voir docs/DECISIONS.md pour son origine),
+        mais en clair : un premier essai posait un voile sombre dessus, jugé trop
+        sombre/marron. Ici un voile BLANC (bg-white/75) éclaircit toute l'image —
+        y compris sa bande la plus sombre en bas — plutôt que de l'assombrir.
+        Vérifié par échantillonnage réel des pixels : le contraste du texte
+        sombre reste au-delà de 9:1 sur toute la hauteur, largement au-dessus du
+        minimum AA (4,5:1).
       */}
-      <section className="relative isolate overflow-hidden border-b border-ink-200 bg-white">
+      <section
+        className="relative isolate overflow-hidden border-b border-ink-200 bg-white bg-cover bg-center"
+        style={{ backgroundImage: `url(${heroBackground})` }}
+      >
+        <div aria-hidden="true" className="absolute inset-0 bg-white/75" />
+
         <FloatingChip
           icon="mentoring"
           label="Mentorat"
