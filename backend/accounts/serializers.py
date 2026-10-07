@@ -10,6 +10,8 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework import serializers
 
+from core.serializers import StrictSerializer
+
 from .models import User
 
 MIN_PASSWORD_LENGTH = 10
@@ -22,19 +24,6 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ("id", "email", "full_name", "date_joined")
         read_only_fields = fields
-
-
-class StrictSerializer(serializers.Serializer):
-    """Sérialiseur qui refuse tout champ non déclaré (durcissement, DL-19)."""
-
-    def to_internal_value(self, data):
-        if isinstance(data, dict):
-            unknown = sorted(set(data) - set(self.fields))
-            if unknown:
-                raise serializers.ValidationError(
-                    {field: ["Ce champ n'est pas accepté."] for field in unknown}
-                )
-        return super().to_internal_value(data)
 
 
 class RegisterSerializer(StrictSerializer):
@@ -102,3 +91,22 @@ class AccessTokenSerializer(serializers.Serializer):
     """Sortie de /auth/refresh."""
 
     access = serializers.CharField()
+
+
+class DeleteAccountSerializer(StrictSerializer):
+    """Entrée de DELETE /me/delete/ : le mot de passe confirme l'intention."""
+
+    password = serializers.CharField(write_only=True, max_length=128, trim_whitespace=False)
+
+
+class ExportSerializer(StrictSerializer):
+    """Sortie de GET /me/export/ : la copie des données de l'utilisateur."""
+
+    exported_at = serializers.DateTimeField()
+    user = serializers.DictField()
+    profile = serializers.DictField()
+    skills = serializers.ListField(child=serializers.DictField())
+    projects = serializers.ListField(child=serializers.DictField())
+    join_requests = serializers.ListField(child=serializers.DictField())
+    exchanges = serializers.ListField(child=serializers.DictField())
+    reports_made = serializers.ListField(child=serializers.DictField())

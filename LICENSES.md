@@ -1,9 +1,15 @@
 # Licences des dépendances
 
-Règle du concours (art. 6) : licences permissives uniquement. Mis à jour le 2026-10-07.
-Contrôle automatique : `make licenses` (ou `scripts/check_licenses.sh all`), également lancé par la CI sur chaque pull request.
+Règle du concours (art. 6) : licences permissives uniquement. Mis à jour le 2026-10-08.
 
-## Python (backend/requirements.txt, dépendances transitives incluses)
+**Contrôle automatique** : `make licenses` (ou `scripts/check_licenses.sh all`) analyse l'arbre complet des dépendances, directes et transitives, côté Python et côté Node. Il échoue avec un code non nul si une licence GPL, AGPL, LGPL ou MPL apparaît. Il tourne en intégration continue sur chaque pull request.
+
+## Résultat
+
+- **Python** : 38 paquets analysés, **0 licence non permissive**.
+- **Node** : 433 paquets dans l'arbre complet, **0 licence non permissive** (hors exception justifiée ci-dessous).
+
+## Python (backend/requirements.txt, transitives incluses)
 
 | Paquet | Version | Licence |
 |---|---|---|
@@ -76,33 +82,47 @@ Contrôle automatique : `make licenses` (ou `scripts/check_licenses.sh all`), é
 | vite | 6.4.4 | MIT |
 | vitest | 3.2.7 | MIT |
 
-Les 432 paquets Node de l'arbre complet (transitifs inclus) sont contrôlés par `scripts/check_licenses.sh node`.
+## PostgreSQL : pourquoi pg8000
 
-## PostgreSQL
+Les pilotes PostgreSQL habituels de Django, **psycopg** et **psycopg2**, sont sous **LGPL** : les utiliser rendrait le projet irrecevable. Nous utilisons donc :
 
-Le pilote est **pg8000** (BSD-3-Clause) avec le backend Django **django-pg8000** (MIT-0), plus scramp (MIT-0), asn1crypto (MIT), python-dateutil (Apache-2.0/BSD), pytz (MIT), six (MIT). `psycopg` et `psycopg2` (LGPL) sont exclus. Le serveur PostgreSQL lui-même (licence PostgreSQL, permissive) tourne dans un conteneur et n'est pas distribué avec notre code.
+| Paquet | Licence | Rôle |
+|---|---|---|
+| pg8000 | BSD-3-Clause | Pilote PostgreSQL en Python pur |
+| django-pg8000 | MIT-0 | Backend Django pour ce pilote |
+| scramp | MIT-0 | Authentification SCRAM |
+| asn1crypto | MIT | Dépendance de scramp |
+| python-dateutil | Apache-2.0 / BSD | Types date et heure |
+| pytz | MIT | Fuseaux horaires |
+| six | MIT | Compatibilité |
+
+Le serveur PostgreSQL lui-même est sous **licence PostgreSQL** (permissive, de type BSD). Il tourne dans un conteneur et n'est pas distribué avec notre code.
 
 ## Exceptions justifiées (`licenses-allowlist.txt`)
 
-- **caniuse-lite** (CC-BY-4.0) : données de compatibilité des navigateurs, utilisées à la compilation seulement (Browserslist et autoprefixer), non incluses dans le livrable exécuté.
+| Paquet | Licence | Justification |
+|---|---|---|
+| caniuse-lite | CC-BY-4.0 | Données de compatibilité des navigateurs, utilisées **à la compilation seulement** par Browserslist et autoprefixer. Rien de ce paquet ne se retrouve dans le livrable exécuté. |
 
 ## Dépendances écartées pour cause de licence
 
-| Paquet | Licence | Pourquoi écarté |
+Ces paquets ont été évalués puis refusés. C'est une part du travail de conformité :
+
+| Paquet | Licence | Décision |
 |---|---|---|
-| psycopg, psycopg2 | LGPL | Pilote PostgreSQL : remplacé par pg8000 (BSD-3) |
+| psycopg, psycopg2 | LGPL | Écartés : remplacés par pg8000 (BSD-3) |
+| **eslint-plugin-jsx-a11y** | MPL-2.0 via axe-core | **Retiré le 2026-10-07**, alors qu'il était imposé par notre cahier des charges interne. Le contrôle automatique a détecté `axe-core` en dépendance indirecte. Remplacé par six règles d'accessibilité écrites par nous (`frontend/eslint-rules/a11y.js`). |
+| vite ≥ 7, tailwindcss ≥ 4 | MPL-2.0 via lightningcss | Versions figées à vite@6 et tailwindcss@3 |
 | mysqlclient | GPL | Non utilisé |
-| vite ≥ 7, tailwindcss ≥ 4 | MPL-2.0 (via lightningcss) | Versions figées : vite@6, tailwindcss@3 |
 | sharp, libvips | LGPL | Aucun traitement d'image côté serveur |
-| **eslint-plugin-jsx-a11y** | MPL-2.0 (via axe-core) | **Retiré le 2026-10-07** : remplacé par six règles maison dans `frontend/eslint-rules/a11y.js`. Voir `docs/DECISIONS.md`. |
 | hypothesis | MPL-2.0 | Non utilisé |
-| requests, httpx | MPL-2.0 (via certifi) | Les appels sortants utiliseront `urllib` (bibliothèque standard) |
-| Next.js | — | Hors stack |
+| requests, httpx | MPL-2.0 via certifi | Non utilisés ; un appel sortant passerait par `urllib` |
+| Données cartographiques tierces | variable ou absente | Écartées : notre carte de l'Afrique est dessinée par nous (voir `docs/DECISIONS.md`) |
 
-## Polices et éléments graphiques
+## Polices, icônes et éléments graphiques
 
-Aucune ressource tierce. Les polices sont celles du système (`system-ui`), les icônes sont des SVG écrits par nous. Aucune donnée cartographique importée : la carte de DL-37 sera dessinée par l'équipe.
+**Aucune ressource tierce.** Les polices sont celles du système (`system-ui`), les icônes sont des SVG écrits par nous, les drapeaux sont des emoji du système, et la carte de l'Afrique est une grille dessinée par nous. Il n'y a donc aucune licence graphique à déclarer.
 
 ## Code préexistant
 
-Aucun. Tout le code de ce dépôt a été écrit pour le concours (art. 6 et 11).
+**Aucun.** Tout le code de ce dépôt a été écrit pour le concours (art. 6 et 11). Aucun membre n'a réutilisé de code antérieur.

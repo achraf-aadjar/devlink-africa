@@ -70,6 +70,8 @@ INSTALLED_APPS = [
     "projects",
     "exchanges",
     "matching",
+    "search",
+    "ai",
     "reports",
     "core",
 ]
@@ -173,6 +175,11 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # --- CORS -------------------------------------------------------------------
 CORS_ALLOWED_ORIGINS = env_list("CORS_ALLOWED_ORIGINS")
 CSRF_TRUSTED_ORIGINS = env_list("CSRF_TRUSTED_ORIGINS")
+# Jamais d'origine générique : seules les origines listées sont acceptées.
+CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_CREDENTIALS = False
+CORS_ALLOW_HEADERS = ("accept", "authorization", "content-type", "origin", "x-requested-with")
+CORS_ALLOW_METHODS = ("DELETE", "GET", "OPTIONS", "PATCH", "POST")
 
 # --- Django REST framework --------------------------------------------------
 REST_FRAMEWORK = {
@@ -180,7 +187,7 @@ REST_FRAMEWORK = {
         "core.authentication.BearerJWTAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
-    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "DEFAULT_PAGINATION_CLASS": "core.pagination.DefaultPagination",
     "PAGE_SIZE": 20,
     "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
@@ -195,6 +202,10 @@ REST_FRAMEWORK = {
         # Scope for login / registration views: use ScopedRateThrottle with
         # throttle_scope = "auth".
         "auth": "5/minute",
+        # Signalements : plafond journalier pour éviter le détournement (DL-32).
+        "reports": "10/day",
+        # Fonctions d'IA : limite par utilisateur, en plus du plafond global.
+        "ai": "20/hour",
     },
 }
 
@@ -212,18 +223,87 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "API de la plateforme d'échange de compétences DevLink Africa.",
     "VERSION": "0.1.0",
     "SERVE_INCLUDE_SCHEMA": False,
+    # Plusieurs modèles ont un champ « status » ou « kind » : on nomme chaque
+    # énumération, sinon drf-spectacular invente des noms illisibles.
+    "ENUM_NAME_OVERRIDES": {
+        "ProjectStatusEnum": "projects.models.Project.Status",
+        "JoinRequestStatusEnum": "projects.models.ProjectJoinRequest.Status",
+        "ExchangeStatusEnum": "exchanges.models.Exchange.Status",
+        "ExchangeTypeEnum": "exchanges.models.Exchange.Type",
+        "ReportStatusEnum": "reports.models.Report.Status",
+        "ReportReasonEnum": "reports.models.Report.Reason",
+        "ReportTargetTypeEnum": "reports.models.Report.TargetType",
+        "SkillKindEnum": "skills.models.UserSkill.Kind",
+        "SkillLevelEnum": "skills.models.UserSkill.Level",
+        "SkillCategoryEnum": "skills.models.Skill.Category",
+        "SkillProofKindEnum": "skills.models.SkillProof.Kind",
+    },
 }
 
 API_VERSION = SPECTACULAR_SETTINGS["VERSION"]
 
+# --- Fonctions d'IA (DL-41, DL-43) -----------------------------------------
+# Désactivées par défaut : le produit doit fonctionner entièrement sans elles.
+# La clé vit dans l'environnement, jamais dans le dépôt.
+AI_ENABLED = env_bool("AI_ENABLED", False)
+AI_API_KEY = os.environ.get("AI_API_KEY", "")
+AI_BASE_URL = os.environ.get("AI_BASE_URL", "https://api.anthropic.com")
+AI_MODEL = os.environ.get("AI_MODEL", "claude-haiku-4-5-20251001")
+AI_TIMEOUT = float(os.environ.get("AI_TIMEOUT", 12))
+# Plafond journalier (DL-41) : un dépassement renvoie au chemin classique,
+# jamais une erreur pour l'utilisateur.
+AI_DAILY_LIMIT = int(os.environ.get("AI_DAILY_LIMIT", 200))
+
+# --- Journalisation ---------------------------------------------------------
+# Format simple et lisible. Règle 6 du cahier : ni mot de passe, ni jeton, ni
+# adresse e-mail en clair. Le journal d'audit remplace l'adresse par une
+# empreinte (voir accounts/services.py).
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "standard": {
+            "format": "{asctime} {levelname} {name} {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {"class": "logging.StreamHandler", "formatter": "standard"},
+    },
+    "root": {"handlers": ["console"], "level": os.environ.get("LOG_LEVEL", "INFO")},
+    "loggers": {
+        # Audit des actions sensibles : connexion échouée, suppression de
+        # compte, signalement. Toujours conservé, même en production.
+        "accounts.audit": {"handlers": ["console"], "level": "INFO", "propagate": False},
+        # Journal des appels d'IA (DL-43) : volumétrie et échecs, sans contenu.
+        "ai.calls": {"handlers": ["console"], "level": "INFO", "propagate": False},
+        "django.db.backends": {"level": "WARNING"},
+    },
+}
+
+# Taille maximale d'une requête : une charge JSON démesurée est refusée avant
+# d'être analysée (DL-29).
+DATA_UPLOAD_MAX_MEMORY_SIZE = int(os.environ.get("DATA_UPLOAD_MAX_MEMORY_SIZE", 2_621_440))  # 2,5 Mo
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 200
+FILE_UPLOAD_MAX_MEMORY_SIZE = DATA_UPLOAD_MAX_MEMORY_SIZE
+
 # --- Production hardening ---------------------------------------------------
 if not DEBUG:
     SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = "Lax"
     CSRF_COOKIE_SECURE = True
+    CSRF_COOKIE_HTTPONLY = True
+    CSRF_COOKIE_SAMESITE = "Lax"
     SECURE_HSTS_SECONDS = int(os.environ.get("SECURE_HSTS_SECONDS", 31536000))
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = False
+    # Préchargement HSTS : à activer seulement quand le domaine est définitif,
+    # car l'inscription sur la liste des navigateurs est difficile à défaire.
+    SECURE_HSTS_PRELOAD = env_bool("SECURE_HSTS_PRELOAD", True)
     SECURE_SSL_REDIRECT = env_bool("SECURE_SSL_REDIRECT", True)
     SECURE_CONTENT_TYPE_NOSNIFF = True
-    # nginx terminates TLS and forwards X-Forwarded-Proto.
+    SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
+    SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin"
+    X_FRAME_OPTIONS = "DENY"
+    # nginx termine le TLS et transmet X-Forwarded-Proto.
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

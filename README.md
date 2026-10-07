@@ -15,6 +15,12 @@ Projet réalisé pour le concours **CADEV 2026 (Systalink)** par Achraf, Emmanue
 | Frontend | React 19 + TypeScript + Vite 6 + Tailwind CSS 3 + React Router |
 | Déploiement | Gunicorn + nginx sur un VPS Datacloud (voir [deploy/README.md](deploy/README.md)) |
 
+## Ce que fait la plateforme
+
+Un développeur déclare ce qu'il sait faire et ce qu'il veut apprendre. **Dev Match** lui propose des profils complémentaires, avec un score et son explication détaillée. Il peut alors proposer un échange (mentorat, revue de code, pair programming…), ou rejoindre un projet du **Project Hub**.
+
+La boucle complète : profil → compétences → recherche → Dev Match expliqué → échange → projet.
+
 ## Prérequis
 
 - Python 3.13 (voir `.python-version`)
@@ -112,6 +118,17 @@ deploy/         nginx, guide de déploiement
 .github/        CI et modèle de PR
 ```
 
+## Qualité
+
+| Indicateur | Valeur |
+|---|---|
+| Tests backend | 429, couverture 98 % |
+| Tests frontend | 111, couverture 90 % |
+| Parcours de démonstration | Testé de bout en bout |
+| Licences non permissives | 0, contrôle automatique en CI |
+| `manage.py check --deploy` | 0 avertissement |
+| Schéma OpenAPI | 0 avertissement, 0 erreur |
+
 ## Règles du concours (art. 6)
 
 - Seules les licences **permissives** sont admises (MIT, Apache-2.0, BSD, ISC, PSF…).
@@ -129,6 +146,9 @@ deploy/         nginx, guide de déploiement
 | [docs/DECISIONS.md](docs/DECISIONS.md) | Les choix techniques et leurs raisons |
 | [docs/securite.md](docs/securite.md) | Ce qui est protégé, comment le vérifier |
 | [docs/PROGRESS.md](docs/PROGRESS.md) | Avancement ticket par ticket |
+| [docs/EXPLICATION_JURY.md](docs/EXPLICATION_JURY.md) | Chaque module expliqué, avec les questions probables du jury |
+| [docs/demo.md](docs/demo.md) | Le script du parcours de démonstration en 8 étapes |
+| [deploy/README.md](deploy/README.md) | Déploiement pas à pas, sauvegardes, retour arrière |
 | [backlog/TICKETS.md](backlog/TICKETS.md) | Les 65 tickets et leurs critères d'acceptation |
 
 Voir [CONTRIBUTING.md](CONTRIBUTING.md) pour contribuer.

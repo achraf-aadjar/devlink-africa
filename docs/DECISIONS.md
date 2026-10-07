@@ -137,3 +137,67 @@ Chaque règle a été vérifiée sur un fichier d'essai contenant les six fautes
 **Ce que nous perdons.** Les règles plus fines du plugin (vérification des attributs ARIA, rôles valides, etc.). Pour compenser, DL-34 prévoit une vérification manuelle de l'accessibilité : navigation entière au clavier et contrastes.
 
 **À signaler à l'équipe** : si l'organisateur répond à DL-10 que la MPL-2.0 est acceptée, cette décision pourra être revue.
+
+---
+
+## 2026-10-08 — Carte de l'Afrique en tuiles, et non en SVG géographique
+
+**Décision.** La carte de DL-37 est une grille de tuiles carrées, une par pays, placées à la main selon leur position approximative sur le continent (`frontend/src/features/countries/components/AfricaTileMap.tsx`).
+
+**Pourquoi.** Le ticket demandait une carte SVG. Nous n'en utilisons pas, pour deux raisons :
+
+1. **La licence.** Les fichiers de contours géographiques disponibles sont presque tous sous une licence à réciprocité, sous licence de données non permissive, ou sans licence claire. Le cahier des charges interdit d'importer la moindre donnée cartographique tierce sans licence permissive déclarée dans `LICENSES.md`. Une carte dessinée par nous supprime le problème.
+2. **Le poids.** Un tracé précis de 54 pays pèse plusieurs centaines de kilo-octets. Nos tuiles ne coûtent rien, ce qui compte pour des connexions parfois lentes.
+
+**Ce que nous perdons.** L'exactitude géographique. L'intérêt de cette carte est de donner un repère visuel et de rendre chaque pays cliquable, pas de servir d'atlas : la liste reste l'outil de navigation principal, juste en dessous.
+
+**Conformité au ticket.** Les deux critères d'acceptation sont respectés : la grille fonctionne sur mobile (9 colonnes, aucun débordement) et les pays sans donnée restent gris mais cliquables.
+
+---
+
+## 2026-10-07 — Fonctions d'IA sans SDK ni bibliothèque HTTP
+
+**Décision.** Les appels au service d'IA passent par `urllib`, de la bibliothèque standard Python (`backend/ai/client.py`).
+
+**Pourquoi.** Toutes les solutions habituelles sont écartées par la règle des licences :
+
+| Option | Problème |
+|---|---|
+| SDK du fournisseur | Dépend de `httpx`, qui dépend de `certifi` (MPL-2.0) |
+| `requests` | Dépend de `certifi` (MPL-2.0) |
+| `httpx` | Même problème |
+| **`urllib`** | **Bibliothèque standard, licence PSF, aucune dépendance** |
+
+`urllib` utilise le magasin de certificats du système d'exploitation, donc nous n'embarquons aucun paquet de certificats. **Zéro dépendance ajoutée pour toute la Phase 4.**
+
+**Le coût.** Il faut écrire à la main la sérialisation JSON, la gestion des délais d'attente et la distinction des erreurs réseau. Cela représente environ 80 lignes, toutes dans un seul fichier, couvertes par des tests.
+
+---
+
+## 2026-10-07 — L'IA propose, l'utilisateur valide
+
+**Décision.** Aucune fonction d'IA n'écrit en base. Chacune renvoie une proposition que l'utilisateur accepte par un clic.
+
+**Pourquoi.** Trois raisons, dans l'ordre d'importance :
+
+1. **La confiance.** Un profil rempli automatiquement, sans contrôle, est un profil dont l'utilisateur ne répond plus. Or tout le produit repose sur la fiabilité des compétences déclarées.
+2. **Le règlement.** Les critères d'acceptation de DL-44 et DL-46 l'exigent explicitement : « rien n'est enregistré sans validation », « le propriétaire valide le résumé ».
+3. **La réversibilité.** Si le service se trompe, il n'y a rien à défaire.
+
+**Garde-fou supplémentaire** : les suggestions sont contraintes au catalogue de compétences et aux énumérations du contrat d'API. Une valeur inventée par le modèle est écartée en silence, plutôt que de provoquer une erreur à l'enregistrement. Des tests le vérifient avec des valeurs volontairement absurdes (« COBOL », « Wakanda », « GURU »).
+
+---
+
+## 2026-10-07 — L'IA est désactivée par défaut
+
+**Décision.** `AI_ENABLED=False` est le défaut. Sans clé d'API, le produit fonctionne entièrement.
+
+**Pourquoi.** Le cahier des charges est catégorique : « les fonctions principales ne doivent **jamais** dépendre de l'IA ». Concrètement :
+
+- Les composants d'IA de l'interface **ne s'affichent pas** quand le service est inactif : nous ne proposons jamais un bouton qui échouera.
+- Chaque route d'IA répond `503` avec le code `ai_unavailable`, et l'interface explique calmement que le formulaire classique reste disponible.
+- Un test vérifie, route par route, que le reste du produit est intact avec l'IA coupée.
+
+**Pour l'activer**, il suffit de renseigner `AI_ENABLED=True` et `AI_API_KEY` dans l'environnement. La clé n'est jamais dans le dépôt, et un test vérifie qu'elle part en en-tête HTTP, pas dans le corps de la requête.
+
+**Pour la démonstration devant le jury** : le parcours des huit étapes ne passe par aucune fonction d'IA. Elles sont un complément, montrable si la clé est en place, parfaitement omissible sinon.

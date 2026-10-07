@@ -1,0 +1,84 @@
+import { useCallback, useEffect, useRef, type ReactNode } from 'react'
+
+interface ModalProps {
+  open: boolean
+  title: string
+  onClose: () => void
+  children: ReactNode
+}
+
+/**
+ * Fenêtre modale accessible : rôle de dialogue, fermeture par Échap, focus
+ * déplacé à l'ouverture, et clic sur le fond pour fermer.
+ */
+export default function Modal({ open, title, onClose, children }: ModalProps) {
+  const panel = useRef<HTMLDivElement>(null)
+  // `onClose` est souvent une fonction anonyme, donc recréée à chaque rendu du
+  // parent. On la garde dans une référence, sinon l'effet se relancerait à
+  // chaque frappe et volerait le focus du champ en cours de saisie.
+  const latestClose = useRef(onClose)
+  useEffect(() => {
+    latestClose.current = onClose
+  }, [onClose])
+
+  const close = useCallback(() => latestClose.current(), [])
+
+  // Fermeture au clavier : installée une seule fois par ouverture.
+  useEffect(() => {
+    if (!open) return
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') close()
+    }
+    document.addEventListener('keydown', onKeyDown)
+
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [open, close])
+
+  // Focus déplacé à l'ouverture seulement, jamais pendant la saisie.
+  useEffect(() => {
+    if (open) panel.current?.focus()
+  }, [open])
+
+  if (!open) return null
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-end justify-center p-0 sm:items-center sm:p-4">
+      <button
+        type="button"
+        aria-label="Fermer"
+        onClick={onClose}
+        className="absolute inset-0 bg-ink-900/40"
+      />
+      <div
+        ref={panel}
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+        tabIndex={-1}
+        className="animate-fade-in relative w-full max-w-lg rounded-t-card bg-white p-5 shadow-card sm:rounded-card"
+      >
+        <div className="mb-4 flex items-start justify-between gap-4">
+          <h2 className="text-lg font-semibold text-ink-900">{title}</h2>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Fermer la fenêtre"
+            className="rounded p-1 text-ink-500 hover:bg-ink-100 hover:text-ink-800"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              className="h-5 w-5"
+              aria-hidden="true"
+              fill="none"
+              stroke="currentColor"
+            >
+              <path strokeWidth="2" strokeLinecap="round" d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+        </div>
+        {children}
+      </div>
+    </div>
+  )
+}

@@ -14,12 +14,13 @@ import hashlib
 import logging
 
 from django.contrib.auth import authenticate
-from django.db import IntegrityError, transaction
+from django.db import IntegrityError, models, transaction
 from rest_framework import exceptions
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from core.exceptions import Conflict
+from matching.models import Match
 from profiles.models import Profile
 
 from .models import User
@@ -82,3 +83,99 @@ def logout_user(*, user: User, refresh_token: str) -> None:
             {"refresh": ["Ce jeton de rafraîchissement est invalide ou déjà révoqué."]}
         ) from error
     audit.info("logout user=%s", user.pk)
+
+
+def export_user_data(*, user) -> dict:
+    """Export complet des données d'un utilisateur (droit d'accès, DL-40).
+
+    Loi sénégalaise n° 2008-12 : la personne doit pouvoir obtenir une copie de
+    ses données. On inclut tout ce qui la concerne, sans les données d'autrui.
+    """
+    from django.utils import timezone
+
+    from exchanges.models import Exchange
+    from projects.models import Project, ProjectJoinRequest
+    from reports.models import Report
+    from skills.models import UserSkill
+
+    profile = getattr(user, "profile", None)
+
+    return {
+        "exported_at": timezone.now().isoformat(),
+        "user": {
+            "id": user.pk,
+            "email": user.email,
+            "full_name": user.full_name,
+            "date_joined": user.date_joined.isoformat(),
+        },
+        "profile": {
+            "country": profile.country if profile else "",
+            "bio": profile.bio if profile else "",
+            "availability": profile.availability if profile else [],
+            "domains": profile.domains if profile else [],
+            "avatar_url": profile.avatar_url if profile else "",
+        },
+        "skills": [
+            {
+                "skill": entry.skill.name,
+                "kind": entry.kind,
+                "level": entry.level,
+                "proofs": [
+                    {"kind": proof.kind, "title": proof.title, "url": proof.url}
+                    for proof in entry.proofs.all()
+                ],
+            }
+            for entry in UserSkill.objects.filter(user=user)
+            .select_related("skill")
+            .prefetch_related("proofs")
+        ],
+        "projects": [
+            {
+                "title": project.title,
+                "description": project.description,
+                "status": project.status,
+                "needs": [skill.name for skill in project.needs.all()],
+            }
+            for project in Project.objects.filter(owner=user).prefetch_related("needs")
+        ],
+        "join_requests": [
+            {"project": entry.project.title, "message": entry.message, "status": entry.status}
+            for entry in ProjectJoinRequest.objects.filter(applicant=user).select_related("project")
+        ],
+        "exchanges": [
+            {
+                "type": entry.type,
+                "status": entry.status,
+                "message": entry.message,
+                "role": "demandeur" if entry.requester_id == user.pk else "destinataire",
+                "created_at": entry.created_at.isoformat(),
+            }
+            for entry in Exchange.objects.filter(models.Q(requester=user) | models.Q(partner=user))
+        ],
+        "reports_made": [
+            {
+                "target_type": entry.target_type,
+                "reason": entry.reason,
+                "created_at": entry.created_at.isoformat(),
+            }
+            for entry in Report.objects.filter(reporter=user)
+        ],
+    }
+
+
+@transaction.atomic
+def delete_account(*, user, password: str) -> None:
+    """Supprime le compte et toutes les données liées (droit d'effacement, DL-40).
+
+    Le mot de passe est redemandé : une suppression est irréversible, et un
+    jeton volé ne doit pas suffire à détruire un compte.
+    """
+    if not user.check_password(password):
+        raise exceptions.ValidationError({"password": ["Mot de passe incorrect."]})
+
+    user_id = user.pk
+    # Les matchs ne sont pas liés par cascade aux deux côtés : on les retire.
+    Match.objects.filter(models.Q(user_a_id=user_id) | models.Q(user_b_id=user_id)).delete()
+    user.delete()
+
+    audit.info("account_deleted user=%s", user_id)
