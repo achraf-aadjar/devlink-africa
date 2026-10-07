@@ -287,3 +287,13 @@ Repris avec nos propres codes, pas une copie : un voile sombre uniforme (`bg-ink
 - Vérifié de bout en bout en conditions réelles (pas seulement en lisant le code) : connexion avec un compte de démonstration, modification d'un projet existant avec une vraie URL GitHub, et re-consultation de la carte et de la page de détail pour confirmer l'affichage.
 
 **Pourquoi aucune URL de dépôt n'est ajoutée aux projets de démonstration dans `seed_demo`.** Inventer des adresses GitHub plausibles mais fictives aurait affiché des liens morts (page 404) au moindre clic pendant une démonstration — un détail qui se remarque. Le champ reste vide pour ces projets, comme avant ; la fonctionnalité se prouve en l'utilisant (ci-dessus), pas en la simulant avec de fausses données.
+
+---
+
+## 2026-10-07 — Retour en arrière sur la bannière photo : design blanc partout
+
+**Décision.** La bannière photo sur fond sombre (entrée du dessus) est retirée le jour même de sa mise en place. Achraf : « j'ai pas aimé la couleur marron », « je veux un design blanc ». Le fichier `hero-background.jpg` est supprimé du dépôt (plus aucune référence dans le code), et la bannière revient à un fond blanc, cohérent avec le reste du site.
+
+**Pourquoi ce n'est pas vu comme du travail perdu.** Le reste de ce qui avait été construit avec la photo tient sans elle : mise en page centrée, pastilles flottantes avec nos icônes, mot clé en couleur, bouton d'action — tout ça reste, seules les couleurs changent (texte sombre sur blanc plutôt que texte blanc sur fond sombre). C'est la même leçon que les trois essais de l'icône `match` ou le premier panneau clair en coin de bannière : le jugement visuel se fait en le voyant construit, pas en l'imaginant à l'avance, et le reconstruire une fois de plus ne coûte presque rien grâce aux pièces déjà en place (`PageContainer`, les icônes, `Button`).
+
+**Traçabilité.** `LICENSES.md` ne liste plus cette image (elle n'est plus dans le dépôt). `AI_USAGE.md` garde la ligne du 2026-10-07 avec une mention du retrait le jour même : la règle 3 du concours demande de déclarer tout usage d'IA, y compris celui qui n'a pas survécu à la relecture visuelle.

@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom'
-import heroBackground from '../assets/images/hero-background.jpg'
 import Icon, { type IconName } from '../components/icons/Icon'
 import PageContainer from '../components/PageContainer'
 import { Button, Card } from '../components/ui'
@@ -54,11 +53,11 @@ function FloatingChip({
     <div
       aria-hidden="true"
       className={cn(
-        'pointer-events-none absolute hidden items-center gap-2 rounded-xl border border-white/15 bg-white/10 px-3 py-2 text-sm font-medium text-white shadow-card backdrop-blur-md xl:flex',
+        'pointer-events-none absolute hidden items-center gap-2 rounded-xl border border-ink-200 bg-white px-3 py-2 text-sm font-medium text-ink-700 shadow-card xl:flex',
         className,
       )}
     >
-      <Icon name={icon} size={18} />
+      <Icon name={icon} size={18} className="text-accent-600" />
       {label}
     </div>
   )
@@ -70,25 +69,12 @@ export default function HomePage() {
   return (
     <div className="flex flex-col">
       {/*
-        Bannière pleine largeur, sur la photo de fond (voir docs/DECISIONS.md
-        pour son origine : générée par IA, pas une photo tierce).
-        `bg-accent-900` sert de couleur de repli tant que l'image charge, ou si
-        elle échoue : elle reste proche du voile sombre posé dessus, donc aucun
-        flash disgracieux.
-
-        Un voile sombre uniforme (bg-ink-900/65) remplace le panneau clair de la
-        première version : vérifié par échantillonnage réel des pixels sur les
-        dix bandes de hauteur de l'image, il garantit au moins 5:1 pour chaque
-        couleur de texte utilisée ici, y compris sur la bande la plus claire —
-        donc le texte peut être centré n'importe où dans la bannière plutôt que
-        cantonné à un coin.
+        Bannière pleine largeur, en blanc comme le reste du site (voir
+        docs/DECISIONS.md : une version photographiée, plus sombre, a été
+        essayée puis abandonnée — Achraf voulait un design blanc, pas la
+        teinte sombre que prenait la photo en bas de page).
       */}
-      <section
-        className="relative isolate overflow-hidden bg-accent-900 bg-cover bg-center"
-        style={{ backgroundImage: `url(${heroBackground})` }}
-      >
-        <div aria-hidden="true" className="absolute inset-0 bg-ink-900/65" />
-
+      <section className="relative isolate overflow-hidden border-b border-ink-200 bg-white">
         <FloatingChip
           icon="mentoring"
           label="Mentorat"
@@ -111,14 +97,14 @@ export default function HomePage() {
         />
 
         <PageContainer className="relative flex flex-col items-center gap-6 py-20 text-center sm:py-28">
-          <span className="text-sm font-semibold uppercase tracking-[0.2em] text-accent-100">
+          <span className="text-sm font-semibold uppercase tracking-[0.2em] text-accent-700">
             Concours CADEV 2026
           </span>
-          <h1 className="max-w-3xl text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
+          <h1 className="max-w-3xl text-4xl font-bold leading-tight text-ink-900 sm:text-5xl lg:text-6xl">
             Apprenez ce qui vous manque,{' '}
-            <span className="text-accent-300">enseignez ce que vous savez</span>.
+            <span className="text-accent-600">enseignez ce que vous savez</span>.
           </h1>
-          <p className="max-w-2xl text-lg text-white/85">
+          <p className="max-w-2xl text-lg text-ink-700">
             DevLink Africa met en relation les développeuses et développeurs d'Afrique selon leurs
             compétences complémentaires. Chaque proposition est accompagnée de son explication :
             vous savez toujours pourquoi un profil vous est proposé.
@@ -144,8 +130,8 @@ export default function HomePage() {
 
           <ul className="mt-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
             {EXCHANGE_KINDS.map((kind) => (
-              <li key={kind.label} className="flex items-center gap-2 text-sm text-white/80">
-                <Icon name={kind.icon} size={16} />
+              <li key={kind.label} className="flex items-center gap-2 text-sm text-ink-600">
+                <Icon name={kind.icon} size={16} className="text-accent-600" />
                 {kind.label}
               </li>
             ))}
