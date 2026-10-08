@@ -341,6 +341,8 @@ class Command(BaseCommand):
                     "bio": bio,
                     "domains": domains,
                     "availability": availability,
+                    # Adresse du domaine de démonstration : jamais une vraie personne.
+                    "contact": email,
                     "is_demo": True,
                 },
             )

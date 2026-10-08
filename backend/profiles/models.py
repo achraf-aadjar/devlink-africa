@@ -24,6 +24,11 @@ class Profile(models.Model):
     availability = models.JSONField(default=list, blank=True)
     domains = models.JSONField(default=list, blank=True)
     avatar_url = models.URLField(blank=True)
+    contact = models.CharField(
+        max_length=200,
+        blank=True,
+        help_text="Adresse e-mail ou lien https. Visible seulement par les partenaires d'un échange accepté.",
+    )
     is_demo = models.BooleanField(
         default=False, help_text="Profil de démonstration, étiqueté comme tel dans l'interface."
     )

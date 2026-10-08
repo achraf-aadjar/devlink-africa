@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from django.core.exceptions import ValidationError as DjangoValidationError
+from django.core.validators import URLValidator, validate_email
 from rest_framework import serializers
 
 #: Codes pays ISO 3166-1 alpha-2 des 54 pays d'Afrique, plus quelques pays
@@ -34,6 +36,28 @@ def validate_https_url(value: str) -> str:
     if not url.startswith("https://"):
         raise serializers.ValidationError("L'adresse doit commencer par https://.")
     return url
+
+
+CONTACT_ERROR = "Indiquez une adresse e-mail ou un lien qui commence par https://."
+
+
+def validate_contact(value: str) -> str:
+    """Moyen de contact : une adresse e-mail ou un lien https, rien d'autre.
+
+    Le frontend en fait un lien cliquable (`mailto:` ou `https:`). Refuser tout
+    le reste écarte par construction les liens `javascript:` et le texte libre.
+    """
+    if not value:
+        return ""
+    contact = value.strip()
+    try:
+        if contact.startswith("https://"):
+            URLValidator(schemes=["https"])(contact)
+        else:
+            validate_email(contact)
+    except DjangoValidationError as error:
+        raise serializers.ValidationError(CONTACT_ERROR) from error
+    return contact
 
 
 class EnumListField(serializers.ListField):

@@ -6,7 +6,7 @@ from django.db import transaction
 
 from .models import Profile
 
-PROFILE_FIELDS = ("country", "bio", "availability", "domains", "avatar_url")
+PROFILE_FIELDS = ("country", "bio", "availability", "domains", "avatar_url", "contact")
 
 
 @transaction.atomic

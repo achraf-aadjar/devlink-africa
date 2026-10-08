@@ -5,7 +5,7 @@ from __future__ import annotations
 from rest_framework import serializers
 
 from core.serializers import StrictModelSerializer, StrictSerializer
-from core.validators import EnumListField, validate_country, validate_https_url
+from core.validators import EnumListField, validate_contact, validate_country, validate_https_url
 from skills.serializers import UserSkillSerializer
 
 from .models import AVAILABILITY_CHOICES, DOMAIN_CHOICES, Profile
@@ -28,6 +28,7 @@ class ProfileSerializer(StrictModelSerializer):
             "availability",
             "domains",
             "avatar_url",
+            "contact",
             "is_demo",
             "completeness",
         )
@@ -42,6 +43,9 @@ class ProfileSerializer(StrictModelSerializer):
 
     def validate_avatar_url(self, value: str) -> str:
         return validate_https_url(value)
+
+    def validate_contact(self, value: str) -> str:
+        return validate_contact(value)
 
 
 class MeSerializer(StrictSerializer):
@@ -62,12 +66,16 @@ class MeUpdateSerializer(StrictSerializer):
     availability = EnumListField(AVAILABILITY_CHOICES)
     domains = EnumListField(DOMAIN_CHOICES)
     avatar_url = serializers.CharField(max_length=500, required=False, allow_blank=True)
+    contact = serializers.CharField(max_length=200, required=False, allow_blank=True)
 
     def validate_country(self, value: str) -> str:
         return validate_country(value)
 
     def validate_avatar_url(self, value: str) -> str:
         return validate_https_url(value)
+
+    def validate_contact(self, value: str) -> str:
+        return validate_contact(value)
 
 
 class PublicProfileSerializer(serializers.Serializer):

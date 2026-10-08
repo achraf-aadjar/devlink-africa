@@ -57,6 +57,14 @@ def test_the_export_contains_every_section():
     } == set(body)
 
 
+def test_the_export_includes_my_contact():
+    user = make_user(contact="https://github.com/ada")
+
+    body = client_for(user).get(EXPORT).json()
+
+    assert body["profile"]["contact"] == "https://github.com/ada"
+
+
 def test_the_export_includes_my_own_email():
     """Il s'agit de *mes* données : mon adresse en fait partie."""
     user = make_user()

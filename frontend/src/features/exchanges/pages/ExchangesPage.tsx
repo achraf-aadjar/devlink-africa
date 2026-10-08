@@ -1,12 +1,15 @@
 import { useState } from 'react'
-import Avatar from '../../../components/Avatar'
 import { Link } from 'react-router-dom'
+import Avatar from '../../../components/Avatar'
 import { Badge, Button, Card, EmptyState, ErrorState, LoadingState } from '../../../components/ui'
 import { EXCHANGE_STATUS_LABELS, EXCHANGE_TYPE_LABELS } from '../../../lib/labels'
 import type { Exchange, ExchangeStatus } from '../../../lib/types'
 import { useQuery } from '../../../lib/useQuery'
 import { useAuth } from '../../auth/hooks/useAuth'
+import { cn } from '../../../lib/cn'
 import { changeExchangeStatus, listExchanges } from '../api/exchanges'
+import ContactPanel from '../components/ContactPanel'
+import { EXCHANGES_CHANGED, usePendingRequests } from '../hooks/usePendingRequests'
 
 type Tab = 'received' | 'sent'
 
@@ -23,12 +26,14 @@ export default function ExchangesPage() {
   const [tab, setTab] = useState<Tab>('received')
   const { data, loading, error, reload } = useQuery(() => listExchanges({ direction: tab }), [tab])
   const [actionError, setActionError] = useState<string | null>(null)
+  const pending = usePendingRequests(true)
 
   async function act(exchange: Exchange, status: ExchangeStatus) {
     setActionError(null)
     try {
       await changeExchangeStatus(exchange.id, status)
       reload()
+      window.dispatchEvent(new Event(EXCHANGES_CHANGED))
     } catch {
       setActionError("L'action n'a pas pu être effectuée.")
     }
@@ -43,7 +48,11 @@ export default function ExchangesPage() {
         </p>
       </header>
 
-      <div role="tablist" aria-label="Direction des échanges" className="flex gap-2">
+      <div
+        role="tablist"
+        aria-label="Direction des échanges"
+        className="flex w-fit gap-1 rounded-full bg-white/[0.04] p-1 ring-1 ring-inset ring-white/[0.07]"
+      >
         {(['received', 'sent'] as Tab[]).map((value) => (
           <button
             key={value}
@@ -51,19 +60,26 @@ export default function ExchangesPage() {
             role="tab"
             aria-selected={tab === value}
             onClick={() => setTab(value)}
-            className={`rounded-lg px-4 py-2 text-sm font-medium ${
+            className={cn(
+              'flex items-center gap-2 rounded-full px-5 py-2 text-sm font-medium transition',
               tab === value
-                ? 'bg-accent-400 text-white'
-                : 'bg-ink-100 text-ink-700 hover:bg-ink-200'
-            }`}
+                ? 'bg-[#1f6feb] text-white shadow-glow'
+                : 'text-ink-700 hover:bg-white/[0.06] hover:text-ink-900',
+            )}
           >
             {value === 'received' ? 'Reçues' : 'Envoyées'}
+            {value === 'received' && pending > 0 && (
+              <span className="rounded-full bg-white/20 px-2 py-0.5 text-xs tabular-nums">
+                <span aria-hidden="true">{pending}</span>
+                <span className="sr-only">{` (${pending} en attente)`}</span>
+              </span>
+            )}
           </button>
         ))}
       </div>
 
       {actionError && (
-        <p role="alert" className="rounded-lg bg-red-950/50 px-4 py-3 text-sm text-red-300">
+        <p role="alert" className="rounded-2xl bg-red-950/50 px-5 py-3 text-sm text-red-300">
           {actionError}
         </p>
       )}
@@ -92,6 +108,8 @@ export default function ExchangesPage() {
           {data.results.map((exchange) => {
             const isRecipient = user?.id === exchange.partner.id
             const other = isRecipient ? exchange.requester : exchange.partner
+            const me = isRecipient ? exchange.partner : exchange.requester
+            const unlocked = exchange.status === 'ACCEPTED' || exchange.status === 'COMPLETED'
 
             return (
               <Card as="li" key={exchange.id} className="flex flex-col gap-3">
@@ -115,6 +133,8 @@ export default function ExchangesPage() {
                 {exchange.skill && (
                   <p className="text-sm text-ink-600">Compétence : {exchange.skill.name}</p>
                 )}
+
+                {unlocked && <ContactPanel other={other} me={me} />}
 
                 <div className="flex flex-wrap gap-2">
                   {exchange.status === 'PROPOSED' && isRecipient && (

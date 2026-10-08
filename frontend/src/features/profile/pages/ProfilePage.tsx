@@ -15,6 +15,7 @@ interface FormState {
   country: string
   bio: string
   avatar_url: string
+  contact: string
   availability: Availability[]
   domains: Domain[]
 }
@@ -71,6 +72,7 @@ export default function ProfilePage() {
       country: data.profile.country,
       bio: data.profile.bio,
       avatar_url: data.profile.avatar_url,
+      contact: data.profile.contact,
       availability: data.profile.availability,
       domains: data.profile.domains,
     })
@@ -166,6 +168,15 @@ export default function ProfilePage() {
             </div>
             {errors.domains && <p className="text-sm text-red-400">{errors.domains}</p>}
           </fieldset>
+
+          <Field
+            label="Moyen de contact"
+            value={form.contact}
+            error={errors.contact}
+            placeholder="vous@exemple.com ou https://github.com/vous"
+            hint="Une adresse e-mail ou un lien https (GitHub, LinkedIn…). Il n'apparaît jamais sur votre profil public : seule la personne avec qui vous avez un échange accepté le voit."
+            onChange={(event) => setForm({ ...form, contact: event.target.value })}
+          />
 
           <Field
             label="Adresse de votre photo (https)"
