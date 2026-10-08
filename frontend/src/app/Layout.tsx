@@ -1,26 +1,35 @@
 import { useState } from 'react'
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
+import Icon, { type IconName } from '../components/icons/Icon'
+import Logo from '../components/icons/Logo'
+import PageContainer from '../components/PageContainer'
 import { Button } from '../components/ui'
 import { useAuth } from '../features/auth/hooks/useAuth'
 import { cn } from '../lib/cn'
 
-const PRIVATE_LINKS = [
-  { to: '/tableau-de-bord', label: 'Tableau de bord' },
-  { to: '/competences', label: 'Compétences' },
-  { to: '/matchs', label: 'Matchs' },
-  { to: '/echanges', label: 'Échanges' },
+interface NavLinkItem {
+  to: string
+  label: string
+  icon: IconName
+}
+
+const PRIVATE_LINKS: NavLinkItem[] = [
+  { to: '/tableau-de-bord', label: 'Tableau de bord', icon: 'dashboard' },
+  { to: '/competences', label: 'Compétences', icon: 'skill' },
+  { to: '/matchs', label: 'Matchs', icon: 'match' },
+  { to: '/echanges', label: 'Échanges', icon: 'exchange' },
 ]
 
-const PUBLIC_LINKS = [
-  { to: '/recherche', label: 'Recherche' },
-  { to: '/projets', label: 'Projets' },
-  { to: '/pays', label: 'Pays' },
+const PUBLIC_LINKS: NavLinkItem[] = [
+  { to: '/recherche', label: 'Recherche', icon: 'search' },
+  { to: '/projets', label: 'Projets', icon: 'project' },
+  { to: '/pays', label: 'Pays', icon: 'country' },
 ]
 
 const linkClass = ({ isActive }: { isActive: boolean }) =>
   cn(
-    'block rounded-lg px-3 py-2 text-sm font-medium transition-colors',
-    isActive ? 'bg-accent-50 text-accent-800' : 'text-ink-700 hover:bg-ink-100',
+    'flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+    isActive ? 'bg-accent-50 text-accent-800' : 'text-ink-700 hover:bg-ink-200',
   )
 
 export default function Layout() {
@@ -39,15 +48,15 @@ export default function Layout() {
     <div className="flex min-h-screen flex-col">
       <a
         href="#contenu"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-3 focus:py-2 focus:shadow-card"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-ink-100 focus:px-3 focus:py-2 focus:shadow-card"
       >
         Aller au contenu
       </a>
 
-      <header className="border-b border-ink-200 bg-white">
-        <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3">
-          <Link to="/" className="text-lg font-bold text-ink-900">
-            DevLink <span className="text-accent-600">Africa</span>
+      <header className="border-b border-ink-200 bg-ink-100">
+        <PageContainer className="flex items-center gap-3 py-3">
+          <Link to="/" className="text-ink-900" aria-label="DevLink Africa, accueil">
+            <Logo size={26} />
           </Link>
 
           <nav
@@ -56,6 +65,7 @@ export default function Layout() {
           >
             {links.map((link) => (
               <NavLink key={link.to} to={link.to} className={linkClass}>
+                <Icon name={link.icon} size={17} />
                 {link.label}
               </NavLink>
             ))}
@@ -65,9 +75,11 @@ export default function Layout() {
             {isAuthenticated ? (
               <>
                 <NavLink to="/profil" className={linkClass}>
+                  <Icon name="profile" size={17} />
                   {user?.full_name || 'Mon profil'}
                 </NavLink>
                 <Button variant="ghost" size="sm" onClick={handleSignOut}>
+                  <Icon name="logout" size={16} />
                   Se déconnecter
                 </Button>
               </>
@@ -89,7 +101,7 @@ export default function Layout() {
             aria-expanded={menuOpen}
             aria-controls="menu-mobile"
             aria-label="Menu"
-            className="ml-auto rounded-lg p-2 text-ink-700 hover:bg-ink-100 md:hidden"
+            className="ml-auto rounded-lg p-2 text-ink-700 hover:bg-ink-200 md:hidden"
           >
             <svg
               viewBox="0 0 24 24"
@@ -101,7 +113,7 @@ export default function Layout() {
               <path strokeWidth="2" strokeLinecap="round" d="M4 7h16M4 12h16M4 17h16" />
             </svg>
           </button>
-        </div>
+        </PageContainer>
 
         {menuOpen && (
           <nav
@@ -128,7 +140,7 @@ export default function Layout() {
                   <button
                     type="button"
                     onClick={handleSignOut}
-                    className="block w-full rounded-lg px-3 py-2 text-left text-sm font-medium text-ink-700 hover:bg-ink-100"
+                    className="block w-full rounded-lg px-3 py-2 text-left text-sm font-medium text-ink-700 hover:bg-ink-200"
                   >
                     Se déconnecter
                   </button>
@@ -152,12 +164,15 @@ export default function Layout() {
         )}
       </header>
 
-      <main id="contenu" className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
+      {/* Plus de max-w ici : chaque page décide de sa propre largeur via
+          PageContainer, pour pouvoir poser des sections pleine largeur
+          (bannière, fond de section) sans que ça devienne la norme partout. */}
+      <main id="contenu" className="flex-1 bg-ink-50">
         <Outlet />
       </main>
 
-      <footer className="border-t border-ink-200 bg-white">
-        <div className="mx-auto flex max-w-6xl flex-col items-center gap-2 px-4 py-6 text-sm text-ink-600 sm:flex-row sm:justify-between">
+      <footer className="border-t border-ink-200 bg-ink-100">
+        <PageContainer className="flex flex-col items-center gap-2 py-6 text-sm text-ink-600 sm:flex-row sm:justify-between">
           <p>DevLink Africa — échange de compétences entre développeurs africains.</p>
           <nav aria-label="Liens secondaires" className="flex gap-4">
             <Link to="/confidentialite" className="underline hover:text-accent-700">
@@ -167,7 +182,7 @@ export default function Layout() {
               Design system
             </Link>
           </nav>
-        </div>
+        </PageContainer>
       </footer>
     </div>
   )

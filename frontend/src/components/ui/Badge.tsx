@@ -4,13 +4,13 @@ import { cn } from '../../lib/cn'
 type Tone = 'neutral' | 'accent' | 'offered' | 'wanted' | 'demo' | 'success' | 'warning'
 
 const TONES: Record<Tone, string> = {
-  neutral: 'bg-ink-100 text-ink-700',
+  neutral: 'bg-ink-200 text-ink-700',
   accent: 'bg-accent-100 text-accent-800',
-  offered: 'bg-emerald-100 text-emerald-900',
-  wanted: 'bg-sky-100 text-sky-900',
-  demo: 'bg-amber-100 text-amber-900',
-  success: 'bg-emerald-100 text-emerald-900',
-  warning: 'bg-amber-100 text-amber-900',
+  offered: 'bg-emerald-950 text-emerald-300',
+  wanted: 'bg-sky-950 text-sky-300',
+  demo: 'bg-amber-950 text-amber-300',
+  success: 'bg-emerald-950 text-emerald-300',
+  warning: 'bg-amber-950 text-amber-300',
 }
 
 export default function Badge({

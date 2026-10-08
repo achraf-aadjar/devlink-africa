@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, type ReactNode } from 'react'
+import Icon from '../icons/Icon'
 
 interface ModalProps {
   open: boolean
@@ -48,7 +49,7 @@ export default function Modal({ open, title, onClose, children }: ModalProps) {
         type="button"
         aria-label="Fermer"
         onClick={onClose}
-        className="absolute inset-0 bg-ink-900/40"
+        className="absolute inset-0 bg-black/60"
       />
       <div
         ref={panel}
@@ -56,7 +57,7 @@ export default function Modal({ open, title, onClose, children }: ModalProps) {
         aria-modal="true"
         aria-label={title}
         tabIndex={-1}
-        className="animate-fade-in relative w-full max-w-lg rounded-t-card bg-white p-5 shadow-card sm:rounded-card"
+        className="animate-fade-in relative w-full max-w-lg rounded-t-card bg-ink-100 p-5 shadow-card sm:rounded-card"
       >
         <div className="mb-4 flex items-start justify-between gap-4">
           <h2 className="text-lg font-semibold text-ink-900">{title}</h2>
@@ -64,17 +65,9 @@ export default function Modal({ open, title, onClose, children }: ModalProps) {
             type="button"
             onClick={onClose}
             aria-label="Fermer la fenêtre"
-            className="rounded p-1 text-ink-500 hover:bg-ink-100 hover:text-ink-800"
+            className="rounded p-1 text-ink-500 hover:bg-ink-200 hover:text-ink-800"
           >
-            <svg
-              viewBox="0 0 24 24"
-              className="h-5 w-5"
-              aria-hidden="true"
-              fill="none"
-              stroke="currentColor"
-            >
-              <path strokeWidth="2" strokeLinecap="round" d="M6 6l12 12M18 6L6 18" />
-            </svg>
+            <Icon name="close" size={20} />
           </button>
         </div>
         {children}

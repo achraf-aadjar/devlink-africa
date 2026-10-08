@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button, Card, Field } from '../../../components/ui'
 import { ApiError } from '../../../lib/api'
+import { updateMe } from '../../profile/api/profile'
+import CountrySelect from '../../profile/components/CountrySelect'
 import { useAuth } from '../hooks/useAuth'
 
 const MIN_PASSWORD_LENGTH = 10
@@ -28,7 +30,13 @@ function validate(values: { email: string; password: string; consent: boolean })
 export default function RegisterPage() {
   const { signUp } = useAuth()
   const navigate = useNavigate()
-  const [values, setValues] = useState({ email: '', password: '', full_name: '', consent: false })
+  const [values, setValues] = useState({
+    email: '',
+    password: '',
+    full_name: '',
+    country: '',
+    consent: false,
+  })
   const [errors, setErrors] = useState<Errors>({})
   const [submitting, setSubmitting] = useState(false)
 
@@ -40,7 +48,19 @@ export default function RegisterPage() {
 
     setSubmitting(true)
     try {
-      await signUp({ ...values, email: values.email.trim().toLowerCase() })
+      const { country, ...registration } = values
+      await signUp({ ...registration, email: values.email.trim().toLowerCase() })
+      // Le pays n'est pas un champ d'inscription côté serveur (il vit sur le
+      // profil, pas sur le compte) : on l'enregistre juste après, maintenant
+      // que la session existe. Facultatif : une erreur ici n'empêche pas la
+      // création du compte, qui a déjà réussi.
+      if (country) {
+        try {
+          await updateMe({ country })
+        } catch {
+          // Pas bloquant : on pourra le renseigner depuis « Mon profil ».
+        }
+      }
       navigate('/tableau-de-bord', { replace: true })
     } catch (error) {
       if (error instanceof ApiError) {
@@ -64,18 +84,19 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-md">
+    <div className="mx-auto w-full max-w-lg">
       <h1 className="mb-1 text-2xl font-bold text-ink-900">Créer un compte</h1>
       <p className="mb-6 text-sm text-ink-600">
         Rejoignez les développeuses et développeurs d'Afrique qui échangent leurs compétences.
       </p>
 
-      <Card>
-        <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
+      <Card className="p-6 sm:p-8">
+        <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
           <Field
             label="Nom complet"
             name="full_name"
             autoComplete="name"
+            hint="Affiché sur votre profil et vos échanges."
             value={values.full_name}
             error={errors.full_name}
             onChange={(event) => setValues({ ...values, full_name: event.target.value })}
@@ -98,11 +119,15 @@ export default function RegisterPage() {
             autoComplete="new-password"
             value={values.password}
             error={errors.password}
-            hint={`${MIN_PASSWORD_LENGTH} caractères au minimum.`}
+            hint={`${MIN_PASSWORD_LENGTH} caractères minimum. Ni trop courant, ni uniquement des chiffres.`}
             onChange={(event) => setValues({ ...values, password: event.target.value })}
           />
+          <CountrySelect
+            value={values.country}
+            onChange={(country) => setValues({ ...values, country })}
+          />
 
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-1.5 border-t border-ink-200 pt-5">
             <label className="flex items-start gap-2 text-sm text-ink-700">
               <input
                 type="checkbox"
@@ -122,19 +147,19 @@ export default function RegisterPage() {
               </span>
             </label>
             {errors.consent && (
-              <p id="consent-error" className="text-sm text-red-700">
+              <p id="consent-error" className="text-sm text-red-400">
                 {errors.consent}
               </p>
             )}
           </div>
 
           {errors.form && (
-            <p role="alert" className="text-sm text-red-700">
+            <p role="alert" className="text-sm text-red-400">
               {errors.form}
             </p>
           )}
 
-          <Button type="submit" loading={submitting} className="mt-2">
+          <Button type="submit" loading={submitting} className="w-full">
             Créer mon compte
           </Button>
         </form>

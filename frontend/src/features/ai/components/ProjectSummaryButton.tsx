@@ -55,7 +55,7 @@ export default function ProjectSummaryButton({
 
       {summary && (
         <div className="flex flex-col gap-2" role="status">
-          <p className="rounded border border-ink-200 bg-white p-3 text-sm text-ink-800">
+          <p className="rounded border border-ink-200 bg-ink-100 p-3 text-sm text-ink-800">
             {summary}
           </p>
           <div className="flex gap-2">

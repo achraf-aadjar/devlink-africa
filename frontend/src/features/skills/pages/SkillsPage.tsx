@@ -79,12 +79,15 @@ export default function SkillsPage() {
       </header>
 
       {notice && (
-        <p role="status" className="rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
+        <p
+          role="status"
+          className="rounded-lg bg-emerald-950/50 px-4 py-3 text-sm text-emerald-300"
+        >
           {notice}
         </p>
       )}
       {formError && (
-        <p role="alert" className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-800">
+        <p role="alert" className="rounded-lg bg-red-950/50 px-4 py-3 text-sm text-red-300">
           {formError}
         </p>
       )}
@@ -183,7 +186,7 @@ function SkillColumn({
                   aria-label={`Niveau pour ${entry.skill.name}`}
                   value={entry.level}
                   onChange={(event) => onLevel(entry, event.target.value as SkillLevel)}
-                  className="rounded border border-ink-300 bg-white px-2 py-1 text-xs text-ink-700"
+                  className="rounded border border-ink-300 bg-ink-100 px-2 py-1 text-xs text-ink-700"
                 >
                   {LEVEL_OPTIONS.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -195,7 +198,7 @@ function SkillColumn({
               <button
                 type="button"
                 onClick={() => onRemove(entry)}
-                className="ml-auto rounded px-2 py-1 text-xs font-medium text-ink-600 hover:bg-ink-100 hover:text-red-700"
+                className="ml-auto rounded px-2 py-1 text-xs font-medium text-ink-600 hover:bg-ink-200 hover:text-red-400"
               >
                 Retirer
               </button>

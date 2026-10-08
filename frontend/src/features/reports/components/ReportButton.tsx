@@ -54,7 +54,7 @@ export default function ReportButton({
 
   if (done) {
     return (
-      <p role="status" className="text-sm text-emerald-800">
+      <p role="status" className="text-sm text-emerald-400">
         Signalement envoyé. Merci.
       </p>
     )
@@ -84,7 +84,7 @@ export default function ReportButton({
             onChange={(event) => setDetails(event.target.value)}
           />
           {error && (
-            <p role="alert" className="text-sm text-red-700">
+            <p role="alert" className="text-sm text-red-400">
               {error}
             </p>
           )}

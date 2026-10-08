@@ -20,8 +20,8 @@ const PROJECT = {
   demo_url: '',
   owner: { id: 2, full_name: 'Kofi Mensah', country: 'GH', is_demo: true },
   join_requests_count: 3,
-  created_at: '',
-  updated_at: '',
+  created_at: '2026-09-01T10:00:00Z',
+  updated_at: '2026-09-20T10:00:00Z',
 }
 
 function stub(projects: unknown[] = [PROJECT]) {
@@ -46,6 +46,7 @@ describe('Project Hub', () => {
     // Le libellé figure aussi dans le filtre de statut : on cible la carte.
     const card = screen.getByRole('link', { name: 'Agri-Data' }).closest('li')
     expect(card).toHaveTextContent('Ouvert aux contributions')
+    expect(card).toHaveTextContent('Mis à jour')
   })
 
   it('n affiche le bouton de création qu aux personnes connectées', async () => {

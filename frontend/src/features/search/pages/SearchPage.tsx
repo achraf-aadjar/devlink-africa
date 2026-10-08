@@ -87,7 +87,9 @@ export default function SearchPage() {
             aria-selected={tab === value}
             onClick={() => update({ onglet: value === 'users' ? '' : value })}
             className={`rounded-lg px-4 py-2 text-sm font-medium ${
-              tab === value ? 'bg-accent-600 text-white' : 'bg-white text-ink-700 hover:bg-ink-100'
+              tab === value
+                ? 'bg-accent-400 text-white'
+                : 'bg-ink-100 text-ink-700 hover:bg-ink-200'
             }`}
           >
             {value === 'users' ? 'Développeurs' : 'Projets'}
@@ -116,7 +118,7 @@ export default function SearchPage() {
 
       <Card>
         <form
-          className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+          className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
           onSubmit={(event) => {
             event.preventDefault()
             update({ q: draft })
@@ -219,9 +221,9 @@ export default function SearchPage() {
                 {users.data.count} développeur{users.data.count > 1 ? 's' : ''} trouvé
                 {users.data.count > 1 ? 's' : ''}.
               </p>
-              <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {users.data.results.map((person) => (
-                  <Card as="li" key={person.id} className="flex flex-col gap-3">
+                  <Card as="li" key={person.id} interactive className="flex flex-col gap-3">
                     <div>
                       <h2 className="font-semibold text-ink-900">
                         <Link
@@ -269,7 +271,7 @@ export default function SearchPage() {
               description="Élargissez vos critères pour découvrir d'autres projets."
             />
           ) : (
-            <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {projects.data.results.map((project) => (
                 <ProjectCard key={project.id} project={project} />
               ))}

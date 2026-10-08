@@ -16,8 +16,8 @@ const OTHERS_PROJECT = {
   demo_url: '',
   owner: { id: 2, full_name: 'Kofi Mensah', country: 'GH', is_demo: false },
   join_requests_count: 0,
-  created_at: '',
-  updated_at: '',
+  created_at: '2026-09-01T10:00:00Z',
+  updated_at: '2026-09-20T10:00:00Z',
 }
 
 const MY_PROJECT = {
@@ -74,6 +74,14 @@ describe('détail d un projet', () => {
     const link = await screen.findByRole('link', { name: 'Dépôt du code' })
     expect(link).toHaveAttribute('target', '_blank')
     expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+  })
+
+  it('affiche les dates du projet', async () => {
+    stub()
+    renderPage()
+
+    expect(await screen.findByText(/Créé/)).toBeInTheDocument()
+    expect(screen.getByText(/Mis à jour/)).toBeInTheDocument()
   })
 
   it('permet de demander à rejoindre', async () => {

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <!--
+    Favicon de DevLink Africa.
+
+    Deux anneaux qui se recouvrent : la complémentarité réciproque, le cœur du
+    produit. Par rapport au logo principal, le trait est épaissi (4 au lieu de
+    3,5) et les anneaux rapprochés : à 16 pixels, un trait fin disparaît et deux
+    formes trop écartées deviennent deux taches illisibles.
+
+    Le fond est inclus, contrairement au logo : un favicon transparent devient
+    invisible sur un onglet au thème sombre.
+  -->
+  <rect width="48" height="48" rx="10" fill="#faf9f7"/>
+  <path d="M24 13.5a11.5 11.5 0 0 0 0 21 11.5 11.5 0 0 0 0-21" fill="#4493f8" fill-opacity="0.22"/>
+  <circle cx="19.5" cy="24" r="11.5" fill="none" stroke="#4493f8" stroke-width="4"/>
+  <circle cx="28.5" cy="24" r="11.5" fill="none" stroke="#0d1117" stroke-width="4"/>
+</svg>

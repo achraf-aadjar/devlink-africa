@@ -71,9 +71,9 @@ export default function CountryDetailPage() {
           {data.developers.length > 0 && (
             <div className="flex flex-col gap-3">
               <h2 className="font-semibold text-ink-900">Développeurs</h2>
-              <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {data.developers.map((person) => (
-                  <Card as="li" key={person.id} className="flex flex-col gap-2">
+                  <Card as="li" key={person.id} interactive className="flex flex-col gap-2">
                     <h3 className="font-semibold text-ink-900">
                       <Link
                         to={`/developpeurs/${person.id}`}
@@ -101,7 +101,7 @@ export default function CountryDetailPage() {
           {data.projects.length > 0 && (
             <div className="flex flex-col gap-3">
               <h2 className="font-semibold text-ink-900">Projets</h2>
-              <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {data.projects.map((project) => (
                   <ProjectCard key={project.id} project={project} />
                 ))}

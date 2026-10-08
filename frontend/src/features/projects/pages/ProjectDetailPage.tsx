@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import DemoBadge from '../../../components/DemoBadge'
+import Icon from '../../../components/icons/Icon'
 import {
   Badge,
   Button,
@@ -11,11 +12,27 @@ import {
   Textarea,
 } from '../../../components/ui'
 import { ApiError } from '../../../lib/api'
+import { formatRelativeDate } from '../../../lib/date'
 import { countryFlag, JOIN_STATUS_LABELS, PROJECT_STATUS_LABELS } from '../../../lib/labels'
 import { useQuery } from '../../../lib/useQuery'
 import { useAuth } from '../../auth/hooks/useAuth'
 import ReportButton from '../../reports/components/ReportButton'
 import { decideJoinRequest, deleteProject, getProject, joinProject } from '../api/projects'
+
+/** Lien externe stylé comme un bouton secondaire : un vrai `<a>`, pas un bouton imbriqué. */
+function LinkButton({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center gap-2 rounded-lg border border-ink-300 bg-ink-100 px-4 py-2 text-sm font-medium text-ink-800 transition-colors hover:bg-ink-200"
+    >
+      <Icon name="external" size={16} />
+      {children}
+    </a>
+  )
+}
 
 export default function ProjectDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -102,8 +119,15 @@ export default function ProjectDetailPage() {
         </Link>
       </nav>
 
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
+      <header className="flex flex-wrap items-start gap-4">
+        <span
+          aria-hidden="true"
+          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-accent-50 text-accent-600"
+        >
+          <Icon name="project" size={28} />
+        </span>
+
+        <div className="min-w-0 flex-1">
           <h1 className="text-2xl font-bold text-ink-900">{data.title}</h1>
           <p className="mt-1 text-sm text-ink-600">
             Porté par{' '}
@@ -125,7 +149,9 @@ export default function ProjectDetailPage() {
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          {data.repo_url && <LinkButton href={data.repo_url}>Dépôt du code</LinkButton>}
+          {data.demo_url && <LinkButton href={data.demo_url}>Démonstration en ligne</LinkButton>}
           {isOwner ? (
             <>
               <Link to={`/projets/${projectId}/modifier`}>
@@ -146,13 +172,45 @@ export default function ProjectDetailPage() {
         </div>
       </header>
 
+      <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-ink-500">
+        {formatRelativeDate(data.created_at) && (
+          <>
+            <span>Créé {formatRelativeDate(data.created_at)}</span>
+            <span aria-hidden="true">·</span>
+          </>
+        )}
+        {formatRelativeDate(data.updated_at) && (
+          <span>Mis à jour {formatRelativeDate(data.updated_at)}</span>
+        )}
+        {data.needs.length > 0 && (
+          <>
+            <span aria-hidden="true">·</span>
+            <span>
+              {data.needs.length} compétence{data.needs.length > 1 ? 's' : ''} recherchée
+              {data.needs.length > 1 ? 's' : ''}
+            </span>
+          </>
+        )}
+        {data.join_requests_count > 0 && (
+          <>
+            <span aria-hidden="true">·</span>
+            <span>
+              {data.join_requests_count} demande{data.join_requests_count > 1 ? 's' : ''}
+            </span>
+          </>
+        )}
+      </div>
+
       {notice && (
-        <p role="status" className="rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
+        <p
+          role="status"
+          className="rounded-lg bg-emerald-950/50 px-4 py-3 text-sm text-emerald-300"
+        >
           {notice}
         </p>
       )}
       {actionError && (
-        <p role="alert" className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-800">
+        <p role="alert" className="rounded-lg bg-red-950/50 px-4 py-3 text-sm text-red-300">
           {actionError}
         </p>
       )}
@@ -173,38 +231,6 @@ export default function ProjectDetailPage() {
                 <Badge tone="wanted">{skill.name}</Badge>
               </li>
             ))}
-          </ul>
-        </Card>
-      )}
-
-      {(data.repo_url || data.demo_url) && (
-        <Card>
-          <h2 className="mb-3 font-semibold text-ink-900">Liens</h2>
-          <ul className="flex flex-col gap-2 text-sm">
-            {data.repo_url && (
-              <li>
-                <a
-                  href={data.repo_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-accent-700 underline"
-                >
-                  Dépôt du code
-                </a>
-              </li>
-            )}
-            {data.demo_url && (
-              <li>
-                <a
-                  href={data.demo_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-accent-700 underline"
-                >
-                  Démonstration en ligne
-                </a>
-              </li>
-            )}
           </ul>
         </Card>
       )}

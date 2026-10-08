@@ -51,7 +51,9 @@ export default function ExchangesPage() {
             aria-selected={tab === value}
             onClick={() => setTab(value)}
             className={`rounded-lg px-4 py-2 text-sm font-medium ${
-              tab === value ? 'bg-accent-600 text-white' : 'bg-white text-ink-700 hover:bg-ink-100'
+              tab === value
+                ? 'bg-accent-400 text-white'
+                : 'bg-ink-100 text-ink-700 hover:bg-ink-200'
             }`}
           >
             {value === 'received' ? 'Reçues' : 'Envoyées'}
@@ -60,7 +62,7 @@ export default function ExchangesPage() {
       </div>
 
       {actionError && (
-        <p role="alert" className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-800">
+        <p role="alert" className="rounded-lg bg-red-950/50 px-4 py-3 text-sm text-red-300">
           {actionError}
         </p>
       )}

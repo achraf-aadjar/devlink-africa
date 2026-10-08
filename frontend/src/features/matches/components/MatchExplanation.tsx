@@ -1,3 +1,4 @@
+import { WeavePattern } from '../../../components/icons/Patterns'
 import { Badge, Card } from '../../../components/ui'
 import type { MatchExplanation as Explanation } from '../../../lib/types'
 
@@ -5,7 +6,7 @@ import type { MatchExplanation as Explanation } from '../../../lib/types'
 function barTone(ratio: number): string {
   if (ratio >= 0.75) return 'bg-accent-600'
   if (ratio >= 0.4) return 'bg-accent-400'
-  return 'bg-ink-300'
+  return 'bg-ink-500'
 }
 
 /**
@@ -32,8 +33,8 @@ export default function MatchExplanation({
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Niveau 1 : le score */}
-      <Card className="flex flex-col items-center gap-2 bg-accent-50">
+      {/* Niveau 1 : le score. Le motif de tissage le détache du reste. */}
+      <WeavePattern className="flex flex-col items-center gap-2 rounded-card border border-ink-200 bg-accent-50 p-5 shadow-card">
         <p className="text-sm font-medium text-accent-800">Score de compatibilité</p>
         <p className="text-5xl font-bold text-accent-700">
           {total}
@@ -44,7 +45,7 @@ export default function MatchExplanation({
             Ce score est plafonné : l'échange ne va pour l'instant que dans un sens.
           </p>
         )}
-      </Card>
+      </WeavePattern>
 
       {/* Niveau 2 : qui apprend quoi à qui */}
       <div className="grid gap-4 sm:grid-cols-2">
