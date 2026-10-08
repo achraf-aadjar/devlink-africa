@@ -18,6 +18,7 @@ Règle du concours (art. 6) : licences permissives uniquement. Mis à jour le 20
 | asgiref | 3.12.1 | BSD License |
 | asn1crypto | 1.5.1 | MIT License |
 | attrs | 26.1.0 | MIT |
+| cachetools | 6.2.6 | MIT |
 | cffi | 2.1.1 | MIT-0 |
 | coverage | 7.16.2 | Apache-2.0 |
 | Django | 5.2.17 | BSD-3-Clause |
@@ -27,6 +28,7 @@ Règle du concours (art. 6) : licences permissives uniquement. Mis à jour le 20
 | djangorestframework | 3.18.1 | BSD-3-Clause |
 | djangorestframework_simplejwt | 5.5.1 | MIT License |
 | drf-spectacular | 0.30.0 | BSD-3-Clause |
+| google-auth | 2.41.1 | Apache Software License |
 | gunicorn | 26.2.0 | MIT |
 | inflection | 0.5.1 | MIT License |
 | iniconfig | 2.3.0 | MIT |
@@ -35,6 +37,8 @@ Règle du concours (art. 6) : licences permissives uniquement. Mis à jour le 20
 | packaging | 26.3 | Apache-2.0 OR BSD-2-Clause |
 | pg8000 | 1.31.5 | BSD License |
 | pluggy | 1.6.0 | MIT License |
+| pyasn1 | 0.6.4 | BSD-2-Clause |
+| pyasn1_modules | 0.4.2 | BSD License |
 | pycparser | 3.0 | BSD-3-Clause |
 | Pygments | 2.21.0 | BSD-2-Clause |
 | PyJWT | 2.15.1 | MIT |
@@ -45,6 +49,7 @@ Règle du concours (art. 6) : licences permissives uniquement. Mis à jour le 20
 | PyYAML | 6.0.3 | MIT License |
 | referencing | 0.37.0 | MIT |
 | rpds-py | 2026.9.1 | MIT |
+| rsa | 4.9.1 | Apache Software License |
 | ruff | 0.16.10 | MIT |
 | scramp | 1.4.17 | MIT No Attribution License (MIT-0) |
 | six | 1.17.0 | MIT License |

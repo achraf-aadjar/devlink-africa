@@ -14,3 +14,11 @@ ruff==0.16.10
 pip-licenses==5.5.5
 pg8000==1.31.5
 django-pg8000==0.0.5
+# Vérification des jetons d'identité Google (connexion « Continuer avec
+# Google »). Toutes les licences vérifiées (voir LICENSES.md) : Apache-2.0,
+# MIT ou BSD. Pas de dépendance à `requests` : voir accounts/google_auth.py.
+google-auth==2.41.1
+cachetools==6.2.6
+pyasn1==0.6.4
+pyasn1-modules==0.4.2
+rsa==4.9.1

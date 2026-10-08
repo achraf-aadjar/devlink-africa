@@ -109,6 +109,22 @@ Erreurs : `400` (mot de passe de moins de 10 caractères, trop proche de l'e-mai
 
 `200` : même corps que l'inscription. `401` `invalid_credentials` pour un mot de passe faux, une adresse inconnue **ou** un compte désactivé — la réponse est identique dans les trois cas, afin de ne pas révéler l'existence d'un compte.
 
+### `GET /auth/google/client-id/` (public)
+
+`200` : `{ "client_id": "..." }`, chaîne vide si la connexion avec Google n'est pas configurée. Ce n'est pas un secret (il part aussi vers le navigateur pour afficher le bouton) : l'interface masque simplement le bouton « Continuer avec Google » tant que la valeur est vide.
+
+### `POST /auth/google/` (public)
+
+Connecte ou crée un compte à partir d'un jeton d'identité Google (vérifié côté serveur : signature, émetteur, audience, adresse vérifiée par Google).
+
+```json
+{ "credential": "eyJhbGciOi..." }
+```
+
+`200` : même corps que l'inscription. Un compte créé ainsi n'a pas de mot de passe tant que la personne n'en choisit pas un depuis son profil. Si l'adresse correspond déjà à un compte existant (créé par mot de passe ou par Google), on s'y connecte simplement.
+
+Erreurs : `400` `google_token_invalid` (jeton invalide, expiré, ou destiné à une autre application) ou `google_email_unverified` (adresse non vérifiée par Google) ; `503` `google_not_configured` si aucun identifiant client n'est renseigné côté serveur.
+
 ### `POST /auth/refresh/` (public)
 
 ```json
