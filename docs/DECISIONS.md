@@ -343,3 +343,11 @@ Repris avec nos propres codes, pas une copie : un voile sombre uniforme (`bg-ink
 **Logo, favicon, motifs : mêmes formes, nouvelles couleurs.** Ces fichiers dessinent des SVG avec des couleurs écrites en dur (pas de classes Tailwind, techniquement impossible pour l'attribut `stroke`) : `Logo.tsx`, `favicon.svg` et `Patterns.tsx` ont donc été corrigés à la main, en reprenant exactement les valeurs hexadécimales du nouveau `accent-600` et `ink-900`, pour rester cohérents avec le reste du thème sans dépendre d'un fichier de configuration qu'un SVG ne peut pas lire.
 
 **Vérifié dans le vrai navigateur, page par page**, pas seulement en relisant le code : connexion, inscription, recherche, projets, pays, tableau de bord, profil, matchs, compétences, échanges, formulaire de projet, détail d'un projet, page de confidentialité et la page `/design` elle-même (qui sert justement à ce genre de relecture). Un oubli a été trouvé ainsi et corrigé : le serveur de développement Vite ne relit pas `tailwind.config.js` à chaud, il a fallu le redémarrer pour voir les nouvelles couleurs — sans ça, les captures d'écran auraient montré l'ancien thème malgré un code déjà correct.
+
+---
+
+## 2026-10-08 — Boutons principaux en vert, comme sur GitHub
+
+**Décision.** Sur demande d'Achraf (« vert comme GitHub mais pas trop vert »), le bouton `primary` (`Créer mon compte`, `Se connecter`, etc.) passe du bleu de marque à un vert. C'est fidèle à GitHub, qui distingue déjà ses deux accents : le bleu pour les liens et le focus, le vert pour l'action principale d'un bouton (leur bouton « Code », entre autres). Les autres usages du bleu (logo, liens, onglets actifs, tuiles de pays, barres de score) ne changent pas : seul `Button` variant `primary` est concerné.
+
+**La teinte.** `green-700` de Tailwind (`#15803d`) au repos, `green-800` (plus sombre) au survol — vérifié à 5:1 avec du texte blanc dessus, et encore mieux au survol. Choisi plutôt que le vert exact de GitHub (`#238636`, qui ne passait qu'à 4,1:1 au repos) pour garder la même marge de sécurité que le reste de la palette. Couleur Tailwind de base, sans ajout au fichier de configuration : même logique que le bouton `danger`, qui utilisait déjà un rouge Tailwind brut plutôt qu'un jeton `ink`/`accent`.

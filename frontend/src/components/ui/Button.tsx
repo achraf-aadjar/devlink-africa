@@ -13,7 +13,9 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const VARIANTS: Record<Variant, string> = {
-  primary: 'bg-accent-400 text-white hover:bg-accent-300 disabled:bg-ink-300',
+  // Vert façon GitHub (leur bouton « Code », pas un vert néon) : vérifié à
+  // 5:1 avec du texte blanc, plus sombre encore au survol.
+  primary: 'bg-green-700 text-white hover:bg-green-800 disabled:bg-ink-300',
   secondary: 'border border-ink-300 bg-ink-100 text-ink-800 hover:bg-ink-200',
   ghost: 'text-ink-700 hover:bg-ink-200',
   danger: 'bg-red-600 text-white hover:bg-red-500',
