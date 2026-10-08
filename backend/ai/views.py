@@ -23,6 +23,8 @@ from . import services
 from .client import AIUnavailable, is_available
 from .serializers import (
     AIStatusSerializer,
+    CopilotInputSerializer,
+    CopilotOutputSerializer,
     ExplainMatchInputSerializer,
     ExplainMatchOutputSerializer,
     ExtractSkillsInputSerializer,
@@ -33,7 +35,13 @@ from .serializers import (
     SummarizeOutputSerializer,
 )
 
-FEATURES = ["skill_extraction", "natural_search", "project_summary", "match_explanation"]
+FEATURES = [
+    "skill_extraction",
+    "natural_search",
+    "project_summary",
+    "match_explanation",
+    "copilot",
+]
 
 
 def _unavailable(error: AIUnavailable) -> Response:
@@ -166,3 +174,27 @@ class ExplainMatchView(AIBaseView):
             return _unavailable(error)
 
         return Response({"sentence": sentence})
+
+
+class CopilotView(AIBaseView):
+    """POST /ai/copilot/ : question libre sur l'utilisation du produit.
+
+    Purement conversationnel : aucune lecture ni écriture des données de la
+    personne, l'historique envoyé par le navigateur n'est jamais stocké.
+    """
+
+    @extend_schema(
+        request=CopilotInputSerializer,
+        responses={200: CopilotOutputSerializer},
+        summary="Poser une question à DevLink Copilot",
+    )
+    def post(self, request):
+        data = CopilotInputSerializer(data=request.data)
+        data.is_valid(raise_exception=True)
+
+        try:
+            reply = services.copilot_reply(data.validated_data["message"], data.validated_data.get("history"))
+        except AIUnavailable as error:
+            return _unavailable(error)
+
+        return Response({"reply": reply})

@@ -4,6 +4,7 @@ import Icon, { type IconName } from '../components/icons/Icon'
 import Logo from '../components/icons/Logo'
 import PageContainer from '../components/PageContainer'
 import { Button } from '../components/ui'
+import CopilotWidget from '../features/ai/components/CopilotWidget'
 import { useAuth } from '../features/auth/hooks/useAuth'
 import { cn } from '../lib/cn'
 
@@ -184,6 +185,8 @@ export default function Layout() {
           </nav>
         </PageContainer>
       </footer>
+
+      <CopilotWidget />
     </div>
   )
 }

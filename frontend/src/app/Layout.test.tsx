@@ -3,17 +3,15 @@ import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { describe, expect, it, vi } from 'vitest'
 import { setTokens } from '../lib/token'
+import { routeFetch } from '../test/helpers'
 import AuthProvider from './AuthProvider'
 import Layout from './Layout'
 
-function jsonResponse(body: unknown, status = 200) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { 'Content-Type': 'application/json' },
-  })
-}
-
 const SESSION_USER = { id: 1, email: 'ada@example.org', full_name: 'Ada Lovelace', date_joined: '' }
+
+// L'IA est coupée dans ces tests : ils portent sur la navigation, pas sur
+// DevLink Copilot (testé séparément).
+const AI_OFF = { '/ai/status': { enabled: false, features: [] } }
 
 function renderLayout() {
   return render(
@@ -32,7 +30,7 @@ function renderLayout() {
 
 describe('mise en page', () => {
   it('affiche les liens de connexion quand personne nest connecté', async () => {
-    vi.stubGlobal('fetch', vi.fn())
+    vi.stubGlobal('fetch', routeFetch(AI_OFF))
     renderLayout()
 
     expect(await screen.findByRole('heading', { name: 'Accueil' })).toBeInTheDocument()
@@ -44,7 +42,7 @@ describe('mise en page', () => {
 
   it('affiche la navigation privée et le nom quand la session est ouverte', async () => {
     setTokens({ access: 'a', refresh: 'r' })
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(jsonResponse(SESSION_USER)))
+    vi.stubGlobal('fetch', routeFetch({ ...AI_OFF, '/me': SESSION_USER }))
     renderLayout()
 
     expect(await screen.findByRole('link', { name: 'Ada Lovelace' })).toBeInTheDocument()
@@ -54,21 +52,22 @@ describe('mise en page', () => {
 
   it('déconnecte et efface les jetons', async () => {
     setTokens({ access: 'a', refresh: 'r' })
-    const fetchMock = vi
-      .fn()
-      .mockResolvedValueOnce(jsonResponse(SESSION_USER))
-      .mockResolvedValueOnce(new Response(null, { status: 204 }))
+    const fetchMock = routeFetch({
+      ...AI_OFF,
+      '/me': SESSION_USER,
+      '/auth/logout': new Response(null, { status: 204 }),
+    })
     vi.stubGlobal('fetch', fetchMock)
     renderLayout()
 
     await userEvent.click(await screen.findByRole('button', { name: 'Se déconnecter' }))
 
     await waitFor(() => expect(localStorage.getItem('devlink.access_token')).toBeNull())
-    expect(fetchMock.mock.calls[1][0]).toBe('/api/v1/auth/logout/')
+    expect(fetchMock.mock.calls.some((call) => String(call[0]).includes('/auth/logout'))).toBe(true)
   })
 
   it('ouvre et ferme le menu mobile', async () => {
-    vi.stubGlobal('fetch', vi.fn())
+    vi.stubGlobal('fetch', routeFetch(AI_OFF))
     renderLayout()
 
     const toggle = await screen.findByRole('button', { name: 'Menu' })
@@ -86,7 +85,7 @@ describe('mise en page', () => {
   })
 
   it('propose un lien dévitement vers le contenu', async () => {
-    vi.stubGlobal('fetch', vi.fn())
+    vi.stubGlobal('fetch', routeFetch(AI_OFF))
     renderLayout()
 
     const skip = await screen.findByRole('link', { name: 'Aller au contenu' })
@@ -94,7 +93,7 @@ describe('mise en page', () => {
   })
 
   it('affiche le lien de confidentialité dans le pied de page', async () => {
-    vi.stubGlobal('fetch', vi.fn())
+    vi.stubGlobal('fetch', routeFetch(AI_OFF))
     renderLayout()
 
     expect(await screen.findByRole('link', { name: 'Confidentialité' })).toHaveAttribute(

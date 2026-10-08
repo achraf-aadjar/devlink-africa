@@ -75,3 +75,30 @@ class ExplainMatchInputSerializer(StrictSerializer):
 
 class ExplainMatchOutputSerializer(serializers.Serializer):
     sentence = serializers.CharField()
+
+
+class CopilotTurnSerializer(serializers.Serializer):
+    """Un tour de l'historique envoyé par le navigateur : jamais stocké côté serveur."""
+
+    role = serializers.ChoiceField(choices=["user", "assistant"])
+    content = serializers.CharField(max_length=1000, allow_blank=True)
+
+
+class CopilotInputSerializer(StrictSerializer):
+    message = serializers.CharField(max_length=1000)
+    history = CopilotTurnSerializer(many=True, required=False, default=list)
+
+    def validate_message(self, value: str) -> str:
+        message = value.strip()
+        if not message:
+            raise serializers.ValidationError("Écrivez votre question pour DevLink Copilot.")
+        return message
+
+    def validate_history(self, value: list[dict]) -> list[dict]:
+        # Borne large : la vraie limite (6 tours) vit dans ai/services.py,
+        # celle-ci évite seulement une requête démesurée.
+        return value[-20:]
+
+
+class CopilotOutputSerializer(serializers.Serializer):
+    reply = serializers.CharField()
