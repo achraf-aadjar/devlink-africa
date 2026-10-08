@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import Avatar from '../../../components/Avatar'
 import { Link, useParams } from 'react-router-dom'
+import Avatar from '../../../components/Avatar'
 import DemoBadge from '../../../components/DemoBadge'
 import { Button, Card, ErrorState, LoadingState } from '../../../components/ui'
 import { ApiError } from '../../../lib/api'

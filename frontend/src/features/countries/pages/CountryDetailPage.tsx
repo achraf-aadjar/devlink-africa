@@ -1,5 +1,5 @@
-import Avatar from '../../../components/Avatar'
 import { Link, useParams } from 'react-router-dom'
+import Avatar from '../../../components/Avatar'
 import DemoBadge from '../../../components/DemoBadge'
 import SkillBadge from '../../../components/SkillBadge'
 import { Badge, Card, EmptyState, ErrorState, LoadingState } from '../../../components/ui'

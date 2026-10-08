@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import Avatar from '../../../components/Avatar'
 import { Link, useSearchParams } from 'react-router-dom'
+import Avatar from '../../../components/Avatar'
 import DemoBadge from '../../../components/DemoBadge'
 import SkillBadge from '../../../components/SkillBadge'
 import {
