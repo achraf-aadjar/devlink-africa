@@ -4,7 +4,9 @@ import { Button, Card, Field } from '../../../components/ui'
 import { ApiError } from '../../../lib/api'
 import { updateMe } from '../../profile/api/profile'
 import CountrySelect from '../../profile/components/CountrySelect'
+import GoogleSignInButton from '../components/GoogleSignInButton'
 import { useAuth } from '../hooks/useAuth'
+import { useGoogleClientId } from '../hooks/useGoogleClientId'
 
 const MIN_PASSWORD_LENGTH = 10
 
@@ -29,6 +31,7 @@ function validate(values: { email: string; password: string; consent: boolean })
 
 export default function RegisterPage() {
   const { signUp } = useAuth()
+  const { clientId: googleClientId } = useGoogleClientId()
   const navigate = useNavigate()
   const [values, setValues] = useState({
     email: '',
@@ -91,6 +94,24 @@ export default function RegisterPage() {
       </p>
 
       <Card className="border-accent-300/40 p-6 shadow-glow-soft sm:p-8">
+        {googleClientId && (
+          <div className="mb-5 flex flex-col gap-4">
+            <GoogleSignInButton onError={(message) => setErrors({ form: message })} />
+            <p className="text-center text-xs text-ink-500">
+              En continuant, vous acceptez notre{' '}
+              <Link to="/confidentialite" className="underline hover:text-accent-700">
+                politique de confidentialité
+              </Link>
+              .
+            </p>
+            <div className="flex items-center gap-3 text-xs text-ink-500" role="separator">
+              <span className="h-px flex-1 bg-ink-200" aria-hidden="true" />
+              ou
+              <span className="h-px flex-1 bg-ink-200" aria-hidden="true" />
+            </div>
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
           <Field
             label="Nom complet"

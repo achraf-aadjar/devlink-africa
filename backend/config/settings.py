@@ -254,6 +254,13 @@ AI_TIMEOUT = float(os.environ.get("AI_TIMEOUT", 12))
 # jamais une erreur pour l'utilisateur.
 AI_DAILY_LIMIT = int(os.environ.get("AI_DAILY_LIMIT", 200))
 
+# --- Connexion avec Google ---------------------------------------------------
+# Vide par défaut : « Continuer avec Google » reste masqué côté interface tant
+# qu'aucun identifiant client n'est fourni. L'identifiant client OAuth n'est
+# pas un secret (il est aussi envoyé au navigateur), mais il doit être obtenu
+# depuis Google Cloud Console — voir docs/DECISIONS.md pour la marche à suivre.
+GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", "")
+
 # --- Journalisation ---------------------------------------------------------
 # Format simple et lisible. Règle 6 du cahier : ni mot de passe, ni jeton, ni
 # adresse e-mail en clair. Le journal d'audit remplace l'adresse par une
