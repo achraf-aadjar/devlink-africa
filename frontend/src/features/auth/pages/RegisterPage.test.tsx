@@ -123,8 +123,8 @@ describe("page d'inscription", () => {
 
     await userEvent.type(screen.getByLabelText(/adresse e-mail/i), FILL.email)
     await userEvent.type(screen.getByLabelText(/mot de passe/i), FILL.password)
-    await screen.findByRole('option', { name: '🇸🇳 Sénégal' })
-    await userEvent.selectOptions(screen.getByLabelText('Pays'), 'SN')
+    await userEvent.click(screen.getByLabelText('Pays'))
+    await userEvent.click(await screen.findByRole('option', { name: '🇸🇳 Sénégal' }))
     await userEvent.click(screen.getByRole('checkbox'))
     await userEvent.click(screen.getByRole('button', { name: 'Créer mon compte' }))
 
