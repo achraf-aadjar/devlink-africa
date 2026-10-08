@@ -20,13 +20,25 @@ import { cn } from '../../lib/cn'
 
 export interface LogoProps extends Omit<SVGProps<SVGSVGElement>, 'children'> {
   size?: number
-  /** `mono` utilise currentColor : pour une impression ou un fond coloré. */
-  variant?: 'color' | 'mono'
+  /**
+   * `mono` utilise currentColor : pour une impression ou un fond coloré.
+   * `light` : pour un fond clair (barre de navigation) — l'anneau droit passe
+   * en quasi-noir, sinon il disparaît sur le blanc.
+   */
+  variant?: LogoVariant
+}
+
+type LogoVariant = 'color' | 'light' | 'mono'
+
+const RIGHT_RING: Record<LogoVariant, string> = {
+  color: '#e6edf3',
+  light: '#1f2328',
+  mono: 'currentColor',
 }
 
 export function LogoMark({ size = 32, variant = 'color', className, ...rest }: LogoProps) {
   const left = variant === 'mono' ? 'currentColor' : '#4493f8'
-  const right = variant === 'mono' ? 'currentColor' : '#e6edf3'
+  const right = RIGHT_RING[variant]
 
   return (
     <svg
@@ -70,14 +82,22 @@ export function Logo({
   className,
 }: {
   size?: number
-  variant?: 'color' | 'mono'
+  variant?: LogoVariant
   className?: string
 }) {
   return (
     <span className={cn('inline-flex items-center gap-2.5', className)}>
       <LogoMark size={size} variant={variant} aria-hidden="true" />
       <span className="text-lg font-bold leading-none tracking-tight">
-        DevLink <span className={variant === 'mono' ? undefined : 'text-accent-600'}>Africa</span>
+        DevLink{' '}
+        <span
+          className={cn(
+            variant === 'color' && 'text-accent-600',
+            variant === 'light' && 'text-[#0969da]',
+          )}
+        >
+          Africa
+        </span>
       </span>
     </span>
   )
