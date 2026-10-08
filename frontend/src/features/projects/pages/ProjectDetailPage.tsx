@@ -26,7 +26,7 @@ function LinkButton({ href, children }: { href: string; children: React.ReactNod
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-flex items-center gap-2 rounded-lg border border-ink-300 bg-ink-100 px-4 py-2 text-sm font-medium text-ink-800 transition-colors hover:bg-ink-200"
+      className="inline-flex items-center gap-2 rounded-full bg-white/[0.06] px-5 py-2 ring-1 ring-inset ring-white/10 text-sm font-medium text-ink-800 transition-colors hover:bg-ink-200"
     >
       <Icon name="external" size={16} />
       {children}
@@ -119,37 +119,40 @@ export default function ProjectDetailPage() {
         </Link>
       </nav>
 
-      <header className="flex flex-wrap items-start gap-4">
-        <span
-          aria-hidden="true"
-          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-accent-50 text-accent-600"
-        >
-          <Icon name="project" size={28} />
-        </span>
+      {/* Sur petit écran, les actions passent sous le titre au lieu de l'écraser. */}
+      <header className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+        <div className="flex min-w-0 items-start gap-4">
+          <span
+            aria-hidden="true"
+            className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#1f6feb]/30 to-[#a371f7]/20 text-accent-800 ring-1 ring-inset ring-accent-400/30"
+          >
+            <Icon name="project" size={28} />
+          </span>
 
-        <div className="min-w-0 flex-1">
-          <h1 className="text-2xl font-bold text-ink-900">{data.title}</h1>
-          <p className="mt-1 text-sm text-ink-600">
-            Porté par{' '}
-            <Link to={`/developpeurs/${data.owner.id}`} className="hover:underline">
-              {data.owner.full_name || 'un développeur'}
-            </Link>
-            {data.owner.country && (
-              <>
-                {' '}
-                <span aria-hidden="true">{countryFlag(data.owner.country)}</span>
-              </>
-            )}
-          </p>
-          <div className="mt-2 flex flex-wrap gap-2">
-            <Badge tone={data.status === 'OPEN' ? 'success' : 'neutral'}>
-              {PROJECT_STATUS_LABELS[data.status]}
-            </Badge>
-            <DemoBadge isDemo={data.owner.is_demo} />
+          <div className="min-w-0 flex-1">
+            <h1 className="text-3xl font-bold tracking-tight text-ink-900">{data.title}</h1>
+            <p className="mt-1 text-sm text-ink-600">
+              Porté par{' '}
+              <Link to={`/developpeurs/${data.owner.id}`} className="hover:underline">
+                {data.owner.full_name || 'un développeur'}
+              </Link>
+              {data.owner.country && (
+                <>
+                  {' '}
+                  <span aria-hidden="true">{countryFlag(data.owner.country)}</span>
+                </>
+              )}
+            </p>
+            <div className="mt-2 flex flex-wrap gap-2">
+              <Badge tone={data.status === 'OPEN' ? 'success' : 'neutral'}>
+                {PROJECT_STATUS_LABELS[data.status]}
+              </Badge>
+              <DemoBadge isDemo={data.owner.is_demo} />
+            </div>
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 lg:shrink-0 lg:justify-end">
           {data.repo_url && <LinkButton href={data.repo_url}>Dépôt du code</LinkButton>}
           {data.demo_url && <LinkButton href={data.demo_url}>Démonstration en ligne</LinkButton>}
           {isOwner ? (

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import Avatar from '../../../components/Avatar'
 import DemoBadge from '../../../components/DemoBadge'
 import { Button, Card, ErrorState, LoadingState } from '../../../components/ui'
 import { ApiError } from '../../../lib/api'
@@ -71,7 +72,8 @@ export default function MatchDetailPage() {
 
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-ink-900">{partnerName}</h1>
+          <Avatar name={partnerName} size={80} className="mb-4 shadow-glow" />
+          <h1 className="text-3xl font-bold tracking-tight text-ink-900">{partnerName}</h1>
           <p className="mt-1 text-sm text-ink-600">
             {data.user.country && (
               <span className="mr-1" aria-hidden="true">

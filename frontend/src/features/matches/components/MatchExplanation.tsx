@@ -1,4 +1,4 @@
-import { WeavePattern } from '../../../components/icons/Patterns'
+import ScoreRing from '../../../components/ScoreRing'
 import { Badge, Card } from '../../../components/ui'
 import type { MatchExplanation as Explanation } from '../../../lib/types'
 
@@ -33,22 +33,23 @@ export default function MatchExplanation({
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Niveau 1 : le score. Le motif de tissage le détache du reste. */}
-      <WeavePattern className="flex flex-col items-center gap-2 rounded-card border border-ink-200 bg-accent-50 p-5 shadow-card">
+      {/* Niveau 1 : le score, en jauge circulaire sur un halo. */}
+      <div className="relative isolate flex flex-col items-center gap-3 py-4 text-center">
+        <div
+          aria-hidden="true"
+          className="glow-blob inset-x-0 top-0 -z-10 mx-auto h-48 w-72 bg-[#1f6feb]/25"
+        />
         <p className="text-sm font-medium text-accent-800">Score de compatibilité</p>
-        <p className="text-5xl font-bold text-accent-700">
-          {total}
-          <span className="text-2xl font-medium">/100</span>
-        </p>
+        <ScoreRing score={total} size={148} stroke={10} showMax />
         {explanation.capped && (
-          <p className="max-w-sm text-center text-sm text-ink-600">
+          <p className="max-w-sm text-sm text-ink-600">
             Ce score est plafonné : l'échange ne va pour l'instant que dans un sens.
           </p>
         )}
-      </WeavePattern>
+      </div>
 
       {/* Niveau 2 : qui apprend quoi à qui */}
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
         <Card>
           <h3 className="mb-3 font-semibold text-ink-900">{partnerName} peut vous apprendre</h3>
           {explanation.they_can_teach_you.length > 0 ? (

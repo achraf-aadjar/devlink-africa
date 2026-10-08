@@ -6,6 +6,14 @@
 - Documentation interactive : `/api/docs/` · schéma OpenAPI : `/api/schema/`
 - Validé par : Achraf ☐ · Emmanuel ☐ · Omar ☐ *(cocher en relecture de la PR)*
 
+**Modifications après le gel** (ajouts seulement, aucun champ retiré ni renommé ; à valider par les trois en relecture de PR) :
+
+| Date | Route | Changement |
+|---|---|---|
+| 2026-10-08 | `GET /me/`, `PATCH /me/`, `GET /me/export/` | Champ `profile.contact` : adresse e-mail ou lien `https`, facultatif |
+| 2026-10-08 | `GET /exchanges/`, `PATCH /exchanges/{id}/`, `POST /matches/{id}/request/` | Champ `contact` sur `requester` et `partner`, rempli seulement si l'échange est `ACCEPTED` ou `COMPLETED` |
+| 2026-10-08 | `GET /dashboard/` | Champs `has_contact` et `counters.exchanges` ; `pending_exchanges.received` et `sent` comptés en base, plus sur l'aperçu |
+
 ## Sommaire
 
 1. [Conventions](#1-conventions)
@@ -144,6 +152,7 @@ Erreurs : `400` (mot de passe de moins de 10 caractères, trop proche de l'e-mai
     "availability": ["MENTORING", "COLLABORATION"],
     "domains": ["WEB", "DATA"],
     "avatar_url": "https://example.org/a.png",
+    "contact": "https://github.com/ada",
     "is_demo": false,
     "completeness": 80
   }
@@ -151,6 +160,8 @@ Erreurs : `400` (mot de passe de moins de 10 caractères, trop proche de l'e-mai
 ```
 
 `completeness` est un pourcentage calculé côté serveur (profil renseigné, compétences déclarées).
+
+`contact` est le moyen de joindre l'utilisateur : une adresse e-mail ou un lien `https` (GitHub, LinkedIn…), ou une chaîne vide. Il n'apparaît **jamais** sur le profil public : seuls les partenaires d'un échange accepté le voient (§ 11).
 
 ### `PATCH /me/`
 
@@ -160,7 +171,7 @@ Modification partielle du profil (et de `full_name`). Seul le propriétaire peut
 { "country": "CI", "bio": "Développeuse mobile.", "availability": ["FREELANCE"], "domains": ["MOBILE"] }
 ```
 
-`200` : le profil complet. `400` pour un pays hors ISO 3166-1 alpha-2, une valeur hors énumération, une bio de plus de 1000 caractères, ou une `avatar_url` non `https`.
+`200` : le profil complet. `400` pour un pays hors ISO 3166-1 alpha-2, une valeur hors énumération, une bio de plus de 1000 caractères, une `avatar_url` non `https`, ou un `contact` qui n'est ni une adresse e-mail ni un lien `https` (`javascript:`, `http:` et texte libre sont refusés).
 
 ### `GET /users/{id}/` — profil public
 
@@ -445,12 +456,14 @@ Propose un échange à l'autre membre de la paire.
   "status": "PROPOSED",
   "message": "Bonjour Kofi, peux-tu m'aider à démarrer avec Python ?",
   "skill": { "id": 6, "name": "Python" },
-  "requester": { "id": 1, "full_name": "Ada Lovelace" },
-  "partner": { "id": 2, "full_name": "Kofi Mensah" },
+  "requester": { "id": 1, "full_name": "Ada Lovelace", "contact": null },
+  "partner": { "id": 2, "full_name": "Kofi Mensah", "contact": null },
   "scheduled_at": null,
   "created_at": "2026-10-15T14:00:00Z"
 }
 ```
+
+**`contact`** vaut `null` tant que l'échange n'est pas accepté. Dès qu'il passe à `ACCEPTED` (puis `COMPLETED`), chaque participant porte le `contact` de son profil (ou `null` s'il n'en a pas renseigné) : l'acceptation vaut accord pour être joint. Un échange refusé ou annulé ne révèle jamais rien.
 
 Règles : `message` obligatoire (1 à 1000 caractères) ; une seule demande en attente par paire d'utilisateurs (`409` `duplicate_request`) ; on ne peut pas se proposer un échange à soi-même (`400`).
 
@@ -552,15 +565,16 @@ Une seule requête fournit tout l'écran d'accueil connecté.
 ```json
 {
   "profile_completeness": 80,
+  "has_contact": false,
   "recommended_matches": [{ "id": 31, "user": { "id": 2, "full_name": "Kofi Mensah" }, "score": 82.5 }],
   "pending_exchanges": { "received": 2, "sent": 1, "items": [] },
   "pending_join_requests": { "count": 3, "items": [] },
   "my_projects": [{ "id": 4, "title": "Agri-Data", "status": "OPEN", "join_requests_count": 3 }],
-  "counters": { "offered_skills": 5, "wanted_skills": 3, "matches": 12 }
+  "counters": { "offered_skills": 5, "wanted_skills": 3, "matches": 12, "exchanges": 4 }
 }
 ```
 
-Les listes sont tronquées (5 éléments au maximum) : ce sont des aperçus, chaque bloc renvoyant vers la page complète.
+Les listes sont tronquées (5 éléments au maximum) : ce sont des aperçus, chaque bloc renvoyant vers la page complète. Les compteurs (`pending_exchanges.received`, `sent`, `counters.*`) sont, eux, toujours calculés sur la totalité. `counters.exchanges` compte les échanges de l'utilisateur, tous statuts confondus ; avec `has_contact`, il alimente la liste « Vos premiers pas ».
 
 ---
 

@@ -96,7 +96,7 @@ class ExchangeDetailView(APIView):
 
         exchange = get_object_or_404(
             Exchange.objects.filter(Q(requester=request.user) | Q(partner=request.user)).select_related(
-                "requester", "partner", "skill"
+                "requester__profile", "partner__profile", "skill"
             ),
             pk=pk,
         )

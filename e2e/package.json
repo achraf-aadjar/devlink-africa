@@ -1,0 +1,12 @@
+{
+  "name": "devlink-africa-e2e",
+  "private": true,
+  "type": "module",
+  "description": "Parcours de démonstration rejoué dans un vrai navigateur (Chromium).",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.0"
+  }
+}

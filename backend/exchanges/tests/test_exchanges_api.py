@@ -413,3 +413,80 @@ def test_an_invalid_target_status_is_refused(matched_pair, bad_status):
     response = client_for(kofi).patch(f"{EXCHANGES}{exchange_id}/", {"status": bad_status}, format="json")
 
     assert response.status_code == 400
+
+
+# --- Moyen de contact -------------------------------------------------------
+
+
+@pytest.fixture
+def pair_with_contacts(matched_pair):
+    ada, kofi, match = matched_pair
+    Profile.objects.filter(user=ada).update(contact="https://github.com/ada")
+    Profile.objects.filter(user=kofi).update(contact="kofi@example.org")
+    return ada, kofi, match
+
+
+def test_contacts_stay_hidden_while_the_request_is_pending(pair_with_contacts):
+    ada, kofi, match = pair_with_contacts
+    _propose(ada, match)
+
+    body = client_for(kofi).get(EXCHANGES).json()["results"][0]
+
+    assert body["requester"]["contact"] is None
+    assert body["partner"]["contact"] is None
+
+
+def test_accepting_reveals_both_contacts_to_both_members(pair_with_contacts):
+    ada, kofi, match = pair_with_contacts
+    exchange_id = _propose(ada, match)
+
+    accepted = client_for(kofi).patch(f"{EXCHANGES}{exchange_id}/", {"status": "ACCEPTED"}, format="json")
+    seen_by_ada = client_for(ada).get(EXCHANGES).json()["results"][0]
+
+    assert accepted.json()["requester"]["contact"] == "https://github.com/ada"
+    assert seen_by_ada["partner"]["contact"] == "kofi@example.org"
+    assert seen_by_ada["requester"]["contact"] == "https://github.com/ada"
+
+
+def test_contacts_stay_visible_once_the_exchange_is_completed(pair_with_contacts):
+    ada, kofi, match = pair_with_contacts
+    exchange_id = _propose(ada, match)
+    client_for(kofi).patch(f"{EXCHANGES}{exchange_id}/", {"status": "ACCEPTED"}, format="json")
+    client_for(ada).patch(f"{EXCHANGES}{exchange_id}/", {"status": "COMPLETED"}, format="json")
+
+    body = client_for(ada).get(EXCHANGES).json()["results"][0]
+
+    assert body["status"] == "COMPLETED"
+    assert body["partner"]["contact"] == "kofi@example.org"
+
+
+def test_declining_never_reveals_the_contacts(pair_with_contacts):
+    ada, kofi, match = pair_with_contacts
+    exchange_id = _propose(ada, match)
+
+    response = client_for(kofi).patch(f"{EXCHANGES}{exchange_id}/", {"status": "DECLINED"}, format="json")
+
+    assert response.json()["requester"]["contact"] is None
+    assert response.json()["partner"]["contact"] is None
+
+
+def test_a_missing_contact_is_null_rather_than_an_empty_string(matched_pair):
+    ada, kofi, match = matched_pair
+    exchange_id = _propose(ada, match)
+
+    response = client_for(kofi).patch(f"{EXCHANGES}{exchange_id}/", {"status": "ACCEPTED"}, format="json")
+
+    assert response.json()["requester"]["contact"] is None
+
+
+def test_listing_accepted_exchanges_does_not_query_each_profile(
+    pair_with_contacts, django_assert_max_num_queries
+):
+    """Le contact vient du profil : il doit être chargé avec l'échange, pas une requête par ligne."""
+    ada, kofi, match = pair_with_contacts
+    exchange_id = _propose(ada, match)
+    client_for(kofi).patch(f"{EXCHANGES}{exchange_id}/", {"status": "ACCEPTED"}, format="json")
+    client = client_for(ada)
+
+    with django_assert_max_num_queries(3):
+        client.get(EXCHANGES)

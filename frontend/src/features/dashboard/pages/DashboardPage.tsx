@@ -1,9 +1,12 @@
 import { Link } from 'react-router-dom'
+import Avatar from '../../../components/Avatar'
+import ScoreRing from '../../../components/ScoreRing'
 import { Badge, Button, Card, ErrorState, LoadingState } from '../../../components/ui'
 import { EXCHANGE_TYPE_LABELS } from '../../../lib/labels'
 import { useQuery } from '../../../lib/useQuery'
 import { useAuth } from '../../auth/hooks/useAuth'
 import { getDashboard } from '../api/dashboard'
+import OnboardingChecklist from '../components/OnboardingChecklist'
 
 export default function DashboardPage() {
   const { user } = useAuth()
@@ -13,51 +16,32 @@ export default function DashboardPage() {
   if (error) return <ErrorState onRetry={reload} />
   if (!data) return null
 
-  const incomplete = data.profile_completeness < 100
-
   return (
     <section className="flex flex-col gap-6">
       <header>
-        <h1 className="text-2xl font-bold text-ink-900">
+        <h1 className="text-3xl font-bold tracking-tight text-ink-900">
           Bonjour{user?.full_name ? ` ${user.full_name.split(' ')[0]}` : ''}
         </h1>
         <p className="mt-1 text-sm text-ink-600">Voici où vous en êtes aujourd'hui.</p>
       </header>
 
-      {incomplete && (
-        <Card className="flex flex-wrap items-center justify-between gap-4 bg-accent-50">
-          <div>
-            <p className="font-medium text-accent-900">
-              Votre profil est complété à {data.profile_completeness} %
-            </p>
-            <p className="mt-0.5 text-sm text-accent-800">
-              Un profil complet reçoit des propositions plus justes.
-            </p>
-          </div>
-          <Link to="/profil">
-            <Button size="sm">Compléter mon profil</Button>
-          </Link>
-        </Card>
-      )}
+      <OnboardingChecklist data={data} />
 
-      <div className="grid gap-4 sm:grid-cols-3">
-        <Card className="text-center">
-          <p className="text-3xl font-bold tabular-nums text-accent-700">{data.counters.matches}</p>
-          <p className="mt-1 text-sm text-ink-600">match{data.counters.matches > 1 ? 's' : ''}</p>
-        </Card>
-        <Card className="text-center">
-          <p className="text-3xl font-bold tabular-nums text-accent-700">
-            {data.counters.offered_skills}
-          </p>
-          <p className="mt-1 text-sm text-ink-600">compétence(s) proposée(s)</p>
-        </Card>
-        <Card className="text-center">
-          <p className="text-3xl font-bold tabular-nums text-accent-700">
-            {data.counters.wanted_skills}
-          </p>
-          <p className="mt-1 text-sm text-ink-600">à apprendre</p>
-        </Card>
-      </div>
+      {/* Compteurs posés à plat, séparés par de fins traits : pas de boîtes. */}
+      <dl className="grid grid-cols-3 divide-x divide-white/[0.08] py-2">
+        {[
+          { value: data.counters.matches, label: `match${data.counters.matches > 1 ? 's' : ''}` },
+          { value: data.counters.offered_skills, label: 'compétence(s) proposée(s)' },
+          { value: data.counters.wanted_skills, label: 'à apprendre' },
+        ].map((counter) => (
+          <div key={counter.label} className="flex flex-col items-center gap-1 px-2 text-center">
+            <dt className="order-2 text-sm text-ink-600">{counter.label}</dt>
+            <dd className="text-gradient text-4xl font-bold tabular-nums sm:text-5xl">
+              {counter.value}
+            </dd>
+          </div>
+        ))}
+      </dl>
 
       <Card>
         <div className="mb-3 flex items-center justify-between gap-3">
@@ -77,10 +61,14 @@ export default function DashboardPage() {
             </Link>
           </div>
         ) : (
-          <ul className="flex flex-col gap-3">
+          <ul className="flex flex-col gap-1">
             {data.recommended_matches.map((match) => (
-              <li key={match.id} className="flex items-center justify-between gap-3">
-                <div className="min-w-0">
+              <li
+                key={match.id}
+                className="-mx-3 flex items-center gap-4 rounded-2xl px-3 py-2.5 transition hover:bg-white/[0.04]"
+              >
+                <Avatar name={match.user.full_name || 'Développeur'} size={44} />
+                <div className="min-w-0 flex-1">
                   <Link
                     to={`/matchs/${match.id}`}
                     className="font-medium text-ink-900 hover:text-accent-700 hover:underline"
@@ -91,16 +79,14 @@ export default function DashboardPage() {
                     <p className="truncate text-sm text-ink-600">{match.reasons[0]}</p>
                   )}
                 </div>
-                <span className="shrink-0 font-bold tabular-nums text-accent-700">
-                  {Math.round(match.score)}
-                </span>
+                <ScoreRing score={match.score} size={44} stroke={4} />
               </li>
             ))}
           </ul>
         )}
       </Card>
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
         <Card>
           <div className="mb-3 flex items-center justify-between gap-3">
             <h2 className="font-semibold text-ink-900">Échanges en attente</h2>

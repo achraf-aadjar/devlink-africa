@@ -25,6 +25,12 @@ check_node() {
     return
   fi
   node "$ROOT/scripts/check_licenses.mjs" "$ROOT/frontend/node_modules" "$ALLOWLIST" || status=1
+
+  # Outils de test de bout en bout : jamais livrés, mais vérifiés de la même façon.
+  if [ -d "$ROOT/e2e/node_modules" ]; then
+    echo "== Licences Node (e2e/node_modules) =="
+    node "$ROOT/scripts/check_licenses.mjs" "$ROOT/e2e/node_modules" "$ALLOWLIST" || status=1
+  fi
 }
 
 case "$TARGET" in

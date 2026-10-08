@@ -10,7 +10,7 @@ export default function MatchesPage() {
   return (
     <section className="flex flex-col gap-6">
       <header>
-        <h1 className="text-2xl font-bold text-ink-900">Mes matchs</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-ink-900">Mes matchs</h1>
         <p className="mt-1 text-sm text-ink-600">
           Dev Match vous propose des profils complémentaires : chacun sait ce que l'autre veut
           apprendre.
@@ -39,7 +39,7 @@ export default function MatchesPage() {
             {data.count} développeur{data.count > 1 ? 's' : ''} correspond
             {data.count > 1 ? 'ent' : ''} à votre profil.
           </p>
-          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {data.results.map((match) => (
               <MatchCard key={match.id} match={match} />
             ))}

@@ -114,6 +114,7 @@ def export_user_data(*, user) -> dict:
             "availability": profile.availability if profile else [],
             "domains": profile.domains if profile else [],
             "avatar_url": profile.avatar_url if profile else "",
+            "contact": profile.contact if profile else "",
         },
         "skills": [
             {

@@ -5,6 +5,7 @@ import DashboardPage from './DashboardPage'
 
 const FULL = {
   profile_completeness: 80,
+  has_contact: false,
   recommended_matches: [
     {
       id: 31,
@@ -60,16 +61,24 @@ const FULL = {
       updated_at: '',
     },
   ],
-  counters: { offered_skills: 5, wanted_skills: 3, matches: 12 },
+  counters: { offered_skills: 5, wanted_skills: 3, matches: 12, exchanges: 1 },
 }
 
 const EMPTY = {
   profile_completeness: 100,
+  has_contact: false,
   recommended_matches: [],
   pending_exchanges: { received: 0, sent: 0, items: [] },
   pending_join_requests: { count: 0, items: [] },
   my_projects: [],
-  counters: { offered_skills: 0, wanted_skills: 0, matches: 0 },
+  counters: { offered_skills: 0, wanted_skills: 0, matches: 0, exchanges: 0 },
+}
+
+/** Tout est fait : la liste des premiers pas n'a plus de raison d'être. */
+const DONE = {
+  ...EMPTY,
+  has_contact: true,
+  counters: { offered_skills: 2, wanted_skills: 1, matches: 4, exchanges: 1 },
 }
 
 function stub(payload: unknown) {
@@ -128,5 +137,35 @@ describe('tableau de bord', () => {
     renderWithRouter(<DashboardPage />, { authenticated: true })
 
     expect(await screen.findByRole('alert')).toBeInTheDocument()
+  })
+
+  it('montre les premiers pas et une seule action : la prochaine', async () => {
+    stub(EMPTY)
+    renderWithRouter(<DashboardPage />, { authenticated: true })
+
+    expect(await screen.findByRole('heading', { name: 'Vos premiers pas' })).toBeInTheDocument()
+    expect(screen.getByText('1 étape faite sur 5')).toBeInTheDocument()
+    // Profil complet : la prochaine étape est de déclarer une compétence.
+    expect(screen.getByRole('link', { name: 'Ajouter une compétence' })).toHaveAttribute(
+      'href',
+      '/competences',
+    )
+    expect(screen.queryByRole('link', { name: 'Ajouter mon contact' })).not.toBeInTheDocument()
+  })
+
+  it('compte les étapes déjà faites', async () => {
+    stub(FULL)
+    renderWithRouter(<DashboardPage />, { authenticated: true })
+
+    // Compétences et premier échange faits ; profil à 80 % et contact manquants.
+    expect(await screen.findByText('3 étapes faites sur 5')).toBeInTheDocument()
+  })
+
+  it('disparaît une fois toutes les étapes faites', async () => {
+    stub(DONE)
+    renderWithRouter(<DashboardPage />, { authenticated: true })
+
+    await screen.findByRole('heading', { level: 1 })
+    expect(screen.queryByRole('heading', { name: 'Vos premiers pas' })).not.toBeInTheDocument()
   })
 })

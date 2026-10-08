@@ -11,7 +11,9 @@ export default function PrivacyPage() {
   return (
     <section className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <header>
-        <h1 className="text-2xl font-bold text-ink-900">Politique de confidentialité</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-ink-900">
+          Politique de confidentialité
+        </h1>
         <p className="mt-1 text-sm text-ink-600">Dernière mise à jour : octobre 2026.</p>
       </header>
 
@@ -43,6 +45,12 @@ export default function PrivacyPage() {
               <strong>Votre profil</strong> : nom, pays, présentation, disponibilités, domaines,
               adresse de votre photo. Ces informations sont publiques sur la plateforme, parce que
               c'est leur raison d'être : permettre aux autres de vous trouver.
+            </li>
+            <li>
+              <strong>Votre moyen de contact</strong>, si vous choisissez d'en indiquer un (adresse
+              e-mail ou lien vers GitHub, LinkedIn…). Il n'est <strong>pas public</strong> : seule
+              la personne avec qui vous avez un échange accepté le voit. Vous pouvez l'effacer à
+              tout moment depuis Mon profil.
             </li>
             <li>
               <strong>Vos compétences</strong>, vos projets, vos demandes d'échange et vos

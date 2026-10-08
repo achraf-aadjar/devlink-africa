@@ -4,6 +4,7 @@ import Icon from '../components/icons/Icon'
 import Logo from '../components/icons/Logo'
 import PageContainer from '../components/PageContainer'
 import { useAuth } from '../features/auth/hooks/useAuth'
+import { usePendingRequests } from '../features/exchanges/hooks/usePendingRequests'
 import { cn } from '../lib/cn'
 
 interface NavLinkItem {
@@ -18,6 +19,17 @@ const PRIVATE_LINKS: NavLinkItem[] = [
   { to: '/echanges', label: 'Échanges' },
 ]
 
+/** Pastille du nombre de demandes reçues, posée à côté du lien « Échanges ». */
+function PendingBadge({ count }: { count: number }) {
+  if (count === 0) return null
+  return (
+    <span className="ml-1.5 inline-flex min-w-5 items-center justify-center rounded-full bg-[#1f6feb] px-1.5 text-xs font-semibold leading-5 text-white">
+      <span aria-hidden="true">{count}</span>
+      <span className="sr-only">{` (${count} demande${count > 1 ? 's' : ''} en attente)`}</span>
+    </span>
+  )
+}
+
 const PUBLIC_LINKS: NavLinkItem[] = [
   { to: '/recherche', label: 'Recherche' },
   { to: '/projets', label: 'Projets' },
@@ -29,7 +41,7 @@ const PUBLIC_LINKS: NavLinkItem[] = [
 // fond sombre et donnerait ici du texte clair sur du clair.
 const linkClass = ({ isActive }: { isActive: boolean }) =>
   cn(
-    'flex items-center rounded-lg px-3 py-2 text-[15px] font-medium transition-colors',
+    'flex items-center whitespace-nowrap rounded-lg px-3 py-2 text-[15px] font-medium transition-colors',
     isActive ? 'text-[#0d1117] bg-[#dde1e7]' : 'text-[#3d444d] hover:text-[#0d1117]',
   )
 
@@ -46,8 +58,13 @@ export default function Layout() {
   const { isAuthenticated, user, signOut } = useAuth()
   const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
+  const pending = usePendingRequests(isAuthenticated)
 
   const links = isAuthenticated ? [...PRIVATE_LINKS, ...PUBLIC_LINKS] : PUBLIC_LINKS
+  // Connecté, la barre porte sept liens plus le profil : elle ne tient sur
+  // une ligne qu'à partir de xl. En visiteur, trois liens tiennent dès lg.
+  const desktop = isAuthenticated ? 'xl:flex' : 'lg:flex'
+  const mobileOnly = isAuthenticated ? 'xl:hidden' : 'lg:hidden'
 
   async function handleSignOut() {
     await signOut()
@@ -74,16 +91,17 @@ export default function Layout() {
 
             <nav
               aria-label="Navigation principale"
-              className="hidden flex-1 items-center justify-center gap-1 lg:flex"
+              className={cn('hidden flex-1 items-center justify-center gap-1', desktop)}
             >
               {links.map((link) => (
                 <NavLink key={link.to} to={link.to} className={linkClass}>
                   {link.label}
+                  {link.to === '/echanges' && <PendingBadge count={pending} />}
                 </NavLink>
               ))}
             </nav>
 
-            <div className="hidden shrink-0 items-center gap-3 lg:flex">
+            <div className={cn('hidden shrink-0 items-center gap-2', desktop)}>
               {isAuthenticated ? (
                 <>
                   <NavLink to="/profil" className={linkClass}>
@@ -93,10 +111,11 @@ export default function Layout() {
                   <button
                     type="button"
                     onClick={handleSignOut}
-                    className="inline-flex items-center gap-2 rounded-xl border border-[#d0d7de] px-4 py-2.5 text-[15px] font-medium text-[#3d444d] transition-colors hover:bg-[#e3e6eb] hover:text-[#0d1117]"
+                    aria-label="Se déconnecter"
+                    title="Se déconnecter"
+                    className="rounded-xl border border-[#d0d7de] p-2.5 text-[#3d444d] transition-colors hover:bg-[#e3e6eb] hover:text-[#0d1117]"
                   >
-                    <Icon name="logout" size={16} />
-                    Se déconnecter
+                    <Icon name="logout" size={18} />
                   </button>
                 </>
               ) : (
@@ -117,7 +136,7 @@ export default function Layout() {
               aria-expanded={menuOpen}
               aria-controls="menu-mobile"
               aria-label="Menu"
-              className="ml-auto rounded-lg p-2 text-[#3d444d] hover:bg-[#e3e6eb] lg:hidden"
+              className={cn('ml-auto rounded-lg p-2 text-[#3d444d] hover:bg-[#e3e6eb]', mobileOnly)}
             >
               <svg
                 viewBox="0 0 24 24"
@@ -135,7 +154,7 @@ export default function Layout() {
             <nav
               id="menu-mobile"
               aria-label="Navigation mobile"
-              className="animate-fade-in border-t border-[#d0d7de] px-3 py-2 lg:hidden"
+              className={cn('animate-fade-in border-t border-[#d0d7de] px-3 py-2', mobileOnly)}
             >
               {links.map((link) => (
                 <NavLink
@@ -145,6 +164,7 @@ export default function Layout() {
                   onClick={() => setMenuOpen(false)}
                 >
                   {link.label}
+                  {link.to === '/echanges' && <PendingBadge count={pending} />}
                 </NavLink>
               ))}
               <div className="mt-2 border-t border-[#d0d7de] pt-2">

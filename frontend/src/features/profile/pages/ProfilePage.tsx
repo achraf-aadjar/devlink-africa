@@ -15,6 +15,7 @@ interface FormState {
   country: string
   bio: string
   avatar_url: string
+  contact: string
   availability: Availability[]
   domains: Domain[]
 }
@@ -71,6 +72,7 @@ export default function ProfilePage() {
       country: data.profile.country,
       bio: data.profile.bio,
       avatar_url: data.profile.avatar_url,
+      contact: data.profile.contact,
       availability: data.profile.availability,
       domains: data.profile.domains,
     })
@@ -81,20 +83,31 @@ export default function ProfilePage() {
     <section className="flex flex-col gap-6">
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-ink-900">Mon profil</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-ink-900">Mon profil</h1>
           <p className="mt-1 text-sm text-ink-600">{data.email}</p>
         </div>
-        <Card className="px-4 py-3 text-center">
-          <p className="text-xs font-medium text-ink-600">Profil complété</p>
-          <p className="text-2xl font-bold tabular-nums text-accent-700">
-            {data.profile.completeness}%
+        <div className="flex flex-col items-end gap-2">
+          <p className="text-xs font-medium text-ink-600">
+            Profil complété{' '}
+            <span className="text-gradient text-2xl font-bold tabular-nums">
+              {data.profile.completeness}%
+            </span>
           </p>
-        </Card>
+          <div
+            aria-hidden="true"
+            className="h-1.5 w-48 overflow-hidden rounded-full bg-white/[0.08]"
+          >
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-[#1f6feb] to-[#a371f7]"
+              style={{ width: `${data.profile.completeness}%` }}
+            />
+          </div>
+        </div>
       </header>
 
       <Card>
         <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
             <Field
               label="Nom complet"
               value={form.full_name}
@@ -155,6 +168,15 @@ export default function ProfilePage() {
             </div>
             {errors.domains && <p className="text-sm text-red-400">{errors.domains}</p>}
           </fieldset>
+
+          <Field
+            label="Moyen de contact"
+            value={form.contact}
+            error={errors.contact}
+            placeholder="vous@exemple.com ou https://github.com/vous"
+            hint="Une adresse e-mail ou un lien https (GitHub, LinkedIn…). Il n'apparaît jamais sur votre profil public : seule la personne avec qui vous avez un échange accepté le voit."
+            onChange={(event) => setForm({ ...form, contact: event.target.value })}
+          />
 
           <Field
             label="Adresse de votre photo (https)"

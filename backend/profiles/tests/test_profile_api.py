@@ -335,3 +335,50 @@ def test_public_profile_avoids_n_plus_one_queries(django_assert_num_queries):
 
     with django_assert_num_queries(3):
         client.get(f"/api/v1/users/{owner.pk}/")
+
+
+# --- Moyen de contact -------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "contact", ["ada@example.org", "https://github.com/ada", "https://www.linkedin.com/in/ada"]
+)
+def test_patch_me_accepts_an_email_or_an_https_link_as_contact(contact):
+    user = make_user()
+
+    response = client_for(user).patch(ME, {"contact": f"  {contact} "}, format="json")
+
+    assert response.status_code == 200
+    assert response.json()["profile"]["contact"] == contact
+
+
+@pytest.mark.parametrize(
+    "contact",
+    ["javascript:alert(1)", "http://github.com/ada", "Telegram @ada", "ada@", "https://"],
+)
+def test_patch_me_rejects_any_other_contact(contact):
+    user = make_user()
+
+    response = client_for(user).patch(ME, {"contact": contact}, format="json")
+
+    assert response.status_code == 400
+    assert "contact" in response.json()["errors"]
+
+
+def test_the_contact_can_be_cleared():
+    user = make_user(contact="ada@example.org")
+
+    response = client_for(user).patch(ME, {"contact": ""}, format="json")
+
+    assert response.json()["profile"]["contact"] == ""
+
+
+def test_public_profile_never_exposes_the_contact():
+    """Le contact n'est révélé que dans un échange accepté, jamais sur le profil public."""
+    owner = make_user("kofi@example.org", contact="kofi@example.org")
+    viewer = make_user("ada@example.org")
+
+    body = client_for(viewer).get(f"/api/v1/users/{owner.pk}/").json()
+
+    assert "contact" not in body
+    assert "kofi@example.org" not in str(body)

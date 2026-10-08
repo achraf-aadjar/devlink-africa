@@ -71,7 +71,7 @@ export default function SkillsPage() {
   return (
     <section className="flex flex-col gap-6">
       <header>
-        <h1 className="text-2xl font-bold text-ink-900">Mes compétences</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-ink-900">Mes compétences</h1>
         <p className="mt-1 text-sm text-ink-600">
           Déclarez ce que vous savez faire et ce que vous voulez apprendre. Dev Match s'appuie sur
           ces deux listes.
@@ -94,7 +94,7 @@ export default function SkillsPage() {
 
       <SkillExtractor onAccept={handleAdd} />
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
         <SkillColumn
           title="Je sais faire"
           description="Ce que vous pouvez enseigner à quelqu'un."
@@ -155,6 +155,7 @@ function SkillColumn({
 }: ColumnProps) {
   const [skillId, setSkillId] = useState('')
   const [level, setLevel] = useState<SkillLevel>('INTERMEDIATE')
+  const headingId = `colonne-${kind.toLowerCase()}`
 
   const available = skills.filter((skill) => !declared.has(`${kind}:${skill.id}`))
   const options = available.map((skill) => ({
@@ -163,9 +164,11 @@ function SkillColumn({
   }))
 
   return (
-    <Card className="flex flex-col gap-4">
+    <Card as="section" labelledBy={headingId} className="flex flex-col gap-4">
       <div>
-        <h2 className="font-semibold text-ink-900">{title}</h2>
+        <h2 id={headingId} className="font-semibold text-ink-900">
+          {title}
+        </h2>
         <p className="mt-0.5 text-sm text-ink-600">{description}</p>
       </div>
 

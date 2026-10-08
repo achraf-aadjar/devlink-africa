@@ -1,4 +1,5 @@
 import { Link, useParams } from 'react-router-dom'
+import Avatar from '../../../components/Avatar'
 import DemoBadge from '../../../components/DemoBadge'
 import SkillBadge from '../../../components/SkillBadge'
 import { Badge, Card, EmptyState, ErrorState, LoadingState } from '../../../components/ui'
@@ -38,7 +39,7 @@ export default function CountryDetailPage() {
           {data.flag}
         </span>
         <div>
-          <h1 className="text-2xl font-bold text-ink-900">{data.name}</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-ink-900">{data.name}</h1>
           <p className="mt-1 text-sm text-ink-600">
             {data.developers_count} développeur{data.developers_count > 1 ? 's' : ''} ·{' '}
             {data.projects_count} projet{data.projects_count > 1 ? 's' : ''}
@@ -71,9 +72,10 @@ export default function CountryDetailPage() {
           {data.developers.length > 0 && (
             <div className="flex flex-col gap-3">
               <h2 className="font-semibold text-ink-900">Développeurs</h2>
-              <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {data.developers.map((person) => (
                   <Card as="li" key={person.id} interactive className="flex flex-col gap-2">
+                    <Avatar name={person.full_name || 'Développeur'} size={52} className="mb-1" />
                     <h3 className="font-semibold text-ink-900">
                       <Link
                         to={`/developpeurs/${person.id}`}
@@ -101,7 +103,7 @@ export default function CountryDetailPage() {
           {data.projects.length > 0 && (
             <div className="flex flex-col gap-3">
               <h2 className="font-semibold text-ink-900">Projets</h2>
-              <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {data.projects.map((project) => (
                   <ProjectCard key={project.id} project={project} />
                 ))}

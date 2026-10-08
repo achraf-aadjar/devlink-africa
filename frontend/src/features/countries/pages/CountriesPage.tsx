@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Card, EmptyState, ErrorState, LoadingState } from '../../../components/ui'
+import { EmptyState, ErrorState, LoadingState } from '../../../components/ui'
 import { useQuery } from '../../../lib/useQuery'
 import { listCountries } from '../../search/api/search'
 import AfricaTileMap from '../components/AfricaTileMap'
@@ -11,7 +11,7 @@ export default function CountriesPage() {
   return (
     <section className="flex flex-col gap-6">
       <header>
-        <h1 className="text-2xl font-bold text-ink-900">Explorer par pays</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-ink-900">Explorer par pays</h1>
         <p className="mt-1 text-sm text-ink-600">
           Les développeurs et les projets présents sur la plateforme, pays par pays.
         </p>
@@ -30,25 +30,36 @@ export default function CountriesPage() {
       {data && <AfricaTileMap countries={data.results} />}
 
       {data && data.results.length > 0 && (
-        <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+        <ul className="flex flex-wrap gap-3">
           {data.results.map((country) => (
-            <Card as="li" key={country.code} interactive className="p-0">
+            <li key={country.code}>
               <Link
                 to={`/pays/${country.code}`}
-                className="flex h-full flex-col gap-1 rounded-card p-4 hover:bg-accent-50"
+                className="group flex items-center gap-3 rounded-full bg-white/[0.04] py-2 pl-2 pr-5 ring-1 ring-inset ring-white/[0.07] transition hover:-translate-y-0.5 hover:bg-white/[0.07] hover:ring-accent-400/40"
               >
-                <span className="text-3xl" aria-hidden="true">
+                <span
+                  aria-hidden="true"
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-white/[0.06] text-2xl"
+                >
                   {country.flag}
                 </span>
-                <span className="font-semibold text-ink-900">{country.name}</span>
-                <span className="text-sm text-ink-600">
-                  {country.developers_count} développeur{country.developers_count > 1 ? 's' : ''}
-                </span>
-                <span className="text-sm text-ink-600">
-                  {country.projects_count} projet{country.projects_count > 1 ? 's' : ''}
+                <span className="flex flex-col leading-tight">
+                  <span className="font-semibold text-ink-900 group-hover:text-accent-800">
+                    {country.name}
+                  </span>
+                  <span className="text-xs text-ink-600">
+                    <span>
+                      {country.developers_count} développeur
+                      {country.developers_count > 1 ? 's' : ''}
+                    </span>
+                    {' · '}
+                    <span>
+                      {country.projects_count} projet{country.projects_count > 1 ? 's' : ''}
+                    </span>
+                  </span>
                 </span>
               </Link>
-            </Card>
+            </li>
           ))}
         </ul>
       )}

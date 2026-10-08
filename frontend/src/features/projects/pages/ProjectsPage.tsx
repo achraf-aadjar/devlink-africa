@@ -52,7 +52,7 @@ export default function ProjectsPage() {
     <section className="flex flex-col gap-6">
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-ink-900">Project Hub</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-ink-900">Project Hub</h1>
           <p className="mt-1 text-sm text-ink-600">
             Des projets africains qui cherchent des contributeurs.
           </p>
@@ -66,7 +66,7 @@ export default function ProjectsPage() {
 
       <Card>
         <form
-          className="grid gap-4 sm:grid-cols-3"
+          className="grid gap-4 grid-cols-1 sm:grid-cols-3"
           onSubmit={(event) => {
             event.preventDefault()
             update({ q: draft })
@@ -120,7 +120,7 @@ export default function ProjectsPage() {
           <p className="text-sm text-ink-600">
             {data.count} projet{data.count > 1 ? 's' : ''} trouvé{data.count > 1 ? 's' : ''}.
           </p>
-          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {data.results.map((project) => (
               <ProjectCard key={project.id} project={project} />
             ))}

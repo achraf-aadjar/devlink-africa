@@ -15,6 +15,7 @@ const ME = {
     availability: ['MENTORING'],
     domains: ['WEB'],
     avatar_url: '',
+    contact: '',
     is_demo: false,
     completeness: 80,
   },

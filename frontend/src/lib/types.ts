@@ -52,6 +52,8 @@ export interface Profile {
   availability: Availability[]
   domains: Domain[]
   avatar_url: string
+  /** Adresse e-mail ou lien https, montré seulement aux partenaires d'un échange accepté. */
+  contact: string
   is_demo: boolean
   completeness: number
 }
@@ -194,14 +196,21 @@ export interface MatchDetail extends MatchSummary {
 
 // --- Échanges ---------------------------------------------------------------
 
+/** Participant à un échange. `contact` n'est rempli qu'une fois l'échange accepté. */
+export interface ExchangeParty {
+  id: number
+  full_name: string
+  contact: string | null
+}
+
 export interface Exchange {
   id: number
   type: ExchangeType
   status: ExchangeStatus
   message: string
   skill: Skill | null
-  requester: { id: number; full_name: string }
-  partner: { id: number; full_name: string }
+  requester: ExchangeParty
+  partner: ExchangeParty
   scheduled_at: string | null
   created_at: string
   updated_at: string
@@ -239,11 +248,12 @@ export interface CountryDetail extends Country {
 
 export interface Dashboard {
   profile_completeness: number
+  has_contact: boolean
   recommended_matches: MatchSummary[]
   pending_exchanges: { received: number; sent: number; items: Exchange[] }
   pending_join_requests: { count: number; items: JoinRequest[] }
   my_projects: Project[]
-  counters: { offered_skills: number; wanted_skills: number; matches: number }
+  counters: { offered_skills: number; wanted_skills: number; matches: number; exchanges: number }
 }
 
 export interface Health {

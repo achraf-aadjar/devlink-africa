@@ -9,7 +9,7 @@ from .models import Exchange
 
 def list_exchanges(*, user, direction: str | None = None, status: str | None = None) -> QuerySet[Exchange]:
     """Échanges d'un utilisateur. Il ne voit que les siens, dans les deux sens."""
-    queryset = Exchange.objects.select_related("requester", "partner", "skill")
+    queryset = Exchange.objects.select_related("requester__profile", "partner__profile", "skill")
 
     if direction == "sent":
         queryset = queryset.filter(requester=user)

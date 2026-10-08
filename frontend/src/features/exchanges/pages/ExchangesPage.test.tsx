@@ -11,8 +11,8 @@ const RECEIVED = {
   status: 'PROPOSED',
   message: "Peux-tu m'aider sur Python ?",
   skill: { id: 6, name: 'Python', category: 'BACKEND' },
-  requester: { id: 2, full_name: 'Kofi Mensah' },
-  partner: { id: 1, full_name: 'Ada Lovelace' },
+  requester: { id: 2, full_name: 'Kofi Mensah', contact: null },
+  partner: { id: 1, full_name: 'Ada Lovelace', contact: null },
   scheduled_at: null,
   created_at: '',
   updated_at: '',
@@ -94,5 +94,73 @@ describe('page des échanges', () => {
         true,
       ),
     )
+  })
+
+  it('donne le contact de l’autre une fois la demande acceptée', async () => {
+    stub([
+      {
+        ...RECEIVED,
+        status: 'ACCEPTED',
+        requester: { id: 2, full_name: 'Kofi Mensah', contact: 'kofi@example.org' },
+        partner: { id: 1, full_name: 'Ada Lovelace', contact: 'https://github.com/ada' },
+      },
+    ])
+    renderWithRouter(<ExchangesPage />, { authenticated: true })
+
+    const link = await screen.findByRole('link', { name: 'kofi@example.org' })
+    expect(link).toHaveAttribute('href', 'mailto:kofi@example.org')
+    expect(screen.queryByText(/ajoutez-le dans Mon profil/)).not.toBeInTheDocument()
+  })
+
+  it('ouvre un lien https de contact dans un nouvel onglet', async () => {
+    stub([
+      {
+        ...RECEIVED,
+        status: 'COMPLETED',
+        requester: { id: 2, full_name: 'Kofi Mensah', contact: 'https://github.com/kofi' },
+        partner: { id: 1, full_name: 'Ada Lovelace', contact: 'ada@example.org' },
+      },
+    ])
+    renderWithRouter(<ExchangesPage />, { authenticated: true })
+
+    const link = await screen.findByRole('link', { name: 'https://github.com/kofi' })
+    expect(link).toHaveAttribute('target', '_blank')
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+  })
+
+  it('invite à renseigner son contact quand les deux en manquent', async () => {
+    stub([{ ...RECEIVED, status: 'ACCEPTED' }])
+    renderWithRouter(<ExchangesPage />, { authenticated: true })
+
+    expect(
+      await screen.findByText(/Kofi Mensah n'a pas encore indiqué de moyen de contact/),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'ajoutez-le dans Mon profil' })).toHaveAttribute(
+      'href',
+      '/profil',
+    )
+  })
+
+  it("ne fait jamais un lien d'une valeur qui n'est ni un e-mail ni un https", async () => {
+    stub([
+      {
+        ...RECEIVED,
+        status: 'ACCEPTED',
+        requester: { id: 2, full_name: 'Kofi Mensah', contact: 'javascript:alert(1)' },
+        partner: { id: 1, full_name: 'Ada Lovelace', contact: 'ada@example.org' },
+      },
+    ])
+    renderWithRouter(<ExchangesPage />, { authenticated: true })
+
+    await screen.findByText(/Échange accepté/)
+    expect(screen.queryByRole('link', { name: 'javascript:alert(1)' })).not.toBeInTheDocument()
+  })
+
+  it('ne montre aucun contact tant que la demande est en attente', async () => {
+    stub()
+    renderWithRouter(<ExchangesPage />, { authenticated: true })
+
+    await screen.findByRole('button', { name: 'Accepter' })
+    expect(screen.queryByText(/Échange accepté/)).not.toBeInTheDocument()
   })
 })

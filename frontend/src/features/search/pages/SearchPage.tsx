@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
+import Avatar from '../../../components/Avatar'
 import DemoBadge from '../../../components/DemoBadge'
 import SkillBadge from '../../../components/SkillBadge'
 import {
@@ -72,7 +73,7 @@ export default function SearchPage() {
   return (
     <section className="flex flex-col gap-6">
       <header>
-        <h1 className="text-2xl font-bold text-ink-900">Recherche</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-ink-900">Recherche</h1>
         <p className="mt-1 text-sm text-ink-600">
           Trouvez un développeur par compétence et par pays, ou un projet à rejoindre.
         </p>
@@ -118,7 +119,7 @@ export default function SearchPage() {
 
       <Card>
         <form
-          className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+          className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
           onSubmit={(event) => {
             event.preventDefault()
             update({ q: draft })
@@ -221,9 +222,10 @@ export default function SearchPage() {
                 {users.data.count} développeur{users.data.count > 1 ? 's' : ''} trouvé
                 {users.data.count > 1 ? 's' : ''}.
               </p>
-              <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {users.data.results.map((person) => (
                   <Card as="li" key={person.id} interactive className="flex flex-col gap-3">
+                    <Avatar name={person.full_name || 'Développeur'} size={52} />
                     <div>
                       <h2 className="font-semibold text-ink-900">
                         <Link
@@ -271,7 +273,7 @@ export default function SearchPage() {
               description="Élargissez vos critères pour découvrir d'autres projets."
             />
           ) : (
-            <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {projects.data.results.map((project) => (
                 <ProjectCard key={project.id} project={project} />
               ))}

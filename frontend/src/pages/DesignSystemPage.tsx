@@ -18,7 +18,7 @@ export default function DesignSystemPage() {
   return (
     <div className="flex flex-col gap-10">
       <header>
-        <h1 className="text-2xl font-bold text-ink-900">Design system</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-ink-900">Design system</h1>
         <p className="mt-1 text-sm text-ink-600">
           Les composants réutilisables de l'interface. Thème sombre, un seul accent (bleu), des
           polices système.
@@ -59,10 +59,7 @@ export default function DesignSystemPage() {
         </p>
         <ul className="grid grid-cols-3 gap-3 sm:grid-cols-5 lg:grid-cols-6">
           {ICON_NAMES.map((name) => (
-            <li
-              key={name}
-              className="flex flex-col items-center gap-2 rounded-lg border border-ink-200 bg-ink-100 p-3"
-            >
+            <li key={name} className="flex flex-col items-center gap-2 surface p-4">
               <Icon name={name} size={24} />
               <code className="text-center text-[0.65rem] leading-tight text-ink-500">{name}</code>
             </li>
@@ -89,16 +86,16 @@ export default function DesignSystemPage() {
           Un fond ne doit jamais se remarquer : s'il attire l'œil, il nuit au texte posé dessus.
           D'où ces opacités très basses.
         </p>
-        <div className="grid gap-4 sm:grid-cols-3">
-          <RingsPattern className="rounded-card border border-ink-200 p-5">
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-3">
+          <RingsPattern className="surface p-6">
             <p className="text-sm font-medium text-ink-800">Anneaux</p>
             <p className="text-xs text-ink-600">Page d'accueil</p>
           </RingsPattern>
-          <WeavePattern className="rounded-card border border-ink-200 p-5">
+          <WeavePattern className="surface p-6">
             <p className="text-sm font-medium text-ink-800">Tissage</p>
             <p className="text-xs text-ink-600">En-tête du score</p>
           </WeavePattern>
-          <DotsPattern className="rounded-card border border-ink-200 p-5">
+          <DotsPattern className="surface p-6">
             <p className="text-sm font-medium text-ink-800">Points</p>
             <p className="text-xs text-ink-600">Cartes de projet</p>
           </DotsPattern>
@@ -112,7 +109,7 @@ export default function DesignSystemPage() {
         <div className="flex flex-wrap gap-2">
           {['50', '100', '200', '300', '400', '500', '600', '700', '800', '900'].map((shade) => (
             <div key={shade} className="text-center">
-              <div className={`h-12 w-12 rounded border border-ink-200 bg-accent-${shade}`} />
+              <div className={`h-12 w-12 rounded-full ring-1 ring-white/10 bg-accent-${shade}`} />
               <span className="text-xs text-ink-500">{shade}</span>
             </div>
           ))}
@@ -120,7 +117,7 @@ export default function DesignSystemPage() {
         <div className="flex flex-wrap gap-2">
           {['50', '100', '200', '300', '400', '500', '600', '700', '800', '900'].map((shade) => (
             <div key={shade} className="text-center">
-              <div className={`h-12 w-12 rounded border border-ink-200 bg-ink-${shade}`} />
+              <div className={`h-12 w-12 rounded-full ring-1 ring-white/10 bg-ink-${shade}`} />
               <span className="text-xs text-ink-500">{shade}</span>
             </div>
           ))}
@@ -150,7 +147,7 @@ export default function DesignSystemPage() {
         <h2 id="champs" className="text-lg font-semibold text-ink-800">
           Champs
         </h2>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
           <Field label="Adresse e-mail" placeholder="vous@example.org" />
           <Field label="Mot de passe" type="password" required hint="10 caractères au minimum." />
           <Field label="Pays" error="Ce champ est obligatoire." />

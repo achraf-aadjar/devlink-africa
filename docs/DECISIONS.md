@@ -351,3 +351,66 @@ Repris avec nos propres codes, pas une copie : un voile sombre uniforme (`bg-ink
 **Décision.** Sur demande d'Achraf (« vert comme GitHub mais pas trop vert »), le bouton `primary` (`Créer mon compte`, `Se connecter`, etc.) passe du bleu de marque à un vert. C'est fidèle à GitHub, qui distingue déjà ses deux accents : le bleu pour les liens et le focus, le vert pour l'action principale d'un bouton (leur bouton « Code », entre autres). Les autres usages du bleu (logo, liens, onglets actifs, tuiles de pays, barres de score) ne changent pas : seul `Button` variant `primary` est concerné.
 
 **La teinte.** `green-700` de Tailwind (`#15803d`) au repos, `green-800` (plus sombre) au survol — vérifié à 5:1 avec du texte blanc dessus, et encore mieux au survol. Choisi plutôt que le vert exact de GitHub (`#238636`, qui ne passait qu'à 4,1:1 au repos) pour garder la même marge de sécurité que le reste de la palette. Couleur Tailwind de base, sans ajout au fichier de configuration : même logique que le bouton `danger`, qui utilisait déjà un rouge Tailwind brut plutôt qu'un jeton `ink`/`accent`.
+
+---
+
+## 2026-10-08 — Navbar flottante, page d'accueil enrichie, effets bleus sur tout le site
+
+**Navbar.** Pastille claire arrondie qui flotte au-dessus du fond sombre et reste collée en haut au défilement : logo à gauche, liens centrés, « Se connecter » et un bouton bleu « S’inscrire » à droite. Le logo a une variante `light` (anneau droit quasi noir) pour rester lisible sur ce fond clair. Connecté, la barre porte sept liens plus le profil : elle ne passe sur une ligne qu'à partir de 1280 px, donc le menu complet s'affiche à `xl` (contre `lg` pour un visiteur, qui n'a que trois liens) ; vérifié par capture à 1024, 1280 et 1440 px.
+
+**Le bouton principal repasse en bleu.** Il remplace le vert de l'entrée précédente : la navbar et l'accueil utilisent un bleu lumineux, et deux couleurs d'action différentes d'une page à l'autre donnaient une impression de patchwork. `#1f6feb` porte du blanc à 4,6:1 ; au survol on fonce (`#1a5fd0`) au lieu d'éclaircir, pour ne pas descendre sous 4,5:1.
+
+**Effets façon github.com, factorisés.** Grille estompée (`.bg-grid`), halos flous (`.glow-blob`), texte en dégradé (`.text-gradient`), cartes à bordure lumineuse (`.glow-card`) dans `index.css` ; ombres `glow` et `glow-soft` dans `tailwind.config.js`. Les pages intérieures passent toutes par `PageShell`, qui pose la grille et un halo discret en haut de page et rejoue une courte animation d'entrée à chaque changement d'adresse.
+
+**Animations sans risque pour l'accessibilité.** Les apparitions au défilement (`useReveal`) partent d'un contenu visible si `IntersectionObserver` manque, et la règle `prefers-reduced-motion` coupe aussi les animations en boucle (`animation-iteration-count: 1`), sinon une boucle réduite à 0,01 ms aurait clignoté.
+
+**Piège rencontré.** Un halo centré par `-translate-x-1/2` partait sur le côté : l'animation `glow` pose son propre `transform` et écrase la translation. Les halos sont donc centrés par `inset-x-0 mx-auto`.
+
+**Chiffres de l'accueil.** Tous viennent du produit : 54 pays (carte), 6 critères et l'exemple de score à 82,5 (docs/api.md), 4 formes d'échange. Aucun chiffre d'usage inventé.
+
+---
+
+## 2026-10-08 — Sortir des « boîtes » : surfaces douces, ronds, avatars
+
+**Constat.** Après la refonte bleue, Achraf trouvait le site « fait de carrés » : chaque contenu était enfermé dans un rectangle gris à bordure, sur une grille de fond qui dessinait elle-même des carrés, et la carte de l'Afrique était une grille de tuiles carrées.
+
+**Ce qui change.**
+- **Surface au lieu de boîte.** `Card` n'a plus de bordure grise ni d'ombre lourde : un voile translucide légèrement plus clair en haut, un liseré intérieur presque invisible, et un arrondi de 24 px au lieu de 12 (classe `.surface` dans `index.css`). Comme presque tous les écrans passent par `Card`, le changement se propage partout sans toucher aux pages.
+- **Plus de grille de fond.** Remplacée par une « aurore » : deux lueurs radiales bleue et violette, sans aucune ligne.
+- **Formes rondes.** Boutons en pilule, champs de saisie arrondis et translucides, pays affichés en pastilles avec leur drapeau, carte de l'Afrique en points au lieu de tuiles, score d'un match en jauge circulaire (`ScoreRing`).
+- **Des visages plutôt que des cadres.** `Avatar` affiche les initiales sur un dégradé dont la teinte dépend du nom (stable d'une page à l'autre). Il apparaît partout où une personne est listée : matchs, tableau de bord, recherche, pays, échanges, profils.
+- **Accueil et tableau de bord ouverts.** Les sections de l'accueil ne sont plus des grilles de cartes mais des colonnes libres, avec une icône ronde en dégradé ; les compteurs du tableau de bord sont posés à plat, séparés par un trait fin.
+
+**Accessibilité conservée.** L'avatar est décoratif (`aria-hidden`), le nom étant toujours écrit à côté. La jauge porte une étiquette (« Score de 83 sur 100 ») et garde le chiffre en texte réel au centre.
+
+---
+
+## 2026-10-08 — Le contact se débloque à l'acceptation d'un échange
+
+**Problème.** Accepter un échange ne débloquait rien : l'adresse e-mail n'est jamais publique, et aucune autre information de contact n'existait. La boucle « match → échange » s'arrêtait donc juste avant l'essentiel, alors que `EXPLICATION_JURY.md` affirmait le contraire.
+
+**Choix.** Un champ `contact` facultatif dans le profil, que chacun remplit avec ce qu'il veut bien partager : une adresse e-mail ou un lien `https` (GitHub, LinkedIn…). Il n'est **jamais** dans le profil public. Il apparaît sur un échange, pour les deux participants, uniquement quand celui-ci est `ACCEPTED` ou `COMPLETED` : c'est l'acceptation qui vaut accord pour être joint. Un échange refusé ou annulé ne révèle rien.
+
+**Pourquoi pas l'adresse de connexion.** La politique de confidentialité promet qu'elle n'est jamais montrée : la révéler aurait changé ce à quoi les utilisateurs ont consenti. Et beaucoup préfèrent être joints ailleurs que sur leur e-mail de connexion.
+
+**Pourquoi pas une messagerie interne.** Modération, notifications, stockage de conversations privées : beaucoup de données personnelles en plus, pour un service que les développeurs ont déjà.
+
+**Pourquoi pas du texte libre (« Telegram @ada »).** L'interface en fait un lien cliquable : n'accepter qu'un e-mail ou une URL `https` écarte par construction `javascript:` et le reste. Contrôle côté serveur, revérifié côté interface.
+
+**Performance.** Le contact vient du profil : les échanges sont chargés avec `select_related("requester__profile", "partner__profile")`, et un test vérifie que lister des échanges acceptés ne fait pas une requête par ligne.
+
+---
+
+## 2026-10-08 — Test du parcours dans un vrai navigateur
+
+**Pourquoi.** Le test de bout en bout existant passait par l'API : il ne voyait ni un bouton mal nommé, ni une page qui plante au rendu. Or c'est l'interface que le jury regarde.
+
+**Comment.** `e2e/tests/parcours-demo.spec.ts`, avec Playwright, rejoue `docs/demo.md` dans Chromium : inscription, profil, compétences, Mamadou Bâ en tête des matchs, score expliqué, demande, acceptation dans un second navigateur, contact révélé des deux côtés, demande pour rejoindre un projet. Playwright démarre lui-même un backend sur une base SQLite jetable (`scripts/e2e_backend.sh`) et le serveur Vite.
+
+**Licence.** `@playwright/test` est sous Apache-2.0, ses deux dépendances aussi ; le dossier `e2e/` est analysé par le même contrôle de licences que le reste. Il est **séparé** du frontend : rien n'entre dans le build ni dans le livrable. Le navigateur Chromium est téléchargé à l'exécution, comme celui de n'importe quel utilisateur, et n'est pas une dépendance du projet (voir `LICENSES.md`). Jusqu'ici, Playwright n'avait servi qu'en local pour des captures ; il devient un outil de test versionné, ce qui mérite cette entrée.
+
+---
+
+## 2026-10-08 — Un compteur faux sur le tableau de bord
+
+`pending_exchanges.received` et `sent` étaient calculés en comptant les éléments de l'aperçu, limité à 5. Avec 7 demandes reçues, le tableau de bord en annonçait 5. Ils sont désormais comptés en base par une requête d'agrégat (une requête de plus, nombre total toujours constant quel que soit le volume, vérifié par le test existant). Trouvé en ajoutant les champs des premiers pas.

@@ -82,6 +82,18 @@ Règle du concours (art. 6) : licences permissives uniquement. Mis à jour le 20
 | vite | 6.4.4 | MIT |
 | vitest | 3.2.7 | MIT |
 
+## Node (e2e/package.json, test de bout en bout)
+
+Outil de test seulement : il n'entre ni dans le build ni dans le livrable. Analysé par le même contrôle automatique (3 paquets, 0 problème).
+
+| Paquet | Version | Licence |
+|---|---|---|
+| @playwright/test | 1.56.0 | Apache-2.0 |
+| playwright | 1.56.0 | Apache-2.0 |
+| playwright-core | 1.56.0 | Apache-2.0 |
+
+Le navigateur Chromium utilisé par ce test est téléchargé au moment de l'exécution (`npx playwright install chromium`), sur la machine de CI ou de développement. Ce n'est pas une dépendance du projet : il n'est ni commité, ni installé par `npm ci`, ni livré, au même titre que le navigateur de l'utilisateur final.
+
 ## PostgreSQL : pourquoi pg8000
 
 Les pilotes PostgreSQL habituels de Django, **psycopg** et **psycopg2**, sont sous **LGPL** : les utiliser rendrait le projet irrecevable. Nous utilisons donc :

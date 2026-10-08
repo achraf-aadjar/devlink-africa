@@ -34,3 +34,7 @@ coverage/
 .DS_Store
 .idea/
 .vscode/
+
+# Tests de bout en bout (Playwright)
+e2e/test-results/
+e2e/playwright-report/

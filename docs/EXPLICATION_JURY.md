@@ -166,8 +166,15 @@ La loi sénégalaise n° 2008-12 est respectée par des fonctionnalités réelle
 - **Droit d'accès** : export JSON complet depuis son profil.
 - **Droit d'effacement** : suppression définitive, confirmée par le mot de passe.
 - **Minimisation** : ni téléphone, ni adresse postale, ni traceur publicitaire. L'adresse e-mail n'apparaît **jamais** dans une réponse publique.
+- **Contact révélé au bon moment** : chacun peut indiquer un moyen de contact (e-mail ou lien `https`). Il n'est visible que par la personne avec qui un échange a été **accepté**. Avant l'acceptation, ou après un refus, il reste caché (vérifié par des tests).
 
-### Question probable
+### Questions probables
+
+> **« Une fois l'échange accepté, comment les deux personnes se parlent-elles ? »**
+> L'acceptation débloque le moyen de contact que chacun a choisi de partager : une adresse e-mail ou un lien vers GitHub, LinkedIn… Le panneau « Échange accepté » l'affiche des deux côtés. Nous n'imposons pas notre messagerie : les développeurs ont déjà leurs outils, et une messagerie interne demanderait modération, notifications et stockage de conversations privées, donc beaucoup plus de données personnelles à protéger.
+
+> **« Pourquoi refuser un texte libre comme "Telegram @ada" ? »**
+> Parce que l'interface en fait un lien cliquable. N'accepter qu'un e-mail (`mailto:`) ou un lien `https:` écarte par construction les liens `javascript:` et tout contenu inattendu. La règle est appliquée côté serveur, et revérifiée côté interface avant de créer le lien.
 
 > **« Pourquoi redemander le mot de passe pour supprimer un compte ? »**
 > Parce qu'un jeton d'accès volé ne doit pas suffire à détruire un compte. C'est une action irréversible : elle mérite une confirmation forte.
@@ -181,11 +188,14 @@ La loi sénégalaise n° 2008-12 est respectée par des fonctionnalités réelle
 - **L'explication du match est la vedette.** Score en évidence, puis « il peut vous apprendre / vous pouvez lui apprendre », puis les raisons en phrases, puis la répartition par critère sous forme de barres. Trois niveaux de lecture, du plus rapide au plus détaillé.
 - **Quatre états sur chaque écran** : chargement (squelettes), vide (avec une action utile), erreur (avec réessai), succès. Un état vide ne dit jamais « aucun résultat » sans proposer quoi faire.
 - **Aucune bibliothèque de composants ni d'icônes.** Neuf composants écrits par nous, icônes en SVG inline, polices système. Moins de dépendances à vérifier, un build léger, et un design qui ne ressemble pas à un modèle générique.
+- **Des surfaces douces plutôt que des boîtes.** Avatars à initiales (pas de photo stockée), score en jauge circulaire, pays en pastilles, carte de l'Afrique en points. Les décors (halos, aurore) sont masqués aux lecteurs d'écran.
+- **Un nouveau compte n'est jamais laissé seul.** La liste « Vos premiers pas » dit quoi faire ensuite (profil, compétences, contact, premier échange), avec un seul bouton : la prochaine étape.
+- **Testé sur mobile.** Les 18 écrans vérifiés à 390 px de large, sans aucun débordement horizontal.
 
 ### Questions probables
 
 > **« Pourquoi pas de bibliothèque d'interface ? »**
-> Trois raisons. La règle des licences : chaque dépendance est un risque à vérifier, et une police mal licenciée rendrait le projet irrecevable. La note : le cahier demande un design distinctif. Le poids : le build fait 105 ko compressés, ce qui compte pour des connexions africaines parfois lentes.
+> Trois raisons. La règle des licences : chaque dépendance est un risque à vérifier, et une police mal licenciée rendrait le projet irrecevable. La note : le cahier demande un design distinctif. Le poids : le JavaScript du build fait 118 ko compressés, ce qui compte pour des connexions africaines parfois lentes.
 
 > **« Et l'accessibilité ? »**
 > Labels liés aux champs, erreurs annoncées par `aria-describedby`, focus toujours visible, lien d'évitement, barres du score décrites pour les lecteurs d'écran. Nous avons dû retirer `eslint-plugin-jsx-a11y`, qui dépend de `axe-core` (MPL-2.0) : nous l'avons remplacé par six règles ESLint écrites par nous, chacune vérifiée sur un cas de faute.
@@ -196,14 +206,17 @@ La loi sénégalaise n° 2008-12 est respectée par des fonctionnalités réelle
 
 | Indicateur | Valeur |
 |---|---|
-| Tests backend | 429, couverture 98 % (99 % sur matching et services) |
-| Tests frontend | 111, couverture 90 % |
-| Parcours de démonstration | Test de bout en bout des 8 étapes |
+| Tests backend | 484, couverture 98 % (98 % sur matching et services) |
+| Tests frontend | 185, couverture 92 % |
+| Parcours de démonstration | Rejoué deux fois en CI : par l'API (pytest) et dans un vrai navigateur (Playwright, Chromium) |
 | Licences | 0 licence à réciprocité, contrôlée en CI sur l'arbre complet |
 | Secrets | Scan maison en CI, 0 trouvé |
 | Schéma OpenAPI | 0 avertissement, 0 erreur |
 
-### Question probable
+### Questions probables
+
+> **« Comment être sûrs que la démonstration ne cassera pas devant nous ? »**
+> Le parcours est rejoué à chaque modification, deux fois : par l'API (`backend/tests/test_parcours_demo.py`) et dans Chromium (`e2e/tests/parcours-demo.spec.ts`), qui clique dans l'interface comme vous le verrez : inscription, profil, compétences, match en tête, demande d'échange, acceptation depuis un second navigateur, contact révélé, projet. Si l'un échoue, la CI est rouge.
 
 > **« Comment avez-vous contrôlé les licences ? »**
 > Un script maison (`scripts/check_licenses.sh`) analyse l'arbre complet des dépendances, Python et Node, et échoue si une licence GPL, AGPL, LGPL ou MPL apparaît. Il tourne en intégration continue sur chaque pull request. Il nous a réellement servi : il a détecté `axe-core` (MPL-2.0) arrivé en dépendance indirecte, ce que nous n'aurions pas vu à l'œil nu.
@@ -215,7 +228,7 @@ La loi sénégalaise n° 2008-12 est respectée par des fonctionnalités réelle
 L'honnêteté sur les limites vaut mieux qu'une promesse non tenue.
 
 - **Pas de fonctions d'IA.** Le cahier les plaçait en dernier, facultatives, à ne faire que si tout le reste était terminé et vert. Nous avons préféré consolider la boucle principale, les tests et la sécurité. Le produit n'en dépend donc d'aucune façon, ce qui était l'exigence première.
-- **Pas de messagerie temps réel.** Hors périmètre assumé. Un échange accepté donne les moyens de se contacter ; la conversation se poursuit ailleurs.
+- **Pas de messagerie temps réel.** Hors périmètre assumé. Un échange accepté révèle le moyen de contact choisi par chacun (e-mail ou lien `https`) ; la conversation se poursuit ailleurs.
 - **Throttling par worker**, voir section 5.
 - **Compétences déclaratives**, atténuées par les preuves, voir section 2.
 

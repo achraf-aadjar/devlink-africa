@@ -142,7 +142,7 @@ function FloatingChip({
       className={cn('pointer-events-none absolute hidden xl:block', className)}
     >
       <div
-        className="flex animate-float items-center gap-2 rounded-xl border border-accent-300/60 bg-ink-100/80 px-3 py-2 text-sm font-medium text-ink-800 shadow-[0_0_24px_-6px_rgba(56,139,253,0.55)] backdrop-blur"
+        className="flex animate-float items-center gap-2 rounded-full border border-accent-300/60 bg-ink-100/80 px-3 py-2 text-sm font-medium text-ink-800 shadow-[0_0_24px_-6px_rgba(56,139,253,0.55)] backdrop-blur"
         style={{ animationDelay: delay }}
       >
         <Icon name={icon} size={18} className="text-accent-700" />
@@ -185,7 +185,7 @@ function SampleMatchCard() {
     <div
       ref={ref}
       className={cn(
-        'reveal relative rounded-2xl border border-accent-300/50 bg-ink-100/90 p-6 shadow-[0_0_80px_-20px_rgba(56,139,253,0.6)] backdrop-blur',
+        'reveal surface relative p-7 shadow-[0_0_80px_-20px_rgba(56,139,253,0.6)] backdrop-blur',
         visible && 'is-visible',
       )}
     >
@@ -227,7 +227,7 @@ function SampleMatchCard() {
         ))}
       </ul>
 
-      <p className="mt-5 rounded-lg border border-ink-200 bg-ink-50 p-3 text-sm leading-relaxed text-ink-700">
+      <p className="mt-5 rounded-2xl bg-white/[0.04] p-4 ring-1 ring-inset ring-white/[0.07] text-sm leading-relaxed text-ink-700">
         <Icon name="info" size={16} className="mr-1.5 inline text-accent-700" />
         Vous voulez apprendre React, elle veut apprendre Django : vos compétences se complètent dans
         les deux sens.
@@ -244,7 +244,7 @@ export default function HomePage() {
       {/* ——— Bannière ——— */}
       <section className="relative isolate overflow-hidden border-b border-ink-200">
         {/* Effets de fond façon github.com : grille estompée et halos bleus. */}
-        <div aria-hidden="true" className="bg-grid absolute inset-0 -z-10" />
+        <div aria-hidden="true" className="bg-aurora absolute inset-0 -z-10" />
         <div
           aria-hidden="true"
           className="glow-blob -z-10 inset-x-0 top-[-10rem] mx-auto h-[32rem] w-[48rem] max-w-full animate-glow bg-[#1f6feb]/40"
@@ -305,7 +305,7 @@ export default function HomePage() {
                 </Link>
                 <Link
                   to="/recherche"
-                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-ink-300 bg-ink-100/70 px-6 py-3 text-base font-semibold text-ink-900 backdrop-blur transition hover:border-accent-400 hover:bg-ink-200"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-white/[0.06] px-6 py-3 ring-1 ring-inset ring-white/15 text-base font-semibold text-ink-900 backdrop-blur transition hover:bg-white/10"
                 >
                   Explorer les profils
                 </Link>
@@ -342,7 +342,7 @@ export default function HomePage() {
             title="Quatre étapes, de l'inscription au premier échange"
             text="Pas de questionnaire interminable : quelques minutes suffisent pour recevoir vos premières propositions."
           />
-          <ol className="relative grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <ol className="relative grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
             {/* Ligne lumineuse qui relie les étapes, sur grand écran. */}
             <div
               aria-hidden="true"
@@ -418,11 +418,16 @@ export default function HomePage() {
             title="Quatre façons de travailler ensemble"
             text="Choisissez la forme qui vous convient. Vous pouvez en essayer plusieurs avec la même personne."
           />
-          <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <ul className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
             {EXCHANGE_KINDS.map((kind, index) => (
-              <Reveal as="li" key={kind.label} delay={index * 100} className="glow-card">
-                <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-accent-100 text-accent-800">
-                  <Icon name={kind.icon} size={22} />
+              <Reveal
+                as="li"
+                key={kind.label}
+                delay={index * 100}
+                className="group flex flex-col items-center text-center"
+              >
+                <span className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[#1f6feb] to-[#a371f7] text-white shadow-glow transition duration-300 group-hover:-translate-y-1 group-hover:scale-105">
+                  <Icon name={kind.icon} size={28} />
                 </span>
                 <h3 className="mb-2 text-lg font-semibold text-ink-900">{kind.label}</h3>
                 <p className="text-sm leading-relaxed text-ink-600">{kind.text}</p>
@@ -441,10 +446,17 @@ export default function HomePage() {
             title="Pensé pour que les deux côtés y gagnent"
             text="DevLink Africa n’est pas un annuaire : c’est un outil pour trouver la bonne personne avec qui progresser."
           />
-          <ul className="grid gap-5 md:grid-cols-3">
+          <ul className="grid gap-12 grid-cols-1 md:grid-cols-3 md:divide-x md:divide-white/[0.06]">
             {PRINCIPLES.map((item, index) => (
-              <Reveal as="li" key={item.title} delay={index * 120} className="glow-card">
-                <Icon name={item.icon} size={26} className="mb-4 text-accent-700" />
+              <Reveal
+                as="li"
+                key={item.title}
+                delay={index * 120}
+                className="flex flex-col items-center px-4 text-center"
+              >
+                <span className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-white/[0.05] text-accent-800 ring-1 ring-inset ring-accent-400/30">
+                  <Icon name={item.icon} size={26} />
+                </span>
                 <h3 className="mb-2 text-lg font-semibold text-ink-900">{item.title}</h3>
                 <p className="text-sm leading-relaxed text-ink-600">{item.text}</p>
               </Reveal>
@@ -455,7 +467,7 @@ export default function HomePage() {
 
       {/* ——— Appel final ——— */}
       <section aria-labelledby="final" className="relative isolate overflow-hidden py-24">
-        <div aria-hidden="true" className="bg-grid absolute inset-0 -z-10" />
+        <div aria-hidden="true" className="bg-aurora absolute inset-0 -z-10" />
         <div
           aria-hidden="true"
           className="glow-blob -z-10 inset-x-0 top-1/2 -mt-40 mx-auto h-80 w-[40rem] max-w-full animate-glow bg-[#1f6feb]/35"

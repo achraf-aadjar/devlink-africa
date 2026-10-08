@@ -1,4 +1,5 @@
 import { Link, useParams } from 'react-router-dom'
+import Avatar from '../../../components/Avatar'
 import DemoBadge from '../../../components/DemoBadge'
 import SkillBadge from '../../../components/SkillBadge'
 import { Badge, Card, ErrorState, LoadingState } from '../../../components/ui'
@@ -40,7 +41,10 @@ export default function PublicProfilePage() {
     <section className="flex flex-col gap-6">
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-ink-900">{data.full_name || 'Développeur'}</h1>
+          <Avatar name={data.full_name || 'Développeur'} size={80} className="mb-4 shadow-glow" />
+          <h1 className="text-3xl font-bold tracking-tight text-ink-900">
+            {data.full_name || 'Développeur'}
+          </h1>
           <p className="mt-1 text-sm text-ink-600">
             {data.country && (
               <span className="mr-1" aria-hidden="true">
@@ -90,7 +94,7 @@ export default function PublicProfilePage() {
         </Card>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
         <Card>
           <h2 className="mb-3 font-semibold text-ink-900">Sait faire</h2>
           {data.skills.offered.length === 0 ? (
