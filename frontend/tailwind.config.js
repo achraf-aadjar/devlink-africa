@@ -64,7 +64,7 @@ export default {
         ],
         mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace'],
       },
-      borderRadius: { card: '0.75rem' },
+      borderRadius: { card: '1.5rem' },
       boxShadow: {
         // Sur fond sombre, une ombre n'apporte presque rien par elle-même :
         // c'est surtout la bordure (border-ink-200/300) qui sépare les

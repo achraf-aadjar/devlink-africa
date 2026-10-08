@@ -367,3 +367,18 @@ Repris avec nos propres codes, pas une copie : un voile sombre uniforme (`bg-ink
 **Piège rencontré.** Un halo centré par `-translate-x-1/2` partait sur le côté : l'animation `glow` pose son propre `transform` et écrase la translation. Les halos sont donc centrés par `inset-x-0 mx-auto`.
 
 **Chiffres de l'accueil.** Tous viennent du produit : 54 pays (carte), 6 critères et l'exemple de score à 82,5 (docs/api.md), 4 formes d'échange. Aucun chiffre d'usage inventé.
+
+---
+
+## 2026-10-08 — Sortir des « boîtes » : surfaces douces, ronds, avatars
+
+**Constat.** Après la refonte bleue, Achraf trouvait le site « fait de carrés » : chaque contenu était enfermé dans un rectangle gris à bordure, sur une grille de fond qui dessinait elle-même des carrés, et la carte de l'Afrique était une grille de tuiles carrées.
+
+**Ce qui change.**
+- **Surface au lieu de boîte.** `Card` n'a plus de bordure grise ni d'ombre lourde : un voile translucide légèrement plus clair en haut, un liseré intérieur presque invisible, et un arrondi de 24 px au lieu de 12 (classe `.surface` dans `index.css`). Comme presque tous les écrans passent par `Card`, le changement se propage partout sans toucher aux pages.
+- **Plus de grille de fond.** Remplacée par une « aurore » : deux lueurs radiales bleue et violette, sans aucune ligne.
+- **Formes rondes.** Boutons en pilule, champs de saisie arrondis et translucides, pays affichés en pastilles avec leur drapeau, carte de l'Afrique en points au lieu de tuiles, score d'un match en jauge circulaire (`ScoreRing`).
+- **Des visages plutôt que des cadres.** `Avatar` affiche les initiales sur un dégradé dont la teinte dépend du nom (stable d'une page à l'autre). Il apparaît partout où une personne est listée : matchs, tableau de bord, recherche, pays, échanges, profils.
+- **Accueil et tableau de bord ouverts.** Les sections de l'accueil ne sont plus des grilles de cartes mais des colonnes libres, avec une icône ronde en dégradé ; les compteurs du tableau de bord sont posés à plat, séparés par un trait fin.
+
+**Accessibilité conservée.** L'avatar est décoratif (`aria-hidden`), le nom étant toujours écrit à côté. La jauge porte une étiquette (« Score de 83 sur 100 ») et garde le chiffre en texte réel au centre.

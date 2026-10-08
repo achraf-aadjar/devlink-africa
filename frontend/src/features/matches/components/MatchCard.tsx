@@ -1,18 +1,23 @@
 import { Link } from 'react-router-dom'
+import Avatar from '../../../components/Avatar'
 import DemoBadge from '../../../components/DemoBadge'
+import ScoreRing from '../../../components/ScoreRing'
 import { Card } from '../../../components/ui'
 import { countryFlag } from '../../../lib/labels'
 import type { MatchSummary } from '../../../lib/types'
 
-/** Carte d'un match dans la liste : score, personne, premières raisons. */
+/** Carte d'un match dans la liste : personne, score, premières raisons. */
 export default function MatchCard({ match }: { match: MatchSummary }) {
+  const name = match.user.full_name || 'Développeur'
+
   return (
-    <Card as="li" interactive className="flex flex-col gap-3">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h2 className="font-semibold text-ink-900">
-            <Link to={`/matchs/${match.id}`} className="hover:text-accent-700 hover:underline">
-              {match.user.full_name || 'Développeur'}
+    <Card as="li" interactive className="flex flex-col gap-4">
+      <div className="flex items-center gap-4">
+        <Avatar name={name} size={52} />
+        <div className="min-w-0 flex-1">
+          <h2 className="truncate font-semibold text-ink-900">
+            <Link to={`/matchs/${match.id}`} className="hover:text-accent-700">
+              {name}
             </Link>
           </h2>
           <p className="mt-0.5 text-sm text-ink-600">
@@ -24,16 +29,13 @@ export default function MatchCard({ match }: { match: MatchSummary }) {
             {match.user.country || 'Pays non renseigné'}
           </p>
         </div>
-        <div className="shrink-0 text-right">
-          <p className="text-gradient text-3xl font-bold tabular-nums">{Math.round(match.score)}</p>
-          <p className="text-xs text-ink-500">sur 100</p>
-        </div>
+        <ScoreRing score={match.score} size={56} stroke={5} />
       </div>
 
       <DemoBadge isDemo={match.user.is_demo} />
 
       {match.reasons.length > 0 && (
-        <ul className="flex flex-col gap-1 text-sm text-ink-700">
+        <ul className="flex flex-col gap-1.5 text-sm text-ink-700">
           {match.reasons.slice(0, 2).map((reason) => (
             <li key={reason} className="flex gap-2">
               <span aria-hidden="true" className="text-accent-600">
@@ -47,9 +49,10 @@ export default function MatchCard({ match }: { match: MatchSummary }) {
 
       <Link
         to={`/matchs/${match.id}`}
-        className="mt-auto text-sm font-medium text-accent-700 hover:underline"
+        className="mt-auto inline-flex w-fit items-center gap-1 rounded-full bg-white/[0.05] px-4 py-1.5 text-sm font-medium text-accent-800 ring-1 ring-inset ring-white/10 transition hover:bg-white/10"
       >
         Voir l'explication détaillée
+        <span aria-hidden="true">→</span>
       </Link>
     </Card>
   )

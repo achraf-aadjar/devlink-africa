@@ -18,16 +18,15 @@ const VARIANTS: Record<Variant, string> = {
   // garder le contraste.
   primary:
     'bg-[#1f6feb] text-white shadow-glow hover:bg-[#1a5fd0] disabled:bg-ink-300 disabled:shadow-none',
-  secondary:
-    'border border-ink-300 bg-ink-100 text-ink-800 hover:border-accent-400/70 hover:bg-ink-200',
-  ghost: 'text-ink-700 hover:bg-ink-200',
+  secondary: 'bg-white/[0.06] text-ink-900 ring-1 ring-inset ring-white/10 hover:bg-white/10',
+  ghost: 'text-ink-700 hover:bg-white/[0.06] hover:text-ink-900',
   danger: 'bg-red-600 text-white hover:bg-red-500',
 }
 
 const SIZES: Record<Size, string> = {
-  sm: 'px-3 py-1.5 text-sm',
-  md: 'px-4 py-2 text-sm',
-  lg: 'px-5 py-2.5 text-base',
+  sm: 'px-4 py-1.5 text-sm',
+  md: 'px-5 py-2 text-sm',
+  lg: 'px-7 py-3 text-base',
 }
 
 export default function Button({
@@ -45,7 +44,7 @@ export default function Button({
       disabled={disabled || loading}
       aria-busy={loading || undefined}
       className={cn(
-        'inline-flex items-center justify-center gap-2 rounded-lg font-medium transition',
+        'inline-flex items-center justify-center gap-2 rounded-full font-medium transition',
         'disabled:cursor-not-allowed disabled:opacity-70',
         VARIANTS[variant],
         SIZES[size],

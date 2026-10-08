@@ -16,9 +16,9 @@ export default function Card({
   return (
     <Tag
       className={cn(
-        'rounded-card border border-ink-200 bg-ink-100 p-5 shadow-card',
+        'surface p-6',
         interactive &&
-          'transition duration-200 hover:-translate-y-0.5 hover:border-accent-400/60 hover:shadow-glow-soft',
+          'transition duration-300 hover:-translate-y-1 hover:shadow-glow-soft hover:ring-accent-400/40',
         className,
       )}
     >

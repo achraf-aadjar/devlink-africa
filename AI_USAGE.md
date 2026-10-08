@@ -33,6 +33,7 @@ Le jury évalue la **maîtrise du code par l'équipe, y compris du code génér�
 | 2026-10-08 | Claude Code (Anthropic) | Documentation pour le jury | `docs/EXPLICATION_JURY.md`, `docs/demo.md`, `deploy/README.md` complet. | Achraf | **à relire par les 3** |
 | 2026-10-07 | Google Gemini | Photo de bannière de l'accueil | Image générée, a servi de fond à la bannière d'accueil deux allers-retours de suite (voile sombre puis clair). **Retirée pour de bon le 2026-10-08** : passage à un thème sombre façon GitHub où une photo chaude (crème à marron) n'avait plus sa place. Détails dans `docs/DECISIONS.md`. | Achraf | à relire par les 3 |
 | 2026-10-08 | Claude Code (Anthropic) | Refonte visuelle | Navbar flottante, page d'accueil enrichie (sections, animations au défilement, effets bleus), style commun à toutes les pages (`PageShell`, bouton principal, cartes, états vides). 3 tests ajoutés. | Achraf | **à relire par Emmanuel** |
+| 2026-10-08 | Claude Code (Anthropic) | Refonte « sans boîtes » | Surfaces douces au lieu de cartes à bordure, fond en aurore, boutons en pilule, avatars à initiales, jauge circulaire du score, pays en pastilles et carte en points, accueil en colonnes ouvertes. 6 tests ajoutés. | Achraf | **à relire par Emmanuel** |
 
 ## Ce que l'équipe doit relire en priorité
 

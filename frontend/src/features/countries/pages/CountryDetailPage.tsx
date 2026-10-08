@@ -1,3 +1,4 @@
+import Avatar from '../../../components/Avatar'
 import { Link, useParams } from 'react-router-dom'
 import DemoBadge from '../../../components/DemoBadge'
 import SkillBadge from '../../../components/SkillBadge'
@@ -74,6 +75,7 @@ export default function CountryDetailPage() {
               <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {data.developers.map((person) => (
                   <Card as="li" key={person.id} interactive className="flex flex-col gap-2">
+                    <Avatar name={person.full_name || 'Développeur'} size={52} className="mb-1" />
                     <h3 className="font-semibold text-ink-900">
                       <Link
                         to={`/developpeurs/${person.id}`}

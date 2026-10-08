@@ -34,13 +34,28 @@
  * apparition des sections au défilement.
  */
 @layer components {
-  /* Grille de lignes très discrète, estompée en ellipse vers les bords. */
-  .bg-grid {
-    background-image:
-      linear-gradient(to right, rgb(48 54 61 / 0.45) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(48 54 61 / 0.45) 1px, transparent 1px);
-    background-size: 56px 56px;
-    mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 30%, transparent 100%);
+  /*
+   * Fond d'ambiance : deux lueurs radiales (bleu, violet) très diffuses. Plus
+   * de grille : ses lignes dessinaient des carrés derrière chaque page.
+   */
+  .bg-aurora {
+    background:
+      radial-gradient(60% 50% at 20% 0%, rgb(31 111 235 / 0.18), transparent 70%),
+      radial-gradient(45% 40% at 85% 10%, rgb(163 113 247 / 0.12), transparent 70%);
+  }
+
+  /*
+   * Surface : remplace la « boîte » grise à bordure. Un voile clair à peine
+   * plus lumineux en haut, et un liseré intérieur presque invisible.
+   */
+  .surface {
+    @apply rounded-card ring-1 ring-inset ring-white/[0.07];
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.045), rgb(255 255 255 / 0.015));
+  }
+
+  /* Champ de saisie : arrondi, translucide, liseré bleu au focus. */
+  .field {
+    @apply rounded-xl border bg-white/[0.03] px-4 py-2.5 transition-colors focus:border-accent-500/70 focus:bg-white/[0.05];
   }
 
   /* Halo : une tache de couleur très floue, posée derrière le contenu.
@@ -57,20 +72,9 @@
     background-image: linear-gradient(90deg, #79c0ff 0%, #388bfd 45%, #a371f7 100%);
   }
 
-  /* Carte dont la bordure s'allume en bleu au survol. */
-  .glow-card {
-    @apply relative rounded-card border border-ink-200 bg-ink-100/80 p-6 transition duration-300;
-  }
-  .glow-card:hover {
-    @apply -translate-y-1 border-accent-400/60;
-    box-shadow:
-      0 0 0 1px rgb(56 139 253 / 0.25),
-      0 12px 40px -12px rgb(56 139 253 / 0.45);
-  }
-
   /* Bouton bleu lumineux, pour l'appel à l'action principal. */
   .btn-glow {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-[#1f6feb] px-6 py-3 text-base font-semibold text-white transition duration-200 hover:bg-[#388bfd];
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-[#1f6feb] px-6 py-3 text-base font-semibold text-white transition duration-200 hover:bg-[#388bfd];
     box-shadow:
       0 0 0 1px rgb(56 139 253 / 0.5),
       0 8px 30px -6px rgb(31 111 235 / 0.7);

@@ -38,8 +38,8 @@ export default function Textarea({
         aria-invalid={error ? true : undefined}
         aria-describedby={describedBy || undefined}
         className={cn(
-          'min-h-24 rounded-lg border bg-ink-100 px-3 py-2 text-ink-900 placeholder:text-ink-400',
-          error ? 'border-red-500' : 'border-ink-300',
+          'min-h-24 field text-ink-900 placeholder:text-ink-400',
+          error ? 'border-red-500/70' : 'border-white/10',
           className,
         )}
       />

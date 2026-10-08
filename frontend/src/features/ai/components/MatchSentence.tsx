@@ -37,7 +37,7 @@ export default function MatchSentence({ matchId }: { matchId: number }) {
     return (
       <p
         role="status"
-        className="rounded-lg border border-accent-200 bg-accent-50 px-4 py-3 text-sm text-ink-800"
+        className="rounded-2xl bg-accent-50/60 px-5 py-4 ring-1 ring-inset ring-accent-400/25 text-sm text-ink-800"
       >
         {sentence}
       </p>

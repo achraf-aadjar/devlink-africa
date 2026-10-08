@@ -59,10 +59,7 @@ export default function DesignSystemPage() {
         </p>
         <ul className="grid grid-cols-3 gap-3 sm:grid-cols-5 lg:grid-cols-6">
           {ICON_NAMES.map((name) => (
-            <li
-              key={name}
-              className="flex flex-col items-center gap-2 rounded-lg border border-ink-200 bg-ink-100 p-3"
-            >
+            <li key={name} className="flex flex-col items-center gap-2 surface p-4">
               <Icon name={name} size={24} />
               <code className="text-center text-[0.65rem] leading-tight text-ink-500">{name}</code>
             </li>
@@ -90,15 +87,15 @@ export default function DesignSystemPage() {
           D'où ces opacités très basses.
         </p>
         <div className="grid gap-4 sm:grid-cols-3">
-          <RingsPattern className="rounded-card border border-ink-200 p-5">
+          <RingsPattern className="surface p-6">
             <p className="text-sm font-medium text-ink-800">Anneaux</p>
             <p className="text-xs text-ink-600">Page d'accueil</p>
           </RingsPattern>
-          <WeavePattern className="rounded-card border border-ink-200 p-5">
+          <WeavePattern className="surface p-6">
             <p className="text-sm font-medium text-ink-800">Tissage</p>
             <p className="text-xs text-ink-600">En-tête du score</p>
           </WeavePattern>
-          <DotsPattern className="rounded-card border border-ink-200 p-5">
+          <DotsPattern className="surface p-6">
             <p className="text-sm font-medium text-ink-800">Points</p>
             <p className="text-xs text-ink-600">Cartes de projet</p>
           </DotsPattern>
@@ -112,7 +109,7 @@ export default function DesignSystemPage() {
         <div className="flex flex-wrap gap-2">
           {['50', '100', '200', '300', '400', '500', '600', '700', '800', '900'].map((shade) => (
             <div key={shade} className="text-center">
-              <div className={`h-12 w-12 rounded border border-ink-200 bg-accent-${shade}`} />
+              <div className={`h-12 w-12 rounded-full ring-1 ring-white/10 bg-accent-${shade}`} />
               <span className="text-xs text-ink-500">{shade}</span>
             </div>
           ))}
@@ -120,7 +117,7 @@ export default function DesignSystemPage() {
         <div className="flex flex-wrap gap-2">
           {['50', '100', '200', '300', '400', '500', '600', '700', '800', '900'].map((shade) => (
             <div key={shade} className="text-center">
-              <div className={`h-12 w-12 rounded border border-ink-200 bg-ink-${shade}`} />
+              <div className={`h-12 w-12 rounded-full ring-1 ring-white/10 bg-ink-${shade}`} />
               <span className="text-xs text-ink-500">{shade}</span>
             </div>
           ))}

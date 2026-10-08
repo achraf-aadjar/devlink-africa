@@ -1,3 +1,4 @@
+import Avatar from '../../../components/Avatar'
 import { Link, useParams } from 'react-router-dom'
 import DemoBadge from '../../../components/DemoBadge'
 import SkillBadge from '../../../components/SkillBadge'
@@ -40,6 +41,7 @@ export default function PublicProfilePage() {
     <section className="flex flex-col gap-6">
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
+          <Avatar name={data.full_name || 'Développeur'} size={80} className="mb-4 shadow-glow" />
           <h1 className="text-3xl font-bold tracking-tight text-ink-900">
             {data.full_name || 'Développeur'}
           </h1>

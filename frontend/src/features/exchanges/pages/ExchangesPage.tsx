@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Avatar from '../../../components/Avatar'
 import { Link } from 'react-router-dom'
 import { Badge, Button, Card, EmptyState, ErrorState, LoadingState } from '../../../components/ui'
 import { EXCHANGE_STATUS_LABELS, EXCHANGE_TYPE_LABELS } from '../../../lib/labels'
@@ -95,11 +96,14 @@ export default function ExchangesPage() {
             return (
               <Card as="li" key={exchange.id} className="flex flex-col gap-3">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <h2 className="font-semibold text-ink-900">
-                    {EXCHANGE_TYPE_LABELS[exchange.type]} avec{' '}
-                    <Link to={`/developpeurs/${other.id}`} className="hover:underline">
-                      {other.full_name}
-                    </Link>
+                  <h2 className="flex items-center gap-3 font-semibold text-ink-900">
+                    <Avatar name={other.full_name || 'Développeur'} size={40} />
+                    <span>
+                      {EXCHANGE_TYPE_LABELS[exchange.type]} avec{' '}
+                      <Link to={`/developpeurs/${other.id}`} className="hover:underline">
+                        {other.full_name}
+                      </Link>
+                    </span>
                   </h2>
                   <Badge tone={STATUS_TONE[exchange.status]}>
                     {EXCHANGE_STATUS_LABELS[exchange.status]}

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Avatar from '../../../components/Avatar'
 import { Link, useSearchParams } from 'react-router-dom'
 import DemoBadge from '../../../components/DemoBadge'
 import SkillBadge from '../../../components/SkillBadge'
@@ -224,6 +225,7 @@ export default function SearchPage() {
               <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {users.data.results.map((person) => (
                   <Card as="li" key={person.id} interactive className="flex flex-col gap-3">
+                    <Avatar name={person.full_name || 'Développeur'} size={52} />
                     <div>
                       <h2 className="font-semibold text-ink-900">
                         <Link

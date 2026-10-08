@@ -84,12 +84,23 @@ export default function ProfilePage() {
           <h1 className="text-3xl font-bold tracking-tight text-ink-900">Mon profil</h1>
           <p className="mt-1 text-sm text-ink-600">{data.email}</p>
         </div>
-        <Card className="px-4 py-3 text-center">
-          <p className="text-xs font-medium text-ink-600">Profil complété</p>
-          <p className="text-gradient text-3xl font-bold tabular-nums">
-            {data.profile.completeness}%
+        <div className="flex flex-col items-end gap-2">
+          <p className="text-xs font-medium text-ink-600">
+            Profil complété{' '}
+            <span className="text-gradient text-2xl font-bold tabular-nums">
+              {data.profile.completeness}%
+            </span>
           </p>
-        </Card>
+          <div
+            aria-hidden="true"
+            className="h-1.5 w-48 overflow-hidden rounded-full bg-white/[0.08]"
+          >
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-[#1f6feb] to-[#a371f7]"
+              style={{ width: `${data.profile.completeness}%` }}
+            />
+          </div>
+        </div>
       </header>
 
       <Card>

@@ -41,7 +41,7 @@ export default function ProjectSummaryButton({
   }
 
   return (
-    <div className="flex flex-col gap-2 rounded-lg bg-accent-50 p-3">
+    <div className="flex flex-col gap-2 rounded-2xl bg-accent-50/60 p-4 ring-1 ring-inset ring-accent-400/20">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-sm text-ink-700">Besoin d'une présentation courte pour la carte ?</p>
         <Button type="button" variant="secondary" size="sm" loading={working} onClick={handleClick}>
@@ -55,7 +55,7 @@ export default function ProjectSummaryButton({
 
       {summary && (
         <div className="flex flex-col gap-2" role="status">
-          <p className="rounded border border-ink-200 bg-ink-100 p-3 text-sm text-ink-800">
+          <p className="rounded-2xl bg-white/[0.04] p-4 ring-1 ring-inset ring-white/[0.07] text-sm text-ink-800">
             {summary}
           </p>
           <div className="flex gap-2">
