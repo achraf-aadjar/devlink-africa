@@ -60,6 +60,26 @@ export default function GoogleSignInButton({
   useEffect(() => {
     if (!clientId) return
     let cancelled = false
+    let resizeObserver: ResizeObserver | null = null
+
+    function render() {
+      const container = containerRef.current
+      if (!container || !window.google) return
+      // GIS ne redimensionne pas un bouton déjà dessiné : on l'efface et on le
+      // redessine à la largeur actuelle (plafonnée à 400, maximum accepté).
+      container.innerHTML = ''
+      const width = Math.min(Math.round(container.getBoundingClientRect().width), 400)
+      if (width <= 0) return
+      window.google.accounts.id.renderButton(container, {
+        theme: 'outline',
+        size: 'large',
+        text: 'continue_with',
+        shape: 'pill',
+        logo_alignment: 'left',
+        locale: 'fr',
+        width,
+      })
+    }
 
     loadGoogleScript()
       .then(() => {
@@ -78,13 +98,11 @@ export default function GoogleSignInButton({
             })()
           },
         })
-        window.google.accounts.id.renderButton(containerRef.current, {
-          theme: 'filled_black',
-          size: 'large',
-          text: 'continue_with',
-          shape: 'rectangular',
-          locale: 'fr',
-        })
+
+        render()
+        // Garde le bouton pleine largeur si la fenêtre (ou la carte) change de taille.
+        resizeObserver = new ResizeObserver(() => render())
+        resizeObserver.observe(containerRef.current)
       })
       .catch(() => {
         if (!cancelled) latest.current.onError("Le bouton Google n'a pas pu être chargé.")
@@ -92,10 +110,11 @@ export default function GoogleSignInButton({
 
     return () => {
       cancelled = true
+      resizeObserver?.disconnect()
     }
   }, [clientId])
 
   if (loading || !clientId) return null
 
-  return <div ref={containerRef} className="flex justify-center" />
+  return <div ref={containerRef} className="w-full" />
 }

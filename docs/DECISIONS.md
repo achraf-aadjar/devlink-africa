@@ -442,3 +442,12 @@ Repris avec nos propres codes, pas une copie : un voile sombre uniforme (`bg-ink
 **Pourquoi il ne fait rien à la place de l'utilisateur.** Comme `extract_skills` ou `summarize_project`, Copilot explique, il n'agit jamais lui-même (pas d'appel caché à `/me/skills/` ou `/me/`, par exemple) : c'est le même principe que tout le reste de la couche IA du projet, « l'IA propose, l'utilisateur valide » — ici, « l'IA explique, l'utilisateur agit ».
 
 **Visible seulement connecté.** Les autres fonctions d'IA exigent déjà une session (`IsAuthenticated`) ; Copilot suit la même règle plutôt que d'ouvrir un point d'entrée texte-libre-vers-modèle-de-langage à des visiteurs anonymes, qui serait un vecteur d'abus évident (coût, spam) et moins protégé par la limite de débit que ne l'est un compte (`UserRateThrottle` par personne contre `AnonRateThrottle` par IP).
+
+---
+
+## 2026-10-08 — Bouton Google : repositionné, pleine largeur
+
+**Décision.** Achraf a obtenu un vrai identifiant client Google Cloud Console et l'a testé : le bouton apparaissait en haut du formulaire, dans sa taille par défaut (assez étroite). Demande : le mettre en bas, avec « un très très bon design ». Deux changements :
+
+1. **Position** : le bouton passe après le bouton principal (« Se connecter » / « Créer mon compte »), toujours séparé par un repère « ou ». Le mot de passe reste le chemin principal, Google une alternative en dessous — plus conforme à l'ordre dans lequel les champs se remplissent, et au fait que le mot de passe reste la méthode qui fonctionne pour tout le monde (Google ne l'est que pour qui a un compte Google).
+2. **Largeur** : Google Identity Services ne dessine pas un bouton qui épouse son conteneur — il faut lui donner une largeur en pixels, qu'il ne met pas à jour tout seul si la fenêtre change de taille. `GoogleSignInButton` mesure maintenant son conteneur (`ResizeObserver`) et redessine le bouton à la largeur exacte de la carte, jusqu'à 400 px (le maximum que Google accepte) — il occupe donc toute la largeur du formulaire, comme n'importe lequel de nos champs, et reste correct si la fenêtre est redimensionnée. Thème changé pour `outline` / forme `pill` (un bouton blanc, bords arrondis) : plus net sur nos fonds sombres que le thème `filled_black` essayé en premier, qui se fondait trop dans la carte.

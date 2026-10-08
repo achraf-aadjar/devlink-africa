@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Button, Card, Field } from '../../../components/ui'
 import { ApiError } from '../../../lib/api'
-import { cn } from '../../../lib/cn'
 import GoogleSignInButton from '../components/GoogleSignInButton'
 import { useAuth } from '../hooks/useAuth'
 import { useGoogleClientId } from '../hooks/useGoogleClientId'
@@ -62,32 +61,7 @@ export default function LoginPage() {
       <p className="mb-6 text-sm text-ink-600">Retrouvez vos matchs et vos échanges.</p>
 
       <Card className="border-accent-300/40 p-6 shadow-glow-soft sm:p-8">
-        {googleClientId && (
-          <div className="flex flex-col gap-4">
-            <GoogleSignInButton
-              redirectTo={from}
-              onError={(message) => setErrors({ form: message })}
-            />
-            <p className="text-center text-xs text-ink-500">
-              En continuant, vous acceptez notre{' '}
-              <Link to="/confidentialite" className="underline hover:text-accent-700">
-                politique de confidentialité
-              </Link>
-              .
-            </p>
-            <div className="flex items-center gap-3 text-xs text-ink-500" role="separator">
-              <span className="h-px flex-1 bg-ink-200" aria-hidden="true" />
-              ou
-              <span className="h-px flex-1 bg-ink-200" aria-hidden="true" />
-            </div>
-          </div>
-        )}
-
-        <form
-          onSubmit={handleSubmit}
-          noValidate
-          className={cn('flex flex-col gap-4', googleClientId && 'mt-4')}
-        >
+        <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
           <Field
             label="Adresse e-mail"
             name="email"
@@ -119,6 +93,27 @@ export default function LoginPage() {
             Se connecter
           </Button>
         </form>
+
+        {googleClientId && (
+          <div className="mt-5 flex flex-col gap-4">
+            <div className="flex items-center gap-3 text-xs font-medium uppercase tracking-wide text-ink-500">
+              <span className="h-px flex-1 bg-ink-200" aria-hidden="true" />
+              ou
+              <span className="h-px flex-1 bg-ink-200" aria-hidden="true" />
+            </div>
+            <GoogleSignInButton
+              redirectTo={from}
+              onError={(message) => setErrors({ form: message })}
+            />
+            <p className="text-center text-xs text-ink-500">
+              En continuant, vous acceptez notre{' '}
+              <Link to="/confidentialite" className="underline hover:text-accent-700">
+                politique de confidentialité
+              </Link>
+              .
+            </p>
+          </div>
+        )}
       </Card>
 
       <p className="mt-4 text-center text-sm text-ink-600">
