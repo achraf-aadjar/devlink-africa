@@ -382,3 +382,35 @@ Repris avec nos propres codes, pas une copie : un voile sombre uniforme (`bg-ink
 - **Accueil et tableau de bord ouverts.** Les sections de l'accueil ne sont plus des grilles de cartes mais des colonnes libres, avec une icône ronde en dégradé ; les compteurs du tableau de bord sont posés à plat, séparés par un trait fin.
 
 **Accessibilité conservée.** L'avatar est décoratif (`aria-hidden`), le nom étant toujours écrit à côté. La jauge porte une étiquette (« Score de 83 sur 100 ») et garde le chiffre en texte réel au centre.
+
+---
+
+## 2026-10-08 — Le contact se débloque à l'acceptation d'un échange
+
+**Problème.** Accepter un échange ne débloquait rien : l'adresse e-mail n'est jamais publique, et aucune autre information de contact n'existait. La boucle « match → échange » s'arrêtait donc juste avant l'essentiel, alors que `EXPLICATION_JURY.md` affirmait le contraire.
+
+**Choix.** Un champ `contact` facultatif dans le profil, que chacun remplit avec ce qu'il veut bien partager : une adresse e-mail ou un lien `https` (GitHub, LinkedIn…). Il n'est **jamais** dans le profil public. Il apparaît sur un échange, pour les deux participants, uniquement quand celui-ci est `ACCEPTED` ou `COMPLETED` : c'est l'acceptation qui vaut accord pour être joint. Un échange refusé ou annulé ne révèle rien.
+
+**Pourquoi pas l'adresse de connexion.** La politique de confidentialité promet qu'elle n'est jamais montrée : la révéler aurait changé ce à quoi les utilisateurs ont consenti. Et beaucoup préfèrent être joints ailleurs que sur leur e-mail de connexion.
+
+**Pourquoi pas une messagerie interne.** Modération, notifications, stockage de conversations privées : beaucoup de données personnelles en plus, pour un service que les développeurs ont déjà.
+
+**Pourquoi pas du texte libre (« Telegram @ada »).** L'interface en fait un lien cliquable : n'accepter qu'un e-mail ou une URL `https` écarte par construction `javascript:` et le reste. Contrôle côté serveur, revérifié côté interface.
+
+**Performance.** Le contact vient du profil : les échanges sont chargés avec `select_related("requester__profile", "partner__profile")`, et un test vérifie que lister des échanges acceptés ne fait pas une requête par ligne.
+
+---
+
+## 2026-10-08 — Test du parcours dans un vrai navigateur
+
+**Pourquoi.** Le test de bout en bout existant passait par l'API : il ne voyait ni un bouton mal nommé, ni une page qui plante au rendu. Or c'est l'interface que le jury regarde.
+
+**Comment.** `e2e/tests/parcours-demo.spec.ts`, avec Playwright, rejoue `docs/demo.md` dans Chromium : inscription, profil, compétences, Mamadou Bâ en tête des matchs, score expliqué, demande, acceptation dans un second navigateur, contact révélé des deux côtés, demande pour rejoindre un projet. Playwright démarre lui-même un backend sur une base SQLite jetable (`scripts/e2e_backend.sh`) et le serveur Vite.
+
+**Licence.** `@playwright/test` est sous Apache-2.0, ses deux dépendances aussi ; le dossier `e2e/` est analysé par le même contrôle de licences que le reste. Il est **séparé** du frontend : rien n'entre dans le build ni dans le livrable. Le navigateur Chromium est téléchargé à l'exécution, comme celui de n'importe quel utilisateur, et n'est pas une dépendance du projet (voir `LICENSES.md`). Jusqu'ici, Playwright n'avait servi qu'en local pour des captures ; il devient un outil de test versionné, ce qui mérite cette entrée.
+
+---
+
+## 2026-10-08 — Un compteur faux sur le tableau de bord
+
+`pending_exchanges.received` et `sent` étaient calculés en comptant les éléments de l'aperçu, limité à 5. Avec 7 demandes reçues, le tableau de bord en annonçait 5. Ils sont désormais comptés en base par une requête d'agrégat (une requête de plus, nombre total toujours constant quel que soit le volume, vérifié par le test existant). Trouvé en ajoutant les champs des premiers pas.

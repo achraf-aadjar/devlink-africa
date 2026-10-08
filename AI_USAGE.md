@@ -34,6 +34,9 @@ Le jury évalue la **maîtrise du code par l'équipe, y compris du code génér�
 | 2026-10-07 | Google Gemini | Photo de bannière de l'accueil | Image générée, a servi de fond à la bannière d'accueil deux allers-retours de suite (voile sombre puis clair). **Retirée pour de bon le 2026-10-08** : passage à un thème sombre façon GitHub où une photo chaude (crème à marron) n'avait plus sa place. Détails dans `docs/DECISIONS.md`. | Achraf | à relire par les 3 |
 | 2026-10-08 | Claude Code (Anthropic) | Refonte visuelle | Navbar flottante, page d'accueil enrichie (sections, animations au défilement, effets bleus), style commun à toutes les pages (`PageShell`, bouton principal, cartes, états vides). 3 tests ajoutés. | Achraf | **à relire par Emmanuel** |
 | 2026-10-08 | Claude Code (Anthropic) | Refonte « sans boîtes » | Surfaces douces au lieu de cartes à bordure, fond en aurore, boutons en pilule, avatars à initiales, jauge circulaire du score, pays en pastilles et carte en points, accueil en colonnes ouvertes. 6 tests ajoutés. | Achraf | **à relire par Emmanuel** |
+| 2026-10-08 | Claude Code (Anthropic) | Contact après acceptation | Champ `contact` (validation e-mail/https), révélation limitée aux échanges acceptés, panneau de contact, pastille des demandes, premiers pas guidés, correction des compteurs du tableau de bord. 20 tests backend, 10 tests frontend. | Achraf | **à relire par Omar (backend) et Emmanuel (interface)** |
+| 2026-10-08 | Claude Code (Anthropic) | Test navigateur et mobile | Parcours de démonstration dans Chromium (Playwright) et job CI ; corrections d'affichage à 390 px ; tests de la page pays ; captures du README. | Achraf | à relire par Emmanuel |
+| 2026-10-08 | Claude Code (Anthropic) | Documentation | Mise à jour de `api.md` (ajouts après le gel listés), `EXPLICATION_JURY.md`, `demo.md`, `DECISIONS.md`, `PROGRESS.md`, `securite.md`, `LICENSES.md`, README. | Achraf | **à relire par les 3** |
 
 ## Ce que l'équipe doit relire en priorité
 
@@ -42,6 +45,7 @@ Le jury évalue la **maîtrise du code par l'équipe**. Trois fichiers méritent
 1. `backend/matching/scoring.py` — l'algorithme de Dev Match (Omar).
 2. `backend/matching/services.py` — le recalcul incrémental (Omar).
 3. `frontend/src/features/matches/components/MatchExplanation.tsx` — l'affichage de l'explication (Emmanuel).
+4. `backend/exchanges/serializers.py` (`to_representation`) et `core/validators.py` (`validate_contact`) — qui voit le contact, et quand (Omar).
 
 `docs/EXPLICATION_JURY.md` prépare les réponses aux questions probables.
 

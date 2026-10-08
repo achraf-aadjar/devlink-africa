@@ -19,7 +19,21 @@ Projet réalisé pour le concours **CADEV 2026 (Systalink)** par Achraf, Emmanue
 
 Un développeur déclare ce qu'il sait faire et ce qu'il veut apprendre. **Dev Match** lui propose des profils complémentaires, avec un score et son explication détaillée. Il peut alors proposer un échange (mentorat, revue de code, pair programming…), ou rejoindre un projet du **Project Hub**.
 
-La boucle complète : profil → compétences → recherche → Dev Match expliqué → échange → projet.
+La boucle complète : profil → compétences → recherche → Dev Match expliqué → échange → projet. Une fois l'échange accepté, chacun voit le moyen de contact que l'autre a choisi de partager, et seulement à ce moment-là.
+
+## Aperçu
+
+![Accueil](docs/captures/accueil.png)
+
+| Le score expliqué, critère par critère | Les premiers pas d'un nouveau compte |
+|---|---|
+| ![Détail d'un match](docs/captures/match-explique.png) | ![Tableau de bord](docs/captures/tableau-de-bord.png) |
+| **Échange accepté : le contact se débloque** | **Explorer par pays** |
+| ![Échange accepté](docs/captures/echange-accepte.png) | ![Pays](docs/captures/pays.png) |
+
+<p align="center"><img src="docs/captures/mobile.png" alt="Matchs et détail d'un match sur mobile" width="520"></p>
+
+Captures prises sur les données de démonstration (`seed_demo`) : ces profils sont fictifs et signalés comme tels dans l'interface.
 
 ## Prérequis
 
@@ -94,6 +108,7 @@ make dev-frontend    # http://localhost:5173  (proxy /api → localhost:8000)
 ```bash
 make test       # pytest (backend, SQLite en mémoire) + vitest (frontend)
 make test-pg    # pytest sur PostgreSQL (après make db)
+make e2e        # parcours de démonstration dans Chromium (Playwright)
 make typecheck  # tsc --noEmit (frontend)
 make lint       # ruff + eslint + prettier
 make licenses   # contrôle des licences Python et Node
@@ -113,7 +128,8 @@ frontend/       React + Vite : src/app (routeur, session), src/features/<domaine
 docs/           Documentation : api.md (contrat gelé), ARCHITECTURE.md, DECISIONS.md,
                 securite.md, PROGRESS.md
 backlog/        Les 65 tickets (TICKETS.md), planning, tickets.json
-scripts/        check_licenses.sh (+ .py, .mjs)
+e2e/            Parcours de démonstration rejoué dans Chromium (Playwright)
+scripts/        check_licenses.sh (+ .py, .mjs), e2e_backend.sh
 deploy/         nginx, guide de déploiement
 .github/        CI et modèle de PR
 ```
@@ -122,9 +138,10 @@ deploy/         nginx, guide de déploiement
 
 | Indicateur | Valeur |
 |---|---|
-| Tests backend | 429, couverture 98 % |
-| Tests frontend | 111, couverture 90 % |
-| Parcours de démonstration | Testé de bout en bout |
+| Tests backend | 484, couverture 98 % (98 % sur le matching et les services) |
+| Tests frontend | 185, couverture 92 % |
+| Parcours de démonstration | Rejoué par l'API (pytest) **et** dans Chromium (Playwright), en CI |
+| Affichage mobile | Les 18 écrans vérifiés à 390 px, aucun débordement |
 | Licences non permissives | 0, contrôle automatique en CI |
 | `manage.py check --deploy` | 0 avertissement |
 | Schéma OpenAPI | 0 avertissement, 0 erreur |
@@ -148,6 +165,7 @@ deploy/         nginx, guide de déploiement
 | [docs/PROGRESS.md](docs/PROGRESS.md) | Avancement ticket par ticket |
 | [docs/EXPLICATION_JURY.md](docs/EXPLICATION_JURY.md) | Chaque module expliqué, avec les questions probables du jury |
 | [docs/demo.md](docs/demo.md) | Le script du parcours de démonstration en 8 étapes |
+| [docs/AVANT_SOUMISSION.md](docs/AVANT_SOUMISSION.md) | Ce qui reste à faire à la main, par personne et par date |
 | [deploy/README.md](deploy/README.md) | Déploiement pas à pas, sauvegardes, retour arrière |
 | [backlog/TICKETS.md](backlog/TICKETS.md) | Les 65 tickets et leurs critères d'acceptation |
 

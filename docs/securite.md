@@ -43,6 +43,7 @@ Même principe pour les ressources d'autrui : l'API renvoie `404` et non `403`, 
 - Longueurs maximales sur tous les champs texte.
 - Énumérations en liste blanche (voir `docs/api.md` § 19).
 - URLs fournies par l'utilisateur : `https` obligatoire.
+- Moyen de contact (`profile.contact`) : une adresse e-mail valide ou une URL `https` valide, rien d'autre (`core/validators.py`, `validate_contact`) ; l'interface revérifie avant d'en faire un lien. Révélé seulement aux deux membres d'un échange accepté (`exchanges/serializers.py`) ; tests dans `profiles/tests` et `exchanges/tests`.
 
 ## 6. Journalisation
 
@@ -91,7 +92,7 @@ Vérification : huit tests d'injection sur la recherche et les filtres de projet
 
 - L'API ne renvoie que du JSON (`Content-Type: application/json`) : un navigateur ne l'exécute pas.
 - Côté frontend, React échappe tout texte inséré, et nous n'utilisons **jamais** `dangerouslySetInnerHTML`.
-- Les URLs fournies par l'utilisateur doivent commencer par `https://`, ce qui exclut `javascript:`.
+- Les URLs fournies par l'utilisateur doivent commencer par `https://`, ce qui exclut `javascript:`. Même règle pour le moyen de contact, qui accepte aussi une adresse e-mail (rendue en `mailto:`).
 
 Vérification : dix tests, dont le refus d'une URL `javascript:` dans l'avatar et dans un lien de projet.
 

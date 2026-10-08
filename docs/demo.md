@@ -2,7 +2,7 @@
 
 Script à suivre devant le jury. Durée visée : **4 minutes**. À répéter deux fois au minimum avant le passage (DL-52, DL-57, DL-61).
 
-Ce parcours est protégé par un test automatique : `backend/tests/test_parcours_demo.py`. S'il échoue, la démonstration est cassée.
+Ce parcours est protégé par deux tests automatiques, lancés à chaque modification : `backend/tests/test_parcours_demo.py` (par l'API) et `e2e/tests/parcours-demo.spec.ts` (dans Chromium, en cliquant dans l'interface). Si l'un échoue, la démonstration est cassée. Pour le rejouer avant le passage : `make e2e`.
 
 ---
 
@@ -33,7 +33,7 @@ Ce parcours est protégé par un test automatique : `backend/tests/test_parcours
 
 1. Créer un compte avec une adresse de démonstration.
 2. Montrer la **case de consentement** et le lien vers la politique de confidentialité.
-3. Renseigner le pays, une courte présentation, les disponibilités.
+3. Renseigner le pays, une courte présentation, les disponibilités, et un **moyen de contact** (lien GitHub, par exemple).
 
 > « Le consentement est explicite, comme l'exige la loi sénégalaise n° 2008-12. Nous ne demandons ni téléphone, ni adresse. L'adresse e-mail ne sera jamais visible par les autres. »
 
@@ -94,7 +94,9 @@ Montrer les trois niveaux de lecture, dans cet ordre :
 
 > « Huit types d'échange : mentorat, revue de code, pair programming, projet commun, préparation d'entretien… »
 
-**À montrer** : dans l'autre onglet, se connecter avec le compte destinataire et **accepter** la demande. La boucle est fermée.
+**À montrer** : dans l'autre onglet, se connecter avec le compte destinataire (`mamadou@demo.devlink.africa` si le compte créé sait React et veut apprendre Docker). La pastille à côté de « Échanges » signale la demande. **Accepter** la demande : le panneau « Échange accepté » affiche aussitôt le moyen de contact de l'autre, des deux côtés. La boucle est fermée.
+
+> « Tant que la demande n'est pas acceptée, personne ne voit le contact de l'autre. C'est l'acceptation qui vaut accord pour être joint. »
 
 ---
 

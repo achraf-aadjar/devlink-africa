@@ -47,6 +47,12 @@ export default function PrivacyPage() {
               c'est leur raison d'être : permettre aux autres de vous trouver.
             </li>
             <li>
+              <strong>Votre moyen de contact</strong>, si vous choisissez d'en indiquer un (adresse
+              e-mail ou lien vers GitHub, LinkedIn…). Il n'est <strong>pas public</strong> : seule
+              la personne avec qui vous avez un échange accepté le voit. Vous pouvez l'effacer à
+              tout moment depuis Mon profil.
+            </li>
+            <li>
               <strong>Vos compétences</strong>, vos projets, vos demandes d'échange et vos
               signalements.
             </li>

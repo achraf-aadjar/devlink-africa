@@ -9,11 +9,13 @@ Une entrée par ticket : état, écarts avec le plan, questions ouvertes.
 | Contrôle | Résultat |
 |---|---|
 | `make setup` | exit 0 |
-| Tests backend (SQLite) | 464 passés, 1 ignoré |
-| Tests backend (PostgreSQL) | 465 passés |
-| Couverture backend | 98 % global, 99 % sur matching et services |
-| Tests frontend | 122 passés |
-| Couverture frontend | 89 % |
+| Tests backend (SQLite) | 484 passés, 1 ignoré |
+| Tests backend (PostgreSQL) | relancés par la CI à chaque PR (pas de PostgreSQL dans l'environnement du 2026-10-08) |
+| Couverture backend | 98 % global, 98 % sur matching et services |
+| Tests frontend | 185 passés |
+| Couverture frontend | 92 % |
+| Parcours de démonstration dans Chromium (`make e2e`) | passé, 12 s |
+| Affichage mobile (390 px, 18 écrans) | aucun débordement |
 | `ruff check` et `ruff format` | propre |
 | ESLint `--max-warnings 0` et Prettier | propre |
 | `tsc --noEmit` | propre |
@@ -21,8 +23,8 @@ Une entrée par ticket : état, écarts avec le plan, questions ouvertes.
 | `manage.py check --deploy` | **aucun avertissement** |
 | `makemigrations --check` | aucun changement en attente |
 | Schéma OpenAPI | 0 avertissement, 0 erreur, 31 routes |
-| `vite build` | réussi, 105 ko compressés |
-| Licences | 38 paquets Python, 368 Node, **0 problème** |
+| `vite build` | réussi, 118 ko de JavaScript compressé |
+| Licences | 38 paquets Python, 368 Node (frontend) + 3 Node (e2e), **0 problème** |
 | Scan de secrets | 0 trouvé |
 | Gunicorn | répond sur `/api/v1/health/` |
 
@@ -181,7 +183,24 @@ Les composants d'IA **ne s'affichent pas** quand le service est inactif : nous n
 
 ---
 
+## Renforcement avant soumission (2026-10-08) — **terminé**
+
+| Sujet | Ce qui a été fait |
+|---|---|
+| Contact après acceptation | Un échange accepté ne débloquait rien : aucun des deux ne pouvait joindre l'autre. Champ `contact` (e-mail ou lien `https`), révélé aux deux seulement une fois l'échange `ACCEPTED` ou `COMPLETED`. Absent du profil public, inclus dans l'export. |
+| Demandes en attente | Pastille dans la barre de navigation, à côté de « Échanges ». |
+| Premiers pas | Liste guidée sur le tableau de bord d'un nouveau compte ; disparaît une fois tout fait. |
+| Bug corrigé | Les compteurs d'échanges en attente du tableau de bord étaient calculés sur l'aperçu limité à 5 : faux au-delà. |
+| Test navigateur | Parcours de démonstration rejoué dans Chromium (Playwright), en CI. |
+| Mobile | 18 écrans vérifiés à 390 px ; trois débordements et deux mises en page écrasées corrigés. |
+| Design | Surfaces douces, avatars, jauge de score, navbar flottante, accueil enrichi (voir `DECISIONS.md`). |
+| Documentation | Captures dans le README, `api.md` (modifications après le gel listées en tête), `EXPLICATION_JURY.md`, `demo.md`, politique de confidentialité. |
+
+---
+
 ## À faire par l'équipe (hors de ma portée)
+
+Liste à cocher, par personne et par date : **[AVANT_SOUMISSION.md](AVANT_SOUMISSION.md)**.
 
 ### Urgent
 
