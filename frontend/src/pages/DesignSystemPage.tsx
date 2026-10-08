@@ -20,8 +20,8 @@ export default function DesignSystemPage() {
       <header>
         <h1 className="text-2xl font-bold text-ink-900">Design system</h1>
         <p className="mt-1 text-sm text-ink-600">
-          Les composants réutilisables de l'interface. Un seul accent (terre cuite), des gris
-          chauds, des polices système.
+          Les composants réutilisables de l'interface. Thème sombre, un seul accent (bleu), des
+          polices système.
         </p>
       </header>
 
@@ -41,10 +41,10 @@ export default function DesignSystemPage() {
             </div>
           ))}
           <div className="text-center">
-            <div className="rounded-lg bg-ink-800 p-3">
-              <LogoMark size={44} variant="mono" className="text-accent-100" />
+            <div className="rounded-lg bg-accent-200 p-3">
+              <LogoMark size={44} variant="mono" className="text-accent-800" />
             </div>
-            <p className="mt-2 text-xs text-ink-500">sur fond sombre</p>
+            <p className="mt-2 text-xs text-ink-500">sur fond coloré</p>
           </div>
         </div>
       </section>
@@ -61,7 +61,7 @@ export default function DesignSystemPage() {
           {ICON_NAMES.map((name) => (
             <li
               key={name}
-              className="flex flex-col items-center gap-2 rounded-lg border border-ink-200 bg-white p-3"
+              className="flex flex-col items-center gap-2 rounded-lg border border-ink-200 bg-ink-100 p-3"
             >
               <Icon name={name} size={24} />
               <code className="text-center text-[0.65rem] leading-tight text-ink-500">{name}</code>
@@ -72,10 +72,10 @@ export default function DesignSystemPage() {
           <span className="flex items-center gap-2 text-sm text-accent-700">
             <Icon name="match" size={18} /> héritent de la couleur
           </span>
-          <span className="flex items-center gap-2 text-sm text-red-700">
+          <span className="flex items-center gap-2 text-sm text-red-400">
             <Icon name="warning" size={18} /> sans réglage
           </span>
-          <span className="flex items-center gap-2 text-sm text-emerald-800">
+          <span className="flex items-center gap-2 text-sm text-emerald-400">
             <Icon name="check" size={18} /> ni duplication
           </span>
         </div>

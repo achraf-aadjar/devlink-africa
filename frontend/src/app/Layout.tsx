@@ -29,7 +29,7 @@ const PUBLIC_LINKS: NavLinkItem[] = [
 const linkClass = ({ isActive }: { isActive: boolean }) =>
   cn(
     'flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
-    isActive ? 'bg-accent-50 text-accent-800' : 'text-ink-700 hover:bg-ink-100',
+    isActive ? 'bg-accent-50 text-accent-800' : 'text-ink-700 hover:bg-ink-200',
   )
 
 export default function Layout() {
@@ -48,12 +48,12 @@ export default function Layout() {
     <div className="flex min-h-screen flex-col">
       <a
         href="#contenu"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-3 focus:py-2 focus:shadow-card"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-ink-100 focus:px-3 focus:py-2 focus:shadow-card"
       >
         Aller au contenu
       </a>
 
-      <header className="border-b border-ink-200 bg-white">
+      <header className="border-b border-ink-200 bg-ink-100">
         <PageContainer className="flex items-center gap-3 py-3">
           <Link to="/" className="text-ink-900" aria-label="DevLink Africa, accueil">
             <Logo size={26} />
@@ -101,7 +101,7 @@ export default function Layout() {
             aria-expanded={menuOpen}
             aria-controls="menu-mobile"
             aria-label="Menu"
-            className="ml-auto rounded-lg p-2 text-ink-700 hover:bg-ink-100 md:hidden"
+            className="ml-auto rounded-lg p-2 text-ink-700 hover:bg-ink-200 md:hidden"
           >
             <svg
               viewBox="0 0 24 24"
@@ -140,7 +140,7 @@ export default function Layout() {
                   <button
                     type="button"
                     onClick={handleSignOut}
-                    className="block w-full rounded-lg px-3 py-2 text-left text-sm font-medium text-ink-700 hover:bg-ink-100"
+                    className="block w-full rounded-lg px-3 py-2 text-left text-sm font-medium text-ink-700 hover:bg-ink-200"
                   >
                     Se déconnecter
                   </button>
@@ -171,7 +171,7 @@ export default function Layout() {
         <Outlet />
       </main>
 
-      <footer className="border-t border-ink-200 bg-white">
+      <footer className="border-t border-ink-200 bg-ink-100">
         <PageContainer className="flex flex-col items-center gap-2 py-6 text-sm text-ink-600 sm:flex-row sm:justify-between">
           <p>DevLink Africa — échange de compétences entre développeurs africains.</p>
           <nav aria-label="Liens secondaires" className="flex gap-4">

@@ -13,8 +13,8 @@ describe('marque', () => {
     const { container } = render(<LogoMark />)
 
     const circles = container.querySelectorAll('circle')
-    expect(circles[0]).toHaveAttribute('stroke', '#b24422')
-    expect(circles[1]).toHaveAttribute('stroke', '#2d2925')
+    expect(circles[0]).toHaveAttribute('stroke', '#4493f8')
+    expect(circles[1]).toHaveAttribute('stroke', '#e6edf3')
   })
 
   it('passe en monochrome sur demande, pour un fond coloré', () => {

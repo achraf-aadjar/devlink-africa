@@ -6,7 +6,7 @@ import type { MatchExplanation as Explanation } from '../../../lib/types'
 function barTone(ratio: number): string {
   if (ratio >= 0.75) return 'bg-accent-600'
   if (ratio >= 0.4) return 'bg-accent-400'
-  return 'bg-ink-300'
+  return 'bg-ink-500'
 }
 
 /**

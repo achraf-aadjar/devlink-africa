@@ -87,7 +87,9 @@ export default function SearchPage() {
             aria-selected={tab === value}
             onClick={() => update({ onglet: value === 'users' ? '' : value })}
             className={`rounded-lg px-4 py-2 text-sm font-medium ${
-              tab === value ? 'bg-accent-600 text-white' : 'bg-white text-ink-700 hover:bg-ink-100'
+              tab === value
+                ? 'bg-accent-400 text-white'
+                : 'bg-ink-100 text-ink-700 hover:bg-ink-200'
             }`}
           >
             {value === 'users' ? 'Développeurs' : 'Projets'}

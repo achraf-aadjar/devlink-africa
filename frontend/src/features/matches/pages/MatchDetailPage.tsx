@@ -94,7 +94,10 @@ export default function MatchDetailPage() {
       </header>
 
       {notice && (
-        <p role="status" className="rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
+        <p
+          role="status"
+          className="rounded-lg bg-emerald-950/50 px-4 py-3 text-sm text-emerald-300"
+        >
           {notice}
         </p>
       )}
@@ -130,7 +133,7 @@ export default function MatchDetailPage() {
         )}
 
         {feedbackError && (
-          <p role="alert" className="mt-2 text-sm text-red-700">
+          <p role="alert" className="mt-2 text-sm text-red-400">
             {feedbackError}
           </p>
         )}

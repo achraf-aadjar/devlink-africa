@@ -14,17 +14,16 @@ import { cn } from '../../lib/cn'
  */
 
 /**
- * Trame d'anneaux entrelacés sur un dégradé chaleureux : le motif de la marque,
- * posé sur la même progression crème → terre cuite qui traverse toute notre
- * palette. Pensée pour habiller une bannière pleine largeur, donc elle prend
- * toute la hauteur et la largeur de son conteneur — c'est à l'appelant de
- * donner une hauteur au conteneur (une bannière, pas un paragraphe).
+ * Trame d'anneaux entrelacés sur un dégradé sombre : le motif de la marque,
+ * posé sur la même progression bleu nuit → bleu qui traverse toute notre
+ * palette sombre. Pensée pour habiller une bannière pleine largeur, donc elle
+ * prend toute la hauteur et la largeur de son conteneur — c'est à l'appelant
+ * de donner une hauteur au conteneur (une bannière, pas un paragraphe).
  *
- * Le dégradé s'arrête à accent-400 : chaque palier de accent-50 à accent-400
- * garde un contraste d'au moins 4,5:1 avec notre texte ink-900 (vérifié), ce
- * qui permet au titre et aux boutons de rester lisibles sur toute la hauteur
- * sans aucun réglage de couleur au cas par cas. accent-500 descend sous ce
- * seuil, d'où l'arrêt à 400.
+ * Le dégradé va de accent-50 à accent-400 : chaque palier garde un contraste
+ * d'au moins 4,5:1 avec notre texte ink-900, qui reste donc lisible sur toute
+ * la hauteur sans aucun réglage de couleur au cas par cas (vérifié, voir
+ * docs/DECISIONS.md).
  */
 export function RingsPattern({
   children,
@@ -47,8 +46,8 @@ export function RingsPattern({
       >
         <defs>
           <pattern id="dla-rings" width="96" height="96" patternUnits="userSpaceOnUse">
-            <circle cx="34" cy="48" r="22" fill="none" stroke="#b24422" strokeWidth="1.5" />
-            <circle cx="62" cy="48" r="22" fill="none" stroke="#b24422" strokeWidth="1.5" />
+            <circle cx="34" cy="48" r="22" fill="none" stroke="#4493f8" strokeWidth="1.5" />
+            <circle cx="62" cy="48" r="22" fill="none" stroke="#4493f8" strokeWidth="1.5" />
           </pattern>
           {/* Fondu du motif vers le bas : net en haut, s'efface où le texte
               est le plus dense, pour ne jamais gêner la lecture. */}
@@ -88,8 +87,8 @@ export function WeavePattern({
       >
         <defs>
           <pattern id="dla-weave" width="32" height="32" patternUnits="userSpaceOnUse">
-            <path d="M16 2 30 16 16 30 2 16z" fill="none" stroke="#b24422" strokeWidth="1.2" />
-            <path d="M16 10 22 16 16 22 10 16z" fill="#b24422" fillOpacity="0.6" />
+            <path d="M16 2 30 16 16 30 2 16z" fill="none" stroke="#4493f8" strokeWidth="1.2" />
+            <path d="M16 10 22 16 16 22 10 16z" fill="#4493f8" fillOpacity="0.6" />
           </pattern>
         </defs>
         <rect width="100%" height="100%" fill="url(#dla-weave)" opacity="0.16" />
@@ -113,7 +112,7 @@ export function DotsPattern({ children, className }: { children?: ReactNode; cla
       >
         <defs>
           <pattern id="dla-dots" width="18" height="18" patternUnits="userSpaceOnUse">
-            <circle cx="9" cy="9" r="1.3" fill="#5d564b" />
+            <circle cx="9" cy="9" r="1.3" fill="#8b949e" />
           </pattern>
         </defs>
         <rect width="100%" height="100%" fill="url(#dla-dots)" opacity="0.1" />

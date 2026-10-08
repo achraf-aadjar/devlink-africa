@@ -36,8 +36,8 @@ export default function Field({ label, error, hint, className, required, ...rest
         aria-invalid={error ? true : undefined}
         aria-describedby={describedBy || undefined}
         className={cn(
-          'rounded-lg border bg-white px-3 py-2 text-ink-900 placeholder:text-ink-400',
-          error ? 'border-red-700' : 'border-ink-300',
+          'rounded-lg border bg-ink-100 px-3 py-2 text-ink-900 placeholder:text-ink-400',
+          error ? 'border-red-500' : 'border-ink-300',
           className,
         )}
       />
@@ -47,7 +47,7 @@ export default function Field({ label, error, hint, className, required, ...rest
         </p>
       )}
       {error && (
-        <p id={errorId} className="text-sm text-red-700">
+        <p id={errorId} className="text-sm text-red-400">
           {error}
         </p>
       )}

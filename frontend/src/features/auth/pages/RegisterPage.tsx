@@ -127,7 +127,7 @@ export default function RegisterPage() {
             onChange={(country) => setValues({ ...values, country })}
           />
 
-          <div className="flex flex-col gap-1.5 border-t border-ink-100 pt-5">
+          <div className="flex flex-col gap-1.5 border-t border-ink-200 pt-5">
             <label className="flex items-start gap-2 text-sm text-ink-700">
               <input
                 type="checkbox"
@@ -147,14 +147,14 @@ export default function RegisterPage() {
               </span>
             </label>
             {errors.consent && (
-              <p id="consent-error" className="text-sm text-red-700">
+              <p id="consent-error" className="text-sm text-red-400">
                 {errors.consent}
               </p>
             )}
           </div>
 
           {errors.form && (
-            <p role="alert" className="text-sm text-red-700">
+            <p role="alert" className="text-sm text-red-400">
               {errors.form}
             </p>
           )}

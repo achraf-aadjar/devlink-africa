@@ -11,7 +11,7 @@
     invisible sur un onglet au thème sombre.
   -->
   <rect width="48" height="48" rx="10" fill="#faf9f7"/>
-  <path d="M24 13.5a11.5 11.5 0 0 0 0 21 11.5 11.5 0 0 0 0-21" fill="#b24422" fill-opacity="0.22"/>
-  <circle cx="19.5" cy="24" r="11.5" fill="none" stroke="#b24422" stroke-width="4"/>
-  <circle cx="28.5" cy="24" r="11.5" fill="none" stroke="#2d2925" stroke-width="4"/>
+  <path d="M24 13.5a11.5 11.5 0 0 0 0 21 11.5 11.5 0 0 0 0-21" fill="#4493f8" fill-opacity="0.22"/>
+  <circle cx="19.5" cy="24" r="11.5" fill="none" stroke="#4493f8" stroke-width="4"/>
+  <circle cx="28.5" cy="24" r="11.5" fill="none" stroke="#0d1117" stroke-width="4"/>
 </svg>

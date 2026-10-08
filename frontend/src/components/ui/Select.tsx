@@ -33,8 +33,8 @@ export default function Select({
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? errorId : undefined}
         className={cn(
-          'rounded-lg border bg-white px-3 py-2 text-ink-900',
-          error ? 'border-red-700' : 'border-ink-300',
+          'rounded-lg border bg-ink-100 px-3 py-2 text-ink-900',
+          error ? 'border-red-500' : 'border-ink-300',
           className,
         )}
       >
@@ -46,7 +46,7 @@ export default function Select({
         ))}
       </select>
       {error && (
-        <p id={errorId} className="text-sm text-red-700">
+        <p id={errorId} className="text-sm text-red-400">
           {error}
         </p>
       )}

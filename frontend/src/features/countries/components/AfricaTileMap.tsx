@@ -117,7 +117,7 @@ export default function AfricaTileMap({ countries }: { countries: Country[] }) {
               className={cn(
                 'flex aspect-square items-center justify-center rounded text-[0.6rem] font-semibold transition-colors sm:text-xs',
                 populated
-                  ? 'bg-accent-500 text-white hover:bg-accent-700'
+                  ? 'bg-accent-400 text-white hover:bg-accent-300'
                   : // Les pays sans donnée restent gris mais cliquables, comme
                     // l'exige le ticket.
                     'bg-ink-200 text-ink-600 hover:bg-ink-300',

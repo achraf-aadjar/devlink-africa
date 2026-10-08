@@ -13,8 +13,9 @@ import { cn } from '../../lib/cn'
  * géométrique abstraite reste lisible à 16 pixels, se décline en monochrome, et
  * ne ressemble à aucun logo existant.
  *
- * La couleur : l'anneau de gauche en terre cuite (notre accent), celui de droite
- * en encre. Deux acteurs différents, une zone commune.
+ * La couleur : l'anneau de gauche en bleu (notre accent), celui de droite en
+ * clair. Deux acteurs différents, une zone commune. Les deux teintes
+ * reprennent exactement accent-600 et ink-900 du thème sombre.
  */
 
 export interface LogoProps extends Omit<SVGProps<SVGSVGElement>, 'children'> {
@@ -24,8 +25,8 @@ export interface LogoProps extends Omit<SVGProps<SVGSVGElement>, 'children'> {
 }
 
 export function LogoMark({ size = 32, variant = 'color', className, ...rest }: LogoProps) {
-  const left = variant === 'mono' ? 'currentColor' : '#b24422'
-  const right = variant === 'mono' ? 'currentColor' : '#2d2925'
+  const left = variant === 'mono' ? 'currentColor' : '#4493f8'
+  const right = variant === 'mono' ? 'currentColor' : '#e6edf3'
 
   return (
     <svg
@@ -45,7 +46,7 @@ export function LogoMark({ size = 32, variant = 'color', className, ...rest }: L
       */}
       <path
         d="M24 12.3a12.5 12.5 0 0 0 0 23.4 12.5 12.5 0 0 0 0-23.4"
-        fill={variant === 'mono' ? 'currentColor' : '#b24422'}
+        fill={variant === 'mono' ? 'currentColor' : '#4493f8'}
         fillOpacity={0.22}
       />
       {/* Anneau gauche : celui qui apporte. */}

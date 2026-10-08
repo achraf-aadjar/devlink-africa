@@ -26,7 +26,7 @@ function LinkButton({ href, children }: { href: string; children: React.ReactNod
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-flex items-center gap-2 rounded-lg border border-ink-300 bg-white px-4 py-2 text-sm font-medium text-ink-800 transition-colors hover:bg-ink-100"
+      className="inline-flex items-center gap-2 rounded-lg border border-ink-300 bg-ink-100 px-4 py-2 text-sm font-medium text-ink-800 transition-colors hover:bg-ink-200"
     >
       <Icon name="external" size={16} />
       {children}
@@ -202,12 +202,15 @@ export default function ProjectDetailPage() {
       </div>
 
       {notice && (
-        <p role="status" className="rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
+        <p
+          role="status"
+          className="rounded-lg bg-emerald-950/50 px-4 py-3 text-sm text-emerald-300"
+        >
           {notice}
         </p>
       )}
       {actionError && (
-        <p role="alert" className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-800">
+        <p role="alert" className="rounded-lg bg-red-950/50 px-4 py-3 text-sm text-red-300">
           {actionError}
         </p>
       )}
