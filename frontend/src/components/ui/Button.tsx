@@ -13,10 +13,13 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const VARIANTS: Record<Variant, string> = {
-  // Vert façon GitHub (leur bouton « Code », pas un vert néon) : vérifié à
-  // 5:1 avec du texte blanc, plus sombre encore au survol.
-  primary: 'bg-green-700 text-white hover:bg-green-800 disabled:bg-ink-300',
-  secondary: 'border border-ink-300 bg-ink-100 text-ink-800 hover:bg-ink-200',
+  // Même bleu que la navbar et l'accueil. #1f6feb porte du blanc à 4,6:1 ;
+  // au survol on fonce (et on allume le halo) plutôt que d'éclaircir, pour
+  // garder le contraste.
+  primary:
+    'bg-[#1f6feb] text-white shadow-glow hover:bg-[#1a5fd0] disabled:bg-ink-300 disabled:shadow-none',
+  secondary:
+    'border border-ink-300 bg-ink-100 text-ink-800 hover:border-accent-400/70 hover:bg-ink-200',
   ghost: 'text-ink-700 hover:bg-ink-200',
   danger: 'bg-red-600 text-white hover:bg-red-500',
 }
@@ -42,7 +45,7 @@ export default function Button({
       disabled={disabled || loading}
       aria-busy={loading || undefined}
       className={cn(
-        'inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors',
+        'inline-flex items-center justify-center gap-2 rounded-lg font-medium transition',
         'disabled:cursor-not-allowed disabled:opacity-70',
         VARIANTS[variant],
         SIZES[size],

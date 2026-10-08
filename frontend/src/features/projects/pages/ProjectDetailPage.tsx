@@ -128,7 +128,7 @@ export default function ProjectDetailPage() {
         </span>
 
         <div className="min-w-0 flex-1">
-          <h1 className="text-2xl font-bold text-ink-900">{data.title}</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-ink-900">{data.title}</h1>
           <p className="mt-1 text-sm text-ink-600">
             Porté par{' '}
             <Link to={`/developpeurs/${data.owner.id}`} className="hover:underline">

@@ -81,12 +81,12 @@ export default function ProfilePage() {
     <section className="flex flex-col gap-6">
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-ink-900">Mon profil</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-ink-900">Mon profil</h1>
           <p className="mt-1 text-sm text-ink-600">{data.email}</p>
         </div>
         <Card className="px-4 py-3 text-center">
           <p className="text-xs font-medium text-ink-600">Profil complété</p>
-          <p className="text-2xl font-bold tabular-nums text-accent-700">
+          <p className="text-gradient text-3xl font-bold tabular-nums">
             {data.profile.completeness}%
           </p>
         </Card>

@@ -85,12 +85,12 @@ export default function RegisterPage() {
 
   return (
     <div className="mx-auto w-full max-w-lg">
-      <h1 className="mb-1 text-2xl font-bold text-ink-900">Créer un compte</h1>
+      <h1 className="mb-1 text-3xl font-bold tracking-tight text-ink-900">Créer un compte</h1>
       <p className="mb-6 text-sm text-ink-600">
         Rejoignez les développeuses et développeurs d'Afrique qui échangent leurs compétences.
       </p>
 
-      <Card className="p-6 sm:p-8">
+      <Card className="border-accent-300/40 p-6 shadow-glow-soft sm:p-8">
         <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
           <Field
             label="Nom complet"

@@ -70,6 +70,9 @@ export default {
         // c'est surtout la bordure (border-ink-200/300) qui sépare les
         // cartes. L'ombre reste discrète, en renfort.
         card: '0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.25)',
+        // Halo bleu des éléments mis en avant (bouton principal, carte active).
+        glow: '0 0 0 1px rgba(56, 139, 253, 0.45), 0 8px 28px -8px rgba(31, 111, 235, 0.7)',
+        'glow-soft': '0 0 0 1px rgba(56, 139, 253, 0.2), 0 20px 60px -24px rgba(56, 139, 253, 0.5)',
       },
       keyframes: {
         'fade-in': { from: { opacity: '0' }, to: { opacity: '1' } },
@@ -83,12 +86,17 @@ export default {
           '50%': { opacity: '0.85', transform: 'scale(1.06)' },
         },
         'bar-fill': { from: { transform: 'scaleX(0)' }, to: { transform: 'scaleX(1)' } },
+        'page-in': {
+          from: { opacity: '0', transform: 'translateY(8px)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
+        },
       },
       animation: {
         'fade-in': 'fade-in 150ms ease-out',
         float: 'float 6s ease-in-out infinite',
         glow: 'glow 8s ease-in-out infinite',
         'bar-fill': 'bar-fill 1.1s cubic-bezier(0.22, 1, 0.36, 1) both',
+        'page-in': 'page-in 350ms ease-out both',
       },
     },
   },

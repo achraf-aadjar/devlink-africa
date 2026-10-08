@@ -54,10 +54,10 @@ export default function LoginPage() {
 
   return (
     <div className="mx-auto w-full max-w-md">
-      <h1 className="mb-1 text-2xl font-bold text-ink-900">Se connecter</h1>
+      <h1 className="mb-1 text-3xl font-bold tracking-tight text-ink-900">Se connecter</h1>
       <p className="mb-6 text-sm text-ink-600">Retrouvez vos matchs et vos échanges.</p>
 
-      <Card>
+      <Card className="border-accent-300/40 p-6 shadow-glow-soft sm:p-8">
         <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
           <Field
             label="Adresse e-mail"

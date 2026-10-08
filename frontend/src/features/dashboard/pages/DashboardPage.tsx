@@ -18,14 +18,14 @@ export default function DashboardPage() {
   return (
     <section className="flex flex-col gap-6">
       <header>
-        <h1 className="text-2xl font-bold text-ink-900">
+        <h1 className="text-3xl font-bold tracking-tight text-ink-900">
           Bonjour{user?.full_name ? ` ${user.full_name.split(' ')[0]}` : ''}
         </h1>
         <p className="mt-1 text-sm text-ink-600">Voici où vous en êtes aujourd'hui.</p>
       </header>
 
       {incomplete && (
-        <Card className="flex flex-wrap items-center justify-between gap-4 bg-accent-50">
+        <Card className="flex flex-wrap items-center justify-between gap-4 border-accent-300/50 bg-accent-50 shadow-glow-soft">
           <div>
             <p className="font-medium text-accent-900">
               Votre profil est complété à {data.profile_completeness} %
@@ -33,6 +33,15 @@ export default function DashboardPage() {
             <p className="mt-0.5 text-sm text-accent-800">
               Un profil complet reçoit des propositions plus justes.
             </p>
+            <div
+              aria-hidden="true"
+              className="mt-3 h-1.5 w-56 overflow-hidden rounded-full bg-ink-200"
+            >
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-[#1f6feb] to-[#79c0ff]"
+                style={{ width: `${data.profile_completeness}%` }}
+              />
+            </div>
           </div>
           <Link to="/profil">
             <Button size="sm">Compléter mon profil</Button>
@@ -41,18 +50,18 @@ export default function DashboardPage() {
       )}
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <Card className="text-center">
-          <p className="text-3xl font-bold tabular-nums text-accent-700">{data.counters.matches}</p>
+        <Card interactive className="text-center">
+          <p className="text-gradient text-4xl font-bold tabular-nums">{data.counters.matches}</p>
           <p className="mt-1 text-sm text-ink-600">match{data.counters.matches > 1 ? 's' : ''}</p>
         </Card>
-        <Card className="text-center">
-          <p className="text-3xl font-bold tabular-nums text-accent-700">
+        <Card interactive className="text-center">
+          <p className="text-gradient text-4xl font-bold tabular-nums">
             {data.counters.offered_skills}
           </p>
           <p className="mt-1 text-sm text-ink-600">compétence(s) proposée(s)</p>
         </Card>
-        <Card className="text-center">
-          <p className="text-3xl font-bold tabular-nums text-accent-700">
+        <Card interactive className="text-center">
+          <p className="text-gradient text-4xl font-bold tabular-nums">
             {data.counters.wanted_skills}
           </p>
           <p className="mt-1 text-sm text-ink-600">à apprendre</p>

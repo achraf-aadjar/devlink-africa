@@ -18,7 +18,7 @@ export default function DesignSystemPage() {
   return (
     <div className="flex flex-col gap-10">
       <header>
-        <h1 className="text-2xl font-bold text-ink-900">Design system</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-ink-900">Design system</h1>
         <p className="mt-1 text-sm text-ink-600">
           Les composants réutilisables de l'interface. Thème sombre, un seul accent (bleu), des
           polices système.

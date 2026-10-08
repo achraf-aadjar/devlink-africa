@@ -72,7 +72,7 @@ export default function SearchPage() {
   return (
     <section className="flex flex-col gap-6">
       <header>
-        <h1 className="text-2xl font-bold text-ink-900">Recherche</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-ink-900">Recherche</h1>
         <p className="mt-1 text-sm text-ink-600">
           Trouvez un développeur par compétence et par pays, ou un projet à rejoindre.
         </p>

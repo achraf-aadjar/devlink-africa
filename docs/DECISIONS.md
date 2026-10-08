@@ -351,3 +351,19 @@ Repris avec nos propres codes, pas une copie : un voile sombre uniforme (`bg-ink
 **Décision.** Sur demande d'Achraf (« vert comme GitHub mais pas trop vert »), le bouton `primary` (`Créer mon compte`, `Se connecter`, etc.) passe du bleu de marque à un vert. C'est fidèle à GitHub, qui distingue déjà ses deux accents : le bleu pour les liens et le focus, le vert pour l'action principale d'un bouton (leur bouton « Code », entre autres). Les autres usages du bleu (logo, liens, onglets actifs, tuiles de pays, barres de score) ne changent pas : seul `Button` variant `primary` est concerné.
 
 **La teinte.** `green-700` de Tailwind (`#15803d`) au repos, `green-800` (plus sombre) au survol — vérifié à 5:1 avec du texte blanc dessus, et encore mieux au survol. Choisi plutôt que le vert exact de GitHub (`#238636`, qui ne passait qu'à 4,1:1 au repos) pour garder la même marge de sécurité que le reste de la palette. Couleur Tailwind de base, sans ajout au fichier de configuration : même logique que le bouton `danger`, qui utilisait déjà un rouge Tailwind brut plutôt qu'un jeton `ink`/`accent`.
+
+---
+
+## 2026-10-08 — Navbar flottante, page d'accueil enrichie, effets bleus sur tout le site
+
+**Navbar.** Pastille claire arrondie qui flotte au-dessus du fond sombre et reste collée en haut au défilement : logo à gauche, liens centrés, « Se connecter » et un bouton bleu « S’inscrire » à droite. Le logo a une variante `light` (anneau droit quasi noir) pour rester lisible sur ce fond clair. Connecté, la barre porte sept liens plus le profil : elle ne passe sur une ligne qu'à partir de 1280 px, donc le menu complet s'affiche à `xl` (contre `lg` pour un visiteur, qui n'a que trois liens) ; vérifié par capture à 1024, 1280 et 1440 px.
+
+**Le bouton principal repasse en bleu.** Il remplace le vert de l'entrée précédente : la navbar et l'accueil utilisent un bleu lumineux, et deux couleurs d'action différentes d'une page à l'autre donnaient une impression de patchwork. `#1f6feb` porte du blanc à 4,6:1 ; au survol on fonce (`#1a5fd0`) au lieu d'éclaircir, pour ne pas descendre sous 4,5:1.
+
+**Effets façon github.com, factorisés.** Grille estompée (`.bg-grid`), halos flous (`.glow-blob`), texte en dégradé (`.text-gradient`), cartes à bordure lumineuse (`.glow-card`) dans `index.css` ; ombres `glow` et `glow-soft` dans `tailwind.config.js`. Les pages intérieures passent toutes par `PageShell`, qui pose la grille et un halo discret en haut de page et rejoue une courte animation d'entrée à chaque changement d'adresse.
+
+**Animations sans risque pour l'accessibilité.** Les apparitions au défilement (`useReveal`) partent d'un contenu visible si `IntersectionObserver` manque, et la règle `prefers-reduced-motion` coupe aussi les animations en boucle (`animation-iteration-count: 1`), sinon une boucle réduite à 0,01 ms aurait clignoté.
+
+**Piège rencontré.** Un halo centré par `-translate-x-1/2` partait sur le côté : l'animation `glow` pose son propre `transform` et écrase la translation. Les halos sont donc centrés par `inset-x-0 mx-auto`.
+
+**Chiffres de l'accueil.** Tous viennent du produit : 54 pays (carte), 6 critères et l'exemple de score à 82,5 (docs/api.md), 4 formes d'échange. Aucun chiffre d'usage inventé.

@@ -104,7 +104,7 @@ export default function ProjectFormPage() {
 
   return (
     <section className="mx-auto w-full max-w-2xl flex-col gap-6">
-      <h1 className="mb-6 text-2xl font-bold text-ink-900">
+      <h1 className="mb-6 text-3xl font-bold tracking-tight text-ink-900">
         {projectId ? 'Modifier le projet' : 'Proposer un projet'}
       </h1>
 

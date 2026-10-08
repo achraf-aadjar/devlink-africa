@@ -17,7 +17,8 @@ export default function Card({
     <Tag
       className={cn(
         'rounded-card border border-ink-200 bg-ink-100 p-5 shadow-card',
-        interactive && 'transition-shadow duration-150 hover:border-accent-200 hover:shadow-lg',
+        interactive &&
+          'transition duration-200 hover:-translate-y-0.5 hover:border-accent-400/60 hover:shadow-glow-soft',
         className,
       )}
     >

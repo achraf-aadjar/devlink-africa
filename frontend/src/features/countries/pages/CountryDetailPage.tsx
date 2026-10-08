@@ -38,7 +38,7 @@ export default function CountryDetailPage() {
           {data.flag}
         </span>
         <div>
-          <h1 className="text-2xl font-bold text-ink-900">{data.name}</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-ink-900">{data.name}</h1>
           <p className="mt-1 text-sm text-ink-600">
             {data.developers_count} développeur{data.developers_count > 1 ? 's' : ''} ·{' '}
             {data.projects_count} projet{data.projects_count > 1 ? 's' : ''}

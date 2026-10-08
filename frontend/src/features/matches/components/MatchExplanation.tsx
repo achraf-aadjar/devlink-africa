@@ -34,9 +34,9 @@ export default function MatchExplanation({
   return (
     <div className="flex flex-col gap-6">
       {/* Niveau 1 : le score. Le motif de tissage le détache du reste. */}
-      <WeavePattern className="flex flex-col items-center gap-2 rounded-card border border-ink-200 bg-accent-50 p-5 shadow-card">
+      <WeavePattern className="flex flex-col items-center gap-2 rounded-card border border-accent-300/50 bg-accent-50 p-6 shadow-glow-soft">
         <p className="text-sm font-medium text-accent-800">Score de compatibilité</p>
-        <p className="text-5xl font-bold text-accent-700">
+        <p className="text-gradient text-6xl font-bold">
           {total}
           <span className="text-2xl font-medium">/100</span>
         </p>

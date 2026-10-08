@@ -20,7 +20,7 @@ export default function ProjectCard({ project }: { project: Project }) {
       <div className="flex items-start gap-3">
         <span
           aria-hidden="true"
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent-50 text-accent-600"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-accent-300/60 bg-accent-50 text-accent-700 shadow-glow"
         >
           <Icon name="project" size={20} />
         </span>

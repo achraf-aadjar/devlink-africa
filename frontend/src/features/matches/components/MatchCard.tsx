@@ -25,9 +25,7 @@ export default function MatchCard({ match }: { match: MatchSummary }) {
           </p>
         </div>
         <div className="shrink-0 text-right">
-          <p className="text-2xl font-bold tabular-nums text-accent-700">
-            {Math.round(match.score)}
-          </p>
+          <p className="text-gradient text-3xl font-bold tabular-nums">{Math.round(match.score)}</p>
           <p className="text-xs text-ink-500">sur 100</p>
         </div>
       </div>

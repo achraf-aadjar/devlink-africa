@@ -40,7 +40,9 @@ export default function PublicProfilePage() {
     <section className="flex flex-col gap-6">
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-ink-900">{data.full_name || 'Développeur'}</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-ink-900">
+            {data.full_name || 'Développeur'}
+          </h1>
           <p className="mt-1 text-sm text-ink-600">
             {data.country && (
               <span className="mr-1" aria-hidden="true">
