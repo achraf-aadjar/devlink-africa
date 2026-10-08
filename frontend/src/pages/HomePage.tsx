@@ -342,7 +342,7 @@ export default function HomePage() {
             title="Quatre étapes, de l'inscription au premier échange"
             text="Pas de questionnaire interminable : quelques minutes suffisent pour recevoir vos premières propositions."
           />
-          <ol className="relative grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <ol className="relative grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
             {/* Ligne lumineuse qui relie les étapes, sur grand écran. */}
             <div
               aria-hidden="true"
@@ -446,7 +446,7 @@ export default function HomePage() {
             title="Pensé pour que les deux côtés y gagnent"
             text="DevLink Africa n’est pas un annuaire : c’est un outil pour trouver la bonne personne avec qui progresser."
           />
-          <ul className="grid gap-12 md:grid-cols-3 md:divide-x md:divide-white/[0.06]">
+          <ul className="grid gap-12 grid-cols-1 md:grid-cols-3 md:divide-x md:divide-white/[0.06]">
             {PRINCIPLES.map((item, index) => (
               <Reveal
                 as="li"

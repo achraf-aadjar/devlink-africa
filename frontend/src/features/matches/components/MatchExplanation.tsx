@@ -49,7 +49,7 @@ export default function MatchExplanation({
       </div>
 
       {/* Niveau 2 : qui apprend quoi à qui */}
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
         <Card>
           <h3 className="mb-3 font-semibold text-ink-900">{partnerName} peut vous apprendre</h3>
           {explanation.they_can_teach_you.length > 0 ? (

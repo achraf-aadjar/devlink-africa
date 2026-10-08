@@ -86,7 +86,7 @@ export default function DesignSystemPage() {
           Un fond ne doit jamais se remarquer : s'il attire l'œil, il nuit au texte posé dessus.
           D'où ces opacités très basses.
         </p>
-        <div className="grid gap-4 sm:grid-cols-3">
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-3">
           <RingsPattern className="surface p-6">
             <p className="text-sm font-medium text-ink-800">Anneaux</p>
             <p className="text-xs text-ink-600">Page d'accueil</p>
@@ -147,7 +147,7 @@ export default function DesignSystemPage() {
         <h2 id="champs" className="text-lg font-semibold text-ink-800">
           Champs
         </h2>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
           <Field label="Adresse e-mail" placeholder="vous@example.org" />
           <Field label="Mot de passe" type="password" required hint="10 caractères au minimum." />
           <Field label="Pays" error="Ce champ est obligatoire." />

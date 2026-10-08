@@ -94,7 +94,7 @@ export default function PublicProfilePage() {
         </Card>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
         <Card>
           <h2 className="mb-3 font-semibold text-ink-900">Sait faire</h2>
           {data.skills.offered.length === 0 ? (

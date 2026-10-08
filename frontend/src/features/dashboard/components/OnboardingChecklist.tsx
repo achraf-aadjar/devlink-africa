@@ -101,7 +101,7 @@ export default function OnboardingChecklist({ data }: { data: Dashboard }) {
             <li
               key={step.title}
               className={cn(
-                'flex items-start gap-4 rounded-2xl px-3 py-3',
+                'flex flex-wrap items-start gap-x-4 gap-y-3 rounded-2xl px-3 py-3 sm:flex-nowrap',
                 isNext && 'bg-white/[0.04] ring-1 ring-inset ring-accent-400/25',
               )}
             >
@@ -129,12 +129,15 @@ export default function OnboardingChecklist({ data }: { data: Dashboard }) {
                 {!step.done && <p className="mt-0.5 text-sm text-ink-600">{step.text}</p>}
               </div>
               {isNext && (
-                <Link
-                  to={step.to}
-                  className="shrink-0 self-center rounded-full bg-[#1f6feb] px-4 py-1.5 text-sm font-medium text-white shadow-glow transition hover:bg-[#1a5fd0]"
-                >
-                  {step.action}
-                </Link>
+                // Sur mobile, le bouton prend sa propre ligne sous le texte.
+                <div className="basis-full pl-12 sm:basis-auto sm:self-center sm:pl-0">
+                  <Link
+                    to={step.to}
+                    className="inline-flex shrink-0 rounded-full bg-[#1f6feb] px-4 py-1.5 text-sm font-medium text-white shadow-glow transition hover:bg-[#1a5fd0]"
+                  >
+                    {step.action}
+                  </Link>
+                </div>
               )}
             </li>
           )

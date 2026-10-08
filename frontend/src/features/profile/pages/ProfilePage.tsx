@@ -107,7 +107,7 @@ export default function ProfilePage() {
 
       <Card>
         <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
             <Field
               label="Nom complet"
               value={form.full_name}

@@ -94,7 +94,7 @@ export default function SkillsPage() {
 
       <SkillExtractor onAccept={handleAdd} />
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
         <SkillColumn
           title="Je sais faire"
           description="Ce que vous pouvez enseigner à quelqu'un."

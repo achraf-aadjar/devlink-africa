@@ -66,7 +66,7 @@ export default function ProjectsPage() {
 
       <Card>
         <form
-          className="grid gap-4 sm:grid-cols-3"
+          className="grid gap-4 grid-cols-1 sm:grid-cols-3"
           onSubmit={(event) => {
             event.preventDefault()
             update({ q: draft })
@@ -120,7 +120,7 @@ export default function ProjectsPage() {
           <p className="text-sm text-ink-600">
             {data.count} projet{data.count > 1 ? 's' : ''} trouvé{data.count > 1 ? 's' : ''}.
           </p>
-          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {data.results.map((project) => (
               <ProjectCard key={project.id} project={project} />
             ))}

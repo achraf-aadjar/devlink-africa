@@ -25,8 +25,8 @@ export default function ProjectCard({ project }: { project: Project }) {
           <Icon name="project" size={20} />
         </span>
         <div className="min-w-0 flex-1">
-          <div className="flex items-start justify-between gap-2">
-            <h2 className="truncate font-semibold text-ink-900">
+          <div className="flex flex-wrap items-start justify-between gap-x-2 gap-y-1">
+            <h2 className="min-w-0 break-words font-semibold text-ink-900">
               <Link to={`/projets/${project.id}`} className="hover:text-accent-700 hover:underline">
                 {project.title}
               </Link>

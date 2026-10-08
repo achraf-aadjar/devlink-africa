@@ -86,7 +86,7 @@ export default function DashboardPage() {
         )}
       </Card>
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
         <Card>
           <div className="mb-3 flex items-center justify-between gap-3">
             <h2 className="font-semibold text-ink-900">Échanges en attente</h2>

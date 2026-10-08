@@ -72,7 +72,7 @@ export default function CountryDetailPage() {
           {data.developers.length > 0 && (
             <div className="flex flex-col gap-3">
               <h2 className="font-semibold text-ink-900">Développeurs</h2>
-              <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {data.developers.map((person) => (
                   <Card as="li" key={person.id} interactive className="flex flex-col gap-2">
                     <Avatar name={person.full_name || 'Développeur'} size={52} className="mb-1" />
@@ -103,7 +103,7 @@ export default function CountryDetailPage() {
           {data.projects.length > 0 && (
             <div className="flex flex-col gap-3">
               <h2 className="font-semibold text-ink-900">Projets</h2>
-              <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {data.projects.map((project) => (
                   <ProjectCard key={project.id} project={project} />
                 ))}
