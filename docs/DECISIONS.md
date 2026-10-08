@@ -391,3 +391,12 @@ Repris avec nos propres codes, pas une copie : un voile sombre uniforme (`bg-ink
 3. **Une bande d'appel à l'action finale**, uniquement pour les visiteurs non connectés (ceux déjà connectés ont déjà vu l'appel à l'action de la bannière, pas besoin de le répéter).
 
 **Pourquoi aucun chiffre n'est mis en avant.** La tentation, pour une page d'accueil, est d'afficher « X développeurs », « Y pays », « Z matchs réalisés ». Nos seules données viennent de `seed_demo` et sont explicitement marquées « Profil de démonstration » partout ailleurs dans le produit — les présenter ici comme une mesure d'audience réelle serait exactement l'erreur déjà écartée pour la bannière (voir plus haut, « des chiffres réels en repère de crédibilité »). L'aperçu des pays montre des compteurs réels (ils sont sur la page `/pays` elle-même, publique), mais rien n'est formulé comme une statistique globale du produit. Testé aussi : si aucun pays n'a encore de développeur, la section le dit en toutes lettres plutôt que de rester vide ou d'inventer un chiffre.
+
+---
+
+## 2026-10-08 — Bouton Google : repositionné, pleine largeur
+
+**Décision.** Achraf a obtenu un vrai identifiant client Google Cloud Console et l'a testé : le bouton apparaissait en haut du formulaire, dans sa taille par défaut (assez étroite). Demande : le mettre en bas, avec « un très très bon design ». Deux changements :
+
+1. **Position** : le bouton passe après le bouton principal (« Se connecter » / « Créer mon compte »), toujours séparé par un repère « ou ». Le mot de passe reste le chemin principal, Google une alternative en dessous — plus conforme à l'ordre dans lequel les champs se remplissent, et au fait que le mot de passe reste la méthode qui fonctionne pour tout le monde (Google ne l'est que pour qui a un compte Google).
+2. **Largeur** : Google Identity Services ne dessine pas un bouton qui épouse son conteneur — il faut lui donner une largeur en pixels, qu'il ne met pas à jour tout seul si la fenêtre change de taille. `GoogleSignInButton` mesure maintenant son conteneur (`ResizeObserver`) et redessine le bouton à la largeur exacte de la carte, jusqu'à 400 px (le maximum que Google accepte) — il occupe donc toute la largeur du formulaire, comme n'importe lequel de nos champs, et reste correct si la fenêtre est redimensionnée. Thème changé pour `outline` / forme `pill` (un bouton blanc, bords arrondis) : plus net sur nos fonds sombres que le thème `filled_black` essayé en premier, qui se fondait trop dans la carte.
