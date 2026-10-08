@@ -1,9 +1,29 @@
 import { Link } from 'react-router-dom'
 import Icon, { type IconName } from '../components/icons/Icon'
 import PageContainer from '../components/PageContainer'
-import { Button, Card } from '../components/ui'
+import { Button, Card, LoadingState } from '../components/ui'
 import { useAuth } from '../features/auth/hooks/useAuth'
+import { listCountries } from '../features/search/api/search'
 import { cn } from '../lib/cn'
+import { useQuery } from '../lib/useQuery'
+
+const VALUE_PROPS: Array<{ icon: IconName; title: string; text: string }> = [
+  {
+    icon: 'match',
+    title: 'Des matchs expliqués',
+    text: 'Jamais une boîte noire : chaque profil proposé vient avec le détail du score, critère par critère.',
+  },
+  {
+    icon: 'project',
+    title: 'Un Project Hub actif',
+    text: 'Proposez un projet qui cherche des contributeurs, ou rejoignez-en un qui correspond à ce que vous savez faire.',
+  },
+  {
+    icon: 'discussion',
+    title: 'DevLink Copilot à vos côtés',
+    text: 'Un assistant intégré pour vous orienter sur la plateforme : compléter son profil, comprendre un score, trouver où agir.',
+  },
+]
 
 const STEPS: Array<{ title: string; text: string; icon: IconName }> = [
   {
@@ -65,6 +85,14 @@ function FloatingChip({
 
 export default function HomePage() {
   const { isAuthenticated } = useAuth()
+  const { data: countries, loading: loadingCountries } = useQuery(() => listCountries(), [])
+
+  // Les pays les plus actifs d'abord, pour que l'aperçu montre une vraie
+  // présence plutôt qu'un ordre arbitraire. Pas de chiffre inventé : si la
+  // plateforme est encore jeune, l'aperçu l'est aussi, honnêtement.
+  const topCountries = [...(countries?.results ?? [])]
+    .sort((a, b) => b.developers_count + b.projects_count - (a.developers_count + a.projects_count))
+    .slice(0, 6)
 
   return (
     <div className="flex flex-col">
@@ -160,6 +188,89 @@ export default function HomePage() {
           </ol>
         </section>
       </PageContainer>
+
+      <PageContainer className="py-6">
+        <section aria-labelledby="pourquoi" className="flex flex-col gap-6">
+          <h2 id="pourquoi" className="text-2xl font-bold text-ink-900">
+            Ce qui change avec DevLink Africa
+          </h2>
+          <ul className="grid gap-5 sm:grid-cols-3">
+            {VALUE_PROPS.map((prop) => (
+              <Card key={prop.title} as="li" className="flex flex-col gap-3">
+                <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent-50 text-accent-600">
+                  <Icon name={prop.icon} size={20} />
+                </span>
+                <h3 className="text-lg font-semibold text-ink-900">{prop.title}</h3>
+                <p className="text-sm leading-relaxed text-ink-600">{prop.text}</p>
+              </Card>
+            ))}
+          </ul>
+        </section>
+      </PageContainer>
+
+      <PageContainer className="py-6">
+        <section aria-labelledby="pays" className="flex flex-col gap-6">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <h2 id="pays" className="text-2xl font-bold text-ink-900">
+                Présent dans toute l'Afrique
+              </h2>
+              <p className="mt-1 text-sm text-ink-600">
+                Les pays où des développeuses et développeurs sont déjà inscrits.
+              </p>
+            </div>
+            <Link to="/pays" className="text-sm font-medium text-accent-700 hover:underline">
+              Voir tous les pays →
+            </Link>
+          </div>
+
+          {loadingCountries && <LoadingState rows={2} label="Chargement des pays…" />}
+
+          {!loadingCountries && topCountries.length === 0 && (
+            <p className="text-sm text-ink-600">
+              Personne n'a encore renseigné son pays — vous pourriez être le premier profil sur la
+              carte.
+            </p>
+          )}
+
+          {!loadingCountries && topCountries.length > 0 && (
+            <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+              {topCountries.map((country) => (
+                <Card key={country.code} as="li" interactive className="p-0">
+                  <Link
+                    to={`/pays/${country.code}`}
+                    className="flex h-full flex-col items-center gap-1 rounded-card p-4 text-center hover:bg-accent-50"
+                  >
+                    <span className="text-2xl" aria-hidden="true">
+                      {country.flag}
+                    </span>
+                    <span className="text-sm font-semibold text-ink-900">{country.name}</span>
+                    <span className="text-xs text-ink-500">
+                      {country.developers_count} développeur
+                      {country.developers_count > 1 ? 's' : ''}
+                    </span>
+                  </Link>
+                </Card>
+              ))}
+            </ul>
+          )}
+        </section>
+      </PageContainer>
+
+      {!isAuthenticated && (
+        <section className="border-t border-ink-200 bg-ink-100">
+          <PageContainer className="flex flex-col items-center gap-4 py-14 text-center">
+            <h2 className="text-2xl font-bold text-ink-900">Prêt à échanger vos compétences ?</h2>
+            <p className="max-w-xl text-ink-600">
+              Créez votre profil en deux minutes : pays, compétences, disponibilités. Dev Match
+              s'occupe du reste.
+            </p>
+            <Link to="/inscription">
+              <Button size="lg">Créer mon compte</Button>
+            </Link>
+          </PageContainer>
+        </section>
+      )}
     </div>
   )
 }

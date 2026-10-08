@@ -379,3 +379,15 @@ Repris avec nos propres codes, pas une copie : un voile sombre uniforme (`bg-ink
 **Pourquoi il ne fait rien à la place de l'utilisateur.** Comme `extract_skills` ou `summarize_project`, Copilot explique, il n'agit jamais lui-même (pas d'appel caché à `/me/skills/` ou `/me/`, par exemple) : c'est le même principe que tout le reste de la couche IA du projet, « l'IA propose, l'utilisateur valide » — ici, « l'IA explique, l'utilisateur agit ».
 
 **Visible seulement connecté.** Les autres fonctions d'IA exigent déjà une session (`IsAuthenticated`) ; Copilot suit la même règle plutôt que d'ouvrir un point d'entrée texte-libre-vers-modèle-de-langage à des visiteurs anonymes, qui serait un vecteur d'abus évident (coût, spam) et moins protégé par la limite de débit que ne l'est un compte (`UserRateThrottle` par personne contre `AnonRateThrottle` par IP).
+
+---
+
+## 2026-10-08 — Page d'accueil étoffée
+
+**Décision.** Achraf : « ya juste deux div, je veux bien présenter ma page d'accueil parce que c'est elle la première chose qu'on voit toujours ». Exact : la page ne tenait qu'en une bannière et une section « Comment ça marche ». Trois sections ajoutées, dans cet ordre :
+
+1. **Ce qui change avec DevLink Africa** — trois cartes (matchs expliqués, Project Hub, DevLink Copilot) qui disent ce qui distingue vraiment le produit, en une phrase chacune.
+2. **Présent dans toute l'Afrique** — un aperçu des pays les plus actifs (`GET /countries/`, triés par nombre de développeurs et de projets, les six premiers), avec un lien vers la page complète. Mêmes cartes que `/pays`, pour que l'aperçu ressemble à la vraie page qu'il annonce.
+3. **Une bande d'appel à l'action finale**, uniquement pour les visiteurs non connectés (ceux déjà connectés ont déjà vu l'appel à l'action de la bannière, pas besoin de le répéter).
+
+**Pourquoi aucun chiffre n'est mis en avant.** La tentation, pour une page d'accueil, est d'afficher « X développeurs », « Y pays », « Z matchs réalisés ». Nos seules données viennent de `seed_demo` et sont explicitement marquées « Profil de démonstration » partout ailleurs dans le produit — les présenter ici comme une mesure d'audience réelle serait exactement l'erreur déjà écartée pour la bannière (voir plus haut, « des chiffres réels en repère de crédibilité »). L'aperçu des pays montre des compteurs réels (ils sont sur la page `/pays` elle-même, publique), mais rien n'est formulé comme une statistique globale du produit. Testé aussi : si aucun pays n'a encore de développeur, la section le dit en toutes lettres plutôt que de rester vide ou d'inventer un chiffre.
