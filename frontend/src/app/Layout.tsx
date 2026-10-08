@@ -1,36 +1,46 @@
 import { useState } from 'react'
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
-import Icon, { type IconName } from '../components/icons/Icon'
+import Icon from '../components/icons/Icon'
 import Logo from '../components/icons/Logo'
 import PageContainer from '../components/PageContainer'
-import { Button } from '../components/ui'
 import { useAuth } from '../features/auth/hooks/useAuth'
 import { cn } from '../lib/cn'
 
 interface NavLinkItem {
   to: string
   label: string
-  icon: IconName
 }
 
 const PRIVATE_LINKS: NavLinkItem[] = [
-  { to: '/tableau-de-bord', label: 'Tableau de bord', icon: 'dashboard' },
-  { to: '/competences', label: 'Compétences', icon: 'skill' },
-  { to: '/matchs', label: 'Matchs', icon: 'match' },
-  { to: '/echanges', label: 'Échanges', icon: 'exchange' },
+  { to: '/tableau-de-bord', label: 'Tableau de bord' },
+  { to: '/competences', label: 'Compétences' },
+  { to: '/matchs', label: 'Matchs' },
+  { to: '/echanges', label: 'Échanges' },
 ]
 
 const PUBLIC_LINKS: NavLinkItem[] = [
-  { to: '/recherche', label: 'Recherche', icon: 'search' },
-  { to: '/projets', label: 'Projets', icon: 'project' },
-  { to: '/pays', label: 'Pays', icon: 'country' },
+  { to: '/recherche', label: 'Recherche' },
+  { to: '/projets', label: 'Projets' },
+  { to: '/pays', label: 'Pays' },
 ]
 
+// La barre est claire (pastille flottante sur le fond sombre) : ses couleurs
+// sont posées en dur plutôt qu'avec `ink`, dont l'échelle est pensée pour un
+// fond sombre et donnerait ici du texte clair sur du clair.
 const linkClass = ({ isActive }: { isActive: boolean }) =>
   cn(
-    'flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
-    isActive ? 'bg-accent-50 text-accent-800' : 'text-ink-700 hover:bg-ink-200',
+    'flex items-center rounded-lg px-3 py-2 text-[15px] font-medium transition-colors',
+    isActive ? 'text-[#0d1117] bg-[#dde1e7]' : 'text-[#3d444d] hover:text-[#0d1117]',
   )
+
+const mobileLinkClass = ({ isActive }: { isActive: boolean }) =>
+  cn(
+    'block rounded-lg px-3 py-2.5 text-[15px] font-medium transition-colors',
+    isActive ? 'text-[#0d1117] bg-[#dde1e7]' : 'text-[#3d444d] hover:bg-[#e3e6eb]',
+  )
+
+const signUpClass =
+  'inline-flex items-center justify-center rounded-xl bg-[#1a6fe0] px-7 py-3 text-[15px] font-semibold text-white transition-colors hover:bg-[#155fc4]'
 
 export default function Layout() {
   const { isAuthenticated, user, signOut } = useAuth()
@@ -53,115 +63,130 @@ export default function Layout() {
         Aller au contenu
       </a>
 
-      <header className="border-b border-ink-200 bg-ink-100">
-        <PageContainer className="flex items-center gap-3 py-3">
-          <Link to="/" className="text-ink-900" aria-label="DevLink Africa, accueil">
-            <Logo size={26} />
-          </Link>
+      {/* Pastille flottante, collée en haut au défilement : le contenu passe
+          dessous, visible dans la marge autour de la barre. */}
+      <header className="sticky top-0 z-40 px-3 pt-3 sm:px-6 sm:pt-4">
+        <div className="mx-auto max-w-[90rem] rounded-2xl bg-[#f0f2f5]/95 shadow-card backdrop-blur">
+          <div className="flex items-center gap-3 px-4 py-2.5 sm:px-6">
+            <Link to="/" className="shrink-0 text-[#0d1117]" aria-label="DevLink Africa, accueil">
+              <Logo size={26} variant="light" />
+            </Link>
 
-          <nav
-            aria-label="Navigation principale"
-            className="ml-4 hidden items-center gap-1 md:flex"
-          >
-            {links.map((link) => (
-              <NavLink key={link.to} to={link.to} className={linkClass}>
-                <Icon name={link.icon} size={17} />
-                {link.label}
-              </NavLink>
-            ))}
-          </nav>
-
-          <div className="ml-auto hidden items-center gap-2 md:flex">
-            {isAuthenticated ? (
-              <>
-                <NavLink to="/profil" className={linkClass}>
-                  <Icon name="profile" size={17} />
-                  {user?.full_name || 'Mon profil'}
-                </NavLink>
-                <Button variant="ghost" size="sm" onClick={handleSignOut}>
-                  <Icon name="logout" size={16} />
-                  Se déconnecter
-                </Button>
-              </>
-            ) : (
-              <>
-                <NavLink to="/connexion" className={linkClass}>
-                  Connexion
-                </NavLink>
-                <Link to="/inscription">
-                  <Button size="sm">Créer un compte</Button>
-                </Link>
-              </>
-            )}
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setMenuOpen((open) => !open)}
-            aria-expanded={menuOpen}
-            aria-controls="menu-mobile"
-            aria-label="Menu"
-            className="ml-auto rounded-lg p-2 text-ink-700 hover:bg-ink-200 md:hidden"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              className="h-5 w-5"
-              aria-hidden="true"
-              fill="none"
-              stroke="currentColor"
+            <nav
+              aria-label="Navigation principale"
+              className="hidden flex-1 items-center justify-center gap-1 lg:flex"
             >
-              <path strokeWidth="2" strokeLinecap="round" d="M4 7h16M4 12h16M4 17h16" />
-            </svg>
-          </button>
-        </PageContainer>
+              {links.map((link) => (
+                <NavLink key={link.to} to={link.to} className={linkClass}>
+                  {link.label}
+                </NavLink>
+              ))}
+            </nav>
 
-        {menuOpen && (
-          <nav
-            id="menu-mobile"
-            aria-label="Navigation mobile"
-            className="animate-fade-in border-t border-ink-200 px-4 py-2 md:hidden"
-          >
-            {links.map((link) => (
-              <NavLink
-                key={link.to}
-                to={link.to}
-                className={linkClass}
-                onClick={() => setMenuOpen(false)}
-              >
-                {link.label}
-              </NavLink>
-            ))}
-            <div className="mt-2 border-t border-ink-200 pt-2">
+            <div className="hidden shrink-0 items-center gap-3 lg:flex">
               {isAuthenticated ? (
                 <>
-                  <NavLink to="/profil" className={linkClass} onClick={() => setMenuOpen(false)}>
-                    Mon profil
+                  <NavLink to="/profil" className={linkClass}>
+                    <Icon name="profile" size={17} className="mr-2" />
+                    {user?.full_name || 'Mon profil'}
                   </NavLink>
                   <button
                     type="button"
                     onClick={handleSignOut}
-                    className="block w-full rounded-lg px-3 py-2 text-left text-sm font-medium text-ink-700 hover:bg-ink-200"
+                    className="inline-flex items-center gap-2 rounded-xl border border-[#d0d7de] px-4 py-2.5 text-[15px] font-medium text-[#3d444d] transition-colors hover:bg-[#e3e6eb] hover:text-[#0d1117]"
                   >
+                    <Icon name="logout" size={16} />
                     Se déconnecter
                   </button>
                 </>
               ) : (
                 <>
-                  <NavLink to="/connexion" className={linkClass} onClick={() => setMenuOpen(false)}>
-                    Connexion
+                  <NavLink to="/connexion" className={linkClass}>
+                    Se connecter
                   </NavLink>
-                  <NavLink
-                    to="/inscription"
-                    className={linkClass}
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    Créer un compte
-                  </NavLink>
+                  <Link to="/inscription" className={signUpClass}>
+                    S’inscrire
+                  </Link>
                 </>
               )}
             </div>
-          </nav>
-        )}
+
+            <button
+              type="button"
+              onClick={() => setMenuOpen((open) => !open)}
+              aria-expanded={menuOpen}
+              aria-controls="menu-mobile"
+              aria-label="Menu"
+              className="ml-auto rounded-lg p-2 text-[#3d444d] hover:bg-[#e3e6eb] lg:hidden"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                className="h-5 w-5"
+                aria-hidden="true"
+                fill="none"
+                stroke="currentColor"
+              >
+                <path strokeWidth="2" strokeLinecap="round" d="M4 7h16M4 12h16M4 17h16" />
+              </svg>
+            </button>
+          </div>
+
+          {menuOpen && (
+            <nav
+              id="menu-mobile"
+              aria-label="Navigation mobile"
+              className="animate-fade-in border-t border-[#d0d7de] px-3 py-2 lg:hidden"
+            >
+              {links.map((link) => (
+                <NavLink
+                  key={link.to}
+                  to={link.to}
+                  className={mobileLinkClass}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {link.label}
+                </NavLink>
+              ))}
+              <div className="mt-2 border-t border-[#d0d7de] pt-2">
+                {isAuthenticated ? (
+                  <>
+                    <NavLink
+                      to="/profil"
+                      className={mobileLinkClass}
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      Mon profil
+                    </NavLink>
+                    <button
+                      type="button"
+                      onClick={handleSignOut}
+                      className="block w-full rounded-lg px-3 py-2.5 text-left text-[15px] font-medium text-[#3d444d] hover:bg-[#e3e6eb]"
+                    >
+                      Se déconnecter
+                    </button>
+                  </>
+                ) : (
+                  <div className="flex flex-col gap-2">
+                    <NavLink
+                      to="/connexion"
+                      className={mobileLinkClass}
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      Se connecter
+                    </NavLink>
+                    <Link
+                      to="/inscription"
+                      className={signUpClass}
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      S’inscrire
+                    </Link>
+                  </div>
+                )}
+              </div>
+            </nav>
+          )}
+        </div>
       </header>
 
       {/* Plus de max-w ici : chaque page décide de sa propre largeur via

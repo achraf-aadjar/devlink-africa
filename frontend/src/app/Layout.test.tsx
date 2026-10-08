@@ -36,8 +36,8 @@ describe('mise en page', () => {
     renderLayout()
 
     expect(await screen.findByRole('heading', { name: 'Accueil' })).toBeInTheDocument()
-    expect(screen.getAllByRole('link', { name: 'Connexion' })[0]).toBeInTheDocument()
-    expect(screen.getAllByRole('link', { name: 'Créer un compte' })[0]).toBeInTheDocument()
+    expect(screen.getAllByRole('link', { name: 'Se connecter' })[0]).toBeInTheDocument()
+    expect(screen.getAllByRole('link', { name: 'S’inscrire' })[0]).toBeInTheDocument()
     // Les écrans privés ne sont pas proposés à un visiteur.
     expect(screen.queryByRole('link', { name: 'Tableau de bord' })).not.toBeInTheDocument()
   })

@@ -73,8 +73,23 @@ export default {
       },
       keyframes: {
         'fade-in': { from: { opacity: '0' }, to: { opacity: '1' } },
+        // Page d'accueil : pastilles qui flottent, halo bleu qui respire.
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' },
+        },
+        glow: {
+          '0%, 100%': { opacity: '0.55', transform: 'scale(1)' },
+          '50%': { opacity: '0.85', transform: 'scale(1.06)' },
+        },
+        'bar-fill': { from: { transform: 'scaleX(0)' }, to: { transform: 'scaleX(1)' } },
       },
-      animation: { 'fade-in': 'fade-in 150ms ease-out' },
+      animation: {
+        'fade-in': 'fade-in 150ms ease-out',
+        float: 'float 6s ease-in-out infinite',
+        glow: 'glow 8s ease-in-out infinite',
+        'bar-fill': 'bar-fill 1.1s cubic-bezier(0.22, 1, 0.36, 1) both',
+      },
     },
   },
   plugins: [],
