@@ -5,8 +5,9 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+# PYTHON peut être un chemin (venv local) ou un nom de commande (CI : "python").
 PYTHON="${PYTHON:-$ROOT/backend/.venv/bin/python}"
-[ -x "$PYTHON" ] || PYTHON="$(command -v python3)"
+[ -x "$PYTHON" ] || PYTHON="$(command -v "$PYTHON" || command -v python3)"
 
 export DB_ENGINE=sqlite
 export DATABASE_PATH="${E2E_DATABASE_PATH:-${TMPDIR:-/tmp}/devlink-e2e.sqlite3}"
