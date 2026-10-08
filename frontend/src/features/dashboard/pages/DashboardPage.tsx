@@ -6,6 +6,7 @@ import { EXCHANGE_TYPE_LABELS } from '../../../lib/labels'
 import { useQuery } from '../../../lib/useQuery'
 import { useAuth } from '../../auth/hooks/useAuth'
 import { getDashboard } from '../api/dashboard'
+import OnboardingChecklist from '../components/OnboardingChecklist'
 
 export default function DashboardPage() {
   const { user } = useAuth()
@@ -14,8 +15,6 @@ export default function DashboardPage() {
   if (loading) return <LoadingState rows={4} label="Chargement de votre tableau de bord…" />
   if (error) return <ErrorState onRetry={reload} />
   if (!data) return null
-
-  const incomplete = data.profile_completeness < 100
 
   return (
     <section className="flex flex-col gap-6">
@@ -26,30 +25,7 @@ export default function DashboardPage() {
         <p className="mt-1 text-sm text-ink-600">Voici où vous en êtes aujourd'hui.</p>
       </header>
 
-      {incomplete && (
-        <Card className="flex flex-wrap items-center justify-between gap-4 border-accent-300/50 bg-accent-50 shadow-glow-soft">
-          <div>
-            <p className="font-medium text-accent-900">
-              Votre profil est complété à {data.profile_completeness} %
-            </p>
-            <p className="mt-0.5 text-sm text-accent-800">
-              Un profil complet reçoit des propositions plus justes.
-            </p>
-            <div
-              aria-hidden="true"
-              className="mt-3 h-1.5 w-56 overflow-hidden rounded-full bg-ink-200"
-            >
-              <div
-                className="h-full rounded-full bg-gradient-to-r from-[#1f6feb] to-[#79c0ff]"
-                style={{ width: `${data.profile_completeness}%` }}
-              />
-            </div>
-          </div>
-          <Link to="/profil">
-            <Button size="sm">Compléter mon profil</Button>
-          </Link>
-        </Card>
-      )}
+      <OnboardingChecklist data={data} />
 
       {/* Compteurs posés à plat, séparés par de fins traits : pas de boîtes. */}
       <dl className="grid grid-cols-3 divide-x divide-white/[0.08] py-2">

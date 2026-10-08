@@ -50,6 +50,7 @@ def test_the_dashboard_returns_every_block():
     body = response.json()
     assert {
         "profile_completeness",
+        "has_contact",
         "recommended_matches",
         "pending_exchanges",
         "pending_join_requests",
@@ -103,6 +104,39 @@ def test_the_pending_exchanges_are_split_by_direction():
 
     assert ada_view["sent"] == 1 and ada_view["received"] == 0
     assert kofi_view["received"] == 1 and kofi_view["sent"] == 0
+
+
+def test_the_pending_counts_are_not_capped_by_the_preview():
+    """Sept demandes reçues : l'aperçu en montre cinq, le compteur dit sept."""
+    ada = make_user("ada@example.org")
+    for index in range(7):
+        sender = make_user(f"dev{index}@example.org")
+        Exchange.objects.create(requester=sender, partner=ada, type="MENTORAT", message="Bonjour.")
+
+    pending = client_for(ada).get(DASHBOARD).json()["pending_exchanges"]
+
+    assert len(pending["items"]) == 5
+    assert pending["received"] == 7
+
+
+def test_the_exchange_counter_includes_every_status():
+    ada = make_user("ada@example.org")
+    kofi = make_user("kofi@example.org")
+    Exchange.objects.create(requester=ada, partner=kofi, type="MENTORAT", message="a", status="COMPLETED")
+    Exchange.objects.create(requester=kofi, partner=ada, type="DISCUSSION", message="b")
+
+    counters = client_for(ada).get(DASHBOARD).json()["counters"]
+
+    assert counters["exchanges"] == 2
+
+
+def test_the_dashboard_says_whether_a_contact_is_set():
+    ada = make_user("ada@example.org")
+    assert client_for(ada).get(DASHBOARD).json()["has_contact"] is False
+
+    Profile.objects.filter(user=ada).update(contact="ada@example.org")
+
+    assert client_for(ada).get(DASHBOARD).json()["has_contact"] is True
 
 
 def test_only_pending_exchanges_are_listed():
@@ -175,7 +209,7 @@ def test_the_dashboard_query_count_does_not_grow_with_the_data(django_assert_num
         Project.objects.create(owner=ada, title=f"Projet {index}")
     client = client_for(ada)
 
-    with django_assert_num_queries(11) as captured:
+    with django_assert_num_queries(12) as captured:
         client.get(DASHBOARD)
     baseline = len(captured)
 

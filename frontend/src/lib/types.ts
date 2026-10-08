@@ -248,11 +248,12 @@ export interface CountryDetail extends Country {
 
 export interface Dashboard {
   profile_completeness: number
+  has_contact: boolean
   recommended_matches: MatchSummary[]
   pending_exchanges: { received: number; sent: number; items: Exchange[] }
   pending_join_requests: { count: number; items: JoinRequest[] }
   my_projects: Project[]
-  counters: { offered_skills: number; wanted_skills: number; matches: number }
+  counters: { offered_skills: number; wanted_skills: number; matches: number; exchanges: number }
 }
 
 export interface Health {

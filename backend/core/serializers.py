@@ -33,6 +33,7 @@ class DashboardCountersSerializer(serializers.Serializer):
     offered_skills = serializers.IntegerField()
     wanted_skills = serializers.IntegerField()
     matches = serializers.IntegerField()
+    exchanges = serializers.IntegerField(help_text="Échanges de l'utilisateur, tous statuts confondus.")
 
 
 class DashboardBlockSerializer(serializers.Serializer):
@@ -48,6 +49,7 @@ class DashboardSerializer(serializers.Serializer):
     """Sortie de GET /dashboard/ (DL-28)."""
 
     profile_completeness = serializers.IntegerField()
+    has_contact = serializers.BooleanField(help_text="Un moyen de contact est renseigné.")
     recommended_matches = serializers.ListField(child=serializers.DictField())
     pending_exchanges = DashboardBlockSerializer()
     pending_join_requests = DashboardBlockSerializer()

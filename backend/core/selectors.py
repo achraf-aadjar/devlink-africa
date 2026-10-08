@@ -48,6 +48,14 @@ def dashboard_for(user) -> dict:
         .prefetch_related("needs")[:PREVIEW_SIZE]
     )
 
+    # Comptés en base, pas sur l'aperçu : au-delà de PREVIEW_SIZE demandes en
+    # attente, compter les éléments affichés donnerait un total faux.
+    exchange_counts = Exchange.objects.filter(Q(requester=user) | Q(partner=user)).aggregate(
+        received=Count("id", filter=Q(partner=user, status=Exchange.Status.PROPOSED)),
+        sent=Count("id", filter=Q(requester=user, status=Exchange.Status.PROPOSED)),
+        total=Count("id"),
+    )
+
     skills = UserSkill.objects.filter(user=user).aggregate(
         offered=Count("id", filter=Q(kind=UserSkill.Kind.OFFERED)),
         wanted=Count("id", filter=Q(kind=UserSkill.Kind.WANTED)),
@@ -57,8 +65,9 @@ def dashboard_for(user) -> dict:
         "profile_completeness": profile.completeness(),
         "matches": matches,
         "exchanges": exchanges,
-        "exchanges_received": sum(1 for item in exchanges if item.partner_id == user.pk),
-        "exchanges_sent": sum(1 for item in exchanges if item.requester_id == user.pk),
+        "exchanges_received": exchange_counts["received"] or 0,
+        "exchanges_sent": exchange_counts["sent"] or 0,
+        "has_contact": bool(profile.contact),
         "join_requests": join_requests,
         "join_requests_count": ProjectJoinRequest.objects.filter(
             project__owner=user, status=ProjectJoinRequest.Status.PENDING
@@ -68,5 +77,6 @@ def dashboard_for(user) -> dict:
             "offered_skills": skills["offered"] or 0,
             "wanted_skills": skills["wanted"] or 0,
             "matches": list_matches(user=user).count(),
+            "exchanges": exchange_counts["total"] or 0,
         },
     }

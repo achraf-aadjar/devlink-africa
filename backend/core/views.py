@@ -98,6 +98,7 @@ class DashboardView(APIView):
         return Response(
             {
                 "profile_completeness": data["profile_completeness"],
+                "has_contact": data["has_contact"],
                 "recommended_matches": MatchListSerializer(data["matches"], many=True, context=context).data,
                 "pending_exchanges": {
                     "received": data["exchanges_received"],
