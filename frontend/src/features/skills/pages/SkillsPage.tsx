@@ -155,6 +155,7 @@ function SkillColumn({
 }: ColumnProps) {
   const [skillId, setSkillId] = useState('')
   const [level, setLevel] = useState<SkillLevel>('INTERMEDIATE')
+  const headingId = `colonne-${kind.toLowerCase()}`
 
   const available = skills.filter((skill) => !declared.has(`${kind}:${skill.id}`))
   const options = available.map((skill) => ({
@@ -163,9 +164,11 @@ function SkillColumn({
   }))
 
   return (
-    <Card className="flex flex-col gap-4">
+    <Card as="section" labelledBy={headingId} className="flex flex-col gap-4">
       <div>
-        <h2 className="font-semibold text-ink-900">{title}</h2>
+        <h2 id={headingId} className="font-semibold text-ink-900">
+          {title}
+        </h2>
         <p className="mt-0.5 text-sm text-ink-600">{description}</p>
       </div>
 

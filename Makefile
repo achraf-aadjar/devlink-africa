@@ -5,10 +5,10 @@ PYTHON ?= $(shell command -v python3.13 || command -v python3)
 VENV := backend/.venv
 BIN := $(VENV)/bin
 
-.PHONY: help setup db wait-db dev-backend dev-frontend test test-pg lint typecheck licenses build check
+.PHONY: help setup db wait-db dev-backend dev-frontend test test-pg e2e lint typecheck licenses build check
 
 help:
-	@echo "Cibles : setup db dev-backend dev-frontend test test-pg lint typecheck licenses build check"
+	@echo "Cibles : setup db dev-backend dev-frontend test test-pg e2e lint typecheck licenses build check"
 
 db:
 	docker compose up -d db
@@ -66,6 +66,10 @@ typecheck:
 	cd frontend && npm run typecheck
 
 # Tous les contrôles de la définition de « terminé » (voir CONTRIBUTING.md).
+# Parcours de démonstration dans Chromium (démarre lui-même backend et frontend)
+e2e:
+	cd e2e && npm ci && npx playwright install chromium && npx playwright test
+
 check: lint typecheck test licenses
 	cd backend && .venv/bin/python manage.py check && .venv/bin/python manage.py makemigrations --check --dry-run
 	cd frontend && npm run build
