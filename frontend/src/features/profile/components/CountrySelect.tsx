@@ -1,10 +1,10 @@
 import { useQuery } from '../../../lib/useQuery'
-import { Select } from '../../../components/ui'
+import { Combobox } from '../../../components/ui'
 import { listCountryChoices } from '../../search/api/search'
 
 /**
  * Liste des pays. On réutilise la liste du serveur plutôt que de la dupliquer
- * côté client : une seule source de vérité pour les codes autorisés.
+ * côté client : une seule source de vérité sur les codes autorisés.
  */
 export default function CountrySelect({
   value,
@@ -25,13 +25,13 @@ export default function CountrySelect({
   }))
 
   return (
-    <Select
+    <Combobox
       label={label}
       value={value}
       error={error}
       options={options}
       placeholder="Choisir un pays"
-      onChange={(event) => onChange(event.target.value)}
+      onChange={onChange}
     />
   )
 }
