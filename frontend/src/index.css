@@ -22,7 +22,70 @@
     *::before,
     *::after {
       animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
     }
+  }
+}
+
+/*
+ * Effets de la page d'accueil, façon github.com : halos bleus flous, grille
+ * fine qui s'efface vers les bords, bordure lumineuse au survol des cartes,
+ * apparition des sections au défilement.
+ */
+@layer components {
+  /* Grille de lignes très discrète, estompée en ellipse vers les bords. */
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, rgb(48 54 61 / 0.45) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(48 54 61 / 0.45) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 30%, transparent 100%);
+  }
+
+  /* Halo : une tache de couleur très floue, posée derrière le contenu.
+     Pas de translate pour le centrer : l'animation `glow` pose son propre
+     transform et l'écraserait. Centrer avec inset-x-0 + mx-auto. */
+  .glow-blob {
+    @apply pointer-events-none absolute rounded-full;
+    filter: blur(90px);
+  }
+
+  /* Texte en dégradé bleu → violet, comme les titres de github.com. */
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(90deg, #79c0ff 0%, #388bfd 45%, #a371f7 100%);
+  }
+
+  /* Carte dont la bordure s'allume en bleu au survol. */
+  .glow-card {
+    @apply relative rounded-card border border-ink-200 bg-ink-100/80 p-6 transition duration-300;
+  }
+  .glow-card:hover {
+    @apply -translate-y-1 border-accent-400/60;
+    box-shadow:
+      0 0 0 1px rgb(56 139 253 / 0.25),
+      0 12px 40px -12px rgb(56 139 253 / 0.45);
+  }
+
+  /* Bouton bleu lumineux, pour l'appel à l'action principal. */
+  .btn-glow {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-[#1f6feb] px-6 py-3 text-base font-semibold text-white transition duration-200 hover:bg-[#388bfd];
+    box-shadow:
+      0 0 0 1px rgb(56 139 253 / 0.5),
+      0 8px 30px -6px rgb(31 111 235 / 0.7);
+  }
+  .btn-glow:hover {
+    box-shadow:
+      0 0 0 1px rgb(121 192 255 / 0.6),
+      0 10px 40px -4px rgb(56 139 253 / 0.85);
+  }
+
+  /* Apparition au défilement : voir useReveal. */
+  .reveal {
+    @apply translate-y-6 opacity-0 transition duration-700 ease-out;
+  }
+  .reveal.is-visible {
+    @apply translate-y-0 opacity-100;
   }
 }
