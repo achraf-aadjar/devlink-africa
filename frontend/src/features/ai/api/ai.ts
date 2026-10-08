@@ -34,3 +34,11 @@ export const summarizeProject = (description: string) =>
 
 export const explainMatch = (match: number) =>
   api.post<{ sentence: string }>('/ai/explain-match/', { match })
+
+export interface CopilotTurn {
+  role: 'user' | 'assistant'
+  content: string
+}
+
+export const copilotReply = (message: string, history: CopilotTurn[]) =>
+  api.post<{ reply: string }>('/ai/copilot/', { message, history })

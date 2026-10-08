@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { describe, expect, it, vi } from 'vitest'
 import { setTokens } from '../lib/token'
+import { routeFetch } from '../test/helpers'
 import AuthProvider from './AuthProvider'
 import Layout from './Layout'
 
@@ -15,10 +16,16 @@ function jsonResponse(body: unknown, status = 200) {
 
 const SESSION_USER = { id: 1, email: 'ada@example.org', full_name: 'Ada Lovelace', date_joined: '' }
 
-/** Répond selon l'adresse : session, compteur de demandes reçues, déconnexion. */
+// L'IA est coupée dans ces tests : ils portent sur la navigation, pas sur
+// DevLink Copilot (testé séparément). CopilotWidget interroge /ai/status dès
+// le montage de Layout, même pour un visiteur non connecté.
+const AI_OFF = { '/ai/status': { enabled: false, features: [] } }
+
+/** Répond selon l'adresse : statut IA, session, compteur de demandes reçues, déconnexion. */
 function sessionFetch(pendingCount = 0) {
   return vi.fn((url: string) => {
     const path = String(url)
+    if (path.includes('/ai/status')) return Promise.resolve(jsonResponse(AI_OFF['/ai/status']))
     if (path.includes('/auth/logout/')) return Promise.resolve(new Response(null, { status: 204 }))
     if (path.includes('/exchanges/')) {
       return Promise.resolve(
@@ -46,7 +53,7 @@ function renderLayout() {
 
 describe('mise en page', () => {
   it('affiche les liens de connexion quand personne nest connecté', async () => {
-    vi.stubGlobal('fetch', vi.fn())
+    vi.stubGlobal('fetch', routeFetch(AI_OFF))
     renderLayout()
 
     expect(await screen.findByRole('heading', { name: 'Accueil' })).toBeInTheDocument()
@@ -84,12 +91,12 @@ describe('mise en page', () => {
   })
 
   it('ne demande pas le compteur à un visiteur', async () => {
-    const fetchMock = vi.fn()
+    const fetchMock = routeFetch(AI_OFF)
     vi.stubGlobal('fetch', fetchMock)
     renderLayout()
 
     await screen.findByRole('heading', { name: 'Accueil' })
-    expect(fetchMock).not.toHaveBeenCalled()
+    expect(fetchMock.mock.calls.some(([url]) => String(url).includes('/exchanges/'))).toBe(false)
   })
 
   it('déconnecte et efface les jetons', async () => {
@@ -105,7 +112,7 @@ describe('mise en page', () => {
   })
 
   it('ouvre et ferme le menu mobile', async () => {
-    vi.stubGlobal('fetch', vi.fn())
+    vi.stubGlobal('fetch', routeFetch(AI_OFF))
     renderLayout()
 
     const toggle = await screen.findByRole('button', { name: 'Menu' })
@@ -123,7 +130,7 @@ describe('mise en page', () => {
   })
 
   it('propose un lien dévitement vers le contenu', async () => {
-    vi.stubGlobal('fetch', vi.fn())
+    vi.stubGlobal('fetch', routeFetch(AI_OFF))
     renderLayout()
 
     const skip = await screen.findByRole('link', { name: 'Aller au contenu' })
@@ -131,7 +138,7 @@ describe('mise en page', () => {
   })
 
   it('affiche le lien de confidentialité dans le pied de page', async () => {
-    vi.stubGlobal('fetch', vi.fn())
+    vi.stubGlobal('fetch', routeFetch(AI_OFF))
     renderLayout()
 
     expect(await screen.findByRole('link', { name: 'Confidentialité' })).toHaveAttribute(

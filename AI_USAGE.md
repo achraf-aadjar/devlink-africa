@@ -37,6 +37,9 @@ Le jury évalue la **maîtrise du code par l'équipe, y compris du code génér�
 | 2026-10-08 | Claude Code (Anthropic) | Contact après acceptation | Champ `contact` (validation e-mail/https), révélation limitée aux échanges acceptés, panneau de contact, pastille des demandes, premiers pas guidés, correction des compteurs du tableau de bord. 20 tests backend, 10 tests frontend. | Achraf | **à relire par Omar (backend) et Emmanuel (interface)** |
 | 2026-10-08 | Claude Code (Anthropic) | Test navigateur et mobile | Parcours de démonstration dans Chromium (Playwright) et job CI ; corrections d'affichage à 390 px ; tests de la page pays ; captures du README. | Achraf | à relire par Emmanuel |
 | 2026-10-08 | Claude Code (Anthropic) | Documentation | Mise à jour de `api.md` (ajouts après le gel listés), `EXPLICATION_JURY.md`, `demo.md`, `DECISIONS.md`, `PROGRESS.md`, `securite.md`, `LICENSES.md`, README. | Achraf | **à relire par les 3** |
+| 2026-10-08 | Claude Code (Anthropic) | Liste des pays avec recherche | Nouveau composant `Combobox` (liste déroulante avec recherche, navigation clavier), qui remplace le `<select>` natif pour la liste des pays : signalé comme un bug de défilement, c'est en fait un comportement natif du navigateur sur une longue liste. | Achraf | à relire en PR |
+| 2026-10-08 | Claude Code (Anthropic) | Connexion avec Google | Routes `/auth/google/` et `/auth/google/client-id/`, vérification du jeton d'identité via `google-auth` avec un transport `urllib` maison (pas de `requests`/`certifi`), bouton côté interface. Désactivé par défaut : demande un identifiant client que seul Achraf peut obtenir (Google Cloud Console). 10 tests. | Achraf | **à relire par les 3** |
+| 2026-10-08 | Claude Code (Anthropic) | DevLink Copilot | Assistant conversationnel intégré (bulle flottante) qui aide à utiliser la plateforme : route `/ai/copilot/`, invite système qui borne les réponses au produit, aucune lecture ni écriture des données de la personne. Même repli que les autres fonctions d'IA si désactivé. 9 tests (5 backend, 5 frontend hors doublons). | Achraf | **à relire par Emmanuel** |
 
 ## Ce que l'équipe doit relire en priorité
 
@@ -46,6 +49,7 @@ Le jury évalue la **maîtrise du code par l'équipe**. Trois fichiers méritent
 2. `backend/matching/services.py` — le recalcul incrémental (Omar).
 3. `frontend/src/features/matches/components/MatchExplanation.tsx` — l'affichage de l'explication (Emmanuel).
 4. `backend/exchanges/serializers.py` (`to_representation`) et `core/validators.py` (`validate_contact`) — qui voit le contact, et quand (Omar).
+5. `backend/ai/services.py` (fonction `copilot_reply` et son invite système) — c'est elle qui borne DevLink Copilot au produit (Emmanuel).
 
 `docs/EXPLICATION_JURY.md` prépare les réponses aux questions probables.
 

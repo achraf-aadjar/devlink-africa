@@ -634,7 +634,7 @@ Suppression du compte et de toutes les données liées (droit d'effacement).
 
 ### `GET /ai/status/`
 
-`200` : `{ "enabled": true, "features": ["skill_extraction", "natural_search", "project_summary", "match_explanation"] }`
+`200` : `{ "enabled": true, "features": ["skill_extraction", "natural_search", "project_summary", "match_explanation", "copilot"] }`
 
 ### `POST /ai/extract-skills/`
 
@@ -661,6 +661,19 @@ Les critères sont affichés et modifiables par l'utilisateur.
 `{ "match": 31 }` → `200` : `{ "sentence": "..." }`. Les raisons calculées restent la source de vérité ; cette phrase ne fait que les reformuler.
 
 En cas de dépassement de quota : `429` `ai_quota_exceeded`, et le produit continue de fonctionner sans IA (DL-41).
+
+### `POST /ai/copilot/`
+
+DevLink Copilot : question libre sur l'utilisation de la plateforme (bulle flottante).
+
+```json
+{
+  "message": "Comment je complète mon profil ?",
+  "history": [{ "role": "user", "content": "..." }, { "role": "assistant", "content": "..." }]
+}
+```
+
+`200` : `{ "reply": "..." }`. `history` est optionnel (6 derniers tours au plus pris en compte) et n'est jamais stocké côté serveur — c'est le navigateur qui le renvoie à chaque appel pour garder le fil d'une discussion. Purement conversationnel : ne lit ni n'écrit aucune donnée du compte.
 
 ---
 

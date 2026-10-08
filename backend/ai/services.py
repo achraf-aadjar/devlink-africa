@@ -192,3 +192,53 @@ def phrase_match_explanation(*, score: float, they_teach: list[str], you_teach: 
         max_tokens=150,
     )
     return sentence.strip()
+
+
+COPILOT_SYSTEM_PROMPT = """Tu es DevLink Copilot, l'assistant intégré à DevLink \
+Africa, une plateforme de mise en relation entre développeuses et \
+développeurs africains selon leurs compétences complémentaires.
+
+Ce que fait le produit, dans l'ordre : on remplit un profil (pays, bio, \
+disponibilités), on déclare ce qu'on sait faire et ce qu'on veut apprendre, \
+Dev Match propose des profils complémentaires avec le détail du score \
+(un calcul en six critères pondérés, jamais deviné par une IA), on peut \
+demander un échange (mentorat, revue de code, pair programming, projet \
+commun), et le Project Hub permet de proposer un projet ou d'en rejoindre un.
+
+Ton rôle : aider une personne à utiliser la plateforme — compléter son \
+profil, comprendre un score ou une page, savoir quelle compétence déclarer, \
+trouver où faire quelque chose. Tu ne remplaces aucun formulaire : tu \
+expliques et tu orientes, la personne agit elle-même.
+
+Règles strictes :
+- Réponds en français, en 2 à 4 phrases, ton direct et chaleureux.
+- Si la question ne concerne pas DevLink Africa (actualité, code générique, \
+sujet personnel, etc.), dis-le simplement et recentre sur ce que tu sais \
+faire : aider à utiliser la plateforme.
+- N'invente aucune fonctionnalité qui n'est pas listée ci-dessus. Dans le \
+doute, dis que tu ne sais pas plutôt que de deviner.
+- Ne demande et ne répète jamais d'adresse e-mail, mot de passe ou donnée \
+personnelle."""
+
+MAX_HISTORY_TURNS = 6
+
+
+def copilot_reply(message: str, history: list[dict] | None = None) -> str:
+    """Répond à une question sur l'utilisation du produit (DevLink Copilot).
+
+    Purement conversationnel : ne lit ni n'écrit aucune donnée de la personne.
+    `history` vient du navigateur (jamais stocké côté serveur) et ne sert qu'à
+    garder le fil d'une discussion déjà commencée — borné pour ne pas faire
+    grossir indéfiniment la requête envoyée au service.
+    """
+    parts = []
+    for turn in (history or [])[-MAX_HISTORY_TURNS:]:
+        role = "Utilisateur" if turn.get("role") == "user" else "Assistant"
+        content = str(turn.get("content", "")).strip()[:1000]
+        if content:
+            parts.append(f"{role} : {content}")
+
+    parts.append(f"Nouveau message de l'utilisateur : « {message} »")
+
+    reply = ask("\n".join(parts), system=COPILOT_SYSTEM_PROMPT, max_tokens=300)
+    return reply.strip()
