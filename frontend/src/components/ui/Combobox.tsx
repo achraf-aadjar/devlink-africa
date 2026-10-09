@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import Icon from '../icons/Icon'
 import { cn } from '../../lib/cn'
+import { useI18n } from '../../i18n/useI18n'
 
 export interface ComboboxOption {
   value: string
@@ -39,9 +40,10 @@ export default function Combobox({
   value,
   options,
   onChange,
-  placeholder = 'Choisir…',
+  placeholder,
   error,
 }: ComboboxProps) {
+  const { t } = useI18n()
   const id = useId()
   const listId = `${id}-list`
   const rootRef = useRef<HTMLDivElement>(null)
@@ -136,7 +138,7 @@ export default function Combobox({
           aria-invalid={error ? true : undefined}
           autoComplete="off"
           value={open ? query : (selected?.label ?? '')}
-          placeholder={placeholder}
+          placeholder={placeholder ?? t('Choisir…')}
           onFocus={openList}
           onClick={openList}
           onChange={(event) => {
@@ -164,7 +166,7 @@ export default function Combobox({
             className="absolute z-20 mt-1 max-h-60 w-full overflow-y-auto rounded-lg border border-ink-300 bg-ink-100 py-1 shadow-card"
           >
             {filtered.length === 0 && (
-              <li className="px-3 py-2 text-sm text-ink-500">Aucun résultat.</li>
+              <li className="px-3 py-2 text-sm text-ink-500">{t('Aucun résultat.')}</li>
             )}
             {filtered.map((option, index) => (
               <li

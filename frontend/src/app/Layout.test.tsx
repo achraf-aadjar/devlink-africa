@@ -2,6 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { describe, expect, it, vi } from 'vitest'
+import I18nProvider from '../i18n/I18nProvider'
 import { setTokens } from '../lib/token'
 import { routeFetch } from '../test/helpers'
 import AuthProvider from './AuthProvider'
@@ -38,20 +39,40 @@ function sessionFetch(pendingCount = 0) {
 
 function renderLayout() {
   return render(
-    <MemoryRouter initialEntries={['/']}>
-      <AuthProvider>
-        <Routes>
-          <Route element={<Layout />}>
-            <Route index element={<h1>Accueil</h1>} />
-            <Route path="connexion" element={<h1>Se connecter</h1>} />
-          </Route>
-        </Routes>
-      </AuthProvider>
-    </MemoryRouter>,
+    <I18nProvider initial="fr">
+      <MemoryRouter initialEntries={['/']}>
+        <AuthProvider>
+          <Routes>
+            <Route element={<Layout />}>
+              <Route index element={<h1>Accueil</h1>} />
+              <Route path="connexion" element={<h1>Se connecter</h1>} />
+            </Route>
+          </Routes>
+        </AuthProvider>
+      </MemoryRouter>
+    </I18nProvider>,
   )
 }
 
 describe('mise en page', () => {
+  it('passe l’interface en anglais et retient ce choix', async () => {
+    localStorage.removeItem('devlink.lang')
+    vi.stubGlobal('fetch', routeFetch(AI_OFF))
+    renderLayout()
+
+    await userEvent.click(await screen.findByRole('button', { name: 'Switch to English' }))
+
+    expect(screen.getAllByRole('link', { name: 'Sign in' })[0]).toBeInTheDocument()
+    expect(screen.getByRole('navigation', { name: 'Main navigation' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Passer en français' })).toHaveAttribute('lang', 'fr')
+    expect(document.documentElement.lang).toBe('en')
+    expect(localStorage.getItem('devlink.lang')).toBe('en')
+
+    await userEvent.click(screen.getByRole('button', { name: 'Passer en français' }))
+    expect(screen.getAllByRole('link', { name: 'Se connecter' })[0]).toBeInTheDocument()
+    expect(document.documentElement.lang).toBe('fr')
+  })
+
   it('affiche les liens de connexion quand personne nest connecté', async () => {
     vi.stubGlobal('fetch', routeFetch(AI_OFF))
     renderLayout()

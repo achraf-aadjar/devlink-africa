@@ -3,12 +3,14 @@ import Avatar from '../../../components/Avatar'
 import DemoBadge from '../../../components/DemoBadge'
 import ScoreRing from '../../../components/ScoreRing'
 import { Card } from '../../../components/ui'
+import { useI18n } from '../../../i18n/useI18n'
 import { countryFlag } from '../../../lib/labels'
 import type { MatchSummary } from '../../../lib/types'
 
 /** Carte d'un match dans la liste : personne, score, premières raisons. */
 export default function MatchCard({ match }: { match: MatchSummary }) {
-  const name = match.user.full_name || 'Développeur'
+  const { t } = useI18n()
+  const name = match.user.full_name || t('Développeur')
 
   return (
     <Card as="li" interactive className="flex flex-col gap-4">
@@ -26,7 +28,7 @@ export default function MatchCard({ match }: { match: MatchSummary }) {
                 {countryFlag(match.user.country)}
               </span>
             )}
-            {match.user.country || 'Pays non renseigné'}
+            {match.user.country || t('Pays non renseigné')}
           </p>
         </div>
         <ScoreRing score={match.score} size={56} stroke={5} />
@@ -51,7 +53,7 @@ export default function MatchCard({ match }: { match: MatchSummary }) {
         to={`/matchs/${match.id}`}
         className="mt-auto inline-flex w-fit items-center gap-1 rounded-full bg-white/[0.05] px-4 py-1.5 text-sm font-medium text-accent-800 ring-1 ring-inset ring-white/10 transition hover:bg-white/10"
       >
-        Voir l'explication détaillée
+        {t("Voir l'explication détaillée")}
         <span aria-hidden="true">→</span>
       </Link>
     </Card>

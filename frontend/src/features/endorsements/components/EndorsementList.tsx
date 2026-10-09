@@ -2,12 +2,14 @@ import { Link } from 'react-router-dom'
 import Avatar from '../../../components/Avatar'
 import Icon from '../../../components/icons/Icon'
 import { Card } from '../../../components/ui'
+import { msg } from '../../../i18n/translate'
+import { useI18n } from '../../../i18n/useI18n'
 import { countryFlag } from '../../../lib/labels'
 import type { UserSkill } from '../../../lib/types'
 
 const CONTEXT_LABEL = {
-  EXCHANGE: 'après un échange',
-  CIRCLE: 'dans un cercle d’échange',
+  EXCHANGE: msg('après un échange'),
+  CIRCLE: msg('dans un cercle d’échange'),
 } as const
 
 /**
@@ -15,6 +17,7 @@ const CONTEXT_LABEL = {
  * validées, dans quel cadre, et ce qu'ils en disent.
  */
 export default function EndorsementList({ skills }: { skills: UserSkill[] }) {
+  const { t, tn } = useI18n()
   const endorsed = skills.filter((entry) => (entry.endorsements?.length ?? 0) > 0)
   if (endorsed.length === 0) return null
 
@@ -23,10 +26,12 @@ export default function EndorsementList({ skills }: { skills: UserSkill[] }) {
       <div>
         <h2 id="passeport-verifie" className="flex items-center gap-2 font-semibold text-ink-900">
           <Icon name="proof" size={18} className="text-emerald-300" />
-          Validé par ses pairs
+          {t('Validé par ses pairs')}
         </h2>
         <p className="mt-1 text-sm text-ink-600">
-          Des compétences confirmées par des développeurs qui les ont apprises de cette personne.
+          {t(
+            'Des compétences confirmées par des développeurs qui les ont apprises de cette personne.',
+          )}
         </p>
       </div>
       <ul className="flex flex-col gap-4">
@@ -35,8 +40,11 @@ export default function EndorsementList({ skills }: { skills: UserSkill[] }) {
             <p className="text-sm font-semibold text-ink-900">
               {entry.skill.name}
               <span className="ml-2 font-normal text-emerald-300">
-                validée par {entry.endorsements?.length}{' '}
-                {(entry.endorsements?.length ?? 0) > 1 ? 'pairs' : 'pair'}
+                {tn(
+                  entry.endorsements?.length ?? 0,
+                  'validée par {n} pair',
+                  'validée par {n} pairs',
+                )}
               </span>
             </p>
             <ul className="flex flex-col gap-2">
@@ -56,10 +64,15 @@ export default function EndorsementList({ skills }: { skills: UserSkill[] }) {
                           {countryFlag(endorsement.by.country)}
                         </span>
                       )}
-                      <span className="text-ink-500"> · {CONTEXT_LABEL[endorsement.context]}</span>
+                      <span className="text-ink-500">
+                        {' '}
+                        · {t(CONTEXT_LABEL[endorsement.context])}
+                      </span>
                     </p>
                     {endorsement.comment && (
-                      <p className="mt-0.5 text-ink-600">« {endorsement.comment} »</p>
+                      <p className="mt-0.5 text-ink-600">
+                        {t('« {comment} »', { comment: endorsement.comment })}
+                      </p>
                     )}
                   </div>
                 </li>

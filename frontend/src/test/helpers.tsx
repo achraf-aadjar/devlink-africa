@@ -3,6 +3,8 @@ import type { ReactElement } from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import { vi } from 'vitest'
 import AuthProvider from '../app/AuthProvider'
+import I18nProvider from '../i18n/I18nProvider'
+import type { Language } from '../i18n/translate'
 import { setTokens } from '../lib/token'
 
 export const SESSION_USER = {
@@ -48,14 +50,17 @@ export function renderWithRouter(
   {
     route = '/',
     authenticated = false,
+    lang = 'fr',
     ...options
-  }: RenderOptions & { route?: string; authenticated?: boolean } = {},
+  }: RenderOptions & { route?: string; authenticated?: boolean; lang?: Language } = {},
 ) {
   if (authenticated) setTokens({ access: 'a', refresh: 'r' })
 
   return render(
     <MemoryRouter initialEntries={[route]}>
-      <AuthProvider>{ui}</AuthProvider>
+      <I18nProvider initial={lang}>
+        <AuthProvider>{ui}</AuthProvider>
+      </I18nProvider>
     </MemoryRouter>,
     options,
   )

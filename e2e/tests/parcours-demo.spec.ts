@@ -189,3 +189,33 @@ test('un cercle d’échange : Dakar → Accra → Nairobi', async ({ browser })
 
   for (const page of sessions) await page.context().close()
 })
+
+test('l’interface passe en anglais, messages du serveur compris', async ({ browser }) => {
+  const page = await (await browser.newContext()).newPage()
+
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Switch to English' }).click()
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Learn what you’re missing')
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en')
+
+  // Les noms de pays viennent du navigateur, à partir du code ISO.
+  await page.goto('/observatoire')
+  await expect(page.getByRole('heading', { name: 'Skills Observatory' })).toBeVisible()
+  await expect(page.getByText(/Senegal/).first()).toBeVisible()
+
+  // Le choix survit au rechargement, et l'API répond dans la même langue.
+  await page.goto('/connexion')
+  await page.getByLabel('Email address').fill('fatou@demo.devlink.africa')
+  await page.getByLabel('Password').fill('pas-le-bon-mot-de-passe')
+  await page.getByRole('button', { name: 'Sign in' }).click()
+  await expect(page.getByText('Incorrect email address or password.')).toBeVisible()
+
+  await page.getByLabel('Password').fill(DEMO_PASSWORD)
+  await page.getByRole('button', { name: 'Sign in' }).click()
+  await expect(page.getByRole('heading', { name: 'Hello Fatou' })).toBeVisible()
+  // Raisons d'un match : rédigées par le serveur, en anglais.
+  await expect(page.getByText(/can teach (you )?\w/).first()).toBeVisible()
+
+  await page.getByRole('button', { name: 'Passer en français' }).click()
+  await expect(page.getByRole('heading', { name: 'Bonjour Fatou' })).toBeVisible()
+})

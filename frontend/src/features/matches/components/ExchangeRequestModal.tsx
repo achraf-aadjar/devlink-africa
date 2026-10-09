@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Button, Modal, Select, Textarea } from '../../../components/ui'
+import { useI18n } from '../../../i18n/useI18n'
 import { ApiError } from '../../../lib/api'
 import { EXCHANGE_TYPE_LABELS } from '../../../lib/labels'
 import type { ExchangeType } from '../../../lib/types'
@@ -24,6 +25,7 @@ export default function ExchangeRequestModal({
   onClose: () => void
   onSent: () => void
 }) {
+  const { t } = useI18n()
   const [type, setType] = useState<ExchangeType>('MENTORAT')
   const [message, setMessage] = useState('')
   const [errors, setErrors] = useState<{ message?: string; form?: string }>({})
@@ -32,7 +34,7 @@ export default function ExchangeRequestModal({
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
     if (!message.trim()) {
-      setErrors({ message: 'Écrivez un mot pour vous présenter.' })
+      setErrors({ message: t('Écrivez un mot pour vous présenter.') })
       return
     }
 
@@ -49,13 +51,13 @@ export default function ExchangeRequestModal({
           message: error.fieldError('message'),
           form:
             error.code === 'duplicate_request'
-              ? 'Une demande est déjà en attente avec cette personne.'
+              ? t('Une demande est déjà en attente avec cette personne.')
               : error.fieldError('message')
                 ? undefined
                 : error.message,
         })
       } else {
-        setErrors({ form: 'Impossible de contacter le serveur. Réessayez.' })
+        setErrors({ form: t('Impossible de contacter le serveur. Réessayez.') })
       }
     } finally {
       setSending(false)
@@ -63,20 +65,24 @@ export default function ExchangeRequestModal({
   }
 
   return (
-    <Modal open={open} title={`Proposer un échange à ${partnerName}`} onClose={onClose}>
+    <Modal
+      open={open}
+      title={t('Proposer un échange à {name}', { name: partnerName })}
+      onClose={onClose}
+    >
       <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
         <Select
-          label="Type d'échange"
+          label={t("Type d'échange")}
           value={type}
-          options={TYPE_OPTIONS}
+          options={TYPE_OPTIONS.map((option) => ({ ...option, label: t(option.label) }))}
           onChange={(event) => setType(event.target.value as ExchangeType)}
         />
         <Textarea
-          label="Votre message"
+          label={t('Votre message')}
           required
           value={message}
           error={errors.message}
-          hint="Dites ce que vous cherchez et ce que vous pouvez apporter."
+          hint={t('Dites ce que vous cherchez et ce que vous pouvez apporter.')}
           maxLength={1000}
           onChange={(event) => setMessage(event.target.value)}
         />
@@ -89,10 +95,10 @@ export default function ExchangeRequestModal({
 
         <div className="flex justify-end gap-2">
           <Button type="button" variant="secondary" onClick={onClose}>
-            Annuler
+            {t('Annuler')}
           </Button>
           <Button type="submit" loading={sending}>
-            Envoyer la demande
+            {t('Envoyer la demande')}
           </Button>
         </div>
       </form>

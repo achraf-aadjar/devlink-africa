@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Button, Card, ErrorState, Field, LoadingState, Textarea } from '../../../components/ui'
+import { useI18n } from '../../../i18n/useI18n'
 import { ApiError } from '../../../lib/api'
 import { AVAILABILITY_LABELS, DOMAIN_LABELS } from '../../../lib/labels'
 import type { Availability, Domain } from '../../../lib/types'
@@ -21,6 +22,7 @@ interface FormState {
 }
 
 export default function ProfilePage() {
+  const { t } = useI18n()
   const { data, loading, error, reload } = useQuery(() => getMe(), [])
   // Le formulaire est initialisé depuis la donnée chargée, sans effet : on garde
   // l'identifiant servant de base pour détecter un nouveau chargement.
@@ -42,7 +44,7 @@ export default function ProfilePage() {
     setNotice(null)
     try {
       await updateMe(form)
-      setNotice('Votre profil est enregistré.')
+      setNotice(t('Votre profil est enregistré.'))
       reload()
     } catch (cause) {
       if (cause instanceof ApiError) {
@@ -53,14 +55,14 @@ export default function ProfilePage() {
         if (Object.keys(found).length === 0) found.form = cause.message
         setErrors(found)
       } else {
-        setErrors({ form: 'Impossible de contacter le serveur. Réessayez.' })
+        setErrors({ form: t('Impossible de contacter le serveur. Réessayez.') })
       }
     } finally {
       setSaving(false)
     }
   }
 
-  if (loading) return <LoadingState rows={4} label="Chargement de votre profil…" />
+  if (loading) return <LoadingState rows={4} label={t('Chargement de votre profil…')} />
   if (error) return <ErrorState onRetry={reload} />
   if (!data) return null
 
@@ -76,19 +78,19 @@ export default function ProfilePage() {
       availability: data.profile.availability,
       domains: data.profile.domains,
     })
-    return <LoadingState rows={4} label="Préparation du formulaire…" />
+    return <LoadingState rows={4} label={t('Préparation du formulaire…')} />
   }
 
   return (
     <section className="flex flex-col gap-6">
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-ink-900">Mon profil</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-ink-900">{t('Mon profil')}</h1>
           <p className="mt-1 text-sm text-ink-600">{data.email}</p>
         </div>
         <div className="flex flex-col items-end gap-2">
           <p className="text-xs font-medium text-ink-600">
-            Profil complété{' '}
+            {t('Profil complété')}{' '}
             <span className="text-gradient text-2xl font-bold tabular-nums">
               {data.profile.completeness}%
             </span>
@@ -109,7 +111,7 @@ export default function ProfilePage() {
         <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
           <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
             <Field
-              label="Nom complet"
+              label={t('Nom complet')}
               value={form.full_name}
               error={errors.full_name}
               autoComplete="name"
@@ -123,16 +125,16 @@ export default function ProfilePage() {
           </div>
 
           <Textarea
-            label="Présentation"
+            label={t('Présentation')}
             value={form.bio}
             error={errors.bio}
             maxLength={1000}
-            hint={`${form.bio.length} / 1000 caractères.`}
+            hint={t('{count} / 1000 caractères.', { count: form.bio.length })}
             onChange={(event) => setForm({ ...form, bio: event.target.value })}
           />
 
           <fieldset className="flex flex-col gap-2">
-            <legend className="text-sm font-medium text-ink-800">Disponibilités</legend>
+            <legend className="text-sm font-medium text-ink-800">{t('Disponibilités')}</legend>
             <div className="flex flex-wrap gap-3">
               {(Object.keys(AVAILABILITY_LABELS) as Availability[]).map((value) => (
                 <label key={value} className="flex items-center gap-2 text-sm text-ink-700">
@@ -144,7 +146,7 @@ export default function ProfilePage() {
                     }
                     className="h-4 w-4 rounded border-ink-300 text-accent-600"
                   />
-                  {AVAILABILITY_LABELS[value]}
+                  {t(AVAILABILITY_LABELS[value])}
                 </label>
               ))}
             </div>
@@ -152,7 +154,7 @@ export default function ProfilePage() {
           </fieldset>
 
           <fieldset className="flex flex-col gap-2">
-            <legend className="text-sm font-medium text-ink-800">Domaines</legend>
+            <legend className="text-sm font-medium text-ink-800">{t('Domaines')}</legend>
             <div className="flex flex-wrap gap-3">
               {(Object.keys(DOMAIN_LABELS) as Domain[]).map((value) => (
                 <label key={value} className="flex items-center gap-2 text-sm text-ink-700">
@@ -162,7 +164,7 @@ export default function ProfilePage() {
                     onChange={() => setForm({ ...form, domains: toggle(form.domains, value) })}
                     className="h-4 w-4 rounded border-ink-300 text-accent-600"
                   />
-                  {DOMAIN_LABELS[value]}
+                  {t(DOMAIN_LABELS[value])}
                 </label>
               ))}
             </div>
@@ -170,16 +172,18 @@ export default function ProfilePage() {
           </fieldset>
 
           <Field
-            label="Moyen de contact"
+            label={t('Moyen de contact')}
             value={form.contact}
             error={errors.contact}
-            placeholder="vous@exemple.com ou https://github.com/vous"
-            hint="Une adresse e-mail ou un lien https (GitHub, LinkedIn…). Il n'apparaît jamais sur votre profil public : seule la personne avec qui vous avez un échange accepté le voit."
+            placeholder={t('vous@exemple.com ou https://github.com/vous')}
+            hint={t(
+              "Une adresse e-mail ou un lien https (GitHub, LinkedIn…). Il n'apparaît jamais sur votre profil public : seule la personne avec qui vous avez un échange accepté le voit.",
+            )}
             onChange={(event) => setForm({ ...form, contact: event.target.value })}
           />
 
           <Field
-            label="Adresse de votre photo (https)"
+            label={t('Adresse de votre photo (https)')}
             type="url"
             value={form.avatar_url}
             error={errors.avatar_url}
@@ -200,7 +204,7 @@ export default function ProfilePage() {
 
           <div className="flex justify-end">
             <Button type="submit" loading={saving}>
-              Enregistrer
+              {t('Enregistrer')}
             </Button>
           </div>
         </form>

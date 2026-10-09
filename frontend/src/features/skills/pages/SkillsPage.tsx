@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import SkillBadge from '../../../components/SkillBadge'
 import { Button, Card, ErrorState, LoadingState, Select } from '../../../components/ui'
+import { useI18n } from '../../../i18n/useI18n'
 import { ApiError } from '../../../lib/api'
 import { CATEGORY_LABELS, LEVEL_LABELS } from '../../../lib/labels'
 import type { SkillKind, SkillLevel, UserSkill } from '../../../lib/types'
@@ -12,6 +13,7 @@ import { addSkill, getMySkills, listCatalog, removeSkill, updateSkillLevel } fro
 const LEVEL_OPTIONS = Object.entries(LEVEL_LABELS).map(([value, label]) => ({ value, label }))
 
 export default function SkillsPage() {
+  const { t } = useI18n()
   const catalog = useQuery(() => listCatalog(), [])
   const mine = useQuery(() => getMySkills(), [])
   const [notice, setNotice] = useState<string | null>(null)
@@ -24,15 +26,15 @@ export default function SkillsPage() {
       await addSkill({ skill: skillId, kind, level })
       setNotice(
         kind === 'OFFERED'
-          ? 'Compétence ajoutée. Vos matchs ont été recalculés.'
-          : 'Souhait ajouté. Vos matchs ont été recalculés.',
+          ? t('Compétence ajoutée. Vos matchs ont été recalculés.')
+          : t('Souhait ajouté. Vos matchs ont été recalculés.'),
       )
       mine.reload()
     } catch (error) {
       if (error instanceof ApiError && error.code === 'duplicate_skill') {
-        setFormError('Vous avez déjà déclaré cette compétence dans cette catégorie.')
+        setFormError(t('Vous avez déjà déclaré cette compétence dans cette catégorie.'))
       } else {
-        setFormError("La compétence n'a pas pu être ajoutée. Réessayez.")
+        setFormError(t("La compétence n'a pas pu être ajoutée. Réessayez."))
       }
     }
   }
@@ -41,10 +43,10 @@ export default function SkillsPage() {
     setFormError(null)
     try {
       await removeSkill(entry.id)
-      setNotice('Compétence retirée. Vos matchs ont été recalculés.')
+      setNotice(t('Compétence retirée. Vos matchs ont été recalculés.'))
       mine.reload()
     } catch {
-      setFormError("La compétence n'a pas pu être retirée.")
+      setFormError(t("La compétence n'a pas pu être retirée."))
     }
   }
 
@@ -53,12 +55,12 @@ export default function SkillsPage() {
       await updateSkillLevel(entry.id, level)
       mine.reload()
     } catch {
-      setFormError("Le niveau n'a pas pu être modifié.")
+      setFormError(t("Le niveau n'a pas pu être modifié."))
     }
   }
 
   if (mine.loading || catalog.loading) {
-    return <LoadingState rows={3} label="Chargement de vos compétences…" />
+    return <LoadingState rows={3} label={t('Chargement de vos compétences…')} />
   }
   if (mine.error) return <ErrorState onRetry={mine.reload} />
   if (!mine.data || !catalog.data) return null
@@ -71,10 +73,11 @@ export default function SkillsPage() {
   return (
     <section className="flex flex-col gap-6">
       <header>
-        <h1 className="text-3xl font-bold tracking-tight text-ink-900">Mes compétences</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-ink-900">{t('Mes compétences')}</h1>
         <p className="mt-1 text-sm text-ink-600">
-          Déclarez ce que vous savez faire et ce que vous voulez apprendre. Dev Match s'appuie sur
-          ces deux listes.
+          {t(
+            "Déclarez ce que vous savez faire et ce que vous voulez apprendre. Dev Match s'appuie sur ces deux listes.",
+          )}
         </p>
       </header>
 
@@ -96,8 +99,8 @@ export default function SkillsPage() {
 
       <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
         <SkillColumn
-          title="Je sais faire"
-          description="Ce que vous pouvez enseigner à quelqu'un."
+          title={t('Je sais faire')}
+          description={t("Ce que vous pouvez enseigner à quelqu'un.")}
           kind="OFFERED"
           entries={mine.data.offered}
           skills={skills}
@@ -107,8 +110,8 @@ export default function SkillsPage() {
           onLevel={handleLevel}
         />
         <SkillColumn
-          title="Je veux apprendre"
-          description="Ce que vous cherchez chez les autres."
+          title={t('Je veux apprendre')}
+          description={t('Ce que vous cherchez chez les autres.')}
           kind="WANTED"
           entries={mine.data.wanted}
           skills={skills}
@@ -120,9 +123,9 @@ export default function SkillsPage() {
 
       <Card className="bg-accent-50">
         <p className="text-sm text-accent-900">
-          Vos compétences sont à jour ?{' '}
+          {t('Vos compétences sont à jour ?')}{' '}
           <Link to="/matchs" className="font-medium underline">
-            Voir vos matchs
+            {t('Voir vos matchs')}
           </Link>
         </p>
       </Card>
@@ -153,6 +156,7 @@ function SkillColumn({
   onRemove,
   onLevel,
 }: ColumnProps) {
+  const { t } = useI18n()
   const [skillId, setSkillId] = useState('')
   const [level, setLevel] = useState<SkillLevel>('INTERMEDIATE')
   const headingId = `colonne-${kind.toLowerCase()}`
@@ -160,8 +164,9 @@ function SkillColumn({
   const available = skills.filter((skill) => !declared.has(`${kind}:${skill.id}`))
   const options = available.map((skill) => ({
     value: String(skill.id),
-    label: `${skill.name} — ${CATEGORY_LABELS[skill.category]}`,
+    label: `${skill.name} — ${t(CATEGORY_LABELS[skill.category])}`,
   }))
+  const levelOptions = LEVEL_OPTIONS.map((option) => ({ ...option, label: t(option.label) }))
 
   return (
     <Card as="section" labelledBy={headingId} className="flex flex-col gap-4">
@@ -173,7 +178,7 @@ function SkillColumn({
       </div>
 
       {entries.length === 0 ? (
-        <p className="text-sm text-ink-500">Aucune compétence déclarée pour le moment.</p>
+        <p className="text-sm text-ink-500">{t('Aucune compétence déclarée pour le moment.')}</p>
       ) : (
         <ul className="flex flex-col gap-2">
           {entries.map((entry) => (
@@ -187,12 +192,12 @@ function SkillColumn({
               />
               {kind === 'OFFERED' && onLevel && (
                 <select
-                  aria-label={`Niveau pour ${entry.skill.name}`}
+                  aria-label={t('Niveau pour {skill}', { skill: entry.skill.name })}
                   value={entry.level}
                   onChange={(event) => onLevel(entry, event.target.value as SkillLevel)}
                   className="rounded border border-ink-300 bg-ink-100 px-2 py-1 text-xs text-ink-700"
                 >
-                  {LEVEL_OPTIONS.map((option) => (
+                  {levelOptions.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
                     </option>
@@ -204,7 +209,7 @@ function SkillColumn({
                 onClick={() => onRemove(entry)}
                 className="ml-auto rounded px-2 py-1 text-xs font-medium text-ink-600 hover:bg-ink-200 hover:text-red-400"
               >
-                Retirer
+                {t('Retirer')}
               </button>
             </li>
           ))}
@@ -213,17 +218,17 @@ function SkillColumn({
 
       <div className="mt-auto flex flex-col gap-3 border-t border-ink-200 pt-4">
         <Select
-          label="Ajouter une compétence"
+          label={t('Ajouter une compétence')}
           value={skillId}
           options={options}
-          placeholder={available.length ? 'Choisir…' : 'Tout est déjà déclaré'}
+          placeholder={available.length ? t('Choisir…') : t('Tout est déjà déclaré')}
           onChange={(event) => setSkillId(event.target.value)}
         />
         {kind === 'OFFERED' && (
           <Select
-            label="Votre niveau"
+            label={t('Votre niveau')}
             value={level}
-            options={LEVEL_OPTIONS}
+            options={levelOptions}
             onChange={(event) => setLevel(event.target.value as SkillLevel)}
           />
         )}
@@ -236,7 +241,7 @@ function SkillColumn({
             setSkillId('')
           }}
         >
-          Ajouter
+          {t('Ajouter')}
         </Button>
       </div>
     </Card>

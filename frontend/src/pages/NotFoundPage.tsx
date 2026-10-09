@@ -1,14 +1,16 @@
 import { Link } from 'react-router-dom'
 import { Button, EmptyState } from '../components/ui'
+import { useI18n } from '../i18n/useI18n'
 
 export default function NotFoundPage() {
+  const { t } = useI18n()
   return (
     <EmptyState
-      title="Page introuvable"
-      description="Cette page n'existe pas ou a été déplacée."
+      title={t('Page introuvable')}
+      description={t("Cette page n'existe pas ou a été déplacée.")}
       action={
         <Link to="/">
-          <Button>Retour à l'accueil</Button>
+          <Button>{t("Retour à l'accueil")}</Button>
         </Link>
       }
     />

@@ -149,7 +149,11 @@ def parse_search_query(query: str) -> dict:
     return cleaned
 
 
-def summarize_project(description: str) -> str:
+#: Langue de rédaction demandée au modèle, selon celle de l'interface.
+WRITE_IN = {"fr": "en français", "en": "en anglais"}
+
+
+def summarize_project(description: str, *, lang: str = "fr") -> str:
     """Résume une description longue en quelques phrases (DL-46).
 
     Le propriétaire valide avant tout enregistrement : nous ne faisons que
@@ -158,7 +162,7 @@ def summarize_project(description: str) -> str:
     summary = ask(
         f"Description : « {description[:MAX_INPUT_LENGTH]} »",
         system=(
-            "Résume ce projet de développement en deux phrases, en français, "
+            f"Résume ce projet de développement en deux phrases, {WRITE_IN[lang]}, "
             "pour une carte de présentation. Va droit au but : le problème résolu "
             "et ce que le projet cherche. N'invente rien."
         ),
@@ -167,7 +171,9 @@ def summarize_project(description: str) -> str:
     return summary.strip()
 
 
-def phrase_match_explanation(*, score: float, they_teach: list[str], you_teach: list[str]) -> str:
+def phrase_match_explanation(
+    *, score: float, they_teach: list[str], you_teach: list[str], lang: str = "fr"
+) -> str:
     """Reformule une explication de match en une phrase (DL-47).
 
     **Les raisons calculées restent la source de vérité.** Cette phrase vient
@@ -184,7 +190,7 @@ def phrase_match_explanation(*, score: float, they_teach: list[str], you_teach: 
             f"Vous pouvez lui enseigner : {', '.join(you_teach) or 'rien'}."
         ),
         system=(
-            "Tu rédiges une phrase, en français, qui explique à un développeur "
+            f"Tu rédiges une phrase, {WRITE_IN[lang]}, qui explique à un développeur "
             "pourquoi cette rencontre est intéressante. Une seule phrase, "
             "chaleureuse et concrète. N'invente aucune compétence, ne cite pas "
             "le score chiffré."
@@ -211,7 +217,7 @@ trouver où faire quelque chose. Tu ne remplaces aucun formulaire : tu \
 expliques et tu orientes, la personne agit elle-même.
 
 Règles strictes :
-- Réponds en français, en 2 à 4 phrases, ton direct et chaleureux.
+- Réponds {write_in}, en 2 à 4 phrases, ton direct et chaleureux.
 - Si la question ne concerne pas DevLink Africa (actualité, code générique, \
 sujet personnel, etc.), dis-le simplement et recentre sur ce que tu sais \
 faire : aider à utiliser la plateforme.
@@ -223,7 +229,7 @@ personnelle."""
 MAX_HISTORY_TURNS = 6
 
 
-def copilot_reply(message: str, history: list[dict] | None = None) -> str:
+def copilot_reply(message: str, history: list[dict] | None = None, *, lang: str = "fr") -> str:
     """Répond à une question sur l'utilisation du produit (DevLink Copilot).
 
     Purement conversationnel : ne lit ni n'écrit aucune donnée de la personne.
@@ -240,5 +246,6 @@ def copilot_reply(message: str, history: list[dict] | None = None) -> str:
 
     parts.append(f"Nouveau message de l'utilisateur : « {message} »")
 
-    reply = ask("\n".join(parts), system=COPILOT_SYSTEM_PROMPT, max_tokens=300)
+    system = COPILOT_SYSTEM_PROMPT.format(write_in=WRITE_IN[lang])
+    reply = ask("\n".join(parts), system=system, max_tokens=300)
     return reply.strip()

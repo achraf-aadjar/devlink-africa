@@ -117,4 +117,16 @@ describe('page des compétences', () => {
       expect(deleted?.[0]).toBe('/api/v1/me/skills/11/')
     })
   })
+
+  it('parle anglais quand l interface est en anglais', async () => {
+    stub()
+    renderWithRouter(<SkillsPage />, { authenticated: true, lang: 'en' })
+
+    expect(await screen.findByRole('heading', { name: 'I can teach' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'I want to learn' })).toBeInTheDocument()
+    const levelSelect = screen.getByLabelText('Level for React')
+    expect(levelSelect.closest('li')).toHaveTextContent('Advanced')
+    expect(screen.getAllByRole('button', { name: 'Remove' })).toHaveLength(2)
+    expect(screen.getAllByRole('option', { name: 'Docker — DevOps' })).toHaveLength(2)
+  })
 })

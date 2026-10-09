@@ -1,9 +1,17 @@
 /** Client d'API typé. Seul endroit du frontend qui parle au backend. */
 
+import { type Language, msg, translate } from '../i18n/translate'
 import { getAccessToken, getRefreshToken, setAccessToken, setTokens } from './token'
 import type { ApiErrorBody } from './types'
 
 export const API_URL: string = import.meta.env.VITE_API_URL ?? '/api/v1'
+
+/** Langue de l'interface, transmise à l'API (voir i18n/I18nProvider.tsx). */
+let apiLanguage: Language = 'fr'
+
+export function setApiLanguage(lang: Language) {
+  apiLanguage = lang
+}
 
 /** Erreur d'API portant le corps uniforme du backend (detail / code / errors). */
 export class ApiError extends Error {
@@ -12,7 +20,8 @@ export class ApiError extends Error {
   readonly fieldErrors: Record<string, string[]>
 
   constructor(status: number, body: Partial<ApiErrorBody> | null) {
-    super(body?.detail ?? "Une erreur s'est produite.")
+    // Les messages du serveur arrivent déjà dans la langue demandée.
+    super(body?.detail ?? translate(apiLanguage, msg("Une erreur s'est produite.")))
     this.name = 'ApiError'
     this.status = status
     this.code = body?.code ?? 'error'
@@ -35,6 +44,7 @@ async function send(path: string, options: Options): Promise<Response> {
     ...rest,
     headers: {
       Accept: 'application/json',
+      'Accept-Language': apiLanguage,
       ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}),
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...headers,
@@ -70,7 +80,9 @@ async function parse<T>(response: Response): Promise<T> {
     data = text ? JSON.parse(text) : null
   } catch {
     // Réponse non JSON (page d'erreur du serveur web, par exemple).
-    throw new ApiError(response.status, { detail: 'Réponse inattendue du serveur.' })
+    throw new ApiError(response.status, {
+      detail: translate(apiLanguage, msg('Réponse inattendue du serveur.')),
+    })
   }
 
   if (!response.ok) throw new ApiError(response.status, data as ApiErrorBody)

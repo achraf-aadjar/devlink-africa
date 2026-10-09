@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Button, Card, Field } from '../../../components/ui'
+import { useI18n } from '../../../i18n/useI18n'
 import { ApiError } from '../../../lib/api'
 import GoogleSignInButton from '../components/GoogleSignInButton'
 import { useAuth } from '../hooks/useAuth'
@@ -10,6 +11,7 @@ type Errors = Partial<Record<'email' | 'password' | 'form', string>>
 
 export default function LoginPage() {
   const { signIn } = useAuth()
+  const { t } = useI18n()
   const { clientId: googleClientId } = useGoogleClientId()
   const navigate = useNavigate()
   const location = useLocation()
@@ -23,8 +25,8 @@ export default function LoginPage() {
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
     const found: Errors = {}
-    if (!values.email.trim()) found.email = 'Indiquez votre adresse e-mail.'
-    if (!values.password) found.password = 'Indiquez votre mot de passe.'
+    if (!values.email.trim()) found.email = t('Indiquez votre adresse e-mail.')
+    if (!values.password) found.password = t('Indiquez votre mot de passe.')
     setErrors(found)
     if (Object.keys(found).length > 0) return
 
@@ -40,7 +42,7 @@ export default function LoginPage() {
           // 401 : le message ne dit pas lequel des deux champs est faux.
           form:
             error.status === 401
-              ? 'Adresse e-mail ou mot de passe incorrect.'
+              ? t('Adresse e-mail ou mot de passe incorrect.')
               : error.status === 429
                 ? error.message
                 : error.fieldErrors.email || error.fieldErrors.password
@@ -48,7 +50,7 @@ export default function LoginPage() {
                   : error.message,
         })
       } else {
-        setErrors({ form: 'Impossible de contacter le serveur. Réessayez dans un instant.' })
+        setErrors({ form: t('Impossible de contacter le serveur. Réessayez dans un instant.') })
       }
     } finally {
       setSubmitting(false)
@@ -57,13 +59,13 @@ export default function LoginPage() {
 
   return (
     <div className="mx-auto w-full max-w-md">
-      <h1 className="mb-1 text-3xl font-bold tracking-tight text-ink-900">Se connecter</h1>
-      <p className="mb-6 text-sm text-ink-600">Retrouvez vos matchs et vos échanges.</p>
+      <h1 className="mb-1 text-3xl font-bold tracking-tight text-ink-900">{t('Se connecter')}</h1>
+      <p className="mb-6 text-sm text-ink-600">{t('Retrouvez vos matchs et vos échanges.')}</p>
 
       <Card className="border-accent-300/40 p-6 shadow-glow-soft sm:p-8">
         <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
           <Field
-            label="Adresse e-mail"
+            label={t('Adresse e-mail')}
             name="email"
             type="email"
             required
@@ -73,7 +75,7 @@ export default function LoginPage() {
             onChange={(event) => setValues({ ...values, email: event.target.value })}
           />
           <Field
-            label="Mot de passe"
+            label={t('Mot de passe')}
             name="password"
             type="password"
             required
@@ -90,7 +92,7 @@ export default function LoginPage() {
           )}
 
           <Button type="submit" loading={submitting} className="mt-2">
-            Se connecter
+            {t('Se connecter')}
           </Button>
         </form>
 
@@ -98,7 +100,7 @@ export default function LoginPage() {
           <div className="mt-5 flex flex-col gap-4">
             <div className="flex items-center gap-3 text-xs font-medium uppercase tracking-wide text-ink-500">
               <span className="h-px flex-1 bg-ink-200" aria-hidden="true" />
-              ou
+              {t('ou')}
               <span className="h-px flex-1 bg-ink-200" aria-hidden="true" />
             </div>
             <GoogleSignInButton
@@ -106,9 +108,9 @@ export default function LoginPage() {
               onError={(message) => setErrors({ form: message })}
             />
             <p className="text-center text-xs text-ink-500">
-              En continuant, vous acceptez notre{' '}
+              {t('En continuant, vous acceptez notre')}{' '}
               <Link to="/confidentialite" className="underline hover:text-accent-700">
-                politique de confidentialité
+                {t('politique de confidentialité')}
               </Link>
               .
             </p>
@@ -117,9 +119,9 @@ export default function LoginPage() {
       </Card>
 
       <p className="mt-4 text-center text-sm text-ink-600">
-        Pas encore de compte ?{' '}
+        {t('Pas encore de compte ?')}{' '}
         <Link to="/inscription" className="font-medium text-accent-700 underline">
-          Créer un compte
+          {t('Créer un compte')}
         </Link>
       </p>
     </div>

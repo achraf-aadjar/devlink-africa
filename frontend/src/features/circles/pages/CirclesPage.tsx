@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, EmptyState, ErrorState, LoadingState } from '../../../components/ui'
+import { msg } from '../../../i18n/translate'
+import { useI18n } from '../../../i18n/useI18n'
 import { ApiError } from '../../../lib/api'
 import type { Circle } from '../../../lib/types'
 import { useQuery } from '../../../lib/useQuery'
@@ -12,9 +14,13 @@ import CircleCard from '../components/CircleCard'
 import { CIRCLES_CHANGED } from '../hooks/usePendingCircles'
 
 const STEPS = [
-  'Dev Match cherche des paires : vous apprenez à quelqu’un qui vous apprend en retour.',
-  'Quand cette paire n’existe pas, l’échange peut circuler : vous apprenez à l’un, un autre vous apprend.',
-  'Chacun accepte. Une fois que tout le monde a dit oui, les contacts se débloquent pour tout le cercle.',
+  msg('Dev Match cherche des paires : vous apprenez à quelqu’un qui vous apprend en retour.'),
+  msg(
+    'Quand cette paire n’existe pas, l’échange peut circuler : vous apprenez à l’un, un autre vous apprend.',
+  ),
+  msg(
+    'Chacun accepte. Une fois que tout le monde a dit oui, les contacts se débloquent pour tout le cercle.',
+  ),
 ]
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
@@ -27,6 +33,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 }
 
 export default function CirclesPage() {
+  const { t } = useI18n()
   const { user } = useAuth()
   const meId = user?.id
   const suggestions = useQuery(() => getCircleSuggestions(), [])
@@ -48,7 +55,7 @@ export default function CirclesPage() {
       setActionError(
         cause instanceof ApiError && cause.message
           ? cause.message
-          : "L'action n'a pas pu être effectuée. Réessayez dans un instant.",
+          : t("L'action n'a pas pu être effectuée. Réessayez dans un instant."),
       )
     } finally {
       setBusyKey(null)
@@ -98,10 +105,11 @@ export default function CirclesPage() {
   return (
     <section className="flex flex-col gap-8">
       <header className="flex flex-col gap-3">
-        <h1 className="text-3xl font-bold tracking-tight text-ink-900">Cercles d'échange</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-ink-900">{t("Cercles d'échange")}</h1>
         <p className="max-w-3xl text-ink-600">
-          Quand aucune paire parfaite n'existe, l'échange peut circuler entre trois ou quatre
-          personnes : chacun apprend à quelqu'un, et apprend de quelqu'un d'autre.
+          {t(
+            "Quand aucune paire parfaite n'existe, l'échange peut circuler entre trois ou quatre personnes : chacun apprend à quelqu'un, et apprend de quelqu'un d'autre.",
+          )}
         </p>
         <ol className="mt-2 grid grid-cols-1 gap-3 md:grid-cols-3">
           {STEPS.map((step, index) => (
@@ -109,7 +117,7 @@ export default function CirclesPage() {
               <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#1f6feb] text-xs font-bold text-white shadow-glow">
                 {index + 1}
               </span>
-              {step}
+              {t(step)}
             </li>
           ))}
         </ol>
@@ -121,7 +129,7 @@ export default function CirclesPage() {
         </p>
       )}
 
-      {loading && <LoadingState rows={2} label="Recherche de vos cercles…" />}
+      {loading && <LoadingState rows={2} label={t('Recherche de vos cercles…')} />}
       {error && (
         <ErrorState
           onRetry={() => {
@@ -133,22 +141,24 @@ export default function CirclesPage() {
 
       {nothing && (
         <EmptyState
-          title="Aucun cercle pour l'instant"
-          description="Les cercles se forment à partir de ce que vous savez et de ce que vous voulez apprendre. Déclarez vos compétences : chaque nouvel inscrit peut fermer un cercle."
+          title={t("Aucun cercle pour l'instant")}
+          description={t(
+            'Les cercles se forment à partir de ce que vous savez et de ce que vous voulez apprendre. Déclarez vos compétences : chaque nouvel inscrit peut fermer un cercle.',
+          )}
           action={
             <Link to="/competences">
-              <Button>Ajouter mes compétences</Button>
+              <Button>{t('Ajouter mes compétences')}</Button>
             </Link>
           }
         />
       )}
 
       {invitations.length > 0 && (
-        <Section title="Ils vous invitent dans leur cercle">{invitations.map(card)}</Section>
+        <Section title={t('Ils vous invitent dans leur cercle')}>{invitations.map(card)}</Section>
       )}
-      {others.length > 0 && <Section title="Mes cercles">{others.map(card)}</Section>}
+      {others.length > 0 && <Section title={t('Mes cercles')}>{others.map(card)}</Section>}
       {possible.length > 0 && (
-        <Section title="Cercles possibles pour vous">{possible.map(card)}</Section>
+        <Section title={t('Cercles possibles pour vous')}>{possible.map(card)}</Section>
       )}
     </section>
   )

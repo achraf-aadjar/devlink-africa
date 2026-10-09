@@ -47,12 +47,12 @@ function stub(payload: unknown = MATCH, status = 200) {
   return fetchMock
 }
 
-function renderPage() {
+function renderPage(lang: 'fr' | 'en' = 'fr') {
   return renderWithRouter(
     <Routes>
       <Route path="/matchs/:id" element={<MatchDetailPage />} />
     </Routes>,
-    { route: '/matchs/31', authenticated: true },
+    { route: '/matchs/31', authenticated: true, lang },
   )
 }
 
@@ -64,6 +64,27 @@ describe('détail d un match', () => {
     expect(await screen.findByRole('heading', { name: 'Kofi Mensah' })).toBeInTheDocument()
     expect(screen.getByText('83')).toBeInTheDocument()
     expect(screen.getAllByRole('meter')).toHaveLength(6)
+  })
+
+  it('explique le match en anglais', async () => {
+    stub()
+    renderPage('en')
+
+    expect(
+      await screen.findByRole('heading', { name: 'Kofi Mensah can teach you' }),
+    ).toBeInTheDocument()
+    expect(screen.getByText('Compatibility score')).toBeInTheDocument()
+    expect(screen.getByText('Complementarity')).toBeInTheDocument()
+    expect(
+      screen.getByRole('meter', { name: 'Reciprocity: 20.0 points out of 20' }),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Not useful' })).toBeInTheDocument()
+
+    await userEvent.click(screen.getByRole('button', { name: 'Propose an exchange' }))
+    expect(
+      await screen.findByRole('dialog', { name: 'Propose an exchange with Kofi Mensah' }),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('option', { name: 'Mentoring' })).toBeInTheDocument()
   })
 
   it('propose un échange', async () => {

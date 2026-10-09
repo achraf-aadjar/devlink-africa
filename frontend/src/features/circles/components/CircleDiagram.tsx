@@ -1,5 +1,6 @@
 import { useId } from 'react'
 import Avatar from '../../../components/Avatar'
+import { useI18n } from '../../../i18n/useI18n'
 import type { Circle } from '../../../lib/types'
 import { arrowSentence } from '../sentences'
 
@@ -13,7 +14,7 @@ function point(angle: number, radius = RADIUS): [number, number] {
 
 /** Prénom seul : le schéma est petit, le nom complet figure dans la liste en dessous. */
 function firstName(fullName: string): string {
-  return fullName.trim().split(/\s+/)[0] || 'Membre'
+  return fullName.trim().split(/\s+/)[0]
 }
 
 /**
@@ -24,15 +25,16 @@ function firstName(fullName: string): string {
  * dans `aria-label`, et la carte qui l'entoure le détaille en phrases.
  */
 export default function CircleDiagram({ circle, meId }: { circle: Circle; meId?: number }) {
+  const { t } = useI18n()
   const uid = useId().replace(/:/g, '')
   const count = circle.members.length
   const angleOf = (index: number) => -Math.PI / 2 + (index * 2 * Math.PI) / count
-  const summary = circle.arrows.map((_, index) => arrowSentence(circle, index, meId)).join(' ')
+  const summary = circle.arrows.map((_, index) => arrowSentence(t, circle, index, meId)).join(' ')
 
   return (
     <div
       role="img"
-      aria-label={`Cercle d'échange. ${summary}`}
+      aria-label={t("Cercle d'échange. {summary}", { summary })}
       className="relative mx-auto aspect-square w-full max-w-[20rem]"
     >
       <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full" aria-hidden="true">
@@ -126,12 +128,12 @@ export default function CircleDiagram({ circle, meId }: { circle: Circle; meId?:
             style={{ left: `${x}%`, top: `${y}%` }}
           >
             <Avatar
-              name={member.full_name || 'Membre'}
+              name={member.full_name || t('Membre')}
               size={48}
               className={isMe ? 'ring-[3px] ring-accent-500' : undefined}
             />
             <span className="whitespace-nowrap rounded-full bg-ink-50/80 px-2 text-xs font-medium text-ink-900">
-              {isMe ? 'Vous' : firstName(member.full_name)}
+              {isMe ? t('Vous') : firstName(member.full_name) || t('Membre')}
               {member.country && <span className="ml-1 text-ink-500">{member.country}</span>}
             </span>
           </div>

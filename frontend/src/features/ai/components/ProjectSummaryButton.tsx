@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Button } from '../../../components/ui'
+import { useI18n } from '../../../i18n/useI18n'
 import { ApiError } from '../../../lib/api'
 import { summarizeProject } from '../api/ai'
 import { useAIStatus } from '../hooks/useAIStatus'
@@ -18,6 +19,7 @@ export default function ProjectSummaryButton({
   description: string
   onUse: (summary: string) => void
 }) {
+  const { t } = useI18n()
   const { enabled, loading: checking } = useAIStatus()
   const [working, setWorking] = useState(false)
   const [unavailable, setUnavailable] = useState(false)
@@ -43,14 +45,18 @@ export default function ProjectSummaryButton({
   return (
     <div className="flex flex-col gap-2 rounded-2xl bg-accent-50/60 p-4 ring-1 ring-inset ring-accent-400/20">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className="text-sm text-ink-700">Besoin d'une présentation courte pour la carte ?</p>
+        <p className="text-sm text-ink-700">
+          {t("Besoin d'une présentation courte pour la carte ?")}
+        </p>
         <Button type="button" variant="secondary" size="sm" loading={working} onClick={handleClick}>
-          Proposer un résumé
+          {t('Proposer un résumé')}
         </Button>
       </div>
 
       {unavailable && (
-        <AIUnavailableNotice fallback="Rédigez votre présentation vous-même, elle sera sûrement meilleure." />
+        <AIUnavailableNotice
+          fallback={t('Rédigez votre présentation vous-même, elle sera sûrement meilleure.')}
+        />
       )}
 
       {summary && (
@@ -60,10 +66,10 @@ export default function ProjectSummaryButton({
           </p>
           <div className="flex gap-2">
             <Button type="button" size="sm" onClick={() => onUse(summary)}>
-              Utiliser ce texte
+              {t('Utiliser ce texte')}
             </Button>
             <Button type="button" size="sm" variant="ghost" onClick={() => setSummary(null)}>
-              Ignorer
+              {t('Ignorer')}
             </Button>
           </div>
         </div>

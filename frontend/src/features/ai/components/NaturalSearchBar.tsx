@@ -1,18 +1,20 @@
 import { useState } from 'react'
 import { Badge, Button, Card, Field } from '../../../components/ui'
+import { msg } from '../../../i18n/translate'
+import { useI18n } from '../../../i18n/useI18n'
 import { ApiError } from '../../../lib/api'
 import { naturalSearch } from '../api/ai'
 import { useAIStatus } from '../hooks/useAIStatus'
 import AIUnavailableNotice from './AIUnavailableNotice'
 
 const CRITERION_LABELS: Record<string, string> = {
-  q: 'Texte',
-  skill: 'Sait faire',
-  skill_wanted: 'Veut apprendre',
-  country: 'Pays',
-  level: 'Niveau',
-  availability: 'Disponibilité',
-  domain: 'Domaine',
+  q: msg('Texte'),
+  skill: msg('Sait faire'),
+  skill_wanted: msg('Veut apprendre'),
+  country: msg('Pays'),
+  level: msg('Niveau'),
+  availability: msg('Disponibilité'),
+  domain: msg('Domaine'),
 }
 
 /**
@@ -26,6 +28,7 @@ export default function NaturalSearchBar({
 }: {
   onCriteria: (criteria: Record<string, string>) => void
 }) {
+  const { t } = useI18n()
   const { enabled, loading: checking } = useAIStatus()
   const [query, setQuery] = useState('')
   const [working, setWorking] = useState(false)
@@ -62,20 +65,22 @@ export default function NaturalSearchBar({
       >
         <div className="flex-1">
           <Field
-            label="Décrivez qui vous cherchez"
+            label={t('Décrivez qui vous cherchez')}
             value={query}
             maxLength={500}
-            placeholder="un dev React au Sénégal qui veut apprendre Docker"
+            placeholder={t('un dev React au Sénégal qui veut apprendre Docker')}
             onChange={(event) => setQuery(event.target.value)}
           />
         </div>
         <Button type="submit" size="md" loading={working} disabled={!query.trim()}>
-          Traduire en filtres
+          {t('Traduire en filtres')}
         </Button>
       </form>
 
       {unavailable && (
-        <AIUnavailableNotice fallback="Utilisez les filtres ci-dessous, ils font le même travail." />
+        <AIUnavailableNotice
+          fallback={t('Utilisez les filtres ci-dessous, ils font le même travail.')}
+        />
       )}
 
       {applied !== null && (
@@ -83,13 +88,16 @@ export default function NaturalSearchBar({
           {entries.length > 0 ? (
             <>
               <p className="mb-2 text-sm text-ink-700">
-                Filtres appliqués, que vous pouvez corriger ci-dessous :
+                {t('Filtres appliqués, que vous pouvez corriger ci-dessous :')}
               </p>
               <ul className="flex flex-wrap gap-2">
                 {entries.map(([key, value]) => (
                   <li key={key}>
                     <Badge tone="accent">
-                      {CRITERION_LABELS[key] ?? key} : {value}
+                      {t('{label} : {value}', {
+                        label: CRITERION_LABELS[key] ? t(CRITERION_LABELS[key]) : key,
+                        value,
+                      })}
                     </Badge>
                   </li>
                 ))}
@@ -97,7 +105,7 @@ export default function NaturalSearchBar({
             </>
           ) : (
             <p className="text-sm text-ink-700">
-              Nous n'avons pas su traduire cette phrase. Utilisez les filtres ci-dessous.
+              {t("Nous n'avons pas su traduire cette phrase. Utilisez les filtres ci-dessous.")}
             </p>
           )}
         </div>

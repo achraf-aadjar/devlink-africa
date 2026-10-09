@@ -10,6 +10,7 @@ import {
   Select,
 } from '../../../components/ui'
 import { useAuth } from '../../auth/hooks/useAuth'
+import { useI18n } from '../../../i18n/useI18n'
 import { PROJECT_STATUS_LABELS } from '../../../lib/labels'
 import { useQuery } from '../../../lib/useQuery'
 import { listCatalog } from '../../skills/api/skills'
@@ -22,6 +23,7 @@ const STATUS_OPTIONS = Object.entries(PROJECT_STATUS_LABELS).map(([value, label]
 }))
 
 export default function ProjectsPage() {
+  const { t, tn } = useI18n()
   const { isAuthenticated } = useAuth()
   // Les filtres vivent dans l'URL : un lien de recherche est partageable (DL-27).
   const [params, setParams] = useSearchParams()
@@ -54,12 +56,12 @@ export default function ProjectsPage() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-ink-900">Project Hub</h1>
           <p className="mt-1 text-sm text-ink-600">
-            Des projets africains qui cherchent des contributeurs.
+            {t('Des projets africains qui cherchent des contributeurs.')}
           </p>
         </div>
         {isAuthenticated && (
           <Link to="/projets/nouveau">
-            <Button>Proposer un projet</Button>
+            <Button>{t('Proposer un projet')}</Button>
           </Link>
         )}
       </header>
@@ -73,15 +75,15 @@ export default function ProjectsPage() {
           }}
         >
           <Field
-            label="Rechercher"
+            label={t('Rechercher')}
             value={draft}
-            placeholder="Titre ou description"
+            placeholder={t('Titre ou description')}
             onChange={(event) => setDraft(event.target.value)}
           />
           <Select
-            label="Compétence recherchée"
+            label={t('Compétence recherchée')}
             value={filters.skill}
-            placeholder="Toutes"
+            placeholder={t('Toutes')}
             options={(catalog.data?.results ?? []).map((skill) => ({
               value: skill.name,
               label: skill.name,
@@ -89,26 +91,28 @@ export default function ProjectsPage() {
             onChange={(event) => update({ skill: event.target.value })}
           />
           <Select
-            label="Statut"
+            label={t('Statut')}
             value={filters.status}
-            placeholder="Tous"
-            options={STATUS_OPTIONS}
+            placeholder={t('Tous')}
+            options={STATUS_OPTIONS.map((option) => ({ ...option, label: t(option.label) }))}
             onChange={(event) => update({ status: event.target.value })}
           />
         </form>
       </Card>
 
-      {loading && <LoadingState rows={3} label="Chargement des projets…" />}
+      {loading && <LoadingState rows={3} label={t('Chargement des projets…')} />}
       {error && <ErrorState onRetry={reload} />}
 
       {data && data.results.length === 0 && (
         <EmptyState
-          title="Aucun projet ne correspond"
-          description="Élargissez vos critères, ou proposez votre propre projet à la communauté."
+          title={t('Aucun projet ne correspond')}
+          description={t(
+            'Élargissez vos critères, ou proposez votre propre projet à la communauté.',
+          )}
           action={
             isAuthenticated ? (
               <Link to="/projets/nouveau">
-                <Button size="sm">Proposer un projet</Button>
+                <Button size="sm">{t('Proposer un projet')}</Button>
               </Link>
             ) : undefined
           }
@@ -118,7 +122,7 @@ export default function ProjectsPage() {
       {data && data.results.length > 0 && (
         <>
           <p className="text-sm text-ink-600">
-            {data.count} projet{data.count > 1 ? 's' : ''} trouvé{data.count > 1 ? 's' : ''}.
+            {tn(data.count, '{n} projet trouvé.', '{n} projets trouvés.')}
           </p>
           <ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {data.results.map((project) => (

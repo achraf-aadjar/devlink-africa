@@ -15,6 +15,8 @@ from rest_framework import exceptions, status
 from rest_framework.response import Response
 from rest_framework.views import exception_handler as drf_exception_handler
 
+from core.i18n import request_language, translate_message
+
 
 class Conflict(exceptions.APIException):
     """409 : la requête est valide mais entre en conflit avec l'état courant."""
@@ -68,8 +70,20 @@ def api_exception_handler(exc, context):
         body["detail"] = f"Trop de tentatives. Réessayez dans {int(exc.wait)} secondes."
         response["Retry-After"] = str(int(exc.wait))
 
+    _translate(body, request_language(context.get("request")))
+
     response.data = body
     return Response(body, status=response.status_code, headers=_safe_headers(response))
+
+
+def _translate(body: dict[str, Any], lang: str) -> None:
+    """Traduit le message et les erreurs par champ (voir core/i18n.py)."""
+    body["detail"] = translate_message(body["detail"], lang)
+    if "errors" in body:
+        body["errors"] = {
+            field: [translate_message(message, lang) for message in messages]
+            for field, messages in body["errors"].items()
+        }
 
 
 def _code_of(exc) -> str:

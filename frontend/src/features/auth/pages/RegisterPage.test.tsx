@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { describe, expect, it, vi } from 'vitest'
 import AuthProvider from '../../../app/AuthProvider'
-import { jsonResponse, routeFetch } from '../../../test/helpers'
+import { jsonResponse, renderWithRouter, routeFetch } from '../../../test/helpers'
 import RegisterPage from './RegisterPage'
 
 const COUNTRIES = {
@@ -50,6 +50,27 @@ describe("page d'inscription", () => {
     expect(fetchMock.mock.calls.some((call) => String(call[0]).includes('/auth/register'))).toBe(
       false,
     )
+  })
+
+  it('affiche ses règles et ses erreurs en anglais', async () => {
+    vi.stubGlobal('fetch', routeFetch({ '/countries/all': COUNTRIES }))
+    renderWithRouter(<RegisterPage />, { route: '/inscription', lang: 'en' })
+
+    expect(screen.getByRole('heading', { name: 'Create an account' })).toBeInTheDocument()
+    expect(
+      screen.getByText('At least 10 characters. Not too common, and not just numbers.'),
+    ).toBeInTheDocument()
+
+    await userEvent.type(screen.getByLabelText(/email address/i), FILL.email)
+    await userEvent.type(screen.getByLabelText(/password/i), 'short')
+    await userEvent.click(screen.getByRole('button', { name: 'Create my account' }))
+
+    expect(
+      await screen.findByText('Your password must be at least 10 characters long.'),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText('You must accept the privacy policy to create an account.'),
+    ).toBeInTheDocument()
   })
 
   it('exige le consentement à la politique de confidentialité', async () => {

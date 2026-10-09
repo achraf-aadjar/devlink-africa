@@ -84,6 +84,9 @@ MIDDLEWARE = [
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    # Choisit la langue des messages de Django et DRF selon Accept-Language
+    # (français par défaut). Les messages propres à DevLink : core/i18n.py.
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -159,6 +162,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # --- i18n -------------------------------------------------------------------
 LANGUAGE_CODE = "fr-fr"
+LANGUAGES = [("fr", "Français"), ("en", "English")]
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True

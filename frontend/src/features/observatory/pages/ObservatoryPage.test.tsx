@@ -97,6 +97,29 @@ describe('observatoire des compétences', () => {
     )
   })
 
+  it('s’affiche en anglais, noms de pays compris', async () => {
+    stub()
+    renderWithRouter(<ObservatoryPage />, { lang: 'en' })
+
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Skills Observatory' }),
+    ).toBeInTheDocument()
+    expect(screen.getByText('Registered developers')).toBeInTheDocument()
+    expect(
+      screen.getByRole('listitem', { name: 'Python: 3 want to learn it, 6 offer it.' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('listitem', { name: 'Kubernetes: 1 wants to learn it, 0 offer it.' }),
+    ).toBeInTheDocument()
+    expect(
+      within(screen.getByRole('list', { name: 'Legend' })).getByText('Offer it'),
+    ).toBeInTheDocument()
+    const bridges = screen.getByRole('region', { name: 'Bridges between countries' })
+    expect(bridges).toHaveTextContent('Senegal is looking for Docker')
+    expect(bridges).toHaveTextContent('offered by: 🇬🇭 Ghana, 🇰🇪 Kenya')
+    expect(screen.queryByText('Sénégal')).not.toBeInTheDocument()
+  })
+
   it('reste clair quand rien n’est encore déclaré', async () => {
     stub({ ...DATA, skills: [], shortages: [], surpluses: [], bridges: [] })
     renderWithRouter(<ObservatoryPage />)

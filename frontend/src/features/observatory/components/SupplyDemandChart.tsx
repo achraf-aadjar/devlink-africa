@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useI18n } from '../../../i18n/useI18n'
 import type { ObservatorySkill } from '../../../lib/types'
 import { offeredText, SERIES, wantedText } from '../series'
 
@@ -19,6 +20,7 @@ function Bar({ value, max, side }: { value: number; max: number; side: 'wanted' 
  * pour que les longueurs se comparent d'un coup d'œil.
  */
 export default function SupplyDemandChart({ skills }: { skills: ObservatorySkill[] }) {
+  const { t, tn } = useI18n()
   const [active, setActive] = useState<number | null>(null)
   const max = Math.max(1, ...skills.map((skill) => Math.max(skill.offered, skill.wanted)))
 
@@ -26,9 +28,9 @@ export default function SupplyDemandChart({ skills }: { skills: ObservatorySkill
     <figure className="flex flex-col gap-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <figcaption className="text-lg font-semibold text-ink-900">
-          Offre et demande, compétence par compétence
+          {t('Offre et demande, compétence par compétence')}
         </figcaption>
-        <ul className="flex gap-5 text-sm text-ink-700" aria-label="Légende">
+        <ul className="flex gap-5 text-sm text-ink-700" aria-label={t('Légende')}>
           {(['wanted', 'offered'] as const).map((side) => (
             <li key={side} className="flex items-center gap-2">
               <span
@@ -36,7 +38,7 @@ export default function SupplyDemandChart({ skills }: { skills: ObservatorySkill
                 className="h-3 w-3 rounded-[3px]"
                 style={{ background: SERIES[side].color }}
               />
-              {SERIES[side].label}
+              {t(SERIES[side].label)}
             </li>
           ))}
         </ul>
@@ -44,7 +46,11 @@ export default function SupplyDemandChart({ skills }: { skills: ObservatorySkill
 
       <ul className="flex flex-col gap-1.5">
         {skills.map((skill, index) => {
-          const description = `${skill.name} : ${wantedText(skill.wanted)}, ${offeredText(skill.offered)}.`
+          const description = t('{skill} : {wanted}, {offered}.', {
+            skill: skill.name,
+            wanted: wantedText(skill.wanted, tn),
+            offered: offeredText(skill.offered, tn),
+          })
           return (
             <li
               key={skill.name}
@@ -81,14 +87,14 @@ export default function SupplyDemandChart({ skills }: { skills: ObservatorySkill
                     className="mx-1 inline-block h-0.5 w-3 align-middle"
                     style={{ background: SERIES.wanted.color }}
                   />
-                  <strong className="text-ink-900">{skill.wanted}</strong>
-                  {skill.wanted > 1 ? ' veulent' : ' veut'} l’apprendre
+                  <strong className="text-ink-900">{skill.wanted}</strong>{' '}
+                  {tn(skill.wanted, 'veut l’apprendre', 'veulent l’apprendre')}
                   <span
                     className="mx-1 ml-2 inline-block h-0.5 w-3 align-middle"
                     style={{ background: SERIES.offered.color }}
                   />
-                  <strong className="text-ink-900">{skill.offered}</strong>
-                  {skill.offered > 1 ? ' la proposent' : ' la propose'}
+                  <strong className="text-ink-900">{skill.offered}</strong>{' '}
+                  {tn(skill.offered, 'la propose', 'la proposent')}
                 </span>
               )}
             </li>
@@ -98,19 +104,19 @@ export default function SupplyDemandChart({ skills }: { skills: ObservatorySkill
 
       <details className="text-sm text-ink-700">
         <summary className="cursor-pointer font-medium text-accent-800">
-          Voir les données en tableau
+          {t('Voir les données en tableau')}
         </summary>
         <table className="mt-3 w-full max-w-md text-left">
           <thead>
             <tr className="border-b border-white/10 text-ink-600">
               <th scope="col" className="py-1.5 font-medium">
-                Compétence
+                {t('Compétence')}
               </th>
               <th scope="col" className="py-1.5 text-right font-medium">
-                Veulent l’apprendre
+                {t(SERIES.wanted.label)}
               </th>
               <th scope="col" className="py-1.5 text-right font-medium">
-                La proposent
+                {t(SERIES.offered.label)}
               </th>
             </tr>
           </thead>

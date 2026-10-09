@@ -35,6 +35,27 @@ describe("page d'accueil", () => {
     expect(screen.getByText('82.5')).toBeInTheDocument()
   })
 
+  it('s’affiche en anglais', () => {
+    vi.stubGlobal('fetch', vi.fn())
+    renderWithRouter(<HomePage />, { lang: 'en' })
+
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
+      'Learn what you’re missing, teach what you know.',
+    )
+    expect(
+      screen.getByRole('heading', { level: 2, name: /A score you can read/ }),
+    ).toHaveTextContent('A score you can read, not a black box.')
+    expect(screen.getByRole('heading', { name: 'Four ways to work together' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Code review' })).toBeInTheDocument()
+    expect(screen.getByText('Willingness to collaborate')).toBeInTheDocument()
+    expect(screen.getByText('100%')).toBeInTheDocument()
+    expect(screen.getAllByRole('link', { name: 'Create my account' })[0]).toHaveAttribute(
+      'href',
+      '/inscription',
+    )
+    expect(screen.queryByText(/Apprenez/)).not.toBeInTheDocument()
+  })
+
   it('renvoie vers les matchs quand la session est ouverte', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(jsonResponse(SESSION_USER)))
     renderWithRouter(<HomePage />, { authenticated: true })

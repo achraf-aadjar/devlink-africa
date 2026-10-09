@@ -43,6 +43,33 @@ describe('page des échanges', () => {
     expect(screen.getByText('Proposé')).toBeInTheDocument()
   })
 
+  it('affiche les demandes reçues en anglais', async () => {
+    stub()
+    renderWithRouter(<ExchangesPage />, { authenticated: true, lang: 'en' })
+
+    expect(await screen.findByText(/Mentoring with/)).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'My exchanges' })).toBeInTheDocument()
+    expect(screen.getByText('Proposed')).toBeInTheDocument()
+    expect(screen.getByText('Skill: Python')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Accept' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Decline' })).toBeInTheDocument()
+    expect(screen.getByRole('tab', { name: 'Sent' })).toBeInTheDocument()
+  })
+
+  it('donne le contact en anglais une fois la demande acceptée', async () => {
+    stub([{ ...RECEIVED, status: 'ACCEPTED' }])
+    renderWithRouter(<ExchangesPage />, { authenticated: true, lang: 'en' })
+
+    expect(
+      await screen.findByText('Exchange accepted: you can now contact each other.'),
+    ).toBeInTheDocument()
+    expect(screen.getByText(/Kofi Mensah hasn't added a contact method yet/)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'add it in My profile' })).toHaveAttribute(
+      'href',
+      '/profil',
+    )
+  })
+
   it('propose accepter et refuser au destinataire', async () => {
     stub()
     renderWithRouter(<ExchangesPage />, { authenticated: true })

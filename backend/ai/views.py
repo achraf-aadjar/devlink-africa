@@ -16,6 +16,7 @@ from rest_framework.response import Response
 from rest_framework.throttling import ScopedRateThrottle
 from rest_framework.views import APIView
 
+from core.i18n import request_language, translate_message
 from matching.models import Match
 from matching.serializers import oriented_explanation
 
@@ -44,10 +45,10 @@ FEATURES = [
 ]
 
 
-def _unavailable(error: AIUnavailable) -> Response:
+def _unavailable(error: AIUnavailable, request) -> Response:
     """Réponse 503 uniforme : l'interface sait alors proposer le repli."""
     return Response(
-        {"detail": error.reason, "code": error.code},
+        {"detail": translate_message(error.reason, request_language(request)), "code": error.code},
         status=status.HTTP_503_SERVICE_UNAVAILABLE,
     )
 
@@ -85,7 +86,7 @@ class ExtractSkillsView(AIBaseView):
         try:
             suggestions = services.extract_skills(data.validated_data["text"])
         except AIUnavailable as error:
-            return _unavailable(error)
+            return _unavailable(error, request)
 
         # Rien n'est enregistré : l'utilisateur valide via /me/skills/.
         return Response({"suggestions": suggestions})
@@ -106,7 +107,7 @@ class NaturalSearchView(AIBaseView):
         try:
             criteria = services.parse_search_query(data.validated_data["query"])
         except AIUnavailable as error:
-            return _unavailable(error)
+            return _unavailable(error, request)
 
         # On exécute la recherche classique avec ces critères : l'IA n'a servi
         # qu'à les deviner, et l'interface les affiche pour correction.
@@ -138,9 +139,11 @@ class SummarizeProjectView(AIBaseView):
         data.is_valid(raise_exception=True)
 
         try:
-            summary = services.summarize_project(data.validated_data["description"])
+            summary = services.summarize_project(
+                data.validated_data["description"], lang=request_language(request)
+            )
         except AIUnavailable as error:
-            return _unavailable(error)
+            return _unavailable(error, request)
 
         return Response({"summary": summary})
 
@@ -169,9 +172,10 @@ class ExplainMatchView(AIBaseView):
                 score=match.score,
                 they_teach=[skill["name"] for skill in oriented["they_can_teach_you"]],
                 you_teach=[skill["name"] for skill in oriented["you_can_teach_them"]],
+                lang=request_language(request),
             )
         except AIUnavailable as error:
-            return _unavailable(error)
+            return _unavailable(error, request)
 
         return Response({"sentence": sentence})
 
@@ -193,8 +197,12 @@ class CopilotView(AIBaseView):
         data.is_valid(raise_exception=True)
 
         try:
-            reply = services.copilot_reply(data.validated_data["message"], data.validated_data.get("history"))
+            reply = services.copilot_reply(
+                data.validated_data["message"],
+                data.validated_data.get("history"),
+                lang=request_language(request),
+            )
         except AIUnavailable as error:
-            return _unavailable(error)
+            return _unavailable(error, request)
 
         return Response({"reply": reply})

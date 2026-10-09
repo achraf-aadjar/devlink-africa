@@ -36,7 +36,7 @@ const PROFILE = {
   projects: [{ id: 4, title: 'Agri-Data', status: 'OPEN' }],
 }
 
-function renderProfile(payload: unknown = PROFILE, status = 200) {
+function renderProfile(payload: unknown = PROFILE, status = 200, lang: 'fr' | 'en' = 'fr') {
   vi.stubGlobal(
     'fetch',
     vi.fn((url: string) =>
@@ -52,7 +52,7 @@ function renderProfile(payload: unknown = PROFILE, status = 200) {
     <Routes>
       <Route path="/developpeurs/:id" element={<PublicProfilePage />} />
     </Routes>,
-    { route: '/developpeurs/2' },
+    { route: '/developpeurs/2', lang },
   )
 }
 
@@ -114,6 +114,35 @@ describe('profil public', () => {
       'href',
       '/developpeurs/3',
     )
+  })
+
+  it('parle anglais, nom du pays compris', async () => {
+    const endorsed = structuredClone(PROFILE)
+    endorsed.skills.offered[0] = {
+      ...endorsed.skills.offered[0],
+      endorsements: [
+        {
+          id: 5,
+          by: { id: 3, full_name: 'Ada Lovelace', country: 'SN' },
+          context: 'CIRCLE',
+          comment: 'Patient et clair.',
+          created_at: '2026-10-09T10:00:00Z',
+        },
+      ],
+    } as (typeof endorsed.skills.offered)[number]
+    renderProfile(endorsed, 200, 'en')
+
+    expect(await screen.findByRole('heading', { name: 'Kofi Mensah' })).toBeInTheDocument()
+    expect(screen.getByText('Ghana')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Can teach' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Wants to learn' })).toBeInTheDocument()
+    expect(screen.getByText('Mentoring')).toBeInTheDocument()
+    expect(screen.getByText('Open to contributions')).toBeInTheDocument()
+
+    const section = screen.getByRole('region', { name: 'Endorsed by peers' })
+    expect(section).toHaveTextContent('endorsed by 1 peer')
+    expect(section).toHaveTextContent('in an exchange circle')
+    expect(section).toHaveTextContent('“Patient et clair.”')
   })
 
   it("n'affiche pas la section quand aucune compétence n'est validée", async () => {

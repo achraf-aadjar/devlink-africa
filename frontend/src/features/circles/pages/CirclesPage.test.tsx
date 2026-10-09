@@ -92,6 +92,33 @@ describe("page des cercles d'échange", () => {
     ).toBeInTheDocument()
   })
 
+  it('présente le cercle en anglais', async () => {
+    stub({ suggestions: [SUGGESTION] })
+    renderWithRouter(<CirclesPage />, { authenticated: true, lang: 'en' })
+
+    expect(await screen.findByText('You teach React to Kwame Boateng.')).toBeInTheDocument()
+    expect(screen.getByText('Kwame Boateng teaches FastAPI to Imani Wanjiru.')).toBeInTheDocument()
+    expect(screen.getByText('Imani Wanjiru teaches you Docker.')).toBeInTheDocument()
+    expect(
+      screen.getByRole('img', {
+        name: 'Exchange circle. You teach React to Kwame Boateng. Kwame Boateng teaches FastAPI to Imani Wanjiru. Imani Wanjiru teaches you Docker.',
+      }),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Exchange circles' })).toBeInTheDocument()
+    expect(screen.getByText('3 members')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Propose this circle' })).toBeInTheDocument()
+  })
+
+  it('accorde les réponses à la deuxième personne en anglais', async () => {
+    stub({ mine: [persisted('PROPOSED', ['PENDING', 'ACCEPTED', 'PENDING'])] })
+    renderWithRouter(<CirclesPage />, { authenticated: true, lang: 'en' })
+
+    expect(await screen.findByText("You haven't responded yet")).toBeInTheDocument()
+    expect(screen.getByText('Kwame Boateng accepted')).toBeInTheDocument()
+    expect(screen.getByText(/1 of 3 have accepted/)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Decline' })).toBeInTheDocument()
+  })
+
   it('propose le cercle avec ses membres dans l’ordre', async () => {
     const fetchMock = stub({ suggestions: [SUGGESTION] })
     renderWithRouter(<CirclesPage />, { authenticated: true })
@@ -150,7 +177,8 @@ describe("page des cercles d'échange", () => {
     stub({ mine: [persisted('PROPOSED', ['ACCEPTED', 'PENDING', 'PENDING'])] })
     renderWithRouter(<CirclesPage />, { authenticated: true })
 
-    expect(await screen.findByText(/Vous avez accepté/)).toBeInTheDocument()
+    expect(await screen.findByText(/Vous avez accepté\. Le cercle s'active/)).toBeInTheDocument()
+    expect(screen.getByText('Vous avez accepté')).toBeInTheDocument()
     expect(screen.queryByText(/Tout le monde a accepté/)).not.toBeInTheDocument()
   })
 

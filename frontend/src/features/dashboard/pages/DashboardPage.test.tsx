@@ -168,4 +168,21 @@ describe('tableau de bord', () => {
     await screen.findByRole('heading', { level: 1 })
     expect(screen.queryByRole('heading', { name: 'Vos premiers pas' })).not.toBeInTheDocument()
   })
+
+  it('parle anglais quand l interface est en anglais', async () => {
+    stub(FULL)
+    renderWithRouter(<DashboardPage />, { authenticated: true, lang: 'en' })
+
+    expect(await screen.findByRole('heading', { name: 'Hello Ada' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Your first steps' })).toBeInTheDocument()
+    expect(screen.getByText('3 of 5 steps done')).toBeInTheDocument()
+    expect(screen.getByText(/Your profile is 80% complete/)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Complete my profile' })).toBeInTheDocument()
+    expect(screen.getByText('matches')).toBeInTheDocument()
+    expect(screen.getByText('1 received · 0 sent')).toBeInTheDocument()
+    expect(screen.getByText('Mentoring with Kofi Mensah')).toBeInTheDocument()
+    expect(screen.getByText('Fatou Kone wants to join one of your projects')).toBeInTheDocument()
+    expect(screen.getByText('1 request')).toBeInTheDocument()
+    expect(screen.queryByText(/Bonjour/)).not.toBeInTheDocument()
+  })
 })
