@@ -40,6 +40,11 @@ Le jury évalue la **maîtrise du code par l'équipe, y compris du code génér�
 | 2026-10-08 | Claude Code (Anthropic) | Liste des pays avec recherche | Nouveau composant `Combobox` (liste déroulante avec recherche, navigation clavier), qui remplace le `<select>` natif pour la liste des pays : signalé comme un bug de défilement, c'est en fait un comportement natif du navigateur sur une longue liste. | Achraf | à relire en PR |
 | 2026-10-08 | Claude Code (Anthropic) | Connexion avec Google | Routes `/auth/google/` et `/auth/google/client-id/`, vérification du jeton d'identité via `google-auth` avec un transport `urllib` maison (pas de `requests`/`certifi`), bouton côté interface. Désactivé par défaut : demande un identifiant client que seul Achraf peut obtenir (Google Cloud Console). 10 tests. | Achraf | **à relire par les 3** |
 | 2026-10-08 | Claude Code (Anthropic) | DevLink Copilot | Assistant conversationnel intégré (bulle flottante) qui aide à utiliser la plateforme : route `/ai/copilot/`, invite système qui borne les réponses au produit, aucune lecture ni écriture des données de la personne. Même repli que les autres fonctions d'IA si désactivé. 9 tests (5 backend, 5 frontend hors doublons). | Achraf | **à relire par Emmanuel** |
+| 2026-10-09 | Claude Code (Anthropic) | Cercles d'échange | Recherche de cycles de 3 ou 4 personnes dans le graphe des compétences (`circles/finder.py`, module pur), API de proposition et de réponse avec verrou de ligne, schéma circulaire et page « Cercles ». 24 tests de l'algorithme, tests d'API et d'interface, scénario navigateur. | Achraf | **à relire par Omar, ligne à ligne** |
+| 2026-10-09 | Claude Code (Anthropic) | Observatoire des compétences | Agrégats publics de l'offre et de la demande (comptes seulement), ponts entre pays, graphique à une échelle avec palette vérifiée pour le daltonisme et tableau équivalent. | Achraf | à relire par Omar et Emmanuel |
+| 2026-10-09 | Claude Code (Anthropic) | Validations par les pairs | Règle d'éligibilité (échange terminé ou cercle actif) dans `skills/endorsements.py`, routes `/endorsements/*`, validations affichées sur le profil public, export et suppression de compte mis à jour. 21 tests backend. | Achraf | **à relire par Omar** |
+| 2026-10-09 | Claude Code (Anthropic) | Interface en anglais | Mécanisme de traduction (`src/i18n/`, texte français comme clé, test d'exhaustivité), traduction des écrans répartie entre plusieurs agents Claude Code en parallèle puis relue et fusionnée ; messages d'erreur de l'API traduits côté serveur (`core/i18n.py`, test d'exhaustivité par lecture du code) ; fonctions d'IA qui rédigent dans la langue de l'interface. Une trentaine de tests frontend et 8 backend ajoutés, 1 scénario navigateur. | Achraf | **à relire par Emmanuel (et l'anglais par les 3)** |
+| 2026-10-09 | Claude Code (Anthropic) | Documentation | `api.md` (§ 20 à 22, langue), `DECISIONS.md`, `EXPLICATION_JURY.md` (section « Ce qui nous distingue », correction de la section sur l'IA), `demo.md`. | Achraf | **à relire par les 3** |
 
 ## Ce que l'équipe doit relire en priorité
 
@@ -50,6 +55,9 @@ Le jury évalue la **maîtrise du code par l'équipe**. Trois fichiers méritent
 3. `frontend/src/features/matches/components/MatchExplanation.tsx` — l'affichage de l'explication (Emmanuel).
 4. `backend/exchanges/serializers.py` (`to_representation`) et `core/validators.py` (`validate_contact`) — qui voit le contact, et quand (Omar).
 5. `backend/ai/services.py` (fonction `copilot_reply` et son invite système) — c'est elle qui borne DevLink Copilot au produit (Emmanuel).
+6. `backend/circles/finder.py` — la recherche des cercles d'échange (Omar).
+7. `backend/skills/endorsements.py` — qui peut valider quoi (Omar).
+8. `frontend/src/i18n/` — le mécanisme de traduction et son test (Emmanuel).
 
 `docs/EXPLICATION_JURY.md` prépare les réponses aux questions probables.
 

@@ -451,3 +451,39 @@ Repris avec nos propres codes, pas une copie : un voile sombre uniforme (`bg-ink
 
 1. **Position** : le bouton passe après le bouton principal (« Se connecter » / « Créer mon compte »), toujours séparé par un repère « ou ». Le mot de passe reste le chemin principal, Google une alternative en dessous — plus conforme à l'ordre dans lequel les champs se remplissent, et au fait que le mot de passe reste la méthode qui fonctionne pour tout le monde (Google ne l'est que pour qui a un compte Google).
 2. **Largeur** : Google Identity Services ne dessine pas un bouton qui épouse son conteneur — il faut lui donner une largeur en pixels, qu'il ne met pas à jour tout seul si la fenêtre change de taille. `GoogleSignInButton` mesure maintenant son conteneur (`ResizeObserver`) et redessine le bouton à la largeur exacte de la carte, jusqu'à 400 px (le maximum que Google accepte) — il occupe donc toute la largeur du formulaire, comme n'importe lequel de nos champs, et reste correct si la fenêtre est redimensionnée. Thème changé pour `outline` / forme `pill` (un bouton blanc, bords arrondis) : plus net sur nos fonds sombres que le thème `filled_black` essayé en premier, qui se fondait trop dans la carte.
+
+---
+
+## 2026-10-09 — Ce qui distingue DevLink : quatre ajouts
+
+**Contexte.** Tous les candidats du concours partent du même sujet (mettre en relation des développeurs africains par compétences). Achraf a demandé « quelque chose qui va nous distinguer » et a retenu quatre propositions : cercles d'échange, observatoire des compétences, compétences validées par les pairs, version anglaise. Chacune répond à une limite concrète du matching à deux, pas à un effet de vitrine.
+
+### Cercles d'échange
+
+**Le problème.** Le matching à deux exige une double coïncidence : Aminata (Dakar) veut FastAPI et enseigne React ; Kwame (Accra) enseigne FastAPI mais veut Docker ; Imani (Nairobi) enseigne Docker et veut React. Aucune paire ne se complète, et pourtant les trois ont tout pour s'entraider. C'est le même problème que les dons croisés de reins, résolu de la même façon : chercher des **cycles** dans le graphe « qui peut apprendre quoi à qui ».
+
+**Choix.** `circles/finder.py` est un module pur (aucun accès base) : il construit le graphe, énumère les cycles de 3 et 4 personnes qui passent par moi, et les note (niveau de chaque flèche, pénalité légère pour 4 personnes, plus difficile à coordonner). Un cercle dont deux membres se complètent déjà directement est écarté : l'échange à deux reste plus simple. Au-delà de 4, la coordination devient irréaliste et la recherche explose : la limite est volontaire. Le cercle est **recalculé** au moment où on le propose, pour qu'une suggestion périmée (compétence retirée entre-temps) ne s'enregistre pas.
+
+**Même règle de confidentialité qu'un échange.** Les contacts ne se révèlent qu'une fois que **tous** ont accepté ; un seul refus clôt le cercle. Les réponses simultanées sont protégées par un verrou de ligne (`select_for_update`), sinon deux « oui » concurrents pourraient laisser un cercle « proposé » alors que tout le monde a accepté.
+
+### Observatoire des compétences
+
+**Pourquoi.** Les données de la plateforme disent quelque chose d'utile au-delà de chaque profil : où manque-t-il des compétences, et quels échanges traversent une frontière (« FastAPI est recherché au Sénégal, proposé au Ghana »). C'est la page qui parle à un jury, à une école ou à un bailleur.
+
+**Uniquement des comptes.** `/observatory/` est public et ne renvoie aucun nom ni identifiant : il additionne des informations déjà publiques sur chaque profil. Trois requêtes en tout, quel que soit le nombre de développeurs. Le graphique (offre et demande par compétence) suit les règles de visualisation habituelles : une seule échelle, deux couleurs vérifiées pour le daltonisme sur fond sombre, une étiquette sur chaque barre et un tableau équivalent pour les lecteurs d'écran.
+
+### Compétences validées par les pairs
+
+**Le problème.** Déclarer « Node.js, avancé » ne coûte rien. Les preuves (dépôts, certifications) aident, mais elles ne disent pas si la personne sait **transmettre**.
+
+**Choix.** On ne peut valider que ce qu'on a vu : après un échange **terminé** avec la personne (n'importe laquelle de ses compétences proposées), ou dans un cercle **actif** (seulement la compétence qu'elle nous enseigne). La règle est dans un seul module (`skills/endorsements.py`) et vérifiée côté serveur ; l'interface ne fait que la refléter. Une validation est publique (nom, pays, commentaire), elle se retire à tout moment, et la politique de confidentialité le dit. Pas de note sur 5 ni de classement : une note invite à la complaisance ou à la revanche, une validation nominative engage celui qui la donne.
+
+### Version anglaise
+
+**Pourquoi.** « Développeurs africains » inclut le Ghana, le Nigeria, le Kenya, l'Afrique du Sud : une plateforme seulement francophone coupe le continent en deux, alors que les cercles et les ponts de l'observatoire relient justement Dakar à Accra et Nairobi.
+
+**Choix technique : le français sert de clé.** Plutôt qu'une bibliothèque (i18next et consorts) et des clés abstraites (`dashboard.title`), chaque texte reste écrit en français dans le composant et passe par `t('…')` ; `src/i18n/en.ts` donne l'anglais. Le code reste lisible tel quel, une traduction manquante retombe sur le français (jamais d'écran vide), et un test lit le code source pour vérifier que **chaque** texte passé à `t()` a sa traduction : un oubli fait échouer la CI. Les pluriels passent par `tn()` (le français met 0 au singulier, l'anglais non). Les noms de pays viennent du navigateur (`Intl.DisplayNames`) à partir du code ISO : aucun dictionnaire de 54 pays à maintenir.
+
+**Côté serveur.** Le frontend envoie `Accept-Language`. Django traduit ses propres messages (`LocaleMiddleware`) ; les messages propres à DevLink sont traduits au même endroit (`core/i18n.py`), avec le même garde-fou : un test parcourt le code (module `ast`) et échoue si un message d'erreur levé n'a pas de traduction. Pas de fichiers gettext compilés : il aurait fallu installer les outils GNU gettext dans l'image Docker pour une soixantaine de phrases. Les fonctions d'IA rédigent dans la langue de l'interface.
+
+**Ce qui reste en français.** Le contenu saisi par les utilisateurs (bios, descriptions de projets), qu'on ne traduit pas à leur place, et la page interne du design system.

@@ -21,6 +21,13 @@ Un développeur déclare ce qu'il sait faire et ce qu'il veut apprendre. **Dev M
 
 La boucle complète : profil → compétences → recherche → Dev Match expliqué → échange → projet. Une fois l'échange accepté, chacun voit le moyen de contact que l'autre a choisi de partager, et seulement à ce moment-là.
 
+### Ce qui nous distingue
+
+- **Cercles d'échange.** Quand aucune paire ne se complète, DevLink trouve une boucle de 3 ou 4 personnes où chacun apprend au suivant : Aminata (Dakar) apprend React à Kwame (Accra), qui apprend FastAPI à Imani (Nairobi), qui lui apprend Docker.
+- **Observatoire des compétences.** Une page publique qui montre l'offre et la demande sur le continent, et les ponts entre pays. Que des chiffres, aucun nom.
+- **Compétences validées par les pairs.** Après un échange terminé, on valide la compétence qu'on a vue à l'œuvre ; la validation apparaît sur le profil public, au nom de celui qui la donne.
+- **Interface en français et en anglais.** Un bouton bascule tout, y compris les messages d'erreur de l'API et les raisons d'un match. Le Ghana, le Nigeria et le Kenya font aussi partie de l'Afrique.
+
 ## Aperçu
 
 ![Accueil](docs/captures/accueil.png)
@@ -30,6 +37,10 @@ La boucle complète : profil → compétences → recherche → Dev Match expliq
 | ![Détail d'un match](docs/captures/match-explique.png) | ![Tableau de bord](docs/captures/tableau-de-bord.png) |
 | **Échange accepté : le contact se débloque** | **Explorer par pays** |
 | ![Échange accepté](docs/captures/echange-accepte.png) | ![Pays](docs/captures/pays.png) |
+| **Un cercle d'échange : Dakar → Accra → Nairobi** | **L'observatoire des compétences** |
+| ![Cercles d'échange](docs/captures/cercles.png) | ![Observatoire](docs/captures/observatoire.png) |
+| **Des compétences validées par les pairs** | **La même plateforme, en anglais** |
+| ![Profil validé](docs/captures/profil-valide.png) | ![Interface en anglais](docs/captures/anglais.png) |
 
 <p align="center"><img src="docs/captures/mobile.png" alt="Matchs et détail d'un match sur mobile" width="520"></p>
 
@@ -138,9 +149,10 @@ deploy/         nginx, guide de déploiement
 
 | Indicateur | Valeur |
 |---|---|
-| Tests backend | 484, couverture 98 % (98 % sur le matching et les services) |
-| Tests frontend | 185, couverture 92 % |
-| Parcours de démonstration | Rejoué par l'API (pytest) **et** dans Chromium (Playwright), en CI |
+| Tests backend | 544, couverture 98 % |
+| Tests frontend | 240, couverture 91 % |
+| Parcours de démonstration | Rejoué par l'API (pytest) **et** dans Chromium (Playwright, 3 scénarios dont le cercle et l'anglais), en CI |
+| Traduction anglaise | Complète par construction : un test échoue si un texte de l'interface ou un message d'erreur de l'API n'est pas traduit |
 | Affichage mobile | Les 18 écrans vérifiés à 390 px, aucun débordement |
 | Licences non permissives | 0, contrôle automatique en CI |
 | `manage.py check --deploy` | 0 avertissement |

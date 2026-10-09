@@ -1,4 +1,4 @@
-# Parcours de démonstration en 8 étapes
+# Parcours de démonstration en 8 étapes (+ 1)
 
 Script à suivre devant le jury. Durée visée : **4 minutes**. À répéter deux fois au minimum avant le passage (DL-52, DL-57, DL-61).
 
@@ -11,11 +11,13 @@ Ce parcours est protégé par deux tests automatiques, lancés à chaque modific
 | À vérifier | Comment |
 |---|---|
 | Le site répond | Ouvrir `https://<domaine>/api/v1/health/` |
-| Les données de démonstration sont chargées | La page Recherche affiche 20 développeurs |
+| Les données de démonstration sont chargées | La page Recherche affiche 22 développeurs |
 | Deux onglets sont prêts | L'un sur l'accueil, l'autre sur le Project Hub |
 | Un compte de secours existe | Au cas où l'inscription en direct échouerait |
 
-**Comptes de démonstration** : `aminata@demo.devlink.africa` et les 19 autres, mot de passe `demo-devlink-2026-xyz`. Tous portent la mention « Profil de démonstration ».
+**Comptes de démonstration** : `aminata@demo.devlink.africa` et les 21 autres, mot de passe `demo-devlink-2026-xyz`. Tous portent la mention « Profil de démonstration ».
+
+**Langue** : l'interface s'ouvre dans la langue du navigateur. Vérifier qu'elle est en français avant de commencer (bouton `FR`/`EN` en haut à droite) : l'étape 9 la bascule en anglais, et le choix est mémorisé.
 
 ---
 
@@ -118,9 +120,35 @@ Montrer les trois niveaux de lecture, dans cet ordre :
 
 **Écran** : Explorer par pays, puis le tableau de bord.
 
-> « Aujourd'hui 15 pays représentés dans notre démonstration. Chaque pays devient une porte d'entrée vers ses développeurs et ses projets. »
+> « Aujourd'hui 17 pays représentés dans notre démonstration. Chaque pays devient une porte d'entrée vers ses développeurs et ses projets. »
 
 > « DevLink Africa ne crée pas de compétences : il révèle celles qui existent déjà sur le continent, et les met en circulation. Un développeur à Niamey peut apprendre de quelqu'un à Kigali, aujourd'hui, gratuitement. »
+
+---
+
+## Étape 9 · Ce qui nous distingue (2 min, si le temps le permet)
+
+Ces écrans sont rejoués dans Chromium par `e2e/tests/parcours-demo.spec.ts` (le cercle, la validation et la bascule en anglais).
+
+**Le cercle d'échange.** Se connecter en `aminata@demo.devlink.africa`, ouvrir **Cercles**.
+
+> « Aminata, à Dakar, veut FastAPI et enseigne React. Kwame, à Accra, enseigne FastAPI mais veut Docker. Imani, à Nairobi, enseigne Docker et veut React. Aucune paire ne marche. Le trio, si : chacun apprend au suivant. »
+
+Montrer le schéma (score 100), puis « Proposer ce cercle ». Les contacts ne se débloquent que quand les trois ont accepté.
+
+**L'observatoire.** Ouvrir **Observatoire** (pied de page, ou lien de la page Pays).
+
+> « Ce que le continent sait, et ce qu'il cherche. Que des chiffres, aucun nom. En bas, les ponts : une compétence recherchée dans un pays et déjà proposée dans un autre. »
+
+**Les validations.** Ouvrir le profil public d'**Ibrahim** (Recherche → Ibrahim).
+
+> « Fatou a terminé un échange avec Ibrahim : elle a validé son Node.js et son CI/CD, avec un commentaire. On ne peut valider que ce qu'on a vu à l'œuvre. »
+
+**L'anglais.** Cliquer sur `EN` en haut à droite.
+
+> « Toute l'interface passe en anglais, y compris les messages d'erreur et les raisons d'un match, écrites par le serveur. Le Ghana, le Nigeria, le Kenya font partie de l'Afrique. »
+
+Revenir en français (`FR`) avant la suite.
 
 ---
 

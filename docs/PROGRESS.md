@@ -198,6 +198,18 @@ Les composants d'IA **ne s'affichent pas** quand le service est inactif : nous n
 
 ---
 
+## Ce qui nous distingue (2026-10-09) — **terminé**
+
+| Sujet | Ce qui a été fait |
+|---|---|
+| Cercles d'échange | Quand aucune paire ne se complète, un cycle de 3 ou 4 personnes où chacun apprend au suivant. Algorithme pur (`circles/finder.py`), contacts révélés quand tous ont accepté. Démo : Dakar → Accra → Nairobi. |
+| Observatoire | Page publique : offre et demande par compétence, manques, savoirs à partager, ponts entre pays. Que des comptes. |
+| Validations par les pairs | Après un échange terminé ou dans un cercle actif, on valide la compétence vue à l'œuvre ; visible sur le profil public. |
+| Interface en anglais | Bouton `FR`/`EN` ; toute l'interface, les messages d'erreur de l'API, les raisons d'un match et les textes de l'IA suivent. Tests d'exhaustivité côté frontend et backend. |
+| Tests | 544 backend, 240 frontend, 3 scénarios navigateur. |
+
+---
+
 ## À faire par l'équipe (hors de ma portée)
 
 Liste à cocher, par personne et par date : **[AVANT_SOUMISSION.md](AVANT_SOUMISSION.md)**.
@@ -222,3 +234,5 @@ Liste à cocher, par personne et par date : **[AVANT_SOUMISSION.md](AVANT_SOUMIS
 1. `backend/matching/scoring.py` et `backend/matching/services.py` → Omar
 2. `frontend/src/features/matches/components/MatchExplanation.tsx` → Emmanuel
 3. `backend/config/settings.py` et `docs/securite.md` → Achraf
+4. `backend/circles/finder.py` et `backend/skills/endorsements.py` → Omar
+5. `frontend/src/i18n/` et la traduction anglaise (`en.ts`) → Emmanuel

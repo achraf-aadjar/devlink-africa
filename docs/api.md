@@ -13,6 +13,12 @@
 | 2026-10-08 | `GET /me/`, `PATCH /me/`, `GET /me/export/` | Champ `profile.contact` : adresse e-mail ou lien `https`, facultatif |
 | 2026-10-08 | `GET /exchanges/`, `PATCH /exchanges/{id}/`, `POST /matches/{id}/request/` | Champ `contact` sur `requester` et `partner`, rempli seulement si l'échange est `ACCEPTED` ou `COMPLETED` |
 | 2026-10-08 | `GET /dashboard/` | Champs `has_contact` et `counters.exchanges` ; `pending_exchanges.received` et `sent` comptés en base, plus sur l'aperçu |
+| 2026-10-09 | `GET/POST /circles/`, `GET /circles/suggestions/`, `GET/PATCH /circles/{id}/` | Nouvelles routes : cercles d'échange (§ 20) |
+| 2026-10-09 | `POST /endorsements/`, `GET /endorsements/candidates/`, `DELETE /endorsements/{id}/` | Nouvelles routes : validations par les pairs (§ 21) |
+| 2026-10-09 | `GET /users/{id}/`, `GET /me/skills/` | Champ `endorsements` sur chaque compétence (liste, vide par défaut) |
+| 2026-10-09 | `GET /me/export/` | Ajout des cercles et des validations données |
+| 2026-10-09 | `GET /observatory/` (public) | Nouvelle route : observatoire des compétences (§ 22) |
+| 2026-10-09 | Toutes | En-tête `Accept-Language` (`fr` par défaut, `en`) : langue des messages d'erreur, des raisons d'un match et des textes rédigés par l'IA (§ 1) |
 
 ## Sommaire
 
@@ -35,6 +41,9 @@
 17. [Fonctions d'IA](#17-fonctions-dia-dl-43-à-dl-47)
 18. [Santé](#18-santé-dl-30)
 19. [Énumérations](#19-énumérations)
+20. [Cercles d'échange](#20-cercles-déchange)
+21. [Validations par les pairs](#21-validations-par-les-pairs)
+22. [Observatoire des compétences](#22-observatoire-des-compétences)
 
 ---
 
@@ -54,6 +63,7 @@
 - **Limitation de débit** : anonyme 60/min, utilisateur connecté 300/min, routes `/auth/*` **5/min par IP**, `/reports` 10/jour, fonctions d'IA selon DL-41. Au dépassement : `429` avec l'en-tête `Retry-After`.
 - **URLs fournies par l'utilisateur** : le schéma `https` est obligatoire.
 - **Confidentialité** : l'adresse e-mail n'apparaît **jamais** dans la représentation publique d'un utilisateur.
+- **Langue** : l'en-tête `Accept-Language` choisit la langue des textes que l'API rédige elle-même : messages d'erreur (`detail` et `errors`), raisons d'un match, phrases produites par l'IA. `en` donne l'anglais ; toute autre valeur, ou son absence, le français. Les codes (`code`), les énumérations et les données ne changent jamais de langue.
 
 ## 2. Erreurs
 
@@ -723,3 +733,104 @@ Fixés dans `backend/matching/scoring.py` (constante documentée) :
 | Technologies communes | 10 % |
 | Disponibilité | 10 % |
 | Domaine commun | 10 % |
+
+---
+
+## 20. Cercles d'échange
+
+Quand l'échange à deux ne marche pas (Aminata veut FastAPI, Kwame l'enseigne mais veut Docker, que seule Imani enseigne, et Imani veut React, qu'Aminata enseigne), l'API propose une boucle de 3 ou 4 personnes : chacun apprend au suivant, le dernier au premier. Le calcul est déterministe (`circles/finder.py`), sans IA.
+
+### `GET /circles/suggestions/`
+
+Les cercles possibles pour moi, du meilleur au moins bon (5 au plus). Un cercle n'est suggéré que si aucune paire de ses membres ne se complète déjà directement : un échange à deux reste toujours plus simple. Réponse : `{"results": [Circle]}` avec `id: null` et `status: "SUGGESTED"`.
+
+### `GET /circles/`
+
+Mes cercles enregistrés (paginé). `?awaiting=me` : seulement ceux qui attendent ma réponse.
+
+```json
+{
+  "id": 7,
+  "key": "12-31-44",
+  "status": "PROPOSED",
+  "score": 100,
+  "members": [
+    {"id": 12, "full_name": "Aminata Diallo", "country": "SN", "is_demo": true, "response": "ACCEPTED", "contact": null}
+  ],
+  "arrows": [{"teacher": 12, "learner": 31, "skill": {"name": "React", "level": "ADVANCED"}}],
+  "created_at": "2026-10-09T10:00:00Z",
+  "activated_at": null
+}
+```
+
+`contact` n'est rempli que lorsque le cercle est `ACTIVE`, pour tous ses membres : même règle que pour un échange accepté.
+
+### `POST /circles/`
+
+Propose un cercle. Corps : `{"members": [12, 31, 44]}`, dans l'ordre du cercle, et je dois en faire partie. Le cercle est recalculé à partir des compétences actuelles : s'il n'est plus possible, `400`. Ma réponse est enregistrée comme `ACCEPTED`. Réponse `201` : le cercle.
+
+Erreurs : `400` (je n'en fais pas partie, ou cercle devenu impossible), `409 duplicate_circle` (ce cercle est déjà proposé et en attente).
+
+### `GET /circles/{id}/` · `PATCH /circles/{id}/`
+
+Lecture d'un de mes cercles (`404` sinon). `PATCH` avec `{"decision": "ACCEPT" | "DECLINE"}` :
+- tous acceptent → `ACTIVE`, `activated_at` rempli, contacts révélés ;
+- un membre refuse → `DECLINED`, le cercle est clos.
+
+Erreurs : `409 already_answered`, `409 invalid_transition` (cercle déjà actif ou refusé).
+
+| `status` | Sens |
+|---|---|
+| `SUGGESTED` | Calculé, pas encore enregistré (seulement dans `/suggestions/`) |
+| `PROPOSED` | Proposé, en attente des réponses |
+| `ACTIVE` | Tout le monde a accepté |
+| `DECLINED` | Un membre a refusé |
+
+## 21. Validations par les pairs
+
+Une compétence déclarée peut être validée par quelqu'un qui l'a vue à l'œuvre : après un échange `COMPLETED` (n'importe quelle compétence proposée par le partenaire), ou dans un cercle `ACTIVE` (seulement la compétence que cette personne m'enseigne). Chaque compétence de `GET /users/{id}/` et `GET /me/skills/` porte la liste `endorsements` :
+
+```json
+{"id": 3, "by": {"id": 8, "full_name": "Fatou Ndiaye", "country": "SN"}, "context": "EXCHANGE", "comment": "Pipeline CI propre.", "created_at": "2026-10-09T10:00:00Z"}
+```
+
+`context` : `EXCHANGE` ou `CIRCLE`.
+
+### `GET /endorsements/candidates/`
+
+Les personnes dont je peux valider des compétences : `{"results": [{"user": {...}, "context": "EXCHANGE", "skills": [{"user_skill": 41, "name": "Node.js", "level": "ADVANCED", "endorsement": null}]}]}`. `endorsement` est l'identifiant de ma validation si je l'ai déjà donnée.
+
+### `POST /endorsements/`
+
+Corps : `{"user_skill": 41, "comment": "…"}` (commentaire facultatif, 280 caractères au plus). Réponse `201` : la validation.
+
+Erreurs : `400` (ma propre compétence), `403` (aucun échange terminé ni cercle actif qui m'y autorise), `404` (compétence introuvable), `409 already_endorsed`.
+
+### `DELETE /endorsements/{id}/`
+
+Retire ma validation. `204` ; `404` si elle n'est pas la mienne.
+
+## 22. Observatoire des compétences
+
+### `GET /observatory/` (public)
+
+Offre et demande de compétences sur la plateforme, **en comptes seulement** : aucun nom, aucun profil.
+
+```json
+{
+  "totals": {"developers": 22, "countries": 12, "offered": 61, "wanted": 44},
+  "skills": [{"name": "React", "category": "FRONTEND", "offered": 5, "wanted": 3}],
+  "shortages": [{"name": "Kubernetes", "category": "DEVOPS", "offered": 0, "wanted": 3}],
+  "surpluses": [{"name": "Python", "category": "BACKEND", "offered": 6, "wanted": 1}],
+  "bridges": [
+    {"skill": "FastAPI", "wanted_in": {"code": "SN", "name": "Sénégal", "flag": "🇸🇳"}, "offered_in": [{"code": "GH", "name": "Ghana", "flag": "🇬🇭"}]}
+  ]
+}
+```
+
+- `skills` : toutes les compétences déclarées, des plus citées aux moins citées.
+- `shortages` : les 5 compétences où la demande dépasse le plus l'offre ; `surpluses` : les 5 où l'offre dépasse le plus la demande.
+- `bridges` (8 au plus) : une compétence recherchée dans un pays et proposée dans d'autres, c'est-à-dire un échange qui traverse une frontière ; ceux qui ont le plus de pays sources d'abord.
+- Comptes par personne : un développeur qui propose Docker compte une fois, quel que soit son niveau.
+- Les noms de pays sont en français ; l'interface anglaise les traduit à partir du code ISO.
+
