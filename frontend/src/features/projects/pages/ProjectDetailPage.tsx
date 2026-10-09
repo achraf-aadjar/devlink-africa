@@ -129,7 +129,7 @@ export default function ProjectDetailPage() {
         <div className="flex min-w-0 items-start gap-4">
           <span
             aria-hidden="true"
-            className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#1f6feb]/30 to-[#a371f7]/20 text-accent-800 ring-1 ring-inset ring-accent-400/30"
+            className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-brand/30 to-violet/20 text-accent-800 ring-1 ring-inset ring-accent-400/30"
           >
             <Icon name="project" size={28} />
           </span>

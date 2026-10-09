@@ -38,13 +38,27 @@ export default {
           800: '#79c0ff',
           900: '#a5d6ff',
         },
+        // Bleu des actions (bouton, pastille) : blanc dessus à 4,6:1.
+        brand: { DEFAULT: '#1f6feb', hover: '#1a5fd0' },
+        // Second ton des dégradés et des halos.
+        violet: '#a371f7',
+        // Pastille claire de l'en-tête, posée sur le fond sombre.
+        paper: {
+          DEFAULT: '#f0f2f5',
+          hover: '#e3e6eb',
+          active: '#dde1e7',
+          line: '#d0d7de',
+          text: '#3d444d',
+          ink: '#0d1117',
+          brand: '#0969da',
+        },
         ink: {
           50: '#0d1117',
           100: '#161b22',
           200: '#21262d',
           300: '#30363d',
           400: '#484f58',
-          500: '#6e7681',
+          500: '#818a95',
           600: '#8b949e',
           700: '#adb5bd',
           800: '#c9d1d9',

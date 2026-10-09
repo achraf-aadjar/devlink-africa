@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import Icon from '../components/icons/Icon'
 import Logo from '../components/icons/Logo'
 import PageContainer from '../components/PageContainer'
+import Spinner from '../components/ui/Spinner'
 import CopilotWidget from '../features/ai/components/CopilotWidget'
 import { useAuth } from '../features/auth/hooks/useAuth'
 import { usePendingCircles } from '../features/circles/hooks/usePendingCircles'
@@ -40,7 +41,7 @@ function PendingBadge({ count, kind = 'request' }: { count: number; kind?: 'requ
         ? t('{count} demandes en attente', { count })
         : t('{count} demande en attente', { count })
   return (
-    <span className="ml-1.5 inline-flex min-w-5 items-center justify-center rounded-full bg-[#1f6feb] px-1.5 text-xs font-semibold leading-5 text-white">
+    <span className="ml-1.5 inline-flex min-w-5 items-center justify-center rounded-full bg-brand px-1.5 text-xs font-semibold leading-5 text-white">
       <span aria-hidden="true">{count}</span>
       <span className="sr-only">{` (${label})`}</span>
     </span>
@@ -60,7 +61,7 @@ function LanguageSwitch({ className }: { className?: string }) {
       aria-label={next === 'en' ? 'Switch to English' : t('Passer en français')}
       title={next === 'en' ? 'English' : 'Français'}
       className={cn(
-        'shrink-0 rounded-lg px-2.5 py-2 text-sm font-semibold text-[#3d444d] transition-colors hover:bg-[#e3e6eb] hover:text-[#0d1117]',
+        'inline-flex h-11 min-w-11 shrink-0 items-center justify-center rounded-lg px-2.5 text-sm font-semibold text-paper-text transition-colors hover:bg-paper-hover hover:text-paper-ink',
         className,
       )}
     >
@@ -84,18 +85,18 @@ const VISITOR_LINKS: NavLinkItem[] = [{ to: '/observatoire', label: msg('Observa
 // fond sombre et donnerait ici du texte clair sur du clair.
 const linkClass = ({ isActive }: { isActive: boolean }) =>
   cn(
-    'flex items-center whitespace-nowrap rounded-lg px-2.5 py-2 text-[15px] font-medium transition-colors',
-    isActive ? 'text-[#0d1117] bg-[#dde1e7]' : 'text-[#3d444d] hover:text-[#0d1117]',
+    'flex min-h-11 items-center whitespace-nowrap rounded-lg px-2.5 py-2 text-[15px] font-medium transition-colors',
+    isActive ? 'text-paper-ink bg-paper-active' : 'text-paper-text hover:text-paper-ink',
   )
 
 const mobileLinkClass = ({ isActive }: { isActive: boolean }) =>
   cn(
-    'block rounded-lg px-3 py-2.5 text-[15px] font-medium transition-colors',
-    isActive ? 'text-[#0d1117] bg-[#dde1e7]' : 'text-[#3d444d] hover:bg-[#e3e6eb]',
+    'flex min-h-11 items-center rounded-lg px-3 py-2.5 text-[15px] font-medium transition-colors',
+    isActive ? 'text-paper-ink bg-paper-active' : 'text-paper-text hover:bg-paper-hover',
   )
 
 const signUpClass =
-  'inline-flex items-center justify-center rounded-xl bg-[#1a6fe0] px-7 py-3 text-[15px] font-semibold text-white transition-colors hover:bg-[#155fc4]'
+  'inline-flex items-center justify-center rounded-xl bg-brand px-7 py-3 text-[15px] font-semibold text-white transition-colors hover:bg-brand-hover'
 
 export default function Layout() {
   const { isAuthenticated, user, signOut } = useAuth()
@@ -130,11 +131,11 @@ export default function Layout() {
       {/* Pastille flottante, collée en haut au défilement : le contenu passe
           dessous, visible dans la marge autour de la barre. */}
       <header className="sticky top-0 z-40 px-3 pt-3 sm:px-6 sm:pt-4">
-        <div className="mx-auto max-w-[90rem] rounded-2xl bg-[#f0f2f5]/95 shadow-card backdrop-blur">
+        <div className="mx-auto max-w-[90rem] rounded-2xl bg-paper/95 shadow-card backdrop-blur">
           <div className="flex items-center gap-3 px-4 py-2.5 sm:px-6">
             <Link
               to="/"
-              className="shrink-0 text-[#0d1117]"
+              className="shrink-0 text-paper-ink"
               aria-label={t('DevLink Africa, accueil')}
             >
               <Logo size={26} variant="light" />
@@ -167,7 +168,7 @@ export default function Layout() {
                     onClick={handleSignOut}
                     aria-label={t('Se déconnecter')}
                     title={t('Se déconnecter')}
-                    className="rounded-xl border border-[#d0d7de] p-2.5 text-[#3d444d] transition-colors hover:bg-[#e3e6eb] hover:text-[#0d1117]"
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-paper-line text-paper-text transition-colors hover:bg-paper-hover hover:text-paper-ink"
                   >
                     <Icon name="logout" size={18} />
                   </button>
@@ -192,7 +193,7 @@ export default function Layout() {
               aria-expanded={menuOpen}
               aria-controls="menu-mobile"
               aria-label={t('Menu')}
-              className={cn('rounded-lg p-2 text-[#3d444d] hover:bg-[#e3e6eb]', mobileOnly)}
+              className={cn('inline-flex h-11 w-11 items-center justify-center rounded-lg text-paper-text hover:bg-paper-hover', mobileOnly)}
             >
               <svg
                 viewBox="0 0 24 24"
@@ -210,7 +211,7 @@ export default function Layout() {
             <nav
               id="menu-mobile"
               aria-label={t('Navigation mobile')}
-              className={cn('animate-fade-in border-t border-[#d0d7de] px-3 py-2', mobileOnly)}
+              className={cn('animate-fade-in border-t border-paper-line px-3 py-2', mobileOnly)}
             >
               {links.map((link) => (
                 <NavLink
@@ -226,7 +227,7 @@ export default function Layout() {
                   )}
                 </NavLink>
               ))}
-              <div className="mt-2 border-t border-[#d0d7de] pt-2">
+              <div className="mt-2 border-t border-paper-line pt-2">
                 {isAuthenticated ? (
                   <>
                     <NavLink
@@ -239,7 +240,7 @@ export default function Layout() {
                     <button
                       type="button"
                       onClick={handleSignOut}
-                      className="block w-full rounded-lg px-3 py-2.5 text-left text-[15px] font-medium text-[#3d444d] hover:bg-[#e3e6eb]"
+                      className="flex min-h-11 w-full items-center rounded-lg px-3 py-2.5 text-left text-[15px] font-medium text-paper-text hover:bg-paper-hover"
                     >
                       {t('Se déconnecter')}
                     </button>
@@ -272,7 +273,19 @@ export default function Layout() {
           PageContainer, pour pouvoir poser des sections pleine largeur
           (bannière, fond de section) sans que ça devienne la norme partout. */}
       <main id="contenu" className="flex-1 bg-ink-50">
-        <Outlet />
+        <Suspense
+          fallback={
+            <div
+              role="status"
+              className="flex items-center justify-center gap-3 py-24 text-ink-600"
+            >
+              <Spinner className="h-5 w-5" />
+              <span>{t('Chargement…')}</span>
+            </div>
+          }
+        >
+          <Outlet />
+        </Suspense>
       </main>
 
       <footer className="border-t border-ink-200 bg-ink-100">

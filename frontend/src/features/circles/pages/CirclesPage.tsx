@@ -114,7 +114,7 @@ export default function CirclesPage() {
         <ol className="mt-2 grid grid-cols-1 gap-3 md:grid-cols-3">
           {STEPS.map((step, index) => (
             <li key={step} className="surface flex gap-3 p-4 text-sm text-ink-700">
-              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#1f6feb] text-xs font-bold text-white shadow-glow">
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand text-xs font-bold text-white shadow-glow">
                 {index + 1}
               </span>
               {t(step)}

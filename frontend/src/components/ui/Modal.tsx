@@ -67,7 +67,7 @@ export default function Modal({ open, title, onClose, children }: ModalProps) {
             type="button"
             onClick={onClose}
             aria-label={t('Fermer la fenêtre')}
-            className="rounded-full p-1.5 text-ink-500 hover:bg-ink-200 hover:text-ink-800"
+            className="-mr-2 -mt-2 inline-flex h-11 w-11 items-center justify-center rounded-full text-ink-500 hover:bg-ink-200 hover:text-ink-800"
           >
             <Icon name="close" size={20} />
           </button>

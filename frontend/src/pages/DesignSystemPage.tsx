@@ -122,6 +122,29 @@ export default function DesignSystemPage() {
             </div>
           ))}
         </div>
+        <p className="text-sm text-ink-600">
+          Jetons d'action et de surface claire : <code>brand</code> (boutons), <code>violet</code>{' '}
+          (second ton des dégradés), <code>paper</code> (pastille claire de l'en-tête).
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {[
+            ['brand', 'bg-brand'],
+            ['brand-hover', 'bg-brand-hover'],
+            ['violet', 'bg-violet'],
+            ['paper', 'bg-paper'],
+            ['paper-hover', 'bg-paper-hover'],
+            ['paper-active', 'bg-paper-active'],
+            ['paper-line', 'bg-paper-line'],
+            ['paper-text', 'bg-paper-text'],
+            ['paper-ink', 'bg-paper-ink'],
+            ['paper-brand', 'bg-paper-brand'],
+          ].map(([name, cls]) => (
+            <div key={name} className="text-center">
+              <div className={`h-12 w-12 rounded-full ring-1 ring-white/10 ${cls}`} />
+              <span className="text-xs text-ink-500">{name}</span>
+            </div>
+          ))}
+        </div>
       </section>
 
       <section aria-labelledby="boutons" className="flex flex-col gap-3">

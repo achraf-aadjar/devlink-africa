@@ -93,7 +93,7 @@ export function Logo({
         <span
           className={cn(
             variant === 'color' && 'text-accent-600',
-            variant === 'light' && 'text-[#0969da]',
+            variant === 'light' && 'text-paper-brand',
           )}
         >
           Africa

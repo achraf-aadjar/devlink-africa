@@ -100,7 +100,7 @@ export default function ProfilePage() {
             className="h-1.5 w-48 overflow-hidden rounded-full bg-white/[0.08]"
           >
             <div
-              className="h-full rounded-full bg-gradient-to-r from-[#1f6feb] to-[#a371f7]"
+              className="h-full rounded-full bg-gradient-to-r from-brand to-violet"
               style={{ width: `${data.profile.completeness}%` }}
             />
           </div>

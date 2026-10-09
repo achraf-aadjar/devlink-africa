@@ -16,14 +16,50 @@
     @apply outline-none ring-2 ring-accent-600 ring-offset-2 ring-offset-ink-50;
   }
 
-  /* Respecte le réglage système « réduire les animations ». */
+  /*
+   * « Réduire les animations » : on retire le mouvement (déplacements,
+   * zooms, halos qui respirent, traits qui défilent) mais on garde les
+   * retours d'état courts en fondu, pour que l'ouverture d'une fenêtre ou
+   * d'un menu reste lisible. Le spinner de chargement continue de tourner :
+   * c'est un signal d'attente, pas de la décoration.
+   */
   @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    .animate-float,
+    .animate-glow,
+    .animate-flow {
+      animation: none !important;
+    }
+
+    .animate-page-in {
+      animation: fade-in 150ms ease-out both !important;
+    }
+
+    .animate-bar-fill {
+      animation: none !important;
+    }
+
+    .reveal {
+      transform: none;
+      transition-property: opacity;
+      transition-duration: 200ms;
+    }
+
     *,
     *::before,
     *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
+      transition-duration: 150ms !important;
+    }
+  }
+
+  /* Petits écrans : halos plus légers à peindre, et immobiles. */
+  @media (max-width: 767px) {
+    .glow-blob {
+      filter: blur(60px) !important;
+      animation: none !important;
     }
   }
 }
@@ -74,7 +110,7 @@
 
   /* Bouton bleu lumineux, pour l'appel à l'action principal. */
   .btn-glow {
-    @apply inline-flex items-center justify-center gap-2 rounded-full bg-[#1f6feb] px-6 py-3 text-base font-semibold text-white transition duration-200 hover:bg-[#388bfd];
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-brand px-6 py-3 text-base font-semibold text-white transition duration-200 hover:bg-accent-500;
     box-shadow:
       0 0 0 1px rgb(56 139 253 / 0.5),
       0 8px 30px -6px rgb(31 111 235 / 0.7);

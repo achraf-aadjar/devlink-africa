@@ -58,7 +58,7 @@ export default function ExchangesPage() {
       <div
         role="tablist"
         aria-label={t('Direction des échanges')}
-        className="flex w-fit gap-1 rounded-full bg-white/[0.04] p-1 ring-1 ring-inset ring-white/[0.07]"
+        className="flex w-fit gap-1 rounded-full bg-white/[0.04] p-0.5 ring-1 ring-inset ring-white/[0.07]"
       >
         {(['received', 'sent'] as Tab[]).map((value) => (
           <button
@@ -68,9 +68,9 @@ export default function ExchangesPage() {
             aria-selected={tab === value}
             onClick={() => setTab(value)}
             className={cn(
-              'flex items-center gap-2 rounded-full px-5 py-2 text-sm font-medium transition',
+              'flex min-h-11 items-center gap-2 rounded-full px-5 py-2 text-sm font-medium transition',
               tab === value
-                ? 'bg-[#1f6feb] text-white shadow-glow'
+                ? 'bg-brand text-white shadow-glow'
                 : 'text-ink-700 hover:bg-white/[0.06] hover:text-ink-900',
             )}
           >
