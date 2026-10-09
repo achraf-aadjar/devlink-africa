@@ -260,3 +260,37 @@ export interface Health {
   status: string
   version: string
 }
+
+// --- Cercles d'échange --------------------------------------------------------
+
+export type CircleStatus = 'SUGGESTED' | 'PROPOSED' | 'ACTIVE' | 'DECLINED'
+export type CircleResponse = 'PENDING' | 'ACCEPTED' | 'DECLINED'
+
+export interface CircleMember {
+  id: number
+  full_name: string
+  country: string
+  is_demo: boolean
+  /** null pour une suggestion, pas encore proposée. */
+  response: CircleResponse | null
+  /** Rempli seulement quand le cercle est actif (tous ont accepté). */
+  contact: string | null
+}
+
+export interface CircleArrow {
+  teacher: number
+  learner: number
+  skill: { name: string; level: SkillLevel }
+}
+
+export interface Circle {
+  /** null pour une suggestion. */
+  id: number | null
+  key: string
+  status: CircleStatus
+  score: number
+  members: CircleMember[]
+  arrows: CircleArrow[]
+  created_at: string | null
+  activated_at: string | null
+}

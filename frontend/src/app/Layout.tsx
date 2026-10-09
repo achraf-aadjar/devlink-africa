@@ -5,6 +5,7 @@ import Logo from '../components/icons/Logo'
 import PageContainer from '../components/PageContainer'
 import CopilotWidget from '../features/ai/components/CopilotWidget'
 import { useAuth } from '../features/auth/hooks/useAuth'
+import { usePendingCircles } from '../features/circles/hooks/usePendingCircles'
 import { usePendingRequests } from '../features/exchanges/hooks/usePendingRequests'
 import { cn } from '../lib/cn'
 
@@ -17,16 +18,20 @@ const PRIVATE_LINKS: NavLinkItem[] = [
   { to: '/tableau-de-bord', label: 'Tableau de bord' },
   { to: '/competences', label: 'Compétences' },
   { to: '/matchs', label: 'Matchs' },
+  { to: '/cercles', label: 'Cercles' },
   { to: '/echanges', label: 'Échanges' },
 ]
 
-/** Pastille du nombre de demandes reçues, posée à côté du lien « Échanges ». */
-function PendingBadge({ count }: { count: number }) {
+/**
+ * Pastille d'un compteur posée à côté d'un lien : demandes d'échange reçues,
+ * invitations dans un cercle.
+ */
+function PendingBadge({ count, noun = 'demande' }: { count: number; noun?: string }) {
   if (count === 0) return null
   return (
     <span className="ml-1.5 inline-flex min-w-5 items-center justify-center rounded-full bg-[#1f6feb] px-1.5 text-xs font-semibold leading-5 text-white">
       <span aria-hidden="true">{count}</span>
-      <span className="sr-only">{` (${count} demande${count > 1 ? 's' : ''} en attente)`}</span>
+      <span className="sr-only">{` (${count} ${noun}${count > 1 ? 's' : ''} en attente)`}</span>
     </span>
   )
 }
@@ -60,6 +65,7 @@ export default function Layout() {
   const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
   const pending = usePendingRequests(isAuthenticated)
+  const circleInvitations = usePendingCircles(isAuthenticated)
 
   const links = isAuthenticated ? [...PRIVATE_LINKS, ...PUBLIC_LINKS] : PUBLIC_LINKS
   // Connecté, la barre porte sept liens plus le profil : elle ne tient sur
@@ -98,6 +104,9 @@ export default function Layout() {
                 <NavLink key={link.to} to={link.to} className={linkClass}>
                   {link.label}
                   {link.to === '/echanges' && <PendingBadge count={pending} />}
+                  {link.to === '/cercles' && (
+                    <PendingBadge count={circleInvitations} noun="invitation" />
+                  )}
                 </NavLink>
               ))}
             </nav>
@@ -166,6 +175,9 @@ export default function Layout() {
                 >
                   {link.label}
                   {link.to === '/echanges' && <PendingBadge count={pending} />}
+                  {link.to === '/cercles' && (
+                    <PendingBadge count={circleInvitations} noun="invitation" />
+                  )}
                 </NavLink>
               ))}
               <div className="mt-2 border-t border-[#d0d7de] pt-2">

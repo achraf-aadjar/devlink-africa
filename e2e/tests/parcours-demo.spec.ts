@@ -129,3 +129,47 @@ test('le parcours de démonstration, de l’inscription au contact', async ({ br
 
   await context.close()
 })
+
+test('un cercle d’échange : Dakar → Accra → Nairobi', async ({ browser }) => {
+  // Aminata, Kwame et Imani n'ont aucune paire réciproque : seul le cercle les réunit.
+  const sessions: Page[] = []
+  async function as(email: string) {
+    const page = await (await browser.newContext()).newPage()
+    sessions.push(page)
+    await login(page, email, DEMO_PASSWORD)
+    return page
+  }
+  // La carte du cercle à trois : celle dont le schéma mentionne FastAPI, sans
+  // Clarisse (qui forme un autre cercle, à quatre). Repérée par son schéma, car
+  // les phrases changent selon le membre qui lit (« Vous apprenez… »).
+  const trio = (page: Page) =>
+    page
+      .getByRole('listitem')
+      .filter({ has: page.getByRole('img', { name: /^Cercle d'échange\..*FastAPI/ }) })
+      .filter({ hasNotText: 'Clarisse' })
+
+  const aminata = await as('aminata@demo.devlink.africa')
+  await aminata.goto('/cercles')
+  const suggestion = trio(aminata).first()
+  await expect(suggestion.getByText('Vous apprenez React à Kwame Boateng.')).toBeVisible()
+  await expect(suggestion.getByText('Imani Wanjiru vous apprend Docker.')).toBeVisible()
+  await suggestion.getByRole('button', { name: 'Proposer ce cercle' }).click()
+  await expect(trio(aminata).getByText(/1 sur 3 ont accepté/)).toBeVisible()
+
+  for (const email of ['kwame@demo.devlink.africa', 'imani@demo.devlink.africa']) {
+    const member = await as(email)
+    await expect(
+      member.getByRole('link', { name: /^Cercles\s*\(1 invitation en attente\)$/ }),
+    ).toBeVisible()
+    await member.goto('/cercles')
+    await trio(member).getByRole('button', { name: 'Accepter' }).click()
+    await expect(trio(member).getByRole('button', { name: 'Accepter' })).toBeHidden()
+  }
+
+  await aminata.reload()
+  await expect(trio(aminata).getByText(/Tout le monde a accepté/)).toBeVisible()
+  await expect(trio(aminata).getByRole('link', { name: 'kwame@demo.devlink.africa' })).toBeVisible()
+  await expect(trio(aminata).getByRole('link', { name: 'imani@demo.devlink.africa' })).toBeVisible()
+
+  for (const page of sessions) await page.context().close()
+})

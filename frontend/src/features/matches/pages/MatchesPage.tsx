@@ -17,6 +17,19 @@ export default function MatchesPage() {
         </p>
       </header>
 
+      <Link
+        to="/cercles"
+        className="surface group flex flex-wrap items-center justify-between gap-3 px-6 py-4 transition hover:ring-accent-400/40"
+      >
+        <span className="text-sm text-ink-700">
+          <strong className="font-semibold text-ink-900">Pas de paire parfaite ?</strong> Vos
+          compétences peuvent aussi circuler dans un cercle de trois ou quatre personnes.
+        </span>
+        <span className="text-sm font-medium text-accent-800 group-hover:underline">
+          Voir mes cercles d'échange →
+        </span>
+      </Link>
+
       {loading && <LoadingState rows={3} label="Chargement de vos matchs…" />}
 
       {error && <ErrorState onRetry={reload} />}

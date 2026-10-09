@@ -1,17 +1,7 @@
 import { Link } from 'react-router-dom'
 import Icon from '../../../components/icons/Icon'
+import { contactHref } from '../../../lib/contact'
 import type { ExchangeParty } from '../../../lib/types'
-
-/**
- * Lien vers un moyen de contact. Le backend n'accepte qu'une adresse e-mail ou
- * un lien https ; on revérifie ici avant d'en faire un lien, pour ne jamais
- * produire autre chose qu'un `mailto:` ou un `https:`.
- */
-function contactHref(contact: string): string | null {
-  if (contact.startsWith('https://')) return contact
-  if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact)) return `mailto:${contact}`
-  return null
-}
 
 /**
  * Ce que l'acceptation débloque : le moyen de joindre l'autre. Si l'un des
