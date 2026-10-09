@@ -10,11 +10,19 @@ export default function CountriesPage() {
 
   return (
     <section className="flex flex-col gap-6">
-      <header>
-        <h1 className="text-3xl font-bold tracking-tight text-ink-900">Explorer par pays</h1>
-        <p className="mt-1 text-sm text-ink-600">
-          Les développeurs et les projets présents sur la plateforme, pays par pays.
-        </p>
+      <header className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight text-ink-900">Explorer par pays</h1>
+          <p className="mt-1 text-sm text-ink-600">
+            Les développeurs et les projets présents sur la plateforme, pays par pays.
+          </p>
+        </div>
+        <Link
+          to="/observatoire"
+          className="rounded-full bg-white/[0.06] px-5 py-2 text-sm font-medium text-ink-900 ring-1 ring-inset ring-white/10 transition hover:bg-white/10"
+        >
+          Observatoire des compétences →
+        </Link>
       </header>
 
       {loading && <LoadingState rows={3} label="Chargement des pays…" />}

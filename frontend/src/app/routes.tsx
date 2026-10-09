@@ -8,6 +8,7 @@ import DashboardPage from '../features/dashboard/pages/DashboardPage'
 import ExchangesPage from '../features/exchanges/pages/ExchangesPage'
 import MatchDetailPage from '../features/matches/pages/MatchDetailPage'
 import MatchesPage from '../features/matches/pages/MatchesPage'
+import ObservatoryPage from '../features/observatory/pages/ObservatoryPage'
 import ProfilePage from '../features/profile/pages/ProfilePage'
 import PublicProfilePage from '../features/profile/pages/PublicProfilePage'
 import ProjectDetailPage from '../features/projects/pages/ProjectDetailPage'
@@ -61,6 +62,7 @@ export default function AppRoutes() {
           <Route path="recherche" element={<SearchPage />} />
           <Route path="pays" element={<CountriesPage />} />
           <Route path="pays/:code" element={<CountryDetailPage />} />
+          <Route path="observatoire" element={<ObservatoryPage />} />
           <Route path="projets" element={<ProjectsPage />} />
 
           <Route element={<RequireAuth />}>

@@ -294,3 +294,26 @@ export interface Circle {
   created_at: string | null
   activated_at: string | null
 }
+
+// --- Observatoire des compétences ---------------------------------------------
+
+export interface ObservatorySkill {
+  name: string
+  category: SkillCategory
+  offered: number
+  wanted: number
+}
+
+export interface ObservatoryCountry {
+  code: string
+  name: string
+  flag: string
+}
+
+export interface Observatory {
+  totals: { developers: number; countries: number; offered: number; wanted: number }
+  skills: ObservatorySkill[]
+  shortages: ObservatorySkill[]
+  surpluses: ObservatorySkill[]
+  bridges: Array<{ skill: string; wanted_in: ObservatoryCountry; offered_in: ObservatoryCountry[] }>
+}

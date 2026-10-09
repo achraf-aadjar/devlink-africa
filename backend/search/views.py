@@ -14,6 +14,7 @@ from projects.models import Project
 from projects.serializers import ProjectSerializer
 from skills.models import UserSkill
 
+from .observatory import observatory
 from .selectors import (
     ALLOWED_AVAILABILITY,
     ALLOWED_DOMAINS,
@@ -23,7 +24,12 @@ from .selectors import (
     search_projects,
     search_users,
 )
-from .serializers import CountryDetailSerializer, CountrySerializer, SearchUserSerializer
+from .serializers import (
+    CountryDetailSerializer,
+    CountrySerializer,
+    ObservatorySerializer,
+    SearchUserSerializer,
+)
 
 
 def _check_choice(value: str | None, allowed, field: str) -> str | None:
@@ -152,3 +158,13 @@ class CountryDetailView(APIView):
             "projects": ProjectSerializer(detail["projects"], many=True).data,
         }
         return Response(payload)
+
+
+class ObservatoryView(APIView):
+    """GET /observatory/ : offre et demande de compétences, en comptes seulement."""
+
+    permission_classes = [AllowAny]
+
+    @extend_schema(responses={200: ObservatorySerializer}, summary="Observatoire des compétences")
+    def get(self, request):
+        return Response(observatory())

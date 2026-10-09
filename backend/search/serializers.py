@@ -73,3 +73,39 @@ class CountryDetailSerializer(CountrySerializer):
     top_skills = TopSkillSerializer(many=True)
     developers = SearchUserSerializer(many=True)
     projects = serializers.ListField(child=serializers.DictField())
+
+
+class ObservatoryTotalsSerializer(serializers.Serializer):
+    developers = serializers.IntegerField()
+    countries = serializers.IntegerField()
+    offered = serializers.IntegerField(help_text="Compétences proposées, tous développeurs confondus.")
+    wanted = serializers.IntegerField(help_text="Compétences recherchées, tous développeurs confondus.")
+
+
+class ObservatorySkillSerializer(serializers.Serializer):
+    name = serializers.CharField()
+    category = serializers.CharField()
+    offered = serializers.IntegerField()
+    wanted = serializers.IntegerField()
+
+
+class ObservatoryCountrySerializer(serializers.Serializer):
+    code = serializers.CharField()
+    name = serializers.CharField()
+    flag = serializers.CharField()
+
+
+class ObservatoryBridgeSerializer(serializers.Serializer):
+    skill = serializers.CharField()
+    wanted_in = ObservatoryCountrySerializer()
+    offered_in = ObservatoryCountrySerializer(many=True)
+
+
+class ObservatorySerializer(serializers.Serializer):
+    """Sortie de GET /observatory/ : des comptes, jamais de nom."""
+
+    totals = ObservatoryTotalsSerializer()
+    skills = ObservatorySkillSerializer(many=True)
+    shortages = ObservatorySkillSerializer(many=True)
+    surpluses = ObservatorySkillSerializer(many=True)
+    bridges = ObservatoryBridgeSerializer(many=True)

@@ -42,6 +42,10 @@ const PUBLIC_LINKS: NavLinkItem[] = [
   { to: '/pays', label: 'Pays' },
 ]
 
+// Connecté, la barre est pleine à 1280 px : l'observatoire reste alors joignable
+// par le pied de page et la page Pays. Un visiteur, qui a la place, le voit ici.
+const VISITOR_LINKS: NavLinkItem[] = [{ to: '/observatoire', label: 'Observatoire' }]
+
 // La barre est claire (pastille flottante sur le fond sombre) : ses couleurs
 // sont posées en dur plutôt qu'avec `ink`, dont l'échelle est pensée pour un
 // fond sombre et donnerait ici du texte clair sur du clair.
@@ -67,7 +71,9 @@ export default function Layout() {
   const pending = usePendingRequests(isAuthenticated)
   const circleInvitations = usePendingCircles(isAuthenticated)
 
-  const links = isAuthenticated ? [...PRIVATE_LINKS, ...PUBLIC_LINKS] : PUBLIC_LINKS
+  const links = isAuthenticated
+    ? [...PRIVATE_LINKS, ...PUBLIC_LINKS]
+    : [...PUBLIC_LINKS, ...VISITOR_LINKS]
   // Connecté, la barre porte sept liens plus le profil : elle ne tient sur
   // une ligne qu'à partir de xl. En visiteur, trois liens tiennent dès lg.
   const desktop = isAuthenticated ? 'xl:flex' : 'lg:flex'
@@ -233,6 +239,9 @@ export default function Layout() {
         <PageContainer className="flex flex-col items-center gap-2 py-6 text-sm text-ink-600 sm:flex-row sm:justify-between">
           <p>DevLink Africa — échange de compétences entre développeurs africains.</p>
           <nav aria-label="Liens secondaires" className="flex gap-4">
+            <Link to="/observatoire" className="underline hover:text-accent-700">
+              Observatoire
+            </Link>
             <Link to="/confidentialite" className="underline hover:text-accent-700">
               Confidentialité
             </Link>
