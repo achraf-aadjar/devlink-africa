@@ -9,6 +9,7 @@ api_v1 = [
     path("", include("skills.urls")),
     path("", include("matching.urls")),
     path("", include("exchanges.urls")),
+    path("", include("circles.urls")),
     path("", include("projects.urls")),
     path("", include("reports.urls")),
     path("", include("search.urls")),

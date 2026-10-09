@@ -184,7 +184,7 @@ def test_le_parcours_public_fonctionne_sans_compte(demo_data):
     assert client.get("/api/v1/skills/").json()["count"] == 14
 
     users = client.get("/api/v1/search/users/").json()
-    assert users["count"] == 20
+    assert users["count"] == 22
     assert "email" not in users["results"][0], "Aucune adresse e-mail en public."
 
     projects = client.get("/api/v1/search/projects/").json()
@@ -206,7 +206,7 @@ def test_les_profils_de_demonstration_sont_tous_etiquetes(demo_data):
 
     results = client.get("/api/v1/search/users/", {"page_size": 100}).json()["results"]
 
-    assert len(results) == 20
+    assert len(results) == 22
     assert all(person["is_demo"] for person in results)
 
 
@@ -220,3 +220,39 @@ def test_un_match_fort_existe_pour_la_demonstration(demo_data):
 
     assert matches["count"] > 0
     assert matches["results"][0]["score"] >= 75
+
+
+def test_le_cercle_de_demonstration_se_forme_et_debloque_les_contacts(demo_data):
+    """Le cercle Dakar → Accra → Nairobi : suggéré, proposé, accepté par tous."""
+    User = get_user_model()
+    aminata, kwame, imani = (
+        User.objects.get(email=f"{handle}@demo.devlink.africa") for handle in ("aminata", "kwame", "imani")
+    )
+
+    def client_for(user):
+        client = APIClient()
+        client.force_authenticate(user=user)
+        return client
+
+    # Aucune paire réciproque entre eux : seul le cercle les réunit.
+    [suggestion] = [
+        circle
+        for circle in client_for(aminata).get("/api/v1/circles/suggestions/").json()["results"]
+        if {member["id"] for member in circle["members"]} == {aminata.pk, kwame.pk, imani.pk}
+    ]
+    assert suggestion["score"] == 100.0
+
+    order = [arrow["teacher"] for arrow in suggestion["arrows"]]
+    proposed = client_for(aminata).post("/api/v1/circles/", {"members": order}, format="json")
+    assert proposed.status_code == 201
+    circle_id = proposed.json()["id"]
+
+    for member in (kwame, imani):
+        answer = client_for(member).patch(
+            f"/api/v1/circles/{circle_id}/", {"decision": "ACCEPT"}, format="json"
+        )
+        assert answer.status_code == 200
+
+    active = client_for(kwame).get(f"/api/v1/circles/{circle_id}/").json()
+    assert active["status"] == "ACTIVE"
+    assert all(member["contact"] for member in active["members"])

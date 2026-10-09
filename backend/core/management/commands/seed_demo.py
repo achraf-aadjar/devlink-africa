@@ -24,7 +24,8 @@ User = get_user_model()
 DEMO_DOMAIN = "demo.devlink.africa"
 DEMO_PASSWORD = "demo-devlink-2026-xyz"
 
-#: 20 profils fictifs répartis sur 10 pays d'Afrique francophone.
+#: 22 profils fictifs répartis sur 17 pays d'Afrique : les 20 du ticket DL-12,
+#: plus deux qui illustrent les cercles d'échange (voir la fin de la liste).
 #: (identifiant, nom, pays, domaines, disponibilités, proposé, recherché, bio)
 PROFILES: list[tuple] = [
     # --- Trois paires à fort score (complémentarité réciproque parfaite) -----
@@ -229,6 +230,32 @@ PROFILES: list[tuple] = [
         [("Kubernetes", "INTERMEDIATE"), ("Linux", "ADVANCED")],
         ["Next.js"],
         "Ingénieur plateforme à Cotonou.",
+    ),
+    # --- Un cercle d'échange : Dakar → Accra → Nairobi → Dakar ---------------
+    # Aminata apprend React à Kwame, Kwame FastAPI à Imani, Imani Docker à
+    # Aminata. Aucune de ces trois paires n'est réciproque : Dev Match ne les
+    # réunit pas, seul le cercle le fait. FastAPI n'est proposé ni recherché par
+    # personne d'autre, pour que le cercle reste net. Tout nouveau compte qui
+    # sait React et veut apprendre Docker se voit proposer le même cercle.
+    (
+        "kwame",
+        "Kwame Boateng",
+        "GH",
+        ["WEB"],
+        ["MENTORING", "COLLABORATION"],
+        [("FastAPI", "ADVANCED")],
+        ["React"],
+        "API Python à Accra. Je veux enfin construire mes propres interfaces.",
+    ),
+    (
+        "imani",
+        "Imani Wanjiru",
+        "KE",
+        ["DEVOPS"],
+        ["MENTORING", "OPEN_SOURCE"],
+        [("Docker", "ADVANCED")],
+        ["FastAPI"],
+        "Conteneurs et déploiement à Nairobi. Envie d'écrire des API propres.",
     ),
 ]
 
