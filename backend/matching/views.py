@@ -10,6 +10,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from core.i18n import request_language
+
 from . import services
 from .models import Match
 from .selectors import get_match_for, list_matches
@@ -34,7 +36,11 @@ class MatchListView(ListAPIView):
         return list_matches(user=self.request.user)
 
     def get_serializer_context(self):
-        return {**super().get_serializer_context(), "viewer_id": self.request.user.pk}
+        return {
+            **super().get_serializer_context(),
+            "viewer_id": self.request.user.pk,
+            "lang": request_language(self.request),
+        }
 
     @extend_schema(summary="Lister mes matchs")
     def get(self, request, *args, **kwargs):
@@ -55,7 +61,9 @@ class MatchDetailView(APIView):
 
             raise NotFound()
 
-        serializer = MatchDetailSerializer(match, context={"viewer_id": request.user.pk})
+        serializer = MatchDetailSerializer(
+            match, context={"viewer_id": request.user.pk, "lang": request_language(request)}
+        )
         return Response(serializer.data)
 
 

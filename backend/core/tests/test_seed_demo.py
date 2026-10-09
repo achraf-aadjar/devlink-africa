@@ -22,14 +22,14 @@ def seeded():
 
 
 def test_it_creates_twenty_profiles_and_eight_projects(seeded):
-    assert User.objects.count() == 20
+    assert User.objects.count() == 22
     assert Project.objects.count() == 8
 
 
 def test_every_demo_profile_is_flagged(seeded):
     """Règle 7 du cahier : les données de démonstration sont étiquetées."""
-    assert Profile.objects.count() == 20
-    assert Profile.objects.filter(is_demo=True).count() == 20
+    assert Profile.objects.count() == 22
+    assert Profile.objects.filter(is_demo=True).count() == 22
 
 
 def test_the_profiles_cover_at_least_eight_countries(seeded):
@@ -86,7 +86,7 @@ def test_the_reset_option_clears_the_demo_accounts(seeded):
     call_command("seed_demo", "--reset", verbosity=0)
 
     # Les comptes sont recréés : le total reste le même, sans accumulation.
-    assert User.objects.count() == 20
+    assert User.objects.count() == 22
 
 
 def test_every_project_has_an_owner_and_needs(seeded):
@@ -119,3 +119,21 @@ def test_the_demo_pair_has_a_high_and_explained_match(seeded):
     assert match.score >= 75
     assert match.explanation["a_can_teach_b"]
     assert match.explanation["b_can_teach_a"]
+
+
+def test_the_demo_contains_an_exchange_circle_for_aminata(seeded):
+    """Le cercle de démonstration : Aminata (Dakar) → Kwame (Accra) → Imani (Nairobi)."""
+    from circles.finder import find_circles_for
+    from circles.services import load_profiles
+
+    aminata = User.objects.get(email="aminata@demo.devlink.africa")
+    names = dict(User.objects.values_list("pk", "full_name"))
+
+    circles = find_circles_for(aminata.pk, load_profiles())
+
+    assert circles, "aucun cercle pour Aminata"
+    assert [(names[a.teacher], a.skill.name) for a in circles[0].arrows] == [
+        ("Aminata Diallo", "React"),
+        ("Kwame Boateng", "FastAPI"),
+        ("Imani Wanjiru", "Docker"),
+    ]

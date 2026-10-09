@@ -70,6 +70,19 @@ describe('DevLink Copilot', () => {
     ).toBeInTheDocument()
   })
 
+  it('parle anglais, sans traduire la réponse du service', async () => {
+    stub()
+    renderWithRouter(<CopilotWidget />, { authenticated: true, lang: 'en' })
+
+    await userEvent.click(await screen.findByRole('button', { name: 'Open DevLink Copilot' }))
+    expect(screen.getByText(/Ask me anything about your profile/)).toBeInTheDocument()
+    await userEvent.type(screen.getByLabelText('Your question for DevLink Copilot'), 'Hello')
+    await userEvent.click(screen.getByRole('button', { name: 'Send' }))
+
+    expect(await screen.findByText('Allez dans Mon profil.')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Minimize DevLink Copilot' })).toBeInTheDocument()
+  })
+
   it('ferme la fenêtre', async () => {
     stub()
     renderWithRouter(<CopilotWidget />, { authenticated: true })

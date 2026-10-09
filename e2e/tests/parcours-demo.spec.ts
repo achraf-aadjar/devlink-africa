@@ -129,3 +129,97 @@ test('le parcours de démonstration, de l’inscription au contact', async ({ br
 
   await context.close()
 })
+
+test('un cercle d’échange : Dakar → Accra → Nairobi', async ({ browser }) => {
+  // Aminata, Kwame et Imani n'ont aucune paire réciproque : seul le cercle les réunit.
+  const sessions: Page[] = []
+  async function as(email: string) {
+    const page = await (await browser.newContext()).newPage()
+    sessions.push(page)
+    await login(page, email, DEMO_PASSWORD)
+    return page
+  }
+  // La carte du cercle à trois : celle dont le schéma mentionne FastAPI, sans
+  // Clarisse (qui forme un autre cercle, à quatre). Repérée par son schéma, car
+  // les phrases changent selon le membre qui lit (« Vous apprenez… »).
+  const trio = (page: Page) =>
+    page
+      .getByRole('listitem')
+      .filter({ has: page.getByRole('img', { name: /^Cercle d'échange\..*FastAPI/ }) })
+      .filter({ hasNotText: 'Clarisse' })
+
+  const aminata = await as('aminata@demo.devlink.africa')
+  await aminata.goto('/cercles')
+  const suggestion = trio(aminata).first()
+  await expect(suggestion.getByText('Vous apprenez React à Kwame Boateng.')).toBeVisible()
+  await expect(suggestion.getByText('Imani Wanjiru vous apprend Docker.')).toBeVisible()
+  await suggestion.getByRole('button', { name: 'Proposer ce cercle' }).click()
+  await expect(trio(aminata).getByText(/1 sur 3 ont accepté/)).toBeVisible()
+
+  for (const email of ['kwame@demo.devlink.africa', 'imani@demo.devlink.africa']) {
+    const member = await as(email)
+    await expect(
+      member.getByRole('link', { name: /^Cercles\s*\(1 invitation en attente\)$/ }),
+    ).toBeVisible()
+    await member.goto('/cercles')
+    await trio(member).getByRole('button', { name: 'Accepter' }).click()
+    await expect(trio(member).getByRole('button', { name: 'Accepter' })).toBeHidden()
+  }
+
+  await aminata.reload()
+  await expect(trio(aminata).getByText(/Tout le monde a accepté/)).toBeVisible()
+  await expect(trio(aminata).getByRole('link', { name: 'kwame@demo.devlink.africa' })).toBeVisible()
+  await expect(trio(aminata).getByRole('link', { name: 'imani@demo.devlink.africa' })).toBeVisible()
+
+  // Imani lui a appris Docker : Aminata le valide, et ça se voit sur le profil d'Imani.
+  await trio(aminata).getByRole('button', { name: 'Valider Docker' }).click()
+  await trio(aminata)
+    .getByLabel(/Un mot sur ce qu'il ou elle vous a appris/)
+    .fill('Limpide.')
+  await trio(aminata).getByRole('button', { name: 'Confirmer la validation' }).click()
+  await expect(trio(aminata).getByText('Validée')).toBeVisible()
+  const imaniId = await aminata.evaluate(async () => {
+    const response = await fetch('/api/v1/search/users/?q=Imani')
+    return (await response.json()).results[0].id as number
+  })
+  await aminata.goto(`/developpeurs/${imaniId}`)
+  const verified = aminata.getByRole('region', { name: 'Validé par ses pairs' })
+  await expect(verified).toContainText('Docker')
+  await expect(verified).toContainText('« Limpide. »')
+
+  for (const page of sessions) await page.context().close()
+})
+
+test('l’interface passe en anglais, messages du serveur compris', async ({ browser }) => {
+  const page = await (await browser.newContext()).newPage()
+
+  // Le bouton de la barre de navigation (l'accueil en propose un second).
+  const languageSwitch = (name: string) =>
+    page.getByRole('banner').getByRole('button', { name, exact: true })
+
+  await page.goto('/')
+  await languageSwitch('Switch to English').click()
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Learn what you’re missing')
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en')
+
+  // Les noms de pays viennent du navigateur, à partir du code ISO.
+  await page.goto('/observatoire')
+  await expect(page.getByRole('heading', { name: 'Skills Observatory' })).toBeVisible()
+  await expect(page.getByText(/Senegal/).first()).toBeVisible()
+
+  // Le choix survit au rechargement, et l'API répond dans la même langue.
+  await page.goto('/connexion')
+  await page.getByLabel('Email address').fill('fatou@demo.devlink.africa')
+  await page.getByLabel('Password').fill('pas-le-bon-mot-de-passe')
+  await page.getByRole('button', { name: 'Sign in' }).click()
+  await expect(page.getByText('Incorrect email address or password.')).toBeVisible()
+
+  await page.getByLabel('Password').fill(DEMO_PASSWORD)
+  await page.getByRole('button', { name: 'Sign in' }).click()
+  await expect(page.getByRole('heading', { name: 'Hello Fatou' })).toBeVisible()
+  // Raisons d'un match : rédigées par le serveur, en anglais.
+  await expect(page.getByText(/can teach (you )?\w/).first()).toBeVisible()
+
+  await languageSwitch('Passer en français').click()
+  await expect(page.getByRole('heading', { name: 'Bonjour Fatou' })).toBeVisible()
+})

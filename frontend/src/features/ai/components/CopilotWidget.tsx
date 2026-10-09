@@ -1,14 +1,17 @@
 import { useEffect, useRef, useState } from 'react'
 import Icon from '../../../components/icons/Icon'
 import { Button, Spinner } from '../../../components/ui'
+import { msg } from '../../../i18n/translate'
+import { useI18n } from '../../../i18n/useI18n'
 import { ApiError } from '../../../lib/api'
 import { useAuth } from '../../auth/hooks/useAuth'
 import { copilotReply, type CopilotTurn } from '../api/ai'
 import { useAIStatus } from '../hooks/useAIStatus'
 
 const MAX_HISTORY_SENT = 6
-const WELCOME =
-  'Bonjour ! Je suis DevLink Copilot. Posez-moi une question sur votre profil, vos compétences, les matchs ou les échanges.'
+const WELCOME = msg(
+  'Bonjour ! Je suis DevLink Copilot. Posez-moi une question sur votre profil, vos compétences, les matchs ou les échanges.',
+)
 
 interface Message extends CopilotTurn {
   id: number
@@ -24,6 +27,7 @@ interface Message extends CopilotTurn {
  * (`useAIStatus`) : pas de bulle qui ne peut que décevoir.
  */
 export default function CopilotWidget() {
+  const { t } = useI18n()
   const { enabled } = useAIStatus()
   const { isAuthenticated } = useAuth()
   const [open, setOpen] = useState(false)
@@ -59,8 +63,8 @@ export default function CopilotWidget() {
     } catch (cause) {
       const message =
         cause instanceof ApiError && cause.status === 503
-          ? 'DevLink Copilot est momentanément indisponible. Réessayez dans un instant.'
-          : "Je n'ai pas pu répondre. Réessayez dans un instant."
+          ? t('DevLink Copilot est momentanément indisponible. Réessayez dans un instant.')
+          : t("Je n'ai pas pu répondre. Réessayez dans un instant.")
       setMessages((list) => [
         ...list,
         { id: nextId.current++, role: 'assistant', content: message, failed: true },
@@ -86,7 +90,7 @@ export default function CopilotWidget() {
             <button
               type="button"
               onClick={() => setOpen(false)}
-              aria-label="Fermer DevLink Copilot"
+              aria-label={t('Fermer DevLink Copilot')}
               className="rounded p-1 text-ink-500 hover:bg-ink-200 hover:text-ink-800"
             >
               <Icon name="close" size={18} />
@@ -94,7 +98,7 @@ export default function CopilotWidget() {
           </div>
 
           <div ref={listRef} className="flex-1 overflow-y-auto px-4 py-3">
-            <p className="mb-3 text-sm text-ink-600">{WELCOME}</p>
+            <p className="mb-3 text-sm text-ink-600">{t(WELCOME)}</p>
             <ul className="flex flex-col gap-2">
               {messages.map((message) => (
                 <li
@@ -117,7 +121,7 @@ export default function CopilotWidget() {
               {sending && (
                 <li className="flex justify-start">
                   <span className="flex items-center gap-2 rounded-card bg-ink-50 px-3 py-2 text-sm text-ink-600">
-                    <Spinner className="h-4 w-4" /> DevLink Copilot réfléchit…
+                    <Spinner className="h-4 w-4" /> {t('DevLink Copilot réfléchit…')}
                   </span>
                 </li>
               )}
@@ -126,19 +130,19 @@ export default function CopilotWidget() {
 
           <form onSubmit={send} className="flex gap-2 border-t border-ink-200 p-3">
             <label htmlFor="copilot-input" className="sr-only">
-              Votre question pour DevLink Copilot
+              {t('Votre question pour DevLink Copilot')}
             </label>
             <input
               id="copilot-input"
               type="text"
               value={draft}
               maxLength={1000}
-              placeholder="Posez votre question…"
+              placeholder={t('Posez votre question…')}
               onChange={(event) => setDraft(event.target.value)}
               className="flex-1 rounded-lg border border-ink-300 bg-ink-100 px-3 py-2 text-sm text-ink-900 placeholder:text-ink-400"
             />
             <Button type="submit" size="sm" loading={sending} disabled={!draft.trim()}>
-              Envoyer
+              {t('Envoyer')}
             </Button>
           </form>
         </div>
@@ -148,7 +152,7 @@ export default function CopilotWidget() {
         type="button"
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
-        aria-label={open ? 'Réduire DevLink Copilot' : 'Ouvrir DevLink Copilot'}
+        aria-label={open ? t('Réduire DevLink Copilot') : t('Ouvrir DevLink Copilot')}
         className="flex h-14 w-14 items-center justify-center rounded-full bg-accent-400 text-white shadow-card transition-colors hover:bg-accent-300"
       >
         <Icon name={open ? 'close' : 'discussion'} size={24} />

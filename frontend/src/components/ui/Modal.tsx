@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, type ReactNode } from 'react'
 import Icon from '../icons/Icon'
+import { useI18n } from '../../i18n/useI18n'
 
 interface ModalProps {
   open: boolean
@@ -13,6 +14,7 @@ interface ModalProps {
  * déplacé à l'ouverture, et clic sur le fond pour fermer.
  */
 export default function Modal({ open, title, onClose, children }: ModalProps) {
+  const { t } = useI18n()
   const panel = useRef<HTMLDivElement>(null)
   // `onClose` est souvent une fonction anonyme, donc recréée à chaque rendu du
   // parent. On la garde dans une référence, sinon l'effet se relancerait à
@@ -47,7 +49,7 @@ export default function Modal({ open, title, onClose, children }: ModalProps) {
     <div className="fixed inset-0 z-50 flex items-end justify-center p-0 sm:items-center sm:p-4">
       <button
         type="button"
-        aria-label="Fermer"
+        aria-label={t('Fermer')}
         onClick={onClose}
         className="absolute inset-0 bg-black/60"
       />
@@ -64,7 +66,7 @@ export default function Modal({ open, title, onClose, children }: ModalProps) {
           <button
             type="button"
             onClick={onClose}
-            aria-label="Fermer la fenêtre"
+            aria-label={t('Fermer la fenêtre')}
             className="rounded-full p-1.5 text-ink-500 hover:bg-ink-200 hover:text-ink-800"
           >
             <Icon name="close" size={20} />

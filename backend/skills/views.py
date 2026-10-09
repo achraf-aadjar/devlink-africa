@@ -11,10 +11,13 @@ from rest_framework.views import APIView
 
 from core.permissions import IsOwner
 
-from . import services
+from . import endorsements, services
 from .models import Skill, SkillProof, UserSkill
 from .selectors import list_catalog, list_user_skills
 from .serializers import (
+    EndorsementCandidateSerializer,
+    EndorsementWriteSerializer,
+    SkillEndorsementSerializer,
     SkillProofSerializer,
     SkillSerializer,
     UserSkillSerializer,
@@ -157,4 +160,48 @@ class SkillProofDetailView(APIView):
             SkillProof, pk=pk, user_skill_id=user_skill_id, user_skill__user=request.user
         )
         proof.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class EndorsementCandidatesView(APIView):
+    """GET /endorsements/candidates/ : les personnes dont je peux valider les compétences."""
+
+    permission_classes = [IsAuthenticated]
+
+    @extend_schema(
+        responses={200: EndorsementCandidateSerializer(many=True)}, summary="Compétences que je peux valider"
+    )
+    def get(self, request):
+        return Response({"results": endorsements.candidates(request.user)})
+
+
+class EndorsementCreateView(APIView):
+    """POST /endorsements/ : valider une compétence d'un partenaire."""
+
+    permission_classes = [IsAuthenticated]
+
+    @extend_schema(
+        request=EndorsementWriteSerializer,
+        responses={201: SkillEndorsementSerializer},
+        summary="Valider une compétence",
+    )
+    def post(self, request):
+        data = EndorsementWriteSerializer(data=request.data)
+        data.is_valid(raise_exception=True)
+        endorsement = endorsements.endorse(
+            endorser=request.user,
+            user_skill_id=data.validated_data["user_skill"],
+            comment=data.validated_data["comment"],
+        )
+        return Response(SkillEndorsementSerializer(endorsement).data, status=status.HTTP_201_CREATED)
+
+
+class EndorsementDetailView(APIView):
+    """DELETE /endorsements/{id}/ : retirer ma validation."""
+
+    permission_classes = [IsAuthenticated]
+
+    @extend_schema(responses={204: None}, summary="Retirer ma validation")
+    def delete(self, request, pk: int):
+        endorsements.withdraw(endorser=request.user, endorsement_id=pk)
         return Response(status=status.HTTP_204_NO_CONTENT)

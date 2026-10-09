@@ -92,6 +92,8 @@ export interface UserSkill {
   level: SkillLevel
   proofs_count: number
   proofs?: SkillProof[]
+  /** Validations par les pairs (absentes des réponses qui ne les chargent pas). */
+  endorsements?: SkillEndorsement[]
 }
 
 export interface MySkills {
@@ -259,4 +261,79 @@ export interface Dashboard {
 export interface Health {
   status: string
   version: string
+}
+
+// --- Cercles d'échange --------------------------------------------------------
+
+export type CircleStatus = 'SUGGESTED' | 'PROPOSED' | 'ACTIVE' | 'DECLINED'
+export type CircleResponse = 'PENDING' | 'ACCEPTED' | 'DECLINED'
+
+export interface CircleMember {
+  id: number
+  full_name: string
+  country: string
+  is_demo: boolean
+  /** null pour une suggestion, pas encore proposée. */
+  response: CircleResponse | null
+  /** Rempli seulement quand le cercle est actif (tous ont accepté). */
+  contact: string | null
+}
+
+export interface CircleArrow {
+  teacher: number
+  learner: number
+  skill: { name: string; level: SkillLevel }
+}
+
+export interface Circle {
+  /** null pour une suggestion. */
+  id: number | null
+  key: string
+  status: CircleStatus
+  score: number
+  members: CircleMember[]
+  arrows: CircleArrow[]
+  created_at: string | null
+  activated_at: string | null
+}
+
+// --- Observatoire des compétences ---------------------------------------------
+
+export interface ObservatorySkill {
+  name: string
+  category: SkillCategory
+  offered: number
+  wanted: number
+}
+
+export interface ObservatoryCountry {
+  code: string
+  name: string
+  flag: string
+}
+
+export interface Observatory {
+  totals: { developers: number; countries: number; offered: number; wanted: number }
+  skills: ObservatorySkill[]
+  shortages: ObservatorySkill[]
+  surpluses: ObservatorySkill[]
+  bridges: Array<{ skill: string; wanted_in: ObservatoryCountry; offered_in: ObservatoryCountry[] }>
+}
+
+// --- Validation par les pairs --------------------------------------------------
+
+export type EndorsementContext = 'EXCHANGE' | 'CIRCLE'
+
+export interface SkillEndorsement {
+  id: number
+  by: { id: number; full_name: string; country: string }
+  context: EndorsementContext
+  comment: string
+  created_at: string
+}
+
+export interface EndorsementCandidate {
+  user: { id: number; full_name: string; country: string }
+  context: EndorsementContext
+  skills: Array<{ user_skill: number; name: string; level: SkillLevel; endorsement: number | null }>
 }

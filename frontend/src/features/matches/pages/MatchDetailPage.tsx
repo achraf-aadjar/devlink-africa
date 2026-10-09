@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import Avatar from '../../../components/Avatar'
 import DemoBadge from '../../../components/DemoBadge'
 import { Button, Card, ErrorState, LoadingState } from '../../../components/ui'
+import { useI18n } from '../../../i18n/useI18n'
 import { ApiError } from '../../../lib/api'
 import { countryFlag } from '../../../lib/labels'
 import { useQuery } from '../../../lib/useQuery'
@@ -12,6 +13,7 @@ import ExchangeRequestModal from '../components/ExchangeRequestModal'
 import MatchExplanation from '../components/MatchExplanation'
 
 export default function MatchDetailPage() {
+  const { t } = useI18n()
   const { id } = useParams<{ id: string }>()
   const matchId = Number(id)
   const { data, loading, error, reload } = useQuery(() => getMatch(matchId), [matchId])
@@ -24,19 +26,19 @@ export default function MatchDetailPage() {
     setFeedbackError(null)
     try {
       await sendFeedback(matchId, { is_relevant: isRelevant })
-      setNotice('Merci, votre avis est enregistré.')
+      setNotice(t('Merci, votre avis est enregistré.'))
       reload()
     } catch (cause) {
       if (cause instanceof ApiError && cause.code === 'duplicate_feedback') {
-        setFeedbackError('Vous avez déjà donné votre avis sur ce match.')
+        setFeedbackError(t('Vous avez déjà donné votre avis sur ce match.'))
       } else {
-        setFeedbackError("Votre avis n'a pas pu être enregistré. Réessayez.")
+        setFeedbackError(t("Votre avis n'a pas pu être enregistré. Réessayez."))
       }
     }
   }
 
   if (loading) {
-    return <LoadingState rows={4} label="Chargement du match…" />
+    return <LoadingState rows={4} label={t('Chargement du match…')} />
   }
 
   if (error) {
@@ -46,13 +48,13 @@ export default function MatchDetailPage() {
         <ErrorState
           message={
             notFound
-              ? "Ce match n'existe pas, ou il ne vous concerne pas."
-              : "Le match n'a pas pu être chargé."
+              ? t("Ce match n'existe pas, ou il ne vous concerne pas.")
+              : t("Le match n'a pas pu être chargé.")
           }
           onRetry={notFound ? undefined : reload}
         />
         <Link to="/matchs" className="text-sm font-medium text-accent-700 hover:underline">
-          Revenir à mes matchs
+          {t('Revenir à mes matchs')}
         </Link>
       </div>
     )
@@ -60,13 +62,13 @@ export default function MatchDetailPage() {
 
   if (!data) return null
 
-  const partnerName = data.user.full_name || 'Cette personne'
+  const partnerName = data.user.full_name || t('Cette personne')
 
   return (
     <section className="flex flex-col gap-6">
-      <nav aria-label="Fil d'Ariane">
+      <nav aria-label={t("Fil d'Ariane")}>
         <Link to="/matchs" className="text-sm text-ink-600 hover:text-accent-700 hover:underline">
-          ← Mes matchs
+          ← {t('Mes matchs')}
         </Link>
       </nav>
 
@@ -80,7 +82,7 @@ export default function MatchDetailPage() {
                 {countryFlag(data.user.country)}
               </span>
             )}
-            {data.user.country || 'Pays non renseigné'}
+            {data.user.country || t('Pays non renseigné')}
           </p>
           <div className="mt-2 flex gap-2">
             <DemoBadge isDemo={data.user.is_demo} />
@@ -89,9 +91,9 @@ export default function MatchDetailPage() {
 
         <div className="flex flex-wrap gap-2">
           <Link to={`/developpeurs/${data.user.id}`}>
-            <Button variant="secondary">Voir le profil</Button>
+            <Button variant="secondary">{t('Voir le profil')}</Button>
           </Link>
-          <Button onClick={() => setModalOpen(true)}>Proposer un échange</Button>
+          <Button onClick={() => setModalOpen(true)}>{t('Proposer un échange')}</Button>
         </div>
       </header>
 
@@ -113,23 +115,25 @@ export default function MatchDetailPage() {
       />
 
       <Card>
-        <h2 className="font-semibold text-ink-900">Cette proposition vous paraît-elle utile ?</h2>
+        <h2 className="font-semibold text-ink-900">
+          {t('Cette proposition vous paraît-elle utile ?')}
+        </h2>
         <p className="mt-1 text-sm text-ink-600">
-          Votre réponse nous aide à améliorer les propositions. Elle ne modifie pas ce score.
+          {t('Votre réponse nous aide à améliorer les propositions. Elle ne modifie pas ce score.')}
         </p>
 
         {data.my_feedback ? (
           <p className="mt-3 text-sm text-ink-700">
-            Vous avez répondu :{' '}
-            <strong>{data.my_feedback.is_relevant ? 'utile' : 'pas utile'}</strong>.
+            {t('Vous avez répondu :')}{' '}
+            <strong>{data.my_feedback.is_relevant ? t('utile') : t('pas utile')}</strong>.
           </p>
         ) : (
           <div className="mt-3 flex gap-2">
             <Button size="sm" variant="secondary" onClick={() => handleFeedback(true)}>
-              Utile
+              {t('Utile')}
             </Button>
             <Button size="sm" variant="ghost" onClick={() => handleFeedback(false)}>
-              Pas utile
+              {t('Pas utile')}
             </Button>
           </div>
         )}
@@ -146,7 +150,7 @@ export default function MatchDetailPage() {
         partnerName={partnerName}
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        onSent={() => setNotice('Votre demande a été envoyée.')}
+        onSent={() => setNotice(t('Votre demande a été envoyée.'))}
       />
     </section>
   )

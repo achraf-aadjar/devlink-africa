@@ -86,6 +86,8 @@ export default {
           '50%': { opacity: '0.85', transform: 'scale(1.06)' },
         },
         'bar-fill': { from: { transform: 'scaleX(0)' }, to: { transform: 'scaleX(1)' } },
+        // Cercles d'échange : un trait lumineux qui parcourt chaque flèche.
+        flow: { to: { strokeDashoffset: '-15' } },
         'page-in': {
           from: { opacity: '0', transform: 'translateY(8px)' },
           to: { opacity: '1', transform: 'translateY(0)' },
@@ -97,6 +99,7 @@ export default {
         glow: 'glow 8s ease-in-out infinite',
         'bar-fill': 'bar-fill 1.1s cubic-bezier(0.22, 1, 0.36, 1) both',
         'page-in': 'page-in 350ms ease-out both',
+        flow: 'flow 1.6s linear infinite',
       },
     },
   },

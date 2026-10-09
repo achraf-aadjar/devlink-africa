@@ -15,6 +15,9 @@ export DATABASE_PATH="${E2E_DATABASE_PATH:-${TMPDIR:-/tmp}/devlink-e2e.sqlite3}"
 [ -n "${SECRET_KEY:-}" ] || SECRET_KEY="$("$PYTHON" -c 'import secrets; print(secrets.token_urlsafe(50))')"
 export SECRET_KEY
 export DEBUG=True
+# Les scénarios ouvrent plusieurs sessions depuis la même adresse : la limite
+# de 5 connexions par minute (production) les ferait échouer sans rien prouver.
+export AUTH_THROTTLE_RATE="${AUTH_THROTTLE_RATE:-60/minute}"
 
 rm -f "$DATABASE_PATH"
 cd "$ROOT/backend"

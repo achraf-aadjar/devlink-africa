@@ -175,7 +175,7 @@ Les composants d'IA **ne s'affichent pas** quand le service est inactif : nous n
 |---|---|
 | DL-54 · Test de bout en bout | **Terminé** : les 8 étapes rejouées par l'API |
 | DL-50 · AI_USAGE et LICENSES finaux | **Terminé** |
-| DL-56 · README final | **Terminé** (captures d'écran à ajouter par Emmanuel) |
+| DL-56 · README final | **Terminé**, captures comprises |
 | DL-59 · Audit des licences | **Terminé** : 0 licence non permissive |
 | DL-48 · Version de production figée | **Attend le déploiement** |
 | DL-49, DL-55, DL-60 · Corrections | **Attend les retours de test sur l'URL publique** |
@@ -195,6 +195,18 @@ Les composants d'IA **ne s'affichent pas** quand le service est inactif : nous n
 | Mobile | 18 écrans vérifiés à 390 px ; trois débordements et deux mises en page écrasées corrigés. |
 | Design | Surfaces douces, avatars, jauge de score, navbar flottante, accueil enrichi (voir `DECISIONS.md`). |
 | Documentation | Captures dans le README, `api.md` (modifications après le gel listées en tête), `EXPLICATION_JURY.md`, `demo.md`, politique de confidentialité. |
+
+---
+
+## Ce qui nous distingue (2026-10-09) — **terminé**
+
+| Sujet | Ce qui a été fait |
+|---|---|
+| Cercles d'échange | Quand aucune paire ne se complète, un cycle de 3 ou 4 personnes où chacun apprend au suivant. Algorithme pur (`circles/finder.py`), contacts révélés quand tous ont accepté. Démo : Dakar → Accra → Nairobi. |
+| Observatoire | Page publique : offre et demande par compétence, manques, savoirs à partager, ponts entre pays. Que des comptes. |
+| Validations par les pairs | Après un échange terminé ou dans un cercle actif, on valide la compétence vue à l'œuvre ; visible sur le profil public. |
+| Interface en anglais | Bouton `FR`/`EN` ; toute l'interface, les messages d'erreur de l'API, les raisons d'un match et les textes de l'IA suivent. Tests d'exhaustivité côté frontend et backend. |
+| Tests | 544 backend, 241 frontend, 3 scénarios navigateur. |
 
 ---
 
@@ -222,3 +234,5 @@ Liste à cocher, par personne et par date : **[AVANT_SOUMISSION.md](AVANT_SOUMIS
 1. `backend/matching/scoring.py` et `backend/matching/services.py` → Omar
 2. `frontend/src/features/matches/components/MatchExplanation.tsx` → Emmanuel
 3. `backend/config/settings.py` et `docs/securite.md` → Achraf
+4. `backend/circles/finder.py` et `backend/skills/endorsements.py` → Omar
+5. `frontend/src/i18n/` et la traduction anglaise (`en.ts`) → Emmanuel

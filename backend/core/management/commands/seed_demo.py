@@ -14,17 +14,19 @@ from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 from django.db import transaction
 
+from exchanges.models import Exchange
 from matching.services import recompute_for_user
 from profiles.models import Profile
 from projects.models import Project
-from skills.models import Skill, UserSkill
+from skills.models import Skill, SkillEndorsement, UserSkill
 
 User = get_user_model()
 
 DEMO_DOMAIN = "demo.devlink.africa"
 DEMO_PASSWORD = "demo-devlink-2026-xyz"
 
-#: 20 profils fictifs répartis sur 10 pays d'Afrique francophone.
+#: 22 profils fictifs répartis sur 17 pays d'Afrique : les 20 du ticket DL-12,
+#: plus deux qui illustrent les cercles d'échange (voir la fin de la liste).
 #: (identifiant, nom, pays, domaines, disponibilités, proposé, recherché, bio)
 PROFILES: list[tuple] = [
     # --- Trois paires à fort score (complémentarité réciproque parfaite) -----
@@ -230,6 +232,32 @@ PROFILES: list[tuple] = [
         ["Next.js"],
         "Ingénieur plateforme à Cotonou.",
     ),
+    # --- Un cercle d'échange : Dakar → Accra → Nairobi → Dakar ---------------
+    # Aminata apprend React à Kwame, Kwame FastAPI à Imani, Imani Docker à
+    # Aminata. Aucune de ces trois paires n'est réciproque : Dev Match ne les
+    # réunit pas, seul le cercle le fait. FastAPI n'est proposé ni recherché par
+    # personne d'autre, pour que le cercle reste net. Tout nouveau compte qui
+    # sait React et veut apprendre Docker se voit proposer le même cercle.
+    (
+        "kwame",
+        "Kwame Boateng",
+        "GH",
+        ["WEB"],
+        ["MENTORING", "COLLABORATION"],
+        [("FastAPI", "ADVANCED")],
+        ["React"],
+        "API Python à Accra. Je veux enfin construire mes propres interfaces.",
+    ),
+    (
+        "imani",
+        "Imani Wanjiru",
+        "KE",
+        ["DEVOPS"],
+        ["MENTORING", "OPEN_SOURCE"],
+        [("Docker", "ADVANCED")],
+        ["FastAPI"],
+        "Conteneurs et déploiement à Nairobi. Envie d'écrire des API propres.",
+    ),
 ]
 
 #: 8 projets fictifs qui cherchent des contributeurs.
@@ -315,6 +343,7 @@ class Command(BaseCommand):
         with transaction.atomic():
             users = self._create_users()
             self._create_projects(users)
+            self._create_endorsements(users)
 
         # Hors transaction : le recalcul écrit beaucoup, mieux vaut des
         # transactions courtes (recommandation du cahier pour la base).
@@ -375,6 +404,35 @@ class Command(BaseCommand):
                 defaults={"description": description, "status": status},
             )
             project.needs.set(Skill.objects.filter(name__in=needs))
+
+    def _create_endorsements(self, users: dict) -> None:
+        """Un échange terminé entre Fatou et Ibrahim, à Abidjan, et les compétences
+        qu'ils se sont validées l'un l'autre : de quoi montrer le passeport vérifié."""
+        fatou, ibrahim = users["fatou"], users["ibrahim"]
+        exchange = Exchange.objects.filter(
+            requester=fatou, partner=ibrahim, status=Exchange.Status.COMPLETED
+        ).first()
+        if exchange is None:
+            Exchange.objects.create(
+                requester=fatou,
+                partner=ibrahim,
+                type=Exchange.Type.ECHANGE_COMPETENCES,
+                status=Exchange.Status.COMPLETED,
+                message="Je t'apprends Flutter, tu me montres Node.js et l'intégration continue ?",
+            )
+
+        for endorser, owner, skill_name, comment in (
+            (fatou, ibrahim, "Node.js", "Il m'a fait écrire ma première API en une après-midi."),
+            (fatou, ibrahim, "CI/CD", "Mon projet se teste maintenant à chaque push."),
+            (ibrahim, fatou, "Flutter", "Pédagogue : mon application hors ligne tourne."),
+        ):
+            SkillEndorsement.objects.update_or_create(
+                endorser=endorser,
+                user_skill=UserSkill.objects.get(
+                    user=owner, skill__name=skill_name, kind=UserSkill.Kind.OFFERED
+                ),
+                defaults={"context": SkillEndorsement.Context.EXCHANGE, "comment": comment},
+            )
 
     def _report(self, users: dict) -> None:
         from matching.models import Match

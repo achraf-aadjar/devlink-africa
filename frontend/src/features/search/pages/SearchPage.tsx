@@ -12,6 +12,9 @@ import {
   LoadingState,
   Select,
 } from '../../../components/ui'
+import type { I18n } from '../../../i18n/context'
+import { useI18n } from '../../../i18n/useI18n'
+import { localCountryName } from '../../../lib/countryName'
 import { AVAILABILITY_LABELS, countryFlag, DOMAIN_LABELS, LEVEL_LABELS } from '../../../lib/labels'
 import { useQuery } from '../../../lib/useQuery'
 import { listCatalog } from '../../skills/api/skills'
@@ -21,10 +24,11 @@ import { listCountries, searchProjects, searchUsers } from '../api/search'
 
 type Tab = 'users' | 'projects'
 
-const toOptions = (labels: Record<string, string>) =>
-  Object.entries(labels).map(([value, label]) => ({ value, label }))
+const toOptions = (labels: Record<string, string>, t: I18n['t']) =>
+  Object.entries(labels).map(([value, label]) => ({ value, label: t(label) }))
 
 export default function SearchPage() {
+  const { t, tn, lang } = useI18n()
   // Les filtres vivent dans l'URL : la recherche est partageable (DL-27).
   const [params, setParams] = useSearchParams()
   const tab = (params.get('onglet') as Tab) ?? 'users'
@@ -73,13 +77,13 @@ export default function SearchPage() {
   return (
     <section className="flex flex-col gap-6">
       <header>
-        <h1 className="text-3xl font-bold tracking-tight text-ink-900">Recherche</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-ink-900">{t('Recherche')}</h1>
         <p className="mt-1 text-sm text-ink-600">
-          Trouvez un développeur par compétence et par pays, ou un projet à rejoindre.
+          {t('Trouvez un développeur par compétence et par pays, ou un projet à rejoindre.')}
         </p>
       </header>
 
-      <div role="tablist" aria-label="Type de recherche" className="flex gap-2">
+      <div role="tablist" aria-label={t('Type de recherche')} className="flex gap-2">
         {(['users', 'projects'] as Tab[]).map((value) => (
           <button
             key={value}
@@ -93,7 +97,7 @@ export default function SearchPage() {
                 : 'bg-ink-100 text-ink-700 hover:bg-ink-200'
             }`}
           >
-            {value === 'users' ? 'Développeurs' : 'Projets'}
+            {value === 'users' ? t('Développeurs') : t('Projets')}
           </button>
         ))}
       </div>
@@ -126,25 +130,25 @@ export default function SearchPage() {
           }}
         >
           <Field
-            label="Rechercher"
+            label={t('Rechercher')}
             value={draft}
-            placeholder={tab === 'users' ? 'Nom ou présentation' : 'Titre ou description'}
+            placeholder={tab === 'users' ? t('Nom ou présentation') : t('Titre ou description')}
             onChange={(event) => setDraft(event.target.value)}
           />
           <Select
-            label="Pays"
+            label={t('Pays')}
             value={filters.country}
-            placeholder="Tous les pays"
+            placeholder={t('Tous les pays')}
             options={(countries.data?.results ?? []).map((country) => ({
               value: country.code,
-              label: `${country.flag} ${country.name}`,
+              label: `${country.flag} ${localCountryName(country.code, country.name, lang)}`,
             }))}
             onChange={(event) => update({ country: event.target.value })}
           />
           <Select
-            label={tab === 'users' ? 'Sait faire' : 'Compétence recherchée'}
+            label={tab === 'users' ? t('Sait faire') : t('Compétence recherchée')}
             value={filters.skill}
-            placeholder="Toutes"
+            placeholder={t('Toutes')}
             options={skillOptions}
             onChange={(event) => update({ skill: event.target.value })}
           />
@@ -152,31 +156,31 @@ export default function SearchPage() {
           {tab === 'users' && (
             <>
               <Select
-                label="Veut apprendre"
+                label={t('Veut apprendre')}
                 value={filters.skill_wanted}
-                placeholder="Toutes"
+                placeholder={t('Toutes')}
                 options={skillOptions}
                 onChange={(event) => update({ skill_wanted: event.target.value })}
               />
               <Select
-                label="Niveau"
+                label={t('Niveau')}
                 value={filters.level}
-                placeholder="Tous"
-                options={toOptions(LEVEL_LABELS)}
+                placeholder={t('Tous')}
+                options={toOptions(LEVEL_LABELS, t)}
                 onChange={(event) => update({ level: event.target.value })}
               />
               <Select
-                label="Disponibilité"
+                label={t('Disponibilité')}
                 value={filters.availability}
-                placeholder="Toutes"
-                options={toOptions(AVAILABILITY_LABELS)}
+                placeholder={t('Toutes')}
+                options={toOptions(AVAILABILITY_LABELS, t)}
                 onChange={(event) => update({ availability: event.target.value })}
               />
               <Select
-                label="Domaine"
+                label={t('Domaine')}
                 value={filters.domain}
-                placeholder="Tous"
-                options={toOptions(DOMAIN_LABELS)}
+                placeholder={t('Tous')}
+                options={toOptions(DOMAIN_LABELS, t)}
                 onChange={(event) => update({ domain: event.target.value })}
               />
             </>
@@ -184,7 +188,7 @@ export default function SearchPage() {
 
           <div className="flex items-end gap-2">
             <Button type="submit" size="sm">
-              Rechercher
+              {t('Rechercher')}
             </Button>
             <Button
               type="button"
@@ -195,44 +199,43 @@ export default function SearchPage() {
                 setParams(new URLSearchParams(tab === 'projects' ? { onglet: 'projects' } : {}))
               }}
             >
-              Réinitialiser
+              {t('Réinitialiser')}
             </Button>
           </div>
         </form>
       </Card>
 
-      {active.loading && <LoadingState rows={3} label="Recherche en cours…" />}
+      {active.loading && <LoadingState rows={3} label={t('Recherche en cours…')} />}
       {active.error && <ErrorState onRetry={active.reload} />}
 
       {tab === 'users' && users.data && (
         <>
           {users.data.results.length === 0 ? (
             <EmptyState
-              title="Aucun développeur ne correspond"
-              description="Essayez avec moins de filtres, ou explorez les profils par pays."
+              title={t('Aucun développeur ne correspond')}
+              description={t('Essayez avec moins de filtres, ou explorez les profils par pays.')}
               action={
                 <Link to="/pays">
-                  <Button size="sm">Explorer par pays</Button>
+                  <Button size="sm">{t('Explorer par pays')}</Button>
                 </Link>
               }
             />
           ) : (
             <>
               <p className="text-sm text-ink-600">
-                {users.data.count} développeur{users.data.count > 1 ? 's' : ''} trouvé
-                {users.data.count > 1 ? 's' : ''}.
+                {tn(users.data.count, '{n} développeur trouvé.', '{n} développeurs trouvés.')}
               </p>
               <ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {users.data.results.map((person) => (
                   <Card as="li" key={person.id} interactive className="flex flex-col gap-3">
-                    <Avatar name={person.full_name || 'Développeur'} size={52} />
+                    <Avatar name={person.full_name || t('Développeur')} size={52} />
                     <div>
                       <h2 className="font-semibold text-ink-900">
                         <Link
                           to={`/developpeurs/${person.id}`}
                           className="hover:text-accent-700 hover:underline"
                         >
-                          {person.full_name || 'Développeur'}
+                          {person.full_name || t('Développeur')}
                         </Link>
                       </h2>
                       <p className="mt-0.5 text-sm text-ink-600">
@@ -241,7 +244,9 @@ export default function SearchPage() {
                             {countryFlag(person.country)}
                           </span>
                         )}
-                        {person.country || 'Pays non renseigné'}
+                        {person.country
+                          ? localCountryName(person.country, person.country, lang)
+                          : t('Pays non renseigné')}
                       </p>
                     </div>
                     <DemoBadge isDemo={person.is_demo} />
@@ -269,8 +274,8 @@ export default function SearchPage() {
         <>
           {projects.data.results.length === 0 ? (
             <EmptyState
-              title="Aucun projet ne correspond"
-              description="Élargissez vos critères pour découvrir d'autres projets."
+              title={t('Aucun projet ne correspond')}
+              description={t("Élargissez vos critères pour découvrir d'autres projets.")}
             />
           ) : (
             <ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

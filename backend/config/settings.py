@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     "projects",
     "exchanges",
     "matching",
+    "circles",
     "search",
     "ai",
     "reports",
@@ -83,6 +84,9 @@ MIDDLEWARE = [
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    # Choisit la langue des messages de Django et DRF selon Accept-Language
+    # (français par défaut). Les messages propres à DevLink : core/i18n.py.
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -158,6 +162,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # --- i18n -------------------------------------------------------------------
 LANGUAGE_CODE = "fr-fr"
+LANGUAGES = [("fr", "Français"), ("en", "English")]
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
@@ -200,8 +205,10 @@ REST_FRAMEWORK = {
         "anon": "60/minute",
         "user": "300/minute",
         # Scope for login / registration views: use ScopedRateThrottle with
-        # throttle_scope = "auth".
-        "auth": "5/minute",
+        # throttle_scope = "auth". Réglable pour les tests de bout en bout
+        # seulement (scripts/e2e_backend.sh), qui ouvrent plusieurs sessions
+        # depuis la même adresse ; 5 par minute partout ailleurs.
+        "auth": os.environ.get("AUTH_THROTTLE_RATE", "5/minute"),
         # Signalements : plafond journalier pour éviter le détournement (DL-32).
         "reports": "10/day",
         # Fonctions d'IA : limite par utilisateur, en plus du plafond global.

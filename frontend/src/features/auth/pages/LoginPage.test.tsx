@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { describe, expect, it, vi } from 'vitest'
 import AuthProvider from '../../../app/AuthProvider'
-import { jsonResponse, routeFetch } from '../../../test/helpers'
+import { jsonResponse, renderWithRouter, routeFetch } from '../../../test/helpers'
 import LoginPage from './LoginPage'
 
 // Google désactivé dans ces tests : ils portent sur le mot de passe. Un
@@ -103,6 +103,24 @@ describe('page de connexion', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Se connecter' }))
 
     expect(await screen.findByRole('alert')).toHaveTextContent(/Impossible de contacter le serveur/)
+  })
+
+  it('s’affiche et valide en anglais', async () => {
+    vi.stubGlobal('fetch', routeFetch(GOOGLE_OFF))
+    renderWithRouter(<LoginPage />, { route: '/connexion', lang: 'en' })
+
+    expect(screen.getByRole('heading', { name: 'Sign in' })).toBeInTheDocument()
+    expect(screen.getByLabelText(/email address/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/password/i)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Create an account' })).toHaveAttribute(
+      'href',
+      '/inscription',
+    )
+
+    await userEvent.click(screen.getByRole('button', { name: 'Sign in' }))
+
+    expect(await screen.findByText('Enter your email address.')).toBeInTheDocument()
+    expect(screen.getByText('Enter your password.')).toBeInTheDocument()
   })
 
   it('désactive le bouton pendant lenvoi', async () => {

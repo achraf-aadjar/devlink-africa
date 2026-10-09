@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Button } from '../../../components/ui'
+import { useI18n } from '../../../i18n/useI18n'
 import { ApiError } from '../../../lib/api'
 import { explainMatch } from '../api/ai'
 import { useAIStatus } from '../hooks/useAIStatus'
@@ -13,6 +14,7 @@ import AIUnavailableNotice from './AIUnavailableNotice'
  * reste vérifiable, l'IA ne fait que le raconter.
  */
 export default function MatchSentence({ matchId }: { matchId: number }) {
+  const { t } = useI18n()
   const { enabled, loading: checking } = useAIStatus()
   const [working, setWorking] = useState(false)
   const [unavailable, setUnavailable] = useState(false)
@@ -47,10 +49,12 @@ export default function MatchSentence({ matchId }: { matchId: number }) {
   return (
     <div className="flex flex-col gap-2">
       <Button type="button" variant="ghost" size="sm" loading={working} onClick={handleClick}>
-        Résumer ce match en une phrase
+        {t('Résumer ce match en une phrase')}
       </Button>
       {unavailable && (
-        <AIUnavailableNotice fallback="Les raisons détaillées ci-dessous disent déjà l'essentiel." />
+        <AIUnavailableNotice
+          fallback={t("Les raisons détaillées ci-dessous disent déjà l'essentiel.")}
+        />
       )}
     </div>
   )

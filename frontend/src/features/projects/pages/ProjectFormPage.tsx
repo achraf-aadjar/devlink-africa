@@ -9,6 +9,7 @@ import {
   Select,
   Textarea,
 } from '../../../components/ui'
+import { useI18n } from '../../../i18n/useI18n'
 import { ApiError } from '../../../lib/api'
 import { PROJECT_STATUS_LABELS } from '../../../lib/labels'
 import type { ProjectStatus } from '../../../lib/types'
@@ -36,6 +37,7 @@ export default function ProjectFormPage() {
   const { id } = useParams<{ id: string }>()
   const projectId = id ? Number(id) : null
   const navigate = useNavigate()
+  const { t } = useI18n()
 
   const catalog = useQuery(() => listCatalog(), [])
   const existing = useQuery(
@@ -58,7 +60,7 @@ export default function ProjectFormPage() {
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
     if (!form.title.trim()) {
-      setErrors({ title: 'Donnez un titre à votre projet.' })
+      setErrors({ title: t('Donnez un titre à votre projet.') })
       return
     }
 
@@ -76,14 +78,16 @@ export default function ProjectFormPage() {
         if (Object.keys(found).length === 0) found.form = cause.message
         setErrors(found)
       } else {
-        setErrors({ form: 'Impossible de contacter le serveur. Réessayez.' })
+        setErrors({ form: t('Impossible de contacter le serveur. Réessayez.') })
       }
     } finally {
       setSaving(false)
     }
   }
 
-  if (projectId && existing.loading) return <LoadingState rows={3} label="Chargement du projet…" />
+  if (projectId && existing.loading) {
+    return <LoadingState rows={3} label={t('Chargement du projet…')} />
+  }
   if (projectId && existing.error) return <ErrorState onRetry={existing.reload} />
 
   // En modification : on remplit le formulaire au premier rendu où la donnée
@@ -99,19 +103,19 @@ export default function ProjectFormPage() {
       demo_url: project.demo_url,
       needs: project.needs.map((skill) => skill.id),
     })
-    return <LoadingState rows={3} label="Préparation du formulaire…" />
+    return <LoadingState rows={3} label={t('Préparation du formulaire…')} />
   }
 
   return (
     <section className="mx-auto w-full max-w-2xl flex-col gap-6">
       <h1 className="mb-6 text-3xl font-bold tracking-tight text-ink-900">
-        {projectId ? 'Modifier le projet' : 'Proposer un projet'}
+        {projectId ? t('Modifier le projet') : t('Proposer un projet')}
       </h1>
 
       <Card>
         <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
           <Field
-            label="Titre"
+            label={t('Titre')}
             required
             value={form.title}
             error={errors.title}
@@ -120,11 +124,11 @@ export default function ProjectFormPage() {
           />
 
           <Textarea
-            label="Description"
+            label={t('Description')}
             value={form.description}
             error={errors.description}
             maxLength={5000}
-            hint="Le problème résolu, l'état d'avancement, ce que vous cherchez."
+            hint={t("Le problème résolu, l'état d'avancement, ce que vous cherchez.")}
             onChange={(event) => setForm({ ...form, description: event.target.value })}
           />
 
@@ -134,7 +138,9 @@ export default function ProjectFormPage() {
           />
 
           <fieldset className="flex flex-col gap-2">
-            <legend className="text-sm font-medium text-ink-800">Compétences recherchées</legend>
+            <legend className="text-sm font-medium text-ink-800">
+              {t('Compétences recherchées')}
+            </legend>
             <div className="flex flex-wrap gap-3">
               {(catalog.data?.results ?? []).map((skill) => (
                 <label key={skill.id} className="flex items-center gap-2 text-sm text-ink-700">
@@ -158,15 +164,15 @@ export default function ProjectFormPage() {
           </fieldset>
 
           <Select
-            label="Statut"
+            label={t('Statut')}
             value={form.status}
-            options={STATUS_OPTIONS}
+            options={STATUS_OPTIONS.map((option) => ({ ...option, label: t(option.label) }))}
             onChange={(event) => setForm({ ...form, status: event.target.value as ProjectStatus })}
           />
 
           <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
             <Field
-              label="Dépôt du code (https)"
+              label={t('Dépôt du code (https)')}
               type="url"
               value={form.repo_url}
               error={errors.repo_url}
@@ -174,7 +180,7 @@ export default function ProjectFormPage() {
               onChange={(event) => setForm({ ...form, repo_url: event.target.value })}
             />
             <Field
-              label="Démonstration (https)"
+              label={t('Démonstration (https)')}
               type="url"
               value={form.demo_url}
               error={errors.demo_url}
@@ -191,10 +197,10 @@ export default function ProjectFormPage() {
 
           <div className="flex justify-end gap-2">
             <Button type="button" variant="secondary" onClick={() => navigate(-1)}>
-              Annuler
+              {t('Annuler')}
             </Button>
             <Button type="submit" loading={saving}>
-              {projectId ? 'Enregistrer' : 'Publier le projet'}
+              {projectId ? t('Enregistrer') : t('Publier le projet')}
             </Button>
           </div>
         </form>

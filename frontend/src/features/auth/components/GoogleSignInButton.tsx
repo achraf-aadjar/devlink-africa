@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useI18n } from '../../../i18n/useI18n'
 import { useAuth } from '../hooks/useAuth'
 import { useGoogleClientId } from '../hooks/useGoogleClientId'
 
@@ -46,15 +47,16 @@ export default function GoogleSignInButton({
 }) {
   const { clientId, loading } = useGoogleClientId()
   const { signInWithGoogle } = useAuth()
+  const { t, lang } = useI18n()
   const navigate = useNavigate()
   const containerRef = useRef<HTMLDivElement>(null)
 
   // Référence stable : l'effet ne doit se relancer que si l'identifiant
-  // client change, pas à chaque rendu du parent (voir Modal.tsx pour le même
-  // principe).
-  const latest = useRef({ signInWithGoogle, navigate, onError, redirectTo })
+  // client ou la langue change, pas à chaque rendu du parent (voir Modal.tsx
+  // pour le même principe).
+  const latest = useRef({ signInWithGoogle, navigate, onError, redirectTo, t })
   useEffect(() => {
-    latest.current = { signInWithGoogle, navigate, onError, redirectTo }
+    latest.current = { signInWithGoogle, navigate, onError, redirectTo, t }
   })
 
   useEffect(() => {
@@ -76,7 +78,8 @@ export default function GoogleSignInButton({
         text: 'continue_with',
         shape: 'pill',
         logo_alignment: 'left',
-        locale: 'fr',
+        // Le libellé du bouton est dessiné par Google, dans la langue de l'interface.
+        locale: lang,
         width,
       })
     }
@@ -93,7 +96,9 @@ export default function GoogleSignInButton({
                 await latest.current.signInWithGoogle(response.credential)
                 latest.current.navigate(latest.current.redirectTo, { replace: true })
               } catch {
-                latest.current.onError('La connexion avec Google a échoué. Réessayez.')
+                latest.current.onError(
+                  latest.current.t('La connexion avec Google a échoué. Réessayez.'),
+                )
               }
             })()
           },
@@ -105,14 +110,15 @@ export default function GoogleSignInButton({
         resizeObserver.observe(containerRef.current)
       })
       .catch(() => {
-        if (!cancelled) latest.current.onError("Le bouton Google n'a pas pu être chargé.")
+        if (!cancelled)
+          latest.current.onError(latest.current.t("Le bouton Google n'a pas pu être chargé."))
       })
 
     return () => {
       cancelled = true
       resizeObserver?.disconnect()
     }
-  }, [clientId])
+  }, [clientId, lang])
 
   if (loading || !clientId) return null
 

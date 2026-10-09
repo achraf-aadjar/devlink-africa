@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import SkillBadge from '../../../components/SkillBadge'
 import { Button, Card, Textarea } from '../../../components/ui'
+import { useI18n } from '../../../i18n/useI18n'
 import { ApiError } from '../../../lib/api'
 import type { SkillKind, SkillLevel } from '../../../lib/types'
 import { extractSkills, type SkillSuggestion } from '../api/ai'
@@ -19,6 +20,7 @@ export default function SkillExtractor({
 }: {
   onAccept: (kind: SkillKind, skillId: number, level: SkillLevel) => Promise<void> | void
 }) {
+  const { t } = useI18n()
   const { enabled, loading: checking } = useAIStatus()
   const [text, setText] = useState('')
   const [working, setWorking] = useState(false)
@@ -47,7 +49,7 @@ export default function SkillExtractor({
       } else if (cause instanceof ApiError) {
         setError(cause.fieldError('text') ?? cause.message)
       } else {
-        setError('Impossible de contacter le serveur.')
+        setError(t('Impossible de contacter le serveur.'))
       }
     } finally {
       setWorking(false)
@@ -68,25 +70,28 @@ export default function SkillExtractor({
   return (
     <Card className="flex flex-col gap-4 border-accent-200 bg-accent-50">
       <div>
-        <h2 className="font-semibold text-ink-900">Remplir depuis un texte</h2>
+        <h2 className="font-semibold text-ink-900">{t('Remplir depuis un texte')}</h2>
         <p className="mt-1 text-sm text-ink-700">
-          Décrivez votre parcours en quelques phrases : nous vous proposerons des compétences à
-          ajouter. Vous gardez la main sur ce qui est enregistré.
+          {t(
+            'Décrivez votre parcours en quelques phrases : nous vous proposerons des compétences à ajouter. Vous gardez la main sur ce qui est enregistré.',
+          )}
         </p>
       </div>
 
       <form onSubmit={handleExtract} noValidate className="flex flex-col gap-3">
         <Textarea
-          label="Votre parcours"
+          label={t('Votre parcours')}
           value={text}
           error={error ?? undefined}
           maxLength={4000}
-          placeholder="Exemple : je fais du Django depuis trois ans et je veux apprendre Flutter."
+          placeholder={t(
+            'Exemple : je fais du Django depuis trois ans et je veux apprendre Flutter.',
+          )}
           onChange={(event) => setText(event.target.value)}
         />
         <div className="flex justify-end">
           <Button type="submit" size="sm" loading={working} disabled={text.trim().length < 20}>
-            Proposer des compétences
+            {t('Proposer des compétences')}
           </Button>
         </div>
       </form>
@@ -95,14 +100,14 @@ export default function SkillExtractor({
 
       {nothingFound && (
         <p role="status" className="text-sm text-ink-700">
-          Aucune compétence reconnue dans ce texte. Ajoutez-les directement ci-dessous.
+          {t('Aucune compétence reconnue dans ce texte. Ajoutez-les directement ci-dessous.')}
         </p>
       )}
 
       {offered.length > 0 && (
         <div>
           <h3 className="mb-2 text-sm font-medium text-ink-800">
-            Compétences que vous semblez maîtriser
+            {t('Compétences que vous semblez maîtriser')}
           </h3>
           <ul className="flex flex-wrap gap-2">
             {offered.map((suggestion) => (
@@ -111,7 +116,9 @@ export default function SkillExtractor({
                   type="button"
                   onClick={() => accept('OFFERED', suggestion)}
                   className="rounded-full focus-visible:ring-2"
-                  aria-label={`Ajouter ${suggestion.name} à ce que je sais faire`}
+                  aria-label={t('Ajouter {skill} à ce que je sais faire', {
+                    skill: suggestion.name,
+                  })}
                 >
                   <SkillBadge
                     name={`+ ${suggestion.name}`}
@@ -128,7 +135,7 @@ export default function SkillExtractor({
       {wanted.length > 0 && (
         <div>
           <h3 className="mb-2 text-sm font-medium text-ink-800">
-            Compétences que vous semblez chercher
+            {t('Compétences que vous semblez chercher')}
           </h3>
           <ul className="flex flex-wrap gap-2">
             {wanted.map((suggestion) => (
@@ -137,7 +144,9 @@ export default function SkillExtractor({
                   type="button"
                   onClick={() => accept('WANTED', suggestion)}
                   className="rounded-full focus-visible:ring-2"
-                  aria-label={`Ajouter ${suggestion.name} à ce que je veux apprendre`}
+                  aria-label={t('Ajouter {skill} à ce que je veux apprendre', {
+                    skill: suggestion.name,
+                  })}
                 >
                   <SkillBadge name={`+ ${suggestion.name}`} kind="WANTED" />
                 </button>
@@ -149,7 +158,7 @@ export default function SkillExtractor({
 
       {(offered.length > 0 || wanted.length > 0) && (
         <p className="text-xs text-ink-600">
-          Cliquez sur une proposition pour l'ajouter. Rien n'est enregistré avant votre clic.
+          {t("Cliquez sur une proposition pour l'ajouter. Rien n'est enregistré avant votre clic.")}
         </p>
       )}
     </Card>

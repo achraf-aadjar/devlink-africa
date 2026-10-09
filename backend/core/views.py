@@ -9,6 +9,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from core.i18n import request_language
 from exchanges.serializers import ExchangeSerializer
 from matching.serializers import MatchListSerializer
 from projects.serializers import JoinRequestSerializer, ProjectSerializer
@@ -93,7 +94,7 @@ class DashboardView(APIView):
     @extend_schema(responses={200: DashboardSerializer}, summary="Lire mon tableau de bord")
     def get(self, request):
         data = dashboard_for(request.user)
-        context = {"viewer_id": request.user.pk}
+        context = {"viewer_id": request.user.pk, "lang": request_language(request)}
 
         return Response(
             {

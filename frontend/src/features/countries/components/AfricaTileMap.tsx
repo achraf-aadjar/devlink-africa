@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom'
+import { useI18n } from '../../../i18n/useI18n'
 import { cn } from '../../../lib/cn'
+import { localCountryName } from '../../../lib/countryName'
 import type { Country } from '../../../lib/types'
 
 /**
@@ -81,18 +83,20 @@ const GRID: Record<string, [number, number]> = {
 }
 
 export default function AfricaTileMap({ countries }: { countries: Country[] }) {
+  const { t, lang } = useI18n()
   const byCode = new Map(countries.map((country) => [country.code, country]))
 
   return (
     <div className="flex flex-col gap-3">
       <p className="text-sm text-ink-600">
-        Chaque point représente un pays. Ceux en couleur comptent au moins un développeur ou un
-        projet.
+        {t(
+          'Chaque point représente un pays. Ceux en couleur comptent au moins un développeur ou un projet.',
+        )}
       </p>
 
       <div
         role="group"
-        aria-label="Carte de l'Afrique par pays"
+        aria-label={t("Carte de l'Afrique par pays")}
         // Grille de 9 colonnes, qui défile horizontalement sur petit écran
         // sans jamais déborder de la page.
         className="grid w-full max-w-xl grid-cols-9 gap-1.5"
@@ -102,10 +106,14 @@ export default function AfricaTileMap({ countries }: { countries: Country[] }) {
           const populated = Boolean(
             country && country.developers_count + country.projects_count > 0,
           )
-          const name = country?.name ?? code
+          const name = localCountryName(code, country?.name ?? code, lang)
           const label = populated
-            ? `${name} : ${country?.developers_count} développeur(s), ${country?.projects_count} projet(s)`
-            : `${name} : aucune inscription pour le moment`
+            ? t('{name} : {developers} développeur(s), {projects} projet(s)', {
+                name,
+                developers: country?.developers_count ?? 0,
+                projects: country?.projects_count ?? 0,
+              })
+            : t('{name} : aucune inscription pour le moment', { name })
 
           return (
             <Link

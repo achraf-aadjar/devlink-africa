@@ -66,7 +66,7 @@ def oriented_explanation(match: Match, viewer_id: int) -> dict:
     }
 
 
-def build_reasons(match: Match, viewer_id: int, partner_name: str) -> list[str]:
+def build_reasons(match: Match, viewer_id: int, partner_name: str, lang: str = "fr") -> list[str]:
     """Phrases d'explication, reconstruites depuis les données calculées."""
     oriented = oriented_explanation(match, viewer_id)
     explanation = MatchExplanation(
@@ -87,7 +87,7 @@ def build_reasons(match: Match, viewer_id: int, partner_name: str) -> list[str]:
     explanation.breakdown = [
         CriterionScore(item["criterion"], item["points"]) for item in oriented["breakdown"]
     ]
-    return reasons_for(explanation, "Vous", partner_name)
+    return reasons_for(explanation, "Vous", partner_name, lang)
 
 
 class MatchListSerializer(serializers.Serializer):
@@ -103,6 +103,14 @@ class MatchListSerializer(serializers.Serializer):
     def viewer_id(self) -> int:
         return self.context["viewer_id"]
 
+    @property
+    def lang(self) -> str:
+        """Langue des phrases rédigées par le serveur (voir core/i18n.py)."""
+        return self.context.get("lang", "fr")
+
+    def _partner_name(self, partner) -> str:
+        return partner.full_name or ("This person" if self.lang == "en" else "Cette personne")
+
     def _partner(self, match: Match):
         return match.user_b if match.user_a_id == self.viewer_id else match.user_a
 
@@ -111,7 +119,7 @@ class MatchListSerializer(serializers.Serializer):
 
     def get_reasons(self, match: Match) -> list[str]:
         partner = self._partner(match)
-        return build_reasons(match, self.viewer_id, partner.full_name or "Cette personne")[:3]
+        return build_reasons(match, self.viewer_id, self._partner_name(partner), self.lang)[:3]
 
 
 class MatchDetailSerializer(MatchListSerializer):
@@ -123,7 +131,7 @@ class MatchDetailSerializer(MatchListSerializer):
     def get_explanation(self, match: Match) -> dict:
         partner = self._partner(match)
         payload = oriented_explanation(match, self.viewer_id)
-        payload["reasons"] = build_reasons(match, self.viewer_id, partner.full_name or "Cette personne")
+        payload["reasons"] = build_reasons(match, self.viewer_id, self._partner_name(partner), self.lang)
         return payload
 
     def get_my_feedback(self, match: Match) -> dict | None:

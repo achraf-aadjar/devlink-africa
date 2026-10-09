@@ -72,6 +72,19 @@ describe('Project Hub', () => {
     )
   })
 
+  it('liste les projets en anglais', async () => {
+    stub()
+    renderWithRouter(<ProjectsPage />, { lang: 'en' })
+
+    const card = (await screen.findByRole('link', { name: 'Agri-Data' })).closest('li')
+    expect(card).toHaveTextContent('Open to contributions')
+    expect(card).toHaveTextContent('Led by Kofi Mensah')
+    expect(card).toHaveTextContent(/Updated .+ · 3 requests/)
+    expect(screen.getByText('1 project found.')).toBeInTheDocument()
+    expect(screen.getByLabelText('Search')).toHaveAttribute('placeholder', 'Title or description')
+    expect(screen.getByRole('option', { name: 'In progress' })).toBeInTheDocument()
+  })
+
   it('propose d élargir les critères sans résultat', async () => {
     stub([])
     renderWithRouter(<ProjectsPage />)

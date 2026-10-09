@@ -2,9 +2,16 @@
 
 from __future__ import annotations
 
-from django.db.models import Count, QuerySet
+from django.db.models import Count, Prefetch, QuerySet
 
-from .models import Skill, UserSkill
+from .models import Skill, SkillEndorsement, UserSkill
+
+
+def endorsements_prefetch() -> Prefetch:
+    """Validations d'une compétence, avec leur auteur : une requête pour toutes."""
+    return Prefetch(
+        "endorsements", queryset=SkillEndorsement.objects.select_related("endorser", "endorser__profile")
+    )
 
 
 def list_catalog(*, category: str | None = None, search: str | None = None) -> QuerySet[Skill]:
@@ -25,6 +32,7 @@ def list_user_skills(user) -> QuerySet[UserSkill]:
     return (
         UserSkill.objects.filter(user=user)
         .select_related("skill")
-        .annotate(proofs_total=Count("proofs"))
+        .annotate(proofs_total=Count("proofs", distinct=True))
+        .prefetch_related(endorsements_prefetch())
         .order_by("skill__name")
     )

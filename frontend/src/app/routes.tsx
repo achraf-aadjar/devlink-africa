@@ -1,12 +1,14 @@
 import { Route, Routes } from 'react-router-dom'
 import LoginPage from '../features/auth/pages/LoginPage'
 import RegisterPage from '../features/auth/pages/RegisterPage'
+import CirclesPage from '../features/circles/pages/CirclesPage'
 import CountriesPage from '../features/countries/pages/CountriesPage'
 import CountryDetailPage from '../features/countries/pages/CountryDetailPage'
 import DashboardPage from '../features/dashboard/pages/DashboardPage'
 import ExchangesPage from '../features/exchanges/pages/ExchangesPage'
 import MatchDetailPage from '../features/matches/pages/MatchDetailPage'
 import MatchesPage from '../features/matches/pages/MatchesPage'
+import ObservatoryPage from '../features/observatory/pages/ObservatoryPage'
 import ProfilePage from '../features/profile/pages/ProfilePage'
 import PublicProfilePage from '../features/profile/pages/PublicProfilePage'
 import ProjectDetailPage from '../features/projects/pages/ProjectDetailPage'
@@ -60,11 +62,13 @@ export default function AppRoutes() {
           <Route path="recherche" element={<SearchPage />} />
           <Route path="pays" element={<CountriesPage />} />
           <Route path="pays/:code" element={<CountryDetailPage />} />
+          <Route path="observatoire" element={<ObservatoryPage />} />
           <Route path="projets" element={<ProjectsPage />} />
 
           <Route element={<RequireAuth />}>
             <Route path="tableau-de-bord" element={<DashboardPage />} />
             <Route path="matchs" element={<MatchesPage />} />
+            <Route path="cercles" element={<CirclesPage />} />
           </Route>
         </Route>
       </Route>

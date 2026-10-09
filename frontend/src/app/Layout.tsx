@@ -5,7 +5,10 @@ import Logo from '../components/icons/Logo'
 import PageContainer from '../components/PageContainer'
 import CopilotWidget from '../features/ai/components/CopilotWidget'
 import { useAuth } from '../features/auth/hooks/useAuth'
+import { usePendingCircles } from '../features/circles/hooks/usePendingCircles'
 import { usePendingRequests } from '../features/exchanges/hooks/usePendingRequests'
+import { msg } from '../i18n/translate'
+import { useI18n } from '../i18n/useI18n'
 import { cn } from '../lib/cn'
 
 interface NavLinkItem {
@@ -14,35 +17,74 @@ interface NavLinkItem {
 }
 
 const PRIVATE_LINKS: NavLinkItem[] = [
-  { to: '/tableau-de-bord', label: 'Tableau de bord' },
-  { to: '/competences', label: 'Compétences' },
-  { to: '/matchs', label: 'Matchs' },
-  { to: '/echanges', label: 'Échanges' },
+  { to: '/tableau-de-bord', label: msg('Tableau de bord') },
+  { to: '/competences', label: msg('Compétences') },
+  { to: '/matchs', label: msg('Matchs') },
+  { to: '/cercles', label: msg('Cercles') },
+  { to: '/echanges', label: msg('Échanges') },
 ]
 
-/** Pastille du nombre de demandes reçues, posée à côté du lien « Échanges ». */
-function PendingBadge({ count }: { count: number }) {
+/**
+ * Pastille d'un compteur posée à côté d'un lien : demandes d'échange reçues,
+ * invitations dans un cercle.
+ */
+function PendingBadge({ count, kind = 'request' }: { count: number; kind?: 'request' | 'invite' }) {
+  const { t } = useI18n()
   if (count === 0) return null
+  const label =
+    kind === 'invite'
+      ? count > 1
+        ? t('{count} invitations en attente', { count })
+        : t('{count} invitation en attente', { count })
+      : count > 1
+        ? t('{count} demandes en attente', { count })
+        : t('{count} demande en attente', { count })
   return (
     <span className="ml-1.5 inline-flex min-w-5 items-center justify-center rounded-full bg-[#1f6feb] px-1.5 text-xs font-semibold leading-5 text-white">
       <span aria-hidden="true">{count}</span>
-      <span className="sr-only">{` (${count} demande${count > 1 ? 's' : ''} en attente)`}</span>
+      <span className="sr-only">{` (${label})`}</span>
     </span>
   )
 }
 
+/** Bascule français ↔ anglais : affiche la langue vers laquelle on passe. */
+function LanguageSwitch({ className }: { className?: string }) {
+  const { lang, setLang, t } = useI18n()
+  const next = lang === 'fr' ? 'en' : 'fr'
+  return (
+    <button
+      type="button"
+      onClick={() => setLang(next)}
+      // Annoncé dans la langue proposée, comme le font les sites bilingues.
+      lang={next}
+      aria-label={next === 'en' ? 'Switch to English' : t('Passer en français')}
+      title={next === 'en' ? 'English' : 'Français'}
+      className={cn(
+        'shrink-0 rounded-lg px-2.5 py-2 text-sm font-semibold text-[#3d444d] transition-colors hover:bg-[#e3e6eb] hover:text-[#0d1117]',
+        className,
+      )}
+    >
+      <span aria-hidden="true">{next.toUpperCase()}</span>
+    </button>
+  )
+}
+
 const PUBLIC_LINKS: NavLinkItem[] = [
-  { to: '/recherche', label: 'Recherche' },
-  { to: '/projets', label: 'Projets' },
-  { to: '/pays', label: 'Pays' },
+  { to: '/recherche', label: msg('Recherche') },
+  { to: '/projets', label: msg('Projets') },
+  { to: '/pays', label: msg('Pays|menu') },
 ]
+
+// Connecté, la barre est pleine à 1280 px : l'observatoire reste alors joignable
+// par le pied de page et la page Pays. Un visiteur, qui a la place, le voit ici.
+const VISITOR_LINKS: NavLinkItem[] = [{ to: '/observatoire', label: msg('Observatoire') }]
 
 // La barre est claire (pastille flottante sur le fond sombre) : ses couleurs
 // sont posées en dur plutôt qu'avec `ink`, dont l'échelle est pensée pour un
 // fond sombre et donnerait ici du texte clair sur du clair.
 const linkClass = ({ isActive }: { isActive: boolean }) =>
   cn(
-    'flex items-center whitespace-nowrap rounded-lg px-3 py-2 text-[15px] font-medium transition-colors',
+    'flex items-center whitespace-nowrap rounded-lg px-2.5 py-2 text-[15px] font-medium transition-colors',
     isActive ? 'text-[#0d1117] bg-[#dde1e7]' : 'text-[#3d444d] hover:text-[#0d1117]',
   )
 
@@ -57,11 +99,15 @@ const signUpClass =
 
 export default function Layout() {
   const { isAuthenticated, user, signOut } = useAuth()
+  const { t } = useI18n()
   const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
   const pending = usePendingRequests(isAuthenticated)
+  const circleInvitations = usePendingCircles(isAuthenticated)
 
-  const links = isAuthenticated ? [...PRIVATE_LINKS, ...PUBLIC_LINKS] : PUBLIC_LINKS
+  const links = isAuthenticated
+    ? [...PRIVATE_LINKS, ...PUBLIC_LINKS]
+    : [...PUBLIC_LINKS, ...VISITOR_LINKS]
   // Connecté, la barre porte sept liens plus le profil : elle ne tient sur
   // une ligne qu'à partir de xl. En visiteur, trois liens tiennent dès lg.
   const desktop = isAuthenticated ? 'xl:flex' : 'lg:flex'
@@ -78,7 +124,7 @@ export default function Layout() {
         href="#contenu"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-ink-100 focus:px-3 focus:py-2 focus:shadow-card"
       >
-        Aller au contenu
+        {t('Aller au contenu')}
       </a>
 
       {/* Pastille flottante, collée en haut au défilement : le contenu passe
@@ -86,18 +132,25 @@ export default function Layout() {
       <header className="sticky top-0 z-40 px-3 pt-3 sm:px-6 sm:pt-4">
         <div className="mx-auto max-w-[90rem] rounded-2xl bg-[#f0f2f5]/95 shadow-card backdrop-blur">
           <div className="flex items-center gap-3 px-4 py-2.5 sm:px-6">
-            <Link to="/" className="shrink-0 text-[#0d1117]" aria-label="DevLink Africa, accueil">
+            <Link
+              to="/"
+              className="shrink-0 text-[#0d1117]"
+              aria-label={t('DevLink Africa, accueil')}
+            >
               <Logo size={26} variant="light" />
             </Link>
 
             <nav
-              aria-label="Navigation principale"
+              aria-label={t('Navigation principale')}
               className={cn('hidden flex-1 items-center justify-center gap-1', desktop)}
             >
               {links.map((link) => (
                 <NavLink key={link.to} to={link.to} className={linkClass}>
-                  {link.label}
+                  {t(link.label)}
                   {link.to === '/echanges' && <PendingBadge count={pending} />}
+                  {link.to === '/cercles' && (
+                    <PendingBadge count={circleInvitations} kind="invite" />
+                  )}
                 </NavLink>
               ))}
             </nav>
@@ -107,13 +160,13 @@ export default function Layout() {
                 <>
                   <NavLink to="/profil" className={linkClass}>
                     <Icon name="profile" size={17} className="mr-2" />
-                    {user?.full_name || 'Mon profil'}
+                    {user?.full_name || t('Mon profil')}
                   </NavLink>
                   <button
                     type="button"
                     onClick={handleSignOut}
-                    aria-label="Se déconnecter"
-                    title="Se déconnecter"
+                    aria-label={t('Se déconnecter')}
+                    title={t('Se déconnecter')}
                     className="rounded-xl border border-[#d0d7de] p-2.5 text-[#3d444d] transition-colors hover:bg-[#e3e6eb] hover:text-[#0d1117]"
                   >
                     <Icon name="logout" size={18} />
@@ -122,22 +175,24 @@ export default function Layout() {
               ) : (
                 <>
                   <NavLink to="/connexion" className={linkClass}>
-                    Se connecter
+                    {t('Se connecter')}
                   </NavLink>
                   <Link to="/inscription" className={signUpClass}>
-                    S’inscrire
+                    {t('S’inscrire')}
                   </Link>
                 </>
               )}
             </div>
+
+            <LanguageSwitch className={cn('ml-auto', isAuthenticated ? 'xl:ml-0' : 'lg:ml-0')} />
 
             <button
               type="button"
               onClick={() => setMenuOpen((open) => !open)}
               aria-expanded={menuOpen}
               aria-controls="menu-mobile"
-              aria-label="Menu"
-              className={cn('ml-auto rounded-lg p-2 text-[#3d444d] hover:bg-[#e3e6eb]', mobileOnly)}
+              aria-label={t('Menu')}
+              className={cn('rounded-lg p-2 text-[#3d444d] hover:bg-[#e3e6eb]', mobileOnly)}
             >
               <svg
                 viewBox="0 0 24 24"
@@ -154,7 +209,7 @@ export default function Layout() {
           {menuOpen && (
             <nav
               id="menu-mobile"
-              aria-label="Navigation mobile"
+              aria-label={t('Navigation mobile')}
               className={cn('animate-fade-in border-t border-[#d0d7de] px-3 py-2', mobileOnly)}
             >
               {links.map((link) => (
@@ -164,8 +219,11 @@ export default function Layout() {
                   className={mobileLinkClass}
                   onClick={() => setMenuOpen(false)}
                 >
-                  {link.label}
+                  {t(link.label)}
                   {link.to === '/echanges' && <PendingBadge count={pending} />}
+                  {link.to === '/cercles' && (
+                    <PendingBadge count={circleInvitations} kind="invite" />
+                  )}
                 </NavLink>
               ))}
               <div className="mt-2 border-t border-[#d0d7de] pt-2">
@@ -176,14 +234,14 @@ export default function Layout() {
                       className={mobileLinkClass}
                       onClick={() => setMenuOpen(false)}
                     >
-                      Mon profil
+                      {t('Mon profil')}
                     </NavLink>
                     <button
                       type="button"
                       onClick={handleSignOut}
                       className="block w-full rounded-lg px-3 py-2.5 text-left text-[15px] font-medium text-[#3d444d] hover:bg-[#e3e6eb]"
                     >
-                      Se déconnecter
+                      {t('Se déconnecter')}
                     </button>
                   </>
                 ) : (
@@ -193,14 +251,14 @@ export default function Layout() {
                       className={mobileLinkClass}
                       onClick={() => setMenuOpen(false)}
                     >
-                      Se connecter
+                      {t('Se connecter')}
                     </NavLink>
                     <Link
                       to="/inscription"
                       className={signUpClass}
                       onClick={() => setMenuOpen(false)}
                     >
-                      S’inscrire
+                      {t('S’inscrire')}
                     </Link>
                   </div>
                 )}
@@ -219,10 +277,13 @@ export default function Layout() {
 
       <footer className="border-t border-ink-200 bg-ink-100">
         <PageContainer className="flex flex-col items-center gap-2 py-6 text-sm text-ink-600 sm:flex-row sm:justify-between">
-          <p>DevLink Africa — échange de compétences entre développeurs africains.</p>
-          <nav aria-label="Liens secondaires" className="flex gap-4">
+          <p>{t('DevLink Africa — échange de compétences entre développeurs africains.')}</p>
+          <nav aria-label={t('Liens secondaires')} className="flex gap-4">
+            <Link to="/observatoire" className="underline hover:text-accent-700">
+              {t('Observatoire')}
+            </Link>
             <Link to="/confidentialite" className="underline hover:text-accent-700">
-              Confidentialité
+              {t('Confidentialité')}
             </Link>
             <Link to="/design" className="underline hover:text-accent-700">
               Design system

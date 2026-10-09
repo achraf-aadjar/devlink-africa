@@ -11,6 +11,7 @@ import {
   Modal,
   Textarea,
 } from '../../../components/ui'
+import { useI18n } from '../../../i18n/useI18n'
 import { ApiError } from '../../../lib/api'
 import { formatRelativeDate } from '../../../lib/date'
 import { countryFlag, JOIN_STATUS_LABELS, PROJECT_STATUS_LABELS } from '../../../lib/labels'
@@ -38,6 +39,7 @@ export default function ProjectDetailPage() {
   const { id } = useParams<{ id: string }>()
   const projectId = Number(id)
   const navigate = useNavigate()
+  const { t, tn, lang } = useI18n()
   const { user, isAuthenticated } = useAuth()
   const { data, loading, error, reload } = useQuery(() => getProject(projectId), [projectId])
 
@@ -52,14 +54,14 @@ export default function ProjectDetailPage() {
   async function handleJoin(event: React.FormEvent) {
     event.preventDefault()
     if (!message.trim()) {
-      setActionError('Expliquez en quelques mots ce que vous apportez.')
+      setActionError(t('Expliquez en quelques mots ce que vous apportez.'))
       return
     }
     setSending(true)
     setActionError(null)
     try {
       await joinProject(projectId, message.trim())
-      setNotice('Votre demande a été envoyée au porteur du projet.')
+      setNotice(t('Votre demande a été envoyée au porteur du projet.'))
       setJoinOpen(false)
       setMessage('')
       reload()
@@ -67,11 +69,11 @@ export default function ProjectDetailPage() {
       if (cause instanceof ApiError) {
         setActionError(
           cause.code === 'duplicate_request'
-            ? 'Vous avez déjà une demande en attente sur ce projet.'
+            ? t('Vous avez déjà une demande en attente sur ce projet.')
             : cause.message,
         )
       } else {
-        setActionError('Impossible de contacter le serveur.')
+        setActionError(t('Impossible de contacter le serveur.'))
       }
     } finally {
       setSending(false)
@@ -82,38 +84,41 @@ export default function ProjectDetailPage() {
     setActionError(null)
     try {
       await decideJoinRequest(requestId, status)
-      setNotice(status === 'ACCEPTED' ? 'Demande acceptée.' : 'Demande refusée.')
+      setNotice(status === 'ACCEPTED' ? t('Demande acceptée.') : t('Demande refusée.'))
       reload()
     } catch {
-      setActionError("La demande n'a pas pu être traitée.")
+      setActionError(t("La demande n'a pas pu être traitée."))
     }
   }
 
   async function handleDelete() {
-    if (!window.confirm('Supprimer définitivement ce projet ?')) return
+    if (!window.confirm(t('Supprimer définitivement ce projet ?'))) return
     try {
       await deleteProject(projectId)
       navigate('/projets')
     } catch {
-      setActionError("Le projet n'a pas pu être supprimé.")
+      setActionError(t("Le projet n'a pas pu être supprimé."))
     }
   }
 
-  if (loading) return <LoadingState rows={4} label="Chargement du projet…" />
+  if (loading) return <LoadingState rows={4} label={t('Chargement du projet…')} />
   if (error) {
     const notFound = error instanceof ApiError && error.status === 404
     return (
       <ErrorState
-        message={notFound ? "Ce projet n'existe pas." : "Le projet n'a pas pu être chargé."}
+        message={notFound ? t("Ce projet n'existe pas.") : t("Le projet n'a pas pu être chargé.")}
         onRetry={notFound ? undefined : reload}
       />
     )
   }
   if (!data) return null
 
+  const created = formatRelativeDate(data.created_at, lang)
+  const updated = formatRelativeDate(data.updated_at, lang)
+
   return (
     <section className="flex flex-col gap-6">
-      <nav aria-label="Fil d'Ariane">
+      <nav aria-label={t("Fil d'Ariane")}>
         <Link to="/projets" className="text-sm text-ink-600 hover:text-accent-700 hover:underline">
           ← Project Hub
         </Link>
@@ -132,9 +137,9 @@ export default function ProjectDetailPage() {
           <div className="min-w-0 flex-1">
             <h1 className="text-3xl font-bold tracking-tight text-ink-900">{data.title}</h1>
             <p className="mt-1 text-sm text-ink-600">
-              Porté par{' '}
+              {t('Porté par')}{' '}
               <Link to={`/developpeurs/${data.owner.id}`} className="hover:underline">
-                {data.owner.full_name || 'un développeur'}
+                {data.owner.full_name || t('un développeur')}
               </Link>
               {data.owner.country && (
                 <>
@@ -145,7 +150,7 @@ export default function ProjectDetailPage() {
             </p>
             <div className="mt-2 flex flex-wrap gap-2">
               <Badge tone={data.status === 'OPEN' ? 'success' : 'neutral'}>
-                {PROJECT_STATUS_LABELS[data.status]}
+                {t(PROJECT_STATUS_LABELS[data.status])}
               </Badge>
               <DemoBadge isDemo={data.owner.is_demo} />
             </div>
@@ -153,22 +158,24 @@ export default function ProjectDetailPage() {
         </div>
 
         <div className="flex flex-wrap items-center gap-2 lg:shrink-0 lg:justify-end">
-          {data.repo_url && <LinkButton href={data.repo_url}>Dépôt du code</LinkButton>}
-          {data.demo_url && <LinkButton href={data.demo_url}>Démonstration en ligne</LinkButton>}
+          {data.repo_url && <LinkButton href={data.repo_url}>{t('Dépôt du code')}</LinkButton>}
+          {data.demo_url && (
+            <LinkButton href={data.demo_url}>{t('Démonstration en ligne')}</LinkButton>
+          )}
           {isOwner ? (
             <>
               <Link to={`/projets/${projectId}/modifier`}>
-                <Button variant="secondary">Modifier</Button>
+                <Button variant="secondary">{t('Modifier')}</Button>
               </Link>
               <Button variant="danger" onClick={handleDelete}>
-                Supprimer
+                {t('Supprimer')}
               </Button>
             </>
           ) : (
             isAuthenticated && (
               <>
-                <Button onClick={() => setJoinOpen(true)}>Rejoindre le projet</Button>
-                <ReportButton targetType="PROJECT" targetId={projectId} label="Signaler" />
+                <Button onClick={() => setJoinOpen(true)}>{t('Rejoindre le projet')}</Button>
+                <ReportButton targetType="PROJECT" targetId={projectId} label={t('Signaler')} />
               </>
             )
           )}
@@ -176,30 +183,25 @@ export default function ProjectDetailPage() {
       </header>
 
       <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-ink-500">
-        {formatRelativeDate(data.created_at) && (
+        {created && (
           <>
-            <span>Créé {formatRelativeDate(data.created_at)}</span>
+            <span>{t('Créé {date}', { date: created })}</span>
             <span aria-hidden="true">·</span>
           </>
         )}
-        {formatRelativeDate(data.updated_at) && (
-          <span>Mis à jour {formatRelativeDate(data.updated_at)}</span>
-        )}
+        {updated && <span>{t('Mis à jour {date}', { date: updated })}</span>}
         {data.needs.length > 0 && (
           <>
             <span aria-hidden="true">·</span>
             <span>
-              {data.needs.length} compétence{data.needs.length > 1 ? 's' : ''} recherchée
-              {data.needs.length > 1 ? 's' : ''}
+              {tn(data.needs.length, '{n} compétence recherchée', '{n} compétences recherchées')}
             </span>
           </>
         )}
         {data.join_requests_count > 0 && (
           <>
             <span aria-hidden="true">·</span>
-            <span>
-              {data.join_requests_count} demande{data.join_requests_count > 1 ? 's' : ''}
-            </span>
+            <span>{tn(data.join_requests_count, '{n} demande', '{n} demandes')}</span>
           </>
         )}
       </div>
@@ -220,14 +222,14 @@ export default function ProjectDetailPage() {
 
       {data.description && (
         <Card>
-          <h2 className="mb-2 font-semibold text-ink-900">Le projet</h2>
+          <h2 className="mb-2 font-semibold text-ink-900">{t('Le projet')}</h2>
           <p className="whitespace-pre-line text-sm text-ink-700">{data.description}</p>
         </Card>
       )}
 
       {data.needs.length > 0 && (
         <Card>
-          <h2 className="mb-3 font-semibold text-ink-900">Compétences recherchées</h2>
+          <h2 className="mb-3 font-semibold text-ink-900">{t('Compétences recherchées')}</h2>
           <ul className="flex flex-wrap gap-2">
             {data.needs.map((skill) => (
               <li key={skill.id}>
@@ -241,10 +243,10 @@ export default function ProjectDetailPage() {
       {isOwner && data.join_requests && (
         <Card>
           <h2 className="mb-3 font-semibold text-ink-900">
-            Demandes reçues ({data.join_requests.length})
+            {t('Demandes reçues ({count})', { count: data.join_requests.length })}
           </h2>
           {data.join_requests.length === 0 ? (
-            <p className="text-sm text-ink-600">Aucune demande pour le moment.</p>
+            <p className="text-sm text-ink-600">{t('Aucune demande pour le moment.')}</p>
           ) : (
             <ul className="flex flex-col gap-4">
               {data.join_requests.map((request) => (
@@ -260,21 +262,21 @@ export default function ProjectDetailPage() {
                       {request.applicant.full_name}
                     </Link>
                     <Badge tone={request.status === 'PENDING' ? 'warning' : 'neutral'}>
-                      {JOIN_STATUS_LABELS[request.status]}
+                      {t(JOIN_STATUS_LABELS[request.status])}
                     </Badge>
                   </div>
                   <p className="mt-1 text-sm text-ink-700">{request.message}</p>
                   {request.status === 'PENDING' && (
                     <div className="mt-2 flex gap-2">
                       <Button size="sm" onClick={() => handleDecision(request.id, 'ACCEPTED')}>
-                        Accepter
+                        {t('Accepter')}
                       </Button>
                       <Button
                         size="sm"
                         variant="secondary"
                         onClick={() => handleDecision(request.id, 'DECLINED')}
                       >
-                        Refuser
+                        {t('Refuser')}
                       </Button>
                     </div>
                   )}
@@ -285,22 +287,22 @@ export default function ProjectDetailPage() {
         </Card>
       )}
 
-      <Modal open={joinOpen} title="Rejoindre ce projet" onClose={() => setJoinOpen(false)}>
+      <Modal open={joinOpen} title={t('Rejoindre ce projet')} onClose={() => setJoinOpen(false)}>
         <form onSubmit={handleJoin} noValidate className="flex flex-col gap-4">
           <Textarea
-            label="Votre message"
+            label={t('Votre message')}
             required
             value={message}
             maxLength={1000}
-            hint="Ce que vous pouvez apporter au projet."
+            hint={t('Ce que vous pouvez apporter au projet.')}
             onChange={(event) => setMessage(event.target.value)}
           />
           <div className="flex justify-end gap-2">
             <Button type="button" variant="secondary" onClick={() => setJoinOpen(false)}>
-              Annuler
+              {t('Annuler')}
             </Button>
             <Button type="submit" loading={sending}>
-              Envoyer
+              {t('Envoyer')}
             </Button>
           </div>
         </form>

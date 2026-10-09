@@ -53,6 +53,8 @@ def test_the_export_contains_every_section():
         "projects",
         "join_requests",
         "exchanges",
+        "circles",
+        "endorsements_given",
         "reports_made",
     } == set(body)
 

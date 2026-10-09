@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import Icon from '../../../components/icons/Icon'
 import { Badge, Card } from '../../../components/ui'
+import { useI18n } from '../../../i18n/useI18n'
 import { formatRelativeDate, shortenUrl } from '../../../lib/date'
 import { countryFlag, PROJECT_STATUS_LABELS } from '../../../lib/labels'
 import type { Project } from '../../../lib/types'
@@ -13,7 +14,8 @@ const STATUS_TONE = {
 } as const
 
 export default function ProjectCard({ project }: { project: Project }) {
-  const updated = formatRelativeDate(project.updated_at)
+  const { t, tn, lang } = useI18n()
+  const updated = formatRelativeDate(project.updated_at, lang)
 
   return (
     <Card as="li" interactive className="flex flex-col gap-3">
@@ -32,7 +34,7 @@ export default function ProjectCard({ project }: { project: Project }) {
               </Link>
             </h2>
             <Badge tone={STATUS_TONE[project.status]} className="shrink-0">
-              {PROJECT_STATUS_LABELS[project.status]}
+              {t(PROJECT_STATUS_LABELS[project.status])}
             </Badge>
           </div>
           {project.repo_url && (
@@ -66,9 +68,9 @@ export default function ProjectCard({ project }: { project: Project }) {
 
       <div className="mt-auto flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-sm text-ink-600">
         <p>
-          Porté par{' '}
+          {t('Porté par')}{' '}
           <Link to={`/developpeurs/${project.owner.id}`} className="hover:underline">
-            {project.owner.full_name || 'un développeur'}
+            {project.owner.full_name || t('un développeur')}
           </Link>
           {project.owner.country && (
             <>
@@ -78,12 +80,11 @@ export default function ProjectCard({ project }: { project: Project }) {
           )}
         </p>
         <p className="text-xs text-ink-500">
-          {updated && `Mis à jour ${updated}`}
+          {updated && t('Mis à jour {date}', { date: updated })}
           {project.join_requests_count > 0 && (
             <>
               {updated ? ' · ' : ''}
-              {project.join_requests_count} demande
-              {project.join_requests_count > 1 ? 's' : ''}
+              {tn(project.join_requests_count, '{n} demande', '{n} demandes')}
             </>
           )}
         </p>

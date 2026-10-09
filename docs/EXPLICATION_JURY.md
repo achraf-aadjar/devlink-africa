@@ -223,24 +223,62 @@ La loi sénégalaise n° 2008-12 est respectée par des fonctionnalités réelle
 
 ---
 
-## 9. Ce que nous n'avons pas fait, et pourquoi
+## 9. Ce qui nous distingue
 
-L'honnêteté sur les limites vaut mieux qu'une promesse non tenue.
+Tous les candidats partent du même sujet. Quatre ajouts répondent chacun à une limite concrète de la mise en relation à deux. Détail des choix : `docs/DECISIONS.md`, 2026-10-09.
 
-- **Pas de fonctions d'IA.** Le cahier les plaçait en dernier, facultatives, à ne faire que si tout le reste était terminé et vert. Nous avons préféré consolider la boucle principale, les tests et la sécurité. Le produit n'en dépend donc d'aucune façon, ce qui était l'exigence première.
-- **Pas de messagerie temps réel.** Hors périmètre assumé. Un échange accepté révèle le moyen de contact choisi par chacun (e-mail ou lien `https`) ; la conversation se poursuit ailleurs.
-- **Throttling par worker**, voir section 5.
-- **Compétences déclaratives**, atténuées par les preuves, voir section 2.
+### Cercles d'échange
+
+L'échange à deux exige une double coïncidence : je veux ce que tu sais, et tu veux ce que je sais. Aminata (Dakar) veut FastAPI et enseigne React ; Kwame (Accra) enseigne FastAPI mais veut Docker ; Imani (Nairobi) enseigne Docker et veut React. Aucune paire ne marche, le trio si : chacun apprend au suivant. DevLink cherche ces **cycles** de 3 ou 4 personnes dans le graphe « qui peut apprendre quoi à qui » (`backend/circles/finder.py`, module pur, 24 tests). Les contacts ne se révèlent que lorsque les trois ont accepté.
+
+### Observatoire des compétences
+
+Une page publique qui additionne l'offre et la demande : les compétences qui manquent, celles qu'on peut partager, et les **ponts** entre pays (« FastAPI : recherché au Sénégal, proposé au Ghana »). Que des comptes, aucun nom.
+
+### Compétences validées par les pairs
+
+Déclarer « Node.js, avancé » ne coûte rien. Après un échange terminé, ou dans un cercle actif, on peut valider la compétence que l'autre nous a transmise. La validation est nominative et publique sur son profil : celui qui la donne s'engage. Le serveur vérifie qu'on a réellement travaillé ensemble.
+
+### Interface en anglais
+
+« Développeurs africains » inclut le Ghana, le Nigeria, le Kenya : une plateforme seulement francophone couperait le continent en deux. Un bouton bascule toute l'interface ; les messages d'erreur et les raisons d'un match suivent. Un test échoue si un texte de l'interface ou un message d'erreur n'a pas sa traduction.
+
+### Questions probables
+
+> **« Pourquoi pas des cercles de 5 ou plus ? »**
+> Au-delà de 4, la coordination devient irréaliste (il faut que tout le monde dise oui) et le nombre de cycles à examiner explose. Et un cercle dont deux membres se complètent déjà directement n'est jamais proposé : l'échange à deux reste plus simple.
+
+> **« Qu'est-ce qui empêche de se valider entre amis ? »**
+> Il faut un échange **terminé** entre les deux, ou un cercle **actif**, donc accepté par chacun. Ça n'empêche pas une complaisance entre deux personnes décidées à tricher, mais la validation porte leur nom et leur pays, publiquement : elle engage celui qui la donne. C'est pourquoi nous n'avons pas mis de note sur 5, qui inviterait à la complaisance ou à la revanche.
+
+> **« L'observatoire ne révèle-t-il pas des données personnelles ? »**
+> Il n'expose que des comptes (« 3 développeurs proposent Docker au Kenya »), jamais qui. Les compétences et le pays de chacun sont déjà publics sur son profil ; l'observatoire ne fait que les additionner.
+
+> **« Comment la traduction reste-t-elle complète ? »**
+> Le texte français sert de clé (`t('Tableau de bord')`), et un test lit le code source pour vérifier que chaque texte a son anglais. Côté serveur, un test parcourt le code Python et échoue si un message d'erreur n'est pas traduit.
 
 ---
 
-## 10. Répartition pour l'oral
+## 10. Ce que nous n'avons pas fait, et pourquoi
+
+L'honnêteté sur les limites vaut mieux qu'une promesse non tenue.
+
+- **L'IA reste un complément, désactivée par défaut.** Le cahier plaçait ces fonctions en dernier et facultatives. Elles existent (extraction de compétences, recherche en langage naturel, résumé de projet, phrase d'explication d'un match, DevLink Copilot), mais le produit fonctionne entièrement sans elles, ce qui était l'exigence première : `AI_ENABLED=false` est la valeur par défaut, et un test vérifie que toutes les routes principales répondent sans IA. Le score de Dev Match n'est jamais calculé par une IA.
+- **Pas de messagerie temps réel.** Hors périmètre assumé. Un échange accepté révèle le moyen de contact choisi par chacun (e-mail ou lien `https`) ; la conversation se poursuit ailleurs.
+- **Throttling par worker**, voir section 5.
+- **Compétences déclaratives**, atténuées par les preuves et par les validations des pairs, voir sections 2 et 9.
+- **Le contenu saisi n'est pas traduit.** Bios et descriptions de projets restent dans la langue de leur auteur.
+
+---
+
+## 11. Répartition pour l'oral
 
 | Partie | Qui | Durée visée |
 |---|---|---|
 | Le problème et la vision | Omar | 2 min |
 | Démonstration du parcours (8 étapes) | Emmanuel | 4 min |
 | Dev Match et son explication | Omar | 2 min |
+| Ce qui nous distingue : cercle, observatoire, validations, anglais | Omar | 2 min |
 | Architecture, base de données, sécurité | Achraf | 2 min |
 | Conformité (licences, IA, données personnelles) | Achraf | 1 min |
 

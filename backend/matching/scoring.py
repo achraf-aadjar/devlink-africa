@@ -285,38 +285,62 @@ def score_pair(a: ProfileInput, b: ProfileInput) -> MatchExplanation:
     )
 
 
-def reasons_for(explanation: MatchExplanation, a_name: str, b_name: str) -> list[str]:
+#: Phrases d'explication, en français et en anglais. `{other}` est le partenaire,
+#: `{skill}` une compétence, `{skills}` une liste.
+REASON_TEMPLATES: dict[str, dict[str, str]] = {
+    "fr": {
+        "they_teach": "{other} peut vous apprendre {skill}.",
+        "you_teach": "Vous pouvez apprendre {skill} à {other}.",
+        "common": "Vous maîtrisez tous les deux : {skills}.",
+        "collaboration": "Vous êtes tous les deux ouverts à la collaboration.",
+        "one_way": (
+            "L'échange est à sens unique pour le moment : déclarez des compétences "
+            "recherchées pour améliorer ce match."
+        ),
+        "nothing": "Aucune complémentarité détectée : déclarez vos compétences pour affiner vos matchs.",
+    },
+    "en": {
+        "they_teach": "{other} can teach you {skill}.",
+        "you_teach": "You can teach {skill} to {other}.",
+        "common": "You both master: {skills}.",
+        "collaboration": "You are both open to collaboration.",
+        "one_way": (
+            "The exchange only goes one way for now: add skills you want to learn to improve this match."
+        ),
+        "nothing": "No complementarity found yet: declare your skills to refine your matches.",
+    },
+}
+
+
+def reasons_for(explanation: MatchExplanation, a_name: str, b_name: str, lang: str = "fr") -> list[str]:
     """Phrases d'explication, du point de vue de A. Source de vérité : le calcul.
 
     Ces phrases sont construites à partir des résultats du score, jamais
     l'inverse : l'explication affichée reflète donc toujours le calcul réel.
+    `lang` choisit la langue (« fr » par défaut, « en »).
     """
+    text = REASON_TEMPLATES.get(lang, REASON_TEMPLATES["fr"])
     sentences: list[str] = []
 
     for skill in explanation.b_can_teach_a[:3]:
-        sentences.append(f"{b_name} peut vous apprendre {skill.name}.")
+        sentences.append(text["they_teach"].format(other=b_name, skill=skill.name))
     for skill in explanation.a_can_teach_b[:3]:
-        sentences.append(f"Vous pouvez apprendre {skill.name} à {b_name}.")
+        sentences.append(text["you_teach"].format(other=b_name, skill=skill.name))
 
     if explanation.common_skills:
         names = ", ".join(skill.name for skill in explanation.common_skills[:3])
-        sentences.append(f"Vous maîtrisez tous les deux : {names}.")
+        sentences.append(text["common"].format(skills=names))
 
     collaboration = next(item for item in explanation.breakdown if item.criterion == "collaboration")
     if collaboration.points > 0:
-        sentences.append("Vous êtes tous les deux ouverts à la collaboration.")
+        sentences.append(text["collaboration"])
 
     # Sens unique : au moins un des deux n'a rien à apprendre à l'autre. On le dit,
     # car c'est actionnable (il suffit de déclarer des compétences recherchées).
     if not (explanation.a_can_teach_b and explanation.b_can_teach_a):
-        sentences.append(
-            "L'échange est à sens unique pour le moment : déclarez des compétences "
-            "recherchées pour améliorer ce match."
-        )
+        sentences.append(text["one_way"])
 
     if not sentences:
-        sentences.append(
-            "Aucune complémentarité détectée : déclarez vos compétences pour affiner vos matchs."
-        )
+        sentences.append(text["nothing"])
 
     return sentences

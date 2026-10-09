@@ -31,6 +31,23 @@ describe('exploration par pays', () => {
     expect(links.every((link) => link.getAttribute('href') === '/pays/SN')).toBe(true)
   })
 
+  it('nomme les pays en anglais', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(jsonResponse(COUNTRIES)))
+    renderWithRouter(<CountriesPage />, { lang: 'en' })
+
+    expect(await screen.findByText('Senegal')).toBeInTheDocument()
+    expect(screen.getByText('6 developers')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Browse by country' })).toBeInTheDocument()
+    // La tuile de la carte aussi, y compris pour un pays sans donnée.
+    expect(
+      screen.getByRole('link', { name: 'Senegal: 6 developer(s), 3 project(s)' }),
+    ).toHaveAttribute('href', '/pays/SN')
+    expect(screen.getByRole('link', { name: 'Chad: no sign-ups yet' })).toHaveAttribute(
+      'href',
+      '/pays/TD',
+    )
+  })
+
   it('gère le cas où aucun pays n est représenté', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(jsonResponse({ results: [] })))
     renderWithRouter(<CountriesPage />)

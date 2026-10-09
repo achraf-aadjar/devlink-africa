@@ -1,6 +1,21 @@
 import ScoreRing from '../../../components/ScoreRing'
 import { Badge, Card } from '../../../components/ui'
+import { msg } from '../../../i18n/translate'
+import { useI18n } from '../../../i18n/useI18n'
 import type { MatchExplanation as Explanation } from '../../../lib/types'
+
+/**
+ * Libellés des critères. L'API les rédige en français (matching/scoring.py) et
+ * les stocke avec le match : on les retraduit ici, d'après le code du critère.
+ */
+const CRITERION_LABELS: Record<string, string> = {
+  complementarity: msg('Complémentarité'),
+  reciprocity: msg('Réciprocité'),
+  collaboration: msg('Envie de collaborer'),
+  common_tech: msg('Technologies communes'),
+  availability: msg('Disponibilité'),
+  domain: msg('Domaine'),
+}
 
 /** Couleur de la barre selon la part du critère obtenue. */
 function barTone(ratio: number): string {
@@ -29,6 +44,7 @@ export default function MatchExplanation({
   score: number
   partnerName: string
 }) {
+  const { t } = useI18n()
   const total = Math.round(score)
 
   return (
@@ -39,11 +55,11 @@ export default function MatchExplanation({
           aria-hidden="true"
           className="glow-blob inset-x-0 top-0 -z-10 mx-auto h-48 w-72 bg-[#1f6feb]/25"
         />
-        <p className="text-sm font-medium text-accent-800">Score de compatibilité</p>
+        <p className="text-sm font-medium text-accent-800">{t('Score de compatibilité')}</p>
         <ScoreRing score={total} size={148} stroke={10} showMax />
         {explanation.capped && (
           <p className="max-w-sm text-sm text-ink-600">
-            Ce score est plafonné : l'échange ne va pour l'instant que dans un sens.
+            {t("Ce score est plafonné : l'échange ne va pour l'instant que dans un sens.")}
           </p>
         )}
       </div>
@@ -51,7 +67,9 @@ export default function MatchExplanation({
       {/* Niveau 2 : qui apprend quoi à qui */}
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
         <Card>
-          <h3 className="mb-3 font-semibold text-ink-900">{partnerName} peut vous apprendre</h3>
+          <h3 className="mb-3 font-semibold text-ink-900">
+            {t('{name} peut vous apprendre', { name: partnerName })}
+          </h3>
           {explanation.they_can_teach_you.length > 0 ? (
             <ul className="flex flex-wrap gap-2">
               {explanation.they_can_teach_you.map((skill) => (
@@ -62,13 +80,13 @@ export default function MatchExplanation({
             </ul>
           ) : (
             <p className="text-sm text-ink-600">
-              Rien pour le moment. Ajoutez des compétences à apprendre dans votre profil.
+              {t('Rien pour le moment. Ajoutez des compétences à apprendre dans votre profil.')}
             </p>
           )}
         </Card>
 
         <Card>
-          <h3 className="mb-3 font-semibold text-ink-900">Vous pouvez lui apprendre</h3>
+          <h3 className="mb-3 font-semibold text-ink-900">{t('Vous pouvez lui apprendre')}</h3>
           {explanation.you_can_teach_them.length > 0 ? (
             <ul className="flex flex-wrap gap-2">
               {explanation.you_can_teach_them.map((skill) => (
@@ -79,7 +97,7 @@ export default function MatchExplanation({
             </ul>
           ) : (
             <p className="text-sm text-ink-600">
-              Rien pour le moment. Déclarez ce que vous savez faire.
+              {t('Rien pour le moment. Déclarez ce que vous savez faire.')}
             </p>
           )}
         </Card>
@@ -88,7 +106,7 @@ export default function MatchExplanation({
       {/* Les raisons, en phrases */}
       {explanation.reasons.length > 0 && (
         <Card>
-          <h3 className="mb-3 font-semibold text-ink-900">Pourquoi ce match</h3>
+          <h3 className="mb-3 font-semibold text-ink-900">{t('Pourquoi ce match')}</h3>
           <ul className="flex flex-col gap-2">
             {explanation.reasons.map((reason) => (
               <li key={reason} className="flex gap-2 text-sm text-ink-700">
@@ -104,20 +122,22 @@ export default function MatchExplanation({
 
       {/* Niveau 3 : la répartition détaillée */}
       <Card>
-        <h3 className="mb-1 font-semibold text-ink-900">Comment le score est calculé</h3>
+        <h3 className="mb-1 font-semibold text-ink-900">{t('Comment le score est calculé')}</h3>
         <p className="mb-4 text-sm text-ink-600">
-          Chaque critère a un poids maximal. La somme des points donne exactement le score.
+          {t('Chaque critère a un poids maximal. La somme des points donne exactement le score.')}
         </p>
 
         <ul className="flex flex-col gap-3">
           {explanation.breakdown.map((item) => {
             const ratio = item.weight > 0 ? item.points / item.weight : 0
+            const label = t(CRITERION_LABELS[item.criterion] ?? item.label)
+            const points = item.points.toFixed(1)
             return (
               <li key={item.criterion}>
                 <div className="mb-1 flex items-baseline justify-between gap-2 text-sm">
-                  <span className="font-medium text-ink-800">{item.label}</span>
+                  <span className="font-medium text-ink-800">{label}</span>
                   <span className="tabular-nums text-ink-600">
-                    {item.points.toFixed(1)} / {item.weight}
+                    {points} / {item.weight}
                   </span>
                 </div>
                 <div
@@ -125,7 +145,11 @@ export default function MatchExplanation({
                   aria-valuenow={Math.round(item.points)}
                   aria-valuemin={0}
                   aria-valuemax={item.weight}
-                  aria-label={`${item.label} : ${item.points.toFixed(1)} points sur ${item.weight}`}
+                  aria-label={t('{label} : {points} points sur {weight}', {
+                    label,
+                    points,
+                    weight: item.weight,
+                  })}
                   className="h-2 overflow-hidden rounded-full bg-ink-100"
                 >
                   <div
@@ -141,7 +165,7 @@ export default function MatchExplanation({
         {explanation.common_skills.length > 0 && (
           <div className="mt-5 border-t border-ink-200 pt-4">
             <h4 className="mb-2 text-sm font-medium text-ink-800">
-              Technologies que vous maîtrisez tous les deux
+              {t('Technologies que vous maîtrisez tous les deux')}
             </h4>
             <ul className="flex flex-wrap gap-2">
               {explanation.common_skills.map((skill) => (

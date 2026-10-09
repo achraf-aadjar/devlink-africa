@@ -1,5 +1,6 @@
 import { useId } from 'react'
 import { cn } from '../lib/cn'
+import { useI18n } from '../i18n/useI18n'
 
 /**
  * Score de 0 à 100 dessiné comme une jauge circulaire, en dégradé bleu-violet.
@@ -21,6 +22,7 @@ export default function ScoreRing({
   /** Affiche « /100 » sous le chiffre (grandes tailles seulement). */
   showMax?: boolean
 }) {
+  const { t } = useI18n()
   const gradientId = useId()
   const value = Math.round(Math.min(Math.max(score, 0), 100))
   const radius = (size - stroke) / 2
@@ -29,7 +31,7 @@ export default function ScoreRing({
   return (
     <div
       role="img"
-      aria-label={`Score de ${value} sur 100`}
+      aria-label={t('Score de {value} sur 100', { value })}
       className={cn('relative inline-flex shrink-0 items-center justify-center', className)}
       style={{ width: size, height: size }}
     >

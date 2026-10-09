@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { describe, expect, it, vi } from 'vitest'
+import { renderWithRouter } from '../../../test/helpers'
 import MatchesPage from './MatchesPage'
 
 function jsonResponse(body: unknown, status = 200) {
@@ -42,6 +43,26 @@ describe('page des matchs', () => {
     expect(await screen.findByText('Kofi Mensah')).toBeInTheDocument()
     expect(screen.getByText('83')).toBeInTheDocument()
     expect(screen.getByText('Kofi peut vous apprendre Python.')).toBeInTheDocument()
+  })
+
+  it('affiche la liste en anglais', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi
+        .fn()
+        .mockResolvedValue(
+          jsonResponse({ count: 1, next: null, previous: null, results: [MATCH] }),
+        ),
+    )
+    renderWithRouter(<MatchesPage />, { lang: 'en' })
+
+    expect(await screen.findByText('1 developer matches your profile.')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'My matches' })).toBeInTheDocument()
+    expect(screen.getByText('Demo profile')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'See the full explanation' })).toHaveAttribute(
+      'href',
+      '/matchs/31',
+    )
   })
 
   it('étiquette les profils de démonstration', async () => {

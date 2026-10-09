@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom'
 import Icon from '../../../components/icons/Icon'
+import type { I18n } from '../../../i18n/context'
+import { useI18n } from '../../../i18n/useI18n'
 import { cn } from '../../../lib/cn'
 import type { Dashboard } from '../../../lib/types'
 
@@ -12,45 +14,50 @@ interface Step {
 }
 
 /** Les cinq étapes qui mènent d'un compte vide à un premier échange. */
-function onboardingSteps(data: Dashboard): Step[] {
+function onboardingSteps(data: Dashboard, t: I18n['t']): Step[] {
   return [
     {
       done: data.profile_completeness === 100,
-      title: 'Compléter votre profil',
+      title: t('Compléter votre profil'),
       text:
         data.profile_completeness === 100
-          ? 'Profil complet.'
-          : `Votre profil est complété à ${data.profile_completeness} %. Un profil complet reçoit des propositions plus justes.`,
+          ? t('Profil complet.')
+          : t(
+              'Votre profil est complété à {percent} %. Un profil complet reçoit des propositions plus justes.',
+              { percent: data.profile_completeness },
+            ),
       to: '/profil',
-      action: 'Compléter mon profil',
+      action: t('Compléter mon profil'),
     },
     {
       done: data.counters.offered_skills > 0,
-      title: 'Dire ce que vous savez faire',
-      text: 'Dev Match cherche des personnes qui veulent apprendre ce que vous maîtrisez.',
+      title: t('Dire ce que vous savez faire'),
+      text: t('Dev Match cherche des personnes qui veulent apprendre ce que vous maîtrisez.'),
       to: '/competences',
-      action: 'Ajouter une compétence',
+      action: t('Ajouter une compétence'),
     },
     {
       done: data.counters.wanted_skills > 0,
-      title: 'Dire ce que vous voulez apprendre',
-      text: "C'est l'autre moitié de l'échange : sans elle, aucun match réciproque.",
+      title: t('Dire ce que vous voulez apprendre'),
+      text: t("C'est l'autre moitié de l'échange : sans elle, aucun match réciproque."),
       to: '/competences',
-      action: 'Ajouter une envie',
+      action: t('Ajouter une envie'),
     },
     {
       done: data.has_contact,
-      title: 'Indiquer un moyen de contact',
-      text: 'Il ne sera montré qu’à vos partenaires, une fois un échange accepté.',
+      title: t('Indiquer un moyen de contact'),
+      text: t('Il ne sera montré qu’à vos partenaires, une fois un échange accepté.'),
       to: '/profil',
-      action: 'Ajouter mon contact',
+      action: t('Ajouter mon contact'),
     },
     {
       done: data.counters.exchanges > 0,
-      title: 'Proposer votre premier échange',
-      text: 'Choisissez un match et proposez du mentorat, une revue de code ou un projet commun.',
+      title: t('Proposer votre premier échange'),
+      text: t(
+        'Choisissez un match et proposez du mentorat, une revue de code ou un projet commun.',
+      ),
       to: '/matchs',
-      action: 'Voir mes matchs',
+      action: t('Voir mes matchs'),
     },
   ]
 }
@@ -62,7 +69,8 @@ function onboardingSteps(data: Dashboard): Step[] {
  * jamais de doute sur l'action à mener.
  */
 export default function OnboardingChecklist({ data }: { data: Dashboard }) {
-  const steps = onboardingSteps(data)
+  const { t, tn } = useI18n()
+  const steps = onboardingSteps(data, t)
   const doneCount = steps.filter((step) => step.done).length
   if (doneCount === steps.length) return null
   const nextIndex = steps.findIndex((step) => !step.done)
@@ -76,11 +84,12 @@ export default function OnboardingChecklist({ data }: { data: Dashboard }) {
       <div className="relative flex flex-wrap items-end justify-between gap-4">
         <div>
           <h2 id="premiers-pas" className="text-xl font-semibold text-ink-900">
-            Vos premiers pas
+            {t('Vos premiers pas')}
           </h2>
           <p className="mt-1 text-sm text-ink-600">
-            {doneCount} étape{doneCount > 1 ? 's' : ''} faite{doneCount > 1 ? 's' : ''} sur{' '}
-            {steps.length}
+            {tn(doneCount, '{n} étape faite sur {total}', '{n} étapes faites sur {total}', {
+              total: steps.length,
+            })}
           </p>
         </div>
         <div
@@ -115,7 +124,7 @@ export default function OnboardingChecklist({ data }: { data: Dashboard }) {
                       : 'bg-white/[0.06] text-ink-500',
                 )}
               >
-                {step.done ? <Icon name="check" size={16} label="Fait" /> : index + 1}
+                {step.done ? <Icon name="check" size={16} label={t('Fait')} /> : index + 1}
               </span>
               <div className="min-w-0 flex-1">
                 <p

@@ -19,6 +19,7 @@ from rest_framework import exceptions
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from circles.models import Circle, CircleMember
 from core.exceptions import Conflict
 from matching.models import Match
 from profiles.models import Profile
@@ -123,7 +124,7 @@ def export_user_data(*, user) -> dict:
     from exchanges.models import Exchange
     from projects.models import Project, ProjectJoinRequest
     from reports.models import Report
-    from skills.models import UserSkill
+    from skills.models import SkillEndorsement, UserSkill
 
     profile = getattr(user, "profile", None)
 
@@ -152,10 +153,20 @@ def export_user_data(*, user) -> dict:
                     {"kind": proof.kind, "title": proof.title, "url": proof.url}
                     for proof in entry.proofs.all()
                 ],
+                # Le nombre seulement : l'identité de qui valide est sa donnée à lui.
+                "endorsements": len(entry.endorsements.all()),
             }
             for entry in UserSkill.objects.filter(user=user)
             .select_related("skill")
-            .prefetch_related("proofs")
+            .prefetch_related("proofs", "endorsements")
+        ],
+        "endorsements_given": [
+            {
+                "skill": entry.user_skill.skill.name,
+                "comment": entry.comment,
+                "created_at": entry.created_at.isoformat(),
+            }
+            for entry in SkillEndorsement.objects.filter(endorser=user).select_related("user_skill__skill")
         ],
         "projects": [
             {
@@ -179,6 +190,17 @@ def export_user_data(*, user) -> dict:
                 "created_at": entry.created_at.isoformat(),
             }
             for entry in Exchange.objects.filter(models.Q(requester=user) | models.Q(partner=user))
+        ],
+        # Sans les noms des autres membres : ce sont leurs données, pas les miennes.
+        "circles": [
+            {
+                "status": member.circle.status,
+                "my_response": member.response,
+                "i_teach": [a["skill"]["name"] for a in member.circle.arrows if a["teacher"] == user.pk],
+                "i_learn": [a["skill"]["name"] for a in member.circle.arrows if a["learner"] == user.pk],
+                "created_at": member.circle.created_at.isoformat(),
+            }
+            for member in CircleMember.objects.filter(user=user).select_related("circle")
         ],
         "reports_made": [
             {
@@ -204,6 +226,9 @@ def delete_account(*, user, password: str) -> None:
     user_id = user.pk
     # Les matchs ne sont pas liés par cascade aux deux côtés : on les retire.
     Match.objects.filter(models.Q(user_a_id=user_id) | models.Q(user_b_id=user_id)).delete()
+    # Un cercle privé d'un membre ne tient plus : on le retire entier, pour ne
+    # pas laisser aux autres une chaîne brisée.
+    Circle.objects.filter(members__user_id=user_id).delete()
     user.delete()
 
     audit.info("account_deleted user=%s", user_id)
