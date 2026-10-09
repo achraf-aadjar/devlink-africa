@@ -14,10 +14,11 @@ from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 from django.db import transaction
 
+from exchanges.models import Exchange
 from matching.services import recompute_for_user
 from profiles.models import Profile
 from projects.models import Project
-from skills.models import Skill, UserSkill
+from skills.models import Skill, SkillEndorsement, UserSkill
 
 User = get_user_model()
 
@@ -342,6 +343,7 @@ class Command(BaseCommand):
         with transaction.atomic():
             users = self._create_users()
             self._create_projects(users)
+            self._create_endorsements(users)
 
         # Hors transaction : le recalcul écrit beaucoup, mieux vaut des
         # transactions courtes (recommandation du cahier pour la base).
@@ -402,6 +404,35 @@ class Command(BaseCommand):
                 defaults={"description": description, "status": status},
             )
             project.needs.set(Skill.objects.filter(name__in=needs))
+
+    def _create_endorsements(self, users: dict) -> None:
+        """Un échange terminé entre Fatou et Ibrahim, à Abidjan, et les compétences
+        qu'ils se sont validées l'un l'autre : de quoi montrer le passeport vérifié."""
+        fatou, ibrahim = users["fatou"], users["ibrahim"]
+        exchange = Exchange.objects.filter(
+            requester=fatou, partner=ibrahim, status=Exchange.Status.COMPLETED
+        ).first()
+        if exchange is None:
+            Exchange.objects.create(
+                requester=fatou,
+                partner=ibrahim,
+                type=Exchange.Type.ECHANGE_COMPETENCES,
+                status=Exchange.Status.COMPLETED,
+                message="Je t'apprends Flutter, tu me montres Node.js et l'intégration continue ?",
+            )
+
+        for endorser, owner, skill_name, comment in (
+            (fatou, ibrahim, "Node.js", "Il m'a fait écrire ma première API en une après-midi."),
+            (fatou, ibrahim, "CI/CD", "Mon projet se teste maintenant à chaque push."),
+            (ibrahim, fatou, "Flutter", "Pédagogue : mon application hors ligne tourne."),
+        ):
+            SkillEndorsement.objects.update_or_create(
+                endorser=endorser,
+                user_skill=UserSkill.objects.get(
+                    user=owner, skill__name=skill_name, kind=UserSkill.Kind.OFFERED
+                ),
+                defaults={"context": SkillEndorsement.Context.EXCHANGE, "comment": comment},
+            )
 
     def _report(self, users: dict) -> None:
         from matching.models import Match

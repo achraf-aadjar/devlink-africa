@@ -65,3 +65,35 @@ class SkillProof(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class SkillEndorsement(models.Model):
+    """Une compétence confirmée par quelqu'un qui l'a apprise de son titulaire.
+
+    C'est ce qui transforme une compétence **déclarée** en compétence
+    **vérifiée** : seul un partenaire d'échange terminé, ou un membre d'un cercle
+    actif qui l'apprend de cette personne, peut la valider (voir
+    `endorsements.eligible_skills`). On ne se valide pas soi-même, et l'on ne
+    valide qu'une fois une même compétence.
+    """
+
+    class Context(models.TextChoices):
+        EXCHANGE = "EXCHANGE", "Après un échange"
+        CIRCLE = "CIRCLE", "Dans un cercle d'échange"
+
+    user_skill = models.ForeignKey(UserSkill, on_delete=models.CASCADE, related_name="endorsements")
+    endorser = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="endorsements_given"
+    )
+    context = models.CharField(max_length=20, choices=Context.choices)
+    comment = models.CharField(max_length=280, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        constraints = [
+            models.UniqueConstraint(fields=["user_skill", "endorser"], name="unique_endorsement"),
+        ]
+
+    def __str__(self):
+        return f"{self.endorser_id} valide {self.user_skill_id}"

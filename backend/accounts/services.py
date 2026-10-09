@@ -124,7 +124,7 @@ def export_user_data(*, user) -> dict:
     from exchanges.models import Exchange
     from projects.models import Project, ProjectJoinRequest
     from reports.models import Report
-    from skills.models import UserSkill
+    from skills.models import SkillEndorsement, UserSkill
 
     profile = getattr(user, "profile", None)
 
@@ -153,10 +153,20 @@ def export_user_data(*, user) -> dict:
                     {"kind": proof.kind, "title": proof.title, "url": proof.url}
                     for proof in entry.proofs.all()
                 ],
+                # Le nombre seulement : l'identité de qui valide est sa donnée à lui.
+                "endorsements": len(entry.endorsements.all()),
             }
             for entry in UserSkill.objects.filter(user=user)
             .select_related("skill")
-            .prefetch_related("proofs")
+            .prefetch_related("proofs", "endorsements")
+        ],
+        "endorsements_given": [
+            {
+                "skill": entry.user_skill.skill.name,
+                "comment": entry.comment,
+                "created_at": entry.created_at.isoformat(),
+            }
+            for entry in SkillEndorsement.objects.filter(endorser=user).select_related("user_skill__skill")
         ],
         "projects": [
             {
