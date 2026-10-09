@@ -193,8 +193,12 @@ test('un cercle d’échange : Dakar → Accra → Nairobi', async ({ browser })
 test('l’interface passe en anglais, messages du serveur compris', async ({ browser }) => {
   const page = await (await browser.newContext()).newPage()
 
+  // Le bouton de la barre de navigation (l'accueil en propose un second).
+  const languageSwitch = (name: string) =>
+    page.getByRole('banner').getByRole('button', { name, exact: true })
+
   await page.goto('/')
-  await page.getByRole('button', { name: 'Switch to English' }).click()
+  await languageSwitch('Switch to English').click()
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Learn what you’re missing')
   await expect(page.locator('html')).toHaveAttribute('lang', 'en')
 
@@ -216,6 +220,6 @@ test('l’interface passe en anglais, messages du serveur compris', async ({ bro
   // Raisons d'un match : rédigées par le serveur, en anglais.
   await expect(page.getByText(/can teach (you )?\w/).first()).toBeVisible()
 
-  await page.getByRole('button', { name: 'Passer en français' }).click()
+  await languageSwitch('Passer en français').click()
   await expect(page.getByRole('heading', { name: 'Bonjour Fatou' })).toBeVisible()
 })
