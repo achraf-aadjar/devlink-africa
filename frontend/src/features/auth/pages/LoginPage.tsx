@@ -2,12 +2,15 @@ import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Button, Card, Field } from '../../../components/ui'
 import { ApiError } from '../../../lib/api'
+import GoogleSignInButton from '../components/GoogleSignInButton'
 import { useAuth } from '../hooks/useAuth'
+import { useGoogleClientId } from '../hooks/useGoogleClientId'
 
 type Errors = Partial<Record<'email' | 'password' | 'form', string>>
 
 export default function LoginPage() {
   const { signIn } = useAuth()
+  const { clientId: googleClientId } = useGoogleClientId()
   const navigate = useNavigate()
   const location = useLocation()
   const [values, setValues] = useState({ email: '', password: '' })
@@ -90,6 +93,27 @@ export default function LoginPage() {
             Se connecter
           </Button>
         </form>
+
+        {googleClientId && (
+          <div className="mt-5 flex flex-col gap-4">
+            <div className="flex items-center gap-3 text-xs font-medium uppercase tracking-wide text-ink-500">
+              <span className="h-px flex-1 bg-ink-200" aria-hidden="true" />
+              ou
+              <span className="h-px flex-1 bg-ink-200" aria-hidden="true" />
+            </div>
+            <GoogleSignInButton
+              redirectTo={from}
+              onError={(message) => setErrors({ form: message })}
+            />
+            <p className="text-center text-xs text-ink-500">
+              En continuant, vous acceptez notre{' '}
+              <Link to="/confidentialite" className="underline hover:text-accent-700">
+                politique de confidentialité
+              </Link>
+              .
+            </p>
+          </div>
+        )}
       </Card>
 
       <p className="mt-4 text-center text-sm text-ink-600">

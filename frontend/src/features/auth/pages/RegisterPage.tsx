@@ -4,7 +4,9 @@ import { Button, Card, Field } from '../../../components/ui'
 import { ApiError } from '../../../lib/api'
 import { updateMe } from '../../profile/api/profile'
 import CountrySelect from '../../profile/components/CountrySelect'
+import GoogleSignInButton from '../components/GoogleSignInButton'
 import { useAuth } from '../hooks/useAuth'
+import { useGoogleClientId } from '../hooks/useGoogleClientId'
 
 const MIN_PASSWORD_LENGTH = 10
 
@@ -29,6 +31,7 @@ function validate(values: { email: string; password: string; consent: boolean })
 
 export default function RegisterPage() {
   const { signUp } = useAuth()
+  const { clientId: googleClientId } = useGoogleClientId()
   const navigate = useNavigate()
   const [values, setValues] = useState({
     email: '',
@@ -163,6 +166,24 @@ export default function RegisterPage() {
             Créer mon compte
           </Button>
         </form>
+
+        {googleClientId && (
+          <div className="mt-5 flex flex-col gap-4">
+            <div className="flex items-center gap-3 text-xs font-medium uppercase tracking-wide text-ink-500">
+              <span className="h-px flex-1 bg-ink-200" aria-hidden="true" />
+              ou
+              <span className="h-px flex-1 bg-ink-200" aria-hidden="true" />
+            </div>
+            <GoogleSignInButton onError={(message) => setErrors({ form: message })} />
+            <p className="text-center text-xs text-ink-500">
+              En continuant, vous acceptez notre{' '}
+              <Link to="/confidentialite" className="underline hover:text-accent-700">
+                politique de confidentialité
+              </Link>
+              .
+            </p>
+          </div>
+        )}
       </Card>
 
       <p className="mt-4 text-center text-sm text-ink-600">

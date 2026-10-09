@@ -414,3 +414,40 @@ Repris avec nos propres codes, pas une copie : un voile sombre uniforme (`bg-ink
 ## 2026-10-08 — Un compteur faux sur le tableau de bord
 
 `pending_exchanges.received` et `sent` étaient calculés en comptant les éléments de l'aperçu, limité à 5. Avec 7 demandes reçues, le tableau de bord en annonçait 5. Ils sont désormais comptés en base par une requête d'agrégat (une requête de plus, nombre total toujours constant quel que soit le volume, vérifié par le test existant). Trouvé en ajoutant les champs des premiers pas.
+
+---
+
+## 2026-10-08 — Connexion avec Google
+
+**Décision.** Ajout de « Continuer avec Google » à l'inscription et à la connexion, sur demande d'Achraf. Même principe que les fonctions d'IA : **désactivé par défaut**, invisible côté interface tant qu'aucun identifiant n'est configuré, et le produit fonctionne entièrement sans — ce n'est pas la seule porte d'entrée.
+
+**Ce que je ne peux pas faire moi-même.** Activer réellement ce bouton demande un identifiant client OAuth, obtenu sur [Google Cloud Console](https://console.cloud.google.com/) : créer un projet, configurer l'écran de consentement, créer un identifiant « OAuth 2.0 » de type « Application Web », et y déclarer les origines autorisées (`http://localhost:5173` en développement, le domaine réel une fois déployé). Ça suppose un compte Google et d'accepter leurs conditions au nom du projet — une démarche humaine, pas quelque chose que je dois faire à la place d'Achraf. Une fois l'identifiant obtenu, il suffit de le coller dans `backend/.env` (`GOOGLE_CLIENT_ID=...`) : le bouton apparaît alors de lui-même, aucun redéploiement de code nécessaire.
+
+**Vérification du jeton, sans `requests`.** La bibliothèque `google-auth` (Apache-2.0, licences de ses dépendances toutes vérifiées : MIT, BSD) sait vérifier un jeton d'identité Google, mais la plupart des exemples s'appuient sur `google.auth.transport.requests`, qui tire `requests` puis `certifi` (MPL-2.0, interdite par le règlement). `accounts/google_auth.py` fournit donc son propre petit adaptateur HTTP basé sur `urllib`, exactement sur le modèle de `ai/client.py` pour les appels au service d'IA : même contrainte, même solution, déjà éprouvée dans ce projet.
+
+**Pourquoi un compte Google peut se connecter à un compte déjà créé par mot de passe.** Google garantit qu'une adresse est vérifiée (`email_verified`) avant de nous la transmettre : si quelqu'un a déjà un compte par mot de passe sur cette adresse, on peut donc s'y connecter en toute confiance via Google plutôt que de créer un doublon. Le mot de passe existant n'est jamais touché. Un compte créé pour la première fois par Google, lui, n'a pas de mot de passe utilisable (`set_unusable_password`, mécanisme standard de Django) tant que la personne n'en choisit pas un depuis son profil.
+
+**Le consentement RGPD-like (loi n° 2008-12).** L'inscription par mot de passe impose une case à cocher explicite. Reproduire exactement ce mécanisme pour un bouton Google est impossible proprement : cliquer sur le bouton déclenche directement la fenêtre de connexion de Google, on ne peut pas intercepter ce clic pour vérifier une case au préalable. Solution retenue, standard sur la quasi-totalité des sites qui proposent une connexion sociale (GitHub et Google y compris) : un texte, « En continuant, vous acceptez notre politique de confidentialité », avec un lien, affiché juste au-dessus du bouton. Le clic qui suit est l'acte explicite ; c'était déjà, de fait, comment la case à cocher elle-même fonctionnait.
+
+---
+
+## 2026-10-08 — DevLink Copilot
+
+**Décision.** Ajout d'un assistant conversationnel intégré (bulle flottante, en bas à droite), sur demande d'Achraf : « DevLink Copilot qui peut aider les développeurs ». Même famille que les autres fonctions d'IA du projet (DL-43 à DL-47), mais c'est la première qui tient une vraie conversation plutôt qu'un aller-retour unique.
+
+**Un assistant produit, pas un assistant généraliste.** L'invite système (`ai/services.py:COPILOT_SYSTEM_PROMPT`) décrit précisément ce que fait DevLink Africa et limite le rôle de Copilot à expliquer et orienter dans la plateforme — profil, compétences, Dev Match, échanges, projets. Elle lui dit explicitement de refuser poliment toute question hors sujet plutôt que d'y répondre. Sans ce garde-fou, un champ de texte libre relié à un modèle de langage devient vite un détournement classique (« fais autre chose pour moi », prompt injection) : mieux vaut le prévenir dans l'invite que le découvrir après coup. Elle lui interdit aussi explicitement de redemander une donnée personnelle (mot de passe, e-mail), en écho à la règle déjà suivie par tout `ai/client.py`.
+
+**Aucune conversation stockée côté serveur.** Chaque appel est indépendant : l'historique (jusqu'à six échanges) est renvoyé par le navigateur à chaque message, jamais conservé en base. Plus simple que de modéliser une conversation persistante, et ça évite une nouvelle catégorie de donnée personnelle à documenter dans `docs/securite.md` et `PrivacyPage.tsx` pour une fonctionnalité qui n'en a pas besoin pour être utile.
+
+**Pourquoi il ne fait rien à la place de l'utilisateur.** Comme `extract_skills` ou `summarize_project`, Copilot explique, il n'agit jamais lui-même (pas d'appel caché à `/me/skills/` ou `/me/`, par exemple) : c'est le même principe que tout le reste de la couche IA du projet, « l'IA propose, l'utilisateur valide » — ici, « l'IA explique, l'utilisateur agit ».
+
+**Visible seulement connecté.** Les autres fonctions d'IA exigent déjà une session (`IsAuthenticated`) ; Copilot suit la même règle plutôt que d'ouvrir un point d'entrée texte-libre-vers-modèle-de-langage à des visiteurs anonymes, qui serait un vecteur d'abus évident (coût, spam) et moins protégé par la limite de débit que ne l'est un compte (`UserRateThrottle` par personne contre `AnonRateThrottle` par IP).
+
+---
+
+## 2026-10-08 — Bouton Google : repositionné, pleine largeur
+
+**Décision.** Achraf a obtenu un vrai identifiant client Google Cloud Console et l'a testé : le bouton apparaissait en haut du formulaire, dans sa taille par défaut (assez étroite). Demande : le mettre en bas, avec « un très très bon design ». Deux changements :
+
+1. **Position** : le bouton passe après le bouton principal (« Se connecter » / « Créer mon compte »), toujours séparé par un repère « ou ». Le mot de passe reste le chemin principal, Google une alternative en dessous — plus conforme à l'ordre dans lequel les champs se remplissent, et au fait que le mot de passe reste la méthode qui fonctionne pour tout le monde (Google ne l'est que pour qui a un compte Google).
+2. **Largeur** : Google Identity Services ne dessine pas un bouton qui épouse son conteneur — il faut lui donner une largeur en pixels, qu'il ne met pas à jour tout seul si la fenêtre change de taille. `GoogleSignInButton` mesure maintenant son conteneur (`ResizeObserver`) et redessine le bouton à la largeur exacte de la carte, jusqu'à 400 px (le maximum que Google accepte) — il occupe donc toute la largeur du formulaire, comme n'importe lequel de nos champs, et reste correct si la fenêtre est redimensionnée. Thème changé pour `outline` / forme `pill` (un bouton blanc, bords arrondis) : plus net sur nos fonds sombres que le thème `filled_black` essayé en premier, qui se fondait trop dans la carte.

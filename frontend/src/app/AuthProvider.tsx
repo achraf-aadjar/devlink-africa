@@ -52,6 +52,12 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     setUser(tokens.user)
   }, [])
 
+  const signInWithGoogle = useCallback(async (credential: string) => {
+    const tokens = await authApi.googleSignIn(credential)
+    setTokens(tokens)
+    setUser(tokens.user)
+  }, [])
+
   const signOut = useCallback(async () => {
     const refresh = getRefreshToken()
     try {
@@ -65,8 +71,16 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const value = useMemo<AuthState>(
-    () => ({ user, isAuthenticated: user !== null, isLoading, signIn, signUp, signOut }),
-    [user, isLoading, signIn, signUp, signOut],
+    () => ({
+      user,
+      isAuthenticated: user !== null,
+      isLoading,
+      signIn,
+      signUp,
+      signInWithGoogle,
+      signOut,
+    }),
+    [user, isLoading, signIn, signUp, signInWithGoogle, signOut],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

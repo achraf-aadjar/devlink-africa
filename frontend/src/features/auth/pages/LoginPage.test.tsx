@@ -3,14 +3,12 @@ import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { describe, expect, it, vi } from 'vitest'
 import AuthProvider from '../../../app/AuthProvider'
+import { jsonResponse, routeFetch } from '../../../test/helpers'
 import LoginPage from './LoginPage'
 
-function jsonResponse(body: unknown, status = 200) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { 'Content-Type': 'application/json' },
-  })
-}
+// Google désactivé dans ces tests : ils portent sur le mot de passe. Un
+// identifiant vide masque le bouton (voir useGoogleClientId).
+const GOOGLE_OFF = { '/auth/google/client-id': { client_id: '' } }
 
 function renderPage() {
   return render(
@@ -36,7 +34,7 @@ describe('page de connexion', () => {
   })
 
   it('valide côté client avant tout appel réseau', async () => {
-    const fetchMock = vi.fn()
+    const fetchMock = routeFetch(GOOGLE_OFF)
     vi.stubGlobal('fetch', fetchMock)
     renderPage()
 
@@ -44,14 +42,15 @@ describe('page de connexion', () => {
 
     expect(await screen.findByText('Indiquez votre adresse e-mail.')).toBeInTheDocument()
     expect(screen.getByText('Indiquez votre mot de passe.')).toBeInTheDocument()
-    expect(fetchMock).not.toHaveBeenCalled()
+    expect(fetchMock.mock.calls.some((call) => String(call[0]).includes('/auth/login'))).toBe(false)
   })
 
   it('connecte puis redirige vers le tableau de bord', async () => {
     vi.stubGlobal(
       'fetch',
-      vi.fn().mockResolvedValue(
-        jsonResponse({
+      routeFetch({
+        ...GOOGLE_OFF,
+        '/auth/login': {
           access: 'a',
           refresh: 'r',
           user: {
@@ -60,8 +59,8 @@ describe('page de connexion', () => {
             full_name: 'Ada',
             date_joined: '2026-10-07T00:00:00Z',
           },
-        }),
-      ),
+        },
+      }),
     )
     renderPage()
 
@@ -76,14 +75,13 @@ describe('page de connexion', () => {
   it('affiche un message unique sur des identifiants refusés', async () => {
     vi.stubGlobal(
       'fetch',
-      vi
-        .fn()
-        .mockResolvedValue(
-          jsonResponse(
-            { detail: 'Adresse e-mail ou mot de passe incorrect.', code: 'invalid_credentials' },
-            401,
-          ),
+      routeFetch({
+        ...GOOGLE_OFF,
+        '/auth/login': jsonResponse(
+          { detail: 'Adresse e-mail ou mot de passe incorrect.', code: 'invalid_credentials' },
+          401,
         ),
+      }),
     )
     renderPage()
 

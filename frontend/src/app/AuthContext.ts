@@ -13,6 +13,8 @@ export interface AuthState {
     full_name: string
     consent: boolean
   }) => Promise<void>
+  /** Jeton d'identité renvoyé par Google Identity Services. */
+  signInWithGoogle: (credential: string) => Promise<void>
   signOut: () => Promise<void>
 }
 

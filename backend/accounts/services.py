@@ -56,6 +56,33 @@ def register_user(*, email: str, password: str, full_name: str = "") -> User:
     return user
 
 
+@transaction.atomic
+def login_or_register_with_google(*, google_info: dict) -> User:
+    """Connecte ou crée un compte à partir d'un jeton Google déjà vérifié (DL-03).
+
+    L'adresse Google est garantie vérifiée par l'appelant (`email_verified`,
+    voir `google_auth.verify_google_token`) : on peut donc l'utiliser pour
+    retrouver un compte existant, qu'il ait été créé par mot de passe ou par
+    Google la première fois. Un compte créé ici n'a pas de mot de passe
+    utilisable (`set_unusable_password`) tant que la personne n'en choisit pas
+    un depuis son profil.
+    """
+    email = User.objects.normalize_email(google_info["email"]).lower()
+    full_name = str(google_info.get("name") or "").strip()[:150]
+
+    user = User.objects.filter(email=email).first()
+    if user is not None:
+        if not user.is_active:
+            raise exceptions.AuthenticationFailed("Ce compte est désactivé.", code="invalid_credentials")
+        audit.info("google_login_success user=%s", user.pk)
+        return user
+
+    user = User.objects.create_user(email=email, password=None, full_name=full_name)
+    Profile.objects.create(user=user)
+    audit.info("google_register_success user=%s", user.pk)
+    return user
+
+
 def login_user(*, email: str, password: str) -> User:
     """Vérifie les identifiants. Lève AuthenticationFailed si invalides.
 

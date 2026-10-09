@@ -73,6 +73,23 @@ class LoginSerializer(StrictSerializer):
         return value.strip().lower()
 
 
+class GoogleAuthSerializer(StrictSerializer):
+    """Entrée de POST /auth/google/ : le jeton d'identité émis par Google."""
+
+    credential = serializers.CharField(max_length=4096, trim_whitespace=True)
+
+
+class GoogleClientIdSerializer(serializers.Serializer):
+    """Sortie de GET /auth/google/client-id/.
+
+    L'identifiant client OAuth n'est pas un secret (Google le fait aussi
+    circuler au navigateur pour afficher le bouton) : une chaîne vide signifie
+    simplement que la connexion avec Google n'est pas configurée.
+    """
+
+    client_id = serializers.CharField(allow_blank=True)
+
+
 class RefreshSerializer(StrictSerializer):
     """Entrée de POST /auth/refresh et de POST /auth/logout."""
 
