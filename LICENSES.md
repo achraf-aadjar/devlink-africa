@@ -136,6 +136,19 @@ Ces paquets ont été évalués puis refusés. C'est une part du travail de conf
 | requests, httpx | MPL-2.0 via certifi | Non utilisés ; un appel sortant passerait par `urllib` |
 | Données cartographiques tierces | variable ou absente | Écartées : notre carte de l'Afrique est dessinée par nous (voir `docs/DECISIONS.md`) |
 
+## Outils de développement (hors livrable)
+
+Ces outils servent à l'équipe pendant le développement. Ils ne figurent dans aucun `package.json` ni `requirements.txt`, ne sont pas copiés dans le dépôt (sauf les fichiers de contexte qu'ils produisent) et ne sont pas livrés avec l'application. `make licenses` ne les analyse donc pas, par construction.
+
+| Outil | Licence | Usage | Vérifié dans |
+|---|---|---|---|
+| Impeccable 4.5.2 (plugin Claude Code) | Apache-2.0 | Audit et correction de l'accessibilité et du design. Produit `PRODUCT.md`, `DESIGN.md`, `.impeccable/design.json` (texte). Référencé par `.claude/settings.json`. | Fichier `LICENSE` du dépôt `pbakaus/impeccable` |
+| CodeGraph 1.5.0 | MIT | Index local du code pour l'assistant. Données dans `.codegraph/`, ignorées par git. | Champ `license` de `@colbymchenry/codegraph` |
+
+Aucune des deux licences n'est à réciprocité (GPL, AGPL, LGPL, MPL). Impeccable télécharge un binaire depuis les publications GitHub de son dépôt, vérifié par somme SHA-256, dans `~/.impeccable/` (hors du dépôt). La télémétrie de CodeGraph est activée par défaut ; elle se coupe avec `codegraph telemetry off`.
+
+**À confirmer auprès de l'organisateur (DL-10)** : l'article 6 vise-t-il aussi les outils de développement locaux ? Si oui, ces deux outils sont à déclarer comme ci-dessus.
+
 ## Polices, icônes et éléments graphiques
 
 **Aucune ressource tierce. Tout a été dessiné pour le concours.**
