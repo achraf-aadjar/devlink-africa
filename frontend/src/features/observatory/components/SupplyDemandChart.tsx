@@ -60,7 +60,7 @@ export default function SupplyDemandChart({ skills }: { skills: ObservatorySkill
               onMouseLeave={() => setActive(null)}
               onFocus={() => setActive(index)}
               onBlur={() => setActive(null)}
-              className="relative grid grid-cols-[1fr_7.5rem_1fr] items-center rounded-lg py-1 outline-none transition-colors hover:bg-white/[0.03] focus-visible:bg-white/[0.05] sm:grid-cols-[1fr_9rem_1fr]"
+              className="relative grid grid-cols-[1fr_7.5rem_1fr] items-center rounded-lg py-1 outline-none transition-colors hover:bg-white/[0.03] focus-visible:bg-white/[0.08] focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-600 sm:grid-cols-[1fr_9rem_1fr]"
             >
               <span aria-hidden="true" className="flex items-center justify-end gap-2">
                 <span className="text-xs tabular-nums text-ink-600">{skill.wanted || ''}</span>
