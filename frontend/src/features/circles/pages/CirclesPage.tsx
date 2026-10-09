@@ -5,6 +5,8 @@ import { ApiError } from '../../../lib/api'
 import type { Circle } from '../../../lib/types'
 import { useQuery } from '../../../lib/useQuery'
 import { useAuth } from '../../auth/hooks/useAuth'
+import { getEndorsementCandidates } from '../../endorsements/api/endorsements'
+import EndorsePanel from '../../endorsements/components/EndorsePanel'
 import { answerCircle, getCircleSuggestions, listCircles, proposeCircle } from '../api/circles'
 import CircleCard from '../components/CircleCard'
 import { CIRCLES_CHANGED } from '../hooks/usePendingCircles'
@@ -29,6 +31,7 @@ export default function CirclesPage() {
   const meId = user?.id
   const suggestions = useQuery(() => getCircleSuggestions(), [])
   const mine = useQuery(() => listCircles(), [])
+  const candidates = useQuery(() => getEndorsementCandidates(), [])
   const [busyKey, setBusyKey] = useState<string | null>(null)
   const [actionError, setActionError] = useState<string | null>(null)
 
@@ -39,6 +42,7 @@ export default function CirclesPage() {
       await action()
       suggestions.reload()
       mine.reload()
+      candidates.reload()
       window.dispatchEvent(new Event(CIRCLES_CHANGED))
     } catch (cause) {
       setActionError(
@@ -68,16 +72,28 @@ export default function CirclesPage() {
   const possible = suggestions.data?.results ?? []
   const nothing = !loading && !error && circles.length === 0 && possible.length === 0
 
-  const card = (circle: Circle) => (
-    <CircleCard
-      key={circle.id ?? circle.key}
-      circle={circle}
-      meId={meId}
-      busy={busyKey === circle.key}
-      onPropose={propose}
-      onAnswer={answer}
-    />
-  )
+  /** Dans un cercle actif, la personne qui m'apprend quelque chose : je peux la valider. */
+  const teacherCandidate = (circle: Circle) => {
+    if (circle.status !== 'ACTIVE') return undefined
+    const teacher = circle.arrows.find((arrow) => arrow.learner === meId)?.teacher
+    return candidates.data?.results.find((candidate) => candidate.user.id === teacher)
+  }
+
+  const card = (circle: Circle) => {
+    const candidate = teacherCandidate(circle)
+    return (
+      <CircleCard
+        key={circle.id ?? circle.key}
+        circle={circle}
+        meId={meId}
+        busy={busyKey === circle.key}
+        onPropose={propose}
+        onAnswer={answer}
+      >
+        {candidate && <EndorsePanel candidate={candidate} onChange={candidates.reload} />}
+      </CircleCard>
+    )
+  }
 
   return (
     <section className="flex flex-col gap-8">

@@ -171,5 +171,21 @@ test('un cercle d’échange : Dakar → Accra → Nairobi', async ({ browser })
   await expect(trio(aminata).getByRole('link', { name: 'kwame@demo.devlink.africa' })).toBeVisible()
   await expect(trio(aminata).getByRole('link', { name: 'imani@demo.devlink.africa' })).toBeVisible()
 
+  // Imani lui a appris Docker : Aminata le valide, et ça se voit sur le profil d'Imani.
+  await trio(aminata).getByRole('button', { name: 'Valider Docker' }).click()
+  await trio(aminata)
+    .getByLabel(/Un mot sur ce qu'il ou elle vous a appris/)
+    .fill('Limpide.')
+  await trio(aminata).getByRole('button', { name: 'Confirmer la validation' }).click()
+  await expect(trio(aminata).getByText('Validée')).toBeVisible()
+  const imaniId = await aminata.evaluate(async () => {
+    const response = await fetch('/api/v1/search/users/?q=Imani')
+    return (await response.json()).results[0].id as number
+  })
+  await aminata.goto(`/developpeurs/${imaniId}`)
+  const verified = aminata.getByRole('region', { name: 'Validé par ses pairs' })
+  await expect(verified).toContainText('Docker')
+  await expect(verified).toContainText('« Limpide. »')
+
   for (const page of sessions) await page.context().close()
 })

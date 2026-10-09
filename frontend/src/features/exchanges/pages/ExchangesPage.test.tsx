@@ -18,10 +18,13 @@ const RECEIVED = {
   updated_at: '',
 }
 
-function stub(items: unknown[] = [RECEIVED]) {
+function stub(items: unknown[] = [RECEIVED], candidates: unknown[] = []) {
   const fetchMock = vi.fn((url: string, init?: RequestInit) => {
     if (init?.method === 'PATCH') {
       return Promise.resolve(jsonResponse({ ...RECEIVED, status: 'ACCEPTED' }))
+    }
+    if (String(url).includes('/endorsements/candidates/')) {
+      return Promise.resolve(jsonResponse({ results: candidates }))
     }
     if (String(url).includes('/exchanges/')) return Promise.resolve(jsonResponse(page(items)))
     return Promise.resolve(jsonResponse(SESSION_USER))

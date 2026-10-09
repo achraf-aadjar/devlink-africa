@@ -89,4 +89,37 @@ describe('profil public', () => {
 
     expect(await screen.findByRole('alert')).toHaveTextContent("Ce profil n'existe pas.")
   })
+
+  it('montre les compétences validées par des pairs, avec qui et comment', async () => {
+    const endorsed = structuredClone(PROFILE)
+    endorsed.skills.offered[0] = {
+      ...endorsed.skills.offered[0],
+      endorsements: [
+        {
+          id: 5,
+          by: { id: 3, full_name: 'Ada Lovelace', country: 'SN' },
+          context: 'EXCHANGE',
+          comment: 'Patient et clair.',
+          created_at: '2026-10-09T10:00:00Z',
+        },
+      ],
+    } as (typeof endorsed.skills.offered)[number]
+    renderProfile(endorsed)
+
+    const section = await screen.findByRole('region', { name: 'Validé par ses pairs' })
+    expect(section).toHaveTextContent('validée par 1 pair')
+    expect(section).toHaveTextContent('« Patient et clair. »')
+    expect(section).toHaveTextContent('après un échange')
+    expect(screen.getByRole('link', { name: 'Ada Lovelace' })).toHaveAttribute(
+      'href',
+      '/developpeurs/3',
+    )
+  })
+
+  it("n'affiche pas la section quand aucune compétence n'est validée", async () => {
+    renderProfile()
+
+    await screen.findByRole('heading', { level: 1 })
+    expect(screen.queryByRole('region', { name: 'Validé par ses pairs' })).not.toBeInTheDocument()
+  })
 })

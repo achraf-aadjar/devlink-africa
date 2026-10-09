@@ -51,12 +51,15 @@ export default function CircleCard({
   busy = false,
   onPropose,
   onAnswer,
+  children,
 }: {
   circle: Circle
   meId?: number
   busy?: boolean
   onPropose?: (circle: Circle) => void
   onAnswer?: (circle: Circle, accept: boolean) => void
+  /** Contenu ajouté sous le cercle, par exemple la validation des compétences. */
+  children?: React.ReactNode
 }) {
   const status = STATUS[circle.status]
   const me = circle.members.find((member) => member.id === meId)
@@ -138,6 +141,8 @@ export default function CircleCard({
           )}
         </div>
       )}
+
+      {children}
 
       {circle.status === 'DECLINED' && (
         <p className="text-sm text-ink-600">Un membre a refusé : ce cercle est clos.</p>

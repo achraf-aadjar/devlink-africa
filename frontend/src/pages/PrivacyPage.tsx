@@ -56,6 +56,11 @@ export default function PrivacyPage() {
               <strong>Vos compétences</strong>, vos projets, vos demandes d'échange et vos
               signalements.
             </li>
+            <li>
+              <strong>Vos validations</strong> : quand vous validez une compétence d'un partenaire
+              après avoir travaillé ensemble, votre nom, votre pays et votre commentaire
+              apparaissent sur son profil public. Vous pouvez retirer une validation à tout moment.
+            </li>
           </ul>
           <p className="mt-2">
             Nous ne collectons ni numéro de téléphone, ni adresse postale, ni donnée bancaire. Nous

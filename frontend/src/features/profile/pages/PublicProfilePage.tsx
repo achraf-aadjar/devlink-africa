@@ -2,6 +2,7 @@ import { Link, useParams } from 'react-router-dom'
 import Avatar from '../../../components/Avatar'
 import DemoBadge from '../../../components/DemoBadge'
 import SkillBadge from '../../../components/SkillBadge'
+import EndorsementList from '../../endorsements/components/EndorsementList'
 import { Badge, Card, ErrorState, LoadingState } from '../../../components/ui'
 import { ApiError } from '../../../lib/api'
 import {
@@ -108,6 +109,7 @@ export default function PublicProfilePage() {
                     kind="OFFERED"
                     level={entry.level}
                     proofsCount={entry.proofs_count}
+                    endorsements={entry.endorsements?.length ?? 0}
                   />
                 </li>
               ))}
@@ -130,6 +132,8 @@ export default function PublicProfilePage() {
           )}
         </Card>
       </div>
+
+      <EndorsementList skills={data.skills.offered} />
 
       {data.projects.length > 0 && (
         <Card>

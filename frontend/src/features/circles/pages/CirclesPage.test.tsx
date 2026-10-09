@@ -53,13 +53,20 @@ function persisted(
   } as Circle
 }
 
-function stub({ suggestions = [] as Circle[], mine = [] as Circle[] } = {}) {
+function stub({
+  suggestions = [] as Circle[],
+  mine = [] as Circle[],
+  candidates = [] as unknown[],
+} = {}) {
   const fetchMock = vi.fn((url: string, init?: RequestInit) => {
     const path = String(url)
     if (init?.method === 'POST' || init?.method === 'PATCH') {
       return Promise.resolve(
         jsonResponse(persisted('PROPOSED', ['ACCEPTED', 'PENDING', 'PENDING']), 201),
       )
+    }
+    if (path.includes('/endorsements/candidates/')) {
+      return Promise.resolve(jsonResponse({ results: candidates }))
     }
     if (path.includes('/circles/suggestions/'))
       return Promise.resolve(jsonResponse({ results: suggestions }))

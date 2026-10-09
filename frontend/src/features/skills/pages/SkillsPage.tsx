@@ -183,6 +183,7 @@ function SkillColumn({
                 kind={entry.kind}
                 level={kind === 'OFFERED' ? entry.level : undefined}
                 proofsCount={entry.proofs_count}
+                endorsements={entry.endorsements?.length ?? 0}
               />
               {kind === 'OFFERED' && onLevel && (
                 <select

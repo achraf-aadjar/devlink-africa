@@ -92,6 +92,8 @@ export interface UserSkill {
   level: SkillLevel
   proofs_count: number
   proofs?: SkillProof[]
+  /** Validations par les pairs (absentes des réponses qui ne les chargent pas). */
+  endorsements?: SkillEndorsement[]
 }
 
 export interface MySkills {
@@ -316,4 +318,22 @@ export interface Observatory {
   shortages: ObservatorySkill[]
   surpluses: ObservatorySkill[]
   bridges: Array<{ skill: string; wanted_in: ObservatoryCountry; offered_in: ObservatoryCountry[] }>
+}
+
+// --- Validation par les pairs --------------------------------------------------
+
+export type EndorsementContext = 'EXCHANGE' | 'CIRCLE'
+
+export interface SkillEndorsement {
+  id: number
+  by: { id: number; full_name: string; country: string }
+  context: EndorsementContext
+  comment: string
+  created_at: string
+}
+
+export interface EndorsementCandidate {
+  user: { id: number; full_name: string; country: string }
+  context: EndorsementContext
+  skills: Array<{ user_skill: number; name: string; level: SkillLevel; endorsement: number | null }>
 }

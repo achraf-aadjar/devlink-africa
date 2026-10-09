@@ -8,6 +8,8 @@ import { useQuery } from '../../../lib/useQuery'
 import { useAuth } from '../../auth/hooks/useAuth'
 import { cn } from '../../../lib/cn'
 import { changeExchangeStatus, listExchanges } from '../api/exchanges'
+import { getEndorsementCandidates } from '../../endorsements/api/endorsements'
+import EndorsePanel from '../../endorsements/components/EndorsePanel'
 import ContactPanel from '../components/ContactPanel'
 import { EXCHANGES_CHANGED, usePendingRequests } from '../hooks/usePendingRequests'
 
@@ -27,6 +29,9 @@ export default function ExchangesPage() {
   const { data, loading, error, reload } = useQuery(() => listExchanges({ direction: tab }), [tab])
   const [actionError, setActionError] = useState<string | null>(null)
   const pending = usePendingRequests(true)
+  const candidates = useQuery(() => getEndorsementCandidates(), [])
+  const candidateFor = (userId: number) =>
+    candidates.data?.results.find((candidate) => candidate.user.id === userId)
 
   async function act(exchange: Exchange, status: ExchangeStatus) {
     setActionError(null)
@@ -110,6 +115,7 @@ export default function ExchangesPage() {
             const other = isRecipient ? exchange.requester : exchange.partner
             const me = isRecipient ? exchange.partner : exchange.requester
             const unlocked = exchange.status === 'ACCEPTED' || exchange.status === 'COMPLETED'
+            const candidate = candidateFor(other.id)
 
             return (
               <Card as="li" key={exchange.id} className="flex flex-col gap-3">
@@ -135,6 +141,10 @@ export default function ExchangesPage() {
                 )}
 
                 {unlocked && <ContactPanel other={other} me={me} />}
+
+                {exchange.status === 'COMPLETED' && candidate && (
+                  <EndorsePanel candidate={candidate} onChange={candidates.reload} />
+                )}
 
                 <div className="flex flex-wrap gap-2">
                   {exchange.status === 'PROPOSED' && isRecipient && (
