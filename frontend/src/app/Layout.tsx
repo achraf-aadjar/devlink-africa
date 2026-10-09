@@ -193,7 +193,10 @@ export default function Layout() {
               aria-expanded={menuOpen}
               aria-controls="menu-mobile"
               aria-label={t('Menu')}
-              className={cn('inline-flex h-11 w-11 items-center justify-center rounded-lg text-paper-text hover:bg-paper-hover', mobileOnly)}
+              className={cn(
+                'inline-flex h-11 w-11 items-center justify-center rounded-lg text-paper-text hover:bg-paper-hover',
+                mobileOnly,
+              )}
             >
               <svg
                 viewBox="0 0 24 24"
