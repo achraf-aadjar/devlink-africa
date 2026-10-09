@@ -75,23 +75,23 @@ export default function CopilotWidget() {
   }
 
   return (
-    <div className="fixed bottom-5 right-5 z-40 flex flex-col items-end gap-3">
+    <div className="fixed bottom-0 right-5 z-40 flex flex-col items-end">
       {open && (
         <div
           role="dialog"
           aria-label="DevLink Copilot"
-          className="flex h-[28rem] w-[22rem] max-w-[calc(100vw-2.5rem)] flex-col overflow-hidden rounded-card border border-ink-200 bg-ink-100 shadow-card"
+          className="flex h-[28rem] w-[22rem] max-w-[calc(100vw-2.5rem)] flex-col overflow-hidden rounded-t border border-ink-300 bg-ink-100 shadow-menu"
         >
-          <div className="flex items-center justify-between border-b border-ink-200 bg-ink-50 px-4 py-3">
+          <div className="flex items-center justify-between border-b border-[#23598a] bg-[#2c6aa3] px-4 py-2.5">
             <div className="flex items-center gap-2">
-              <Icon name="discussion" size={18} className="text-accent-600" />
-              <h2 className="text-sm font-semibold text-ink-900">DevLink Copilot</h2>
+              <Icon name="discussion" size={18} className="text-white" />
+              <h2 className="text-sm font-bold text-white">DevLink Copilot</h2>
             </div>
             <button
               type="button"
               onClick={() => setOpen(false)}
               aria-label={t('Fermer DevLink Copilot')}
-              className="rounded p-1 text-ink-500 hover:bg-ink-200 hover:text-ink-800"
+              className="p-1 text-[#dce9f5] hover:text-white"
             >
               <Icon name="close" size={18} />
             </button>
@@ -108,10 +108,10 @@ export default function CopilotWidget() {
                   <p
                     className={
                       message.role === 'user'
-                        ? 'max-w-[85%] rounded-card bg-accent-400 px-3 py-2 text-sm text-white'
+                        ? 'max-w-[85%] rounded bg-accent-400 px-3 py-2 text-sm text-white'
                         : message.failed
-                          ? 'max-w-[85%] rounded-card bg-ink-50 px-3 py-2 text-sm text-ink-600'
-                          : 'max-w-[85%] rounded-card bg-ink-50 px-3 py-2 text-sm text-ink-800'
+                          ? 'max-w-[85%] rounded border border-ink-200 bg-white px-3 py-2 text-sm text-ink-600'
+                          : 'max-w-[85%] rounded border border-ink-200 bg-white px-3 py-2 text-sm text-ink-800'
                     }
                   >
                     {message.content}
@@ -120,7 +120,7 @@ export default function CopilotWidget() {
               ))}
               {sending && (
                 <li className="flex justify-start">
-                  <span className="flex items-center gap-2 rounded-card bg-ink-50 px-3 py-2 text-sm text-ink-600">
+                  <span className="flex items-center gap-2 rounded border border-ink-200 bg-white px-3 py-2 text-sm text-ink-600">
                     <Spinner className="h-4 w-4" /> {t('DevLink Copilot réfléchit…')}
                   </span>
                 </li>
@@ -139,7 +139,7 @@ export default function CopilotWidget() {
               maxLength={1000}
               placeholder={t('Posez votre question…')}
               onChange={(event) => setDraft(event.target.value)}
-              className="flex-1 rounded-lg border border-ink-300 bg-ink-100 px-3 py-2 text-sm text-ink-900 placeholder:text-ink-400"
+              className="field flex-1 border-ink-300 text-sm placeholder:text-ink-400"
             />
             <Button type="submit" size="sm" loading={sending} disabled={!draft.trim()}>
               {t('Envoyer')}
@@ -153,9 +153,10 @@ export default function CopilotWidget() {
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
         aria-label={open ? t('Réduire DevLink Copilot') : t('Ouvrir DevLink Copilot')}
-        className="flex h-14 w-14 items-center justify-center rounded-full bg-accent-400 text-white shadow-card transition-colors hover:bg-accent-300"
+        className="flex items-center gap-2 rounded-t border border-b-0 border-[#23598a] bg-[#2c6aa3] px-4 py-2 text-sm font-bold text-white hover:bg-[#245787]"
       >
-        <Icon name={open ? 'close' : 'discussion'} size={24} />
+        <Icon name="discussion" size={16} />
+        DevLink Copilot
       </button>
     </div>
   )

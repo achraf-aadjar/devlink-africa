@@ -72,8 +72,8 @@ export default function SkillsPage() {
 
   return (
     <section className="flex flex-col gap-6">
-      <header>
-        <h1 className="text-3xl font-bold tracking-tight text-ink-900">{t('Mes compétences')}</h1>
+      <header className="page-header">
+        <h1 className="text-[26px] font-bold leading-tight text-ink-900">{t('Mes compétences')}</h1>
         <p className="mt-1 text-sm text-ink-600">
           {t(
             "Déclarez ce que vous savez faire et ce que vous voulez apprendre. Dev Match s'appuie sur ces deux listes.",
@@ -82,15 +82,12 @@ export default function SkillsPage() {
       </header>
 
       {notice && (
-        <p
-          role="status"
-          className="rounded-lg bg-emerald-950/50 px-4 py-3 text-sm text-emerald-300"
-        >
+        <p role="status" className="alert alert-success">
           {notice}
         </p>
       )}
       {formError && (
-        <p role="alert" className="rounded-lg bg-red-950/50 px-4 py-3 text-sm text-red-300">
+        <p role="alert" className="alert alert-danger">
           {formError}
         </p>
       )}
@@ -195,7 +192,7 @@ function SkillColumn({
                   aria-label={t('Niveau pour {skill}', { skill: entry.skill.name })}
                   value={entry.level}
                   onChange={(event) => onLevel(entry, event.target.value as SkillLevel)}
-                  className="rounded border border-ink-300 bg-ink-100 px-2 py-1 text-xs text-ink-700"
+                  className="rounded border border-ink-300 bg-white px-1.5 py-0.5 text-xs text-ink-700"
                 >
                   {levelOptions.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -207,7 +204,7 @@ function SkillColumn({
               <button
                 type="button"
                 onClick={() => onRemove(entry)}
-                className="ml-auto rounded px-2 py-1 text-xs font-medium text-ink-600 hover:bg-ink-200 hover:text-red-400"
+                className="ml-auto rounded px-2 py-1 text-xs font-medium text-ink-600 hover:bg-ink-100 hover:text-[#a94442]"
               >
                 {t('Retirer')}
               </button>

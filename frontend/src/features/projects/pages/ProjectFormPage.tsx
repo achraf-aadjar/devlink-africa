@@ -108,7 +108,7 @@ export default function ProjectFormPage() {
 
   return (
     <section className="mx-auto w-full max-w-2xl flex-col gap-6">
-      <h1 className="mb-6 text-3xl font-bold tracking-tight text-ink-900">
+      <h1 className="mb-6 text-[26px] font-bold leading-tight text-ink-900">
         {projectId ? t('Modifier le projet') : t('Proposer un projet')}
       </h1>
 
@@ -138,7 +138,7 @@ export default function ProjectFormPage() {
           />
 
           <fieldset className="flex flex-col gap-2">
-            <legend className="text-sm font-medium text-ink-800">
+            <legend className="text-sm font-bold text-ink-800">
               {t('Compétences recherchées')}
             </legend>
             <div className="flex flex-wrap gap-3">
@@ -190,7 +190,7 @@ export default function ProjectFormPage() {
           </div>
 
           {errors.form && (
-            <p role="alert" className="text-sm text-red-400">
+            <p role="alert" className="text-sm text-[#a94442]">
               {errors.form}
             </p>
           )}

@@ -96,7 +96,7 @@ export default function RegisterPage() {
 
   return (
     <div className="mx-auto w-full max-w-lg">
-      <h1 className="mb-1 text-3xl font-bold tracking-tight text-ink-900">
+      <h1 className="mb-1 text-[26px] font-bold leading-tight text-ink-900">
         {t('Créer un compte')}
       </h1>
       <p className="mb-6 text-sm text-ink-600">
@@ -105,7 +105,7 @@ export default function RegisterPage() {
         )}
       </p>
 
-      <Card className="border-accent-300/40 p-6 shadow-glow-soft sm:p-8">
+      <Card className="p-6 sm:p-8">
         <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
           <Field
             label={t('Nom complet')}
@@ -164,14 +164,14 @@ export default function RegisterPage() {
               </span>
             </label>
             {errors.consent && (
-              <p id="consent-error" className="text-sm text-red-400">
+              <p id="consent-error" className="text-sm text-[#a94442]">
                 {errors.consent}
               </p>
             )}
           </div>
 
           {errors.form && (
-            <p role="alert" className="text-sm text-red-400">
+            <p role="alert" className="text-sm text-[#a94442]">
               {errors.form}
             </p>
           )}

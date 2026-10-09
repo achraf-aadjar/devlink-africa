@@ -73,7 +73,7 @@ export default function PersonalDataCard() {
       </div>
 
       {error && (
-        <p role="alert" className="text-sm text-red-400">
+        <p role="alert" className="text-sm text-[#a94442]">
           {error}
         </p>
       )}

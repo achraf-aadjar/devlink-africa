@@ -72,10 +72,10 @@ export default function MatchDetailPage() {
         </Link>
       </nav>
 
-      <header className="flex flex-wrap items-start justify-between gap-4">
+      <header className="page-header flex flex-wrap items-start justify-between gap-4">
         <div>
-          <Avatar name={partnerName} size={80} className="mb-4 shadow-glow" />
-          <h1 className="text-3xl font-bold tracking-tight text-ink-900">{partnerName}</h1>
+          <Avatar name={partnerName} size={80} className="mb-4" />
+          <h1 className="text-[26px] font-bold leading-tight text-ink-900">{partnerName}</h1>
           <p className="mt-1 text-sm text-ink-600">
             {data.user.country && (
               <span className="mr-1" aria-hidden="true">
@@ -98,10 +98,7 @@ export default function MatchDetailPage() {
       </header>
 
       {notice && (
-        <p
-          role="status"
-          className="rounded-lg bg-emerald-950/50 px-4 py-3 text-sm text-emerald-300"
-        >
+        <p role="status" className="alert alert-success">
           {notice}
         </p>
       )}
@@ -139,7 +136,7 @@ export default function MatchDetailPage() {
         )}
 
         {feedbackError && (
-          <p role="alert" className="mt-2 text-sm text-red-400">
+          <p role="alert" className="mt-2 text-sm text-[#a94442]">
             {feedbackError}
           </p>
         )}

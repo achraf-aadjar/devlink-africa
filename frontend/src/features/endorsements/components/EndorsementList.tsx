@@ -25,7 +25,7 @@ export default function EndorsementList({ skills }: { skills: UserSkill[] }) {
     <Card as="section" labelledBy="passeport-verifie" className="flex flex-col gap-4">
       <div>
         <h2 id="passeport-verifie" className="flex items-center gap-2 font-semibold text-ink-900">
-          <Icon name="proof" size={18} className="text-emerald-300" />
+          <Icon name="proof" size={18} className="text-[#3c763d]" />
           {t('Validé par ses pairs')}
         </h2>
         <p className="mt-1 text-sm text-ink-600">
@@ -39,7 +39,7 @@ export default function EndorsementList({ skills }: { skills: UserSkill[] }) {
           <li key={entry.id} className="flex flex-col gap-2">
             <p className="text-sm font-semibold text-ink-900">
               {entry.skill.name}
-              <span className="ml-2 font-normal text-emerald-300">
+              <span className="ml-2 font-normal text-[#3c763d]">
                 {tn(
                   entry.endorsements?.length ?? 0,
                   'validée par {n} pair',

@@ -76,52 +76,42 @@ export default function OnboardingChecklist({ data }: { data: Dashboard }) {
   const nextIndex = steps.findIndex((step) => !step.done)
 
   return (
-    <section
-      aria-labelledby="premiers-pas"
-      className="surface relative overflow-hidden p-6 shadow-glow-soft sm:p-8"
-    >
-      <div aria-hidden="true" className="glow-blob -right-20 -top-24 h-64 w-64 bg-[#1f6feb]/25" />
-      <div className="relative flex flex-wrap items-end justify-between gap-4">
+    <section aria-labelledby="premiers-pas" className="surface overflow-hidden">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-ink-200 bg-ink-100 px-5 py-3">
         <div>
-          <h2 id="premiers-pas" className="text-xl font-semibold text-ink-900">
+          <h2 id="premiers-pas" className="text-base font-bold text-ink-900">
             {t('Vos premiers pas')}
           </h2>
-          <p className="mt-1 text-sm text-ink-600">
+          <p className="text-xs text-ink-600">
             {tn(doneCount, '{n} étape faite sur {total}', '{n} étapes faites sur {total}', {
               total: steps.length,
             })}
           </p>
         </div>
-        <div
-          aria-hidden="true"
-          className="h-1.5 w-full max-w-56 overflow-hidden rounded-full bg-white/[0.08]"
-        >
-          <div
-            className="h-full rounded-full bg-gradient-to-r from-[#1f6feb] to-[#a371f7] transition-[width] duration-500"
-            style={{ width: `${(doneCount / steps.length) * 100}%` }}
-          />
+        <div aria-hidden="true" className="progress w-full max-w-56">
+          <div className="progress-bar" style={{ width: `${(doneCount / steps.length) * 100}%` }} />
         </div>
       </div>
 
-      <ol className="relative mt-6 flex flex-col gap-1">
+      <ol className="flex flex-col">
         {steps.map((step, index) => {
           const isNext = index === nextIndex
           return (
             <li
               key={step.title}
               className={cn(
-                'flex flex-wrap items-start gap-x-4 gap-y-3 rounded-2xl px-3 py-3 sm:flex-nowrap',
-                isNext && 'bg-white/[0.04] ring-1 ring-inset ring-accent-400/25',
+                'flex flex-wrap items-start gap-x-4 gap-y-3 border-b border-ink-200 px-5 py-3 last:border-0 sm:flex-nowrap',
+                isNext && 'bg-accent-50',
               )}
             >
               <span
                 className={cn(
-                  'mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold',
+                  'mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-sm font-bold',
                   step.done
-                    ? 'bg-emerald-500/15 text-emerald-300'
+                    ? 'bg-[#dff0d8] text-[#3c763d]'
                     : isNext
-                      ? 'bg-[#1f6feb] text-white shadow-glow'
-                      : 'bg-white/[0.06] text-ink-500',
+                      ? 'bg-[#337ab7] text-white'
+                      : 'border border-ink-300 bg-white text-ink-500',
                 )}
               >
                 {step.done ? <Icon name="check" size={16} label={t('Fait')} /> : index + 1}
@@ -129,7 +119,7 @@ export default function OnboardingChecklist({ data }: { data: Dashboard }) {
               <div className="min-w-0 flex-1">
                 <p
                   className={cn(
-                    'font-medium',
+                    'font-bold',
                     step.done ? 'text-ink-500 line-through decoration-ink-400' : 'text-ink-900',
                   )}
                 >
@@ -140,10 +130,7 @@ export default function OnboardingChecklist({ data }: { data: Dashboard }) {
               {isNext && (
                 // Sur mobile, le bouton prend sa propre ligne sous le texte.
                 <div className="basis-full pl-12 sm:basis-auto sm:self-center sm:pl-0">
-                  <Link
-                    to={step.to}
-                    className="inline-flex shrink-0 rounded-full bg-[#1f6feb] px-4 py-1.5 text-sm font-medium text-white shadow-glow transition hover:bg-[#1a5fd0]"
-                  >
+                  <Link to={step.to} className="btn btn-primary btn-sm">
                     {step.action}
                   </Link>
                 </div>

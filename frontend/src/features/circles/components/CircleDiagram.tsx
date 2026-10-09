@@ -39,64 +39,33 @@ export default function CircleDiagram({ circle, meId }: { circle: Circle; meId?:
     >
       <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full" aria-hidden="true">
         <defs>
-          <linearGradient id={`flow-${uid}`} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#388bfd" />
-            <stop offset="100%" stopColor="#a371f7" />
-          </linearGradient>
           <marker
             id={`arrow-${uid}`}
             viewBox="0 0 10 10"
             refX="7"
             refY="5"
-            markerWidth="4.5"
-            markerHeight="4.5"
+            markerWidth="5"
+            markerHeight="5"
             orient="auto"
           >
-            <path d="M0,0 L10,5 L0,10 z" fill="#a5d6ff" />
+            <path d="M0,0 L10,5 L0,10 z" fill="#337ab7" />
           </marker>
-          <radialGradient id={`halo-${uid}`}>
-            <stop offset="0%" stopColor="#1f6feb" stopOpacity="0.28" />
-            <stop offset="100%" stopColor="#1f6feb" stopOpacity="0" />
-          </radialGradient>
         </defs>
-
-        <circle cx="50" cy="50" r="46" fill={`url(#halo-${uid})`} />
-        <circle
-          cx="50"
-          cy="50"
-          r={RADIUS}
-          fill="none"
-          stroke="rgb(255 255 255 / 0.05)"
-          strokeWidth="0.6"
-        />
 
         {circle.members.map((member, index) => {
           const start = angleOf(index) + GAP
           const end = angleOf(index + 1) - GAP
           const [x1, y1] = point(start)
           const [x2, y2] = point(end)
-          const path = `M ${x1} ${y1} A ${RADIUS} ${RADIUS} 0 0 1 ${x2} ${y2}`
           return (
-            <g key={member.id}>
-              <path
-                d={path}
-                fill="none"
-                stroke={`url(#flow-${uid})`}
-                strokeWidth="1.1"
-                strokeLinecap="round"
-                markerEnd={`url(#arrow-${uid})`}
-              />
-              <path
-                d={path}
-                fill="none"
-                stroke="#cfe6ff"
-                strokeOpacity="0.85"
-                strokeWidth="0.8"
-                strokeLinecap="round"
-                strokeDasharray="1.2 6"
-                className="animate-flow"
-              />
-            </g>
+            <path
+              key={member.id}
+              d={`M ${x1} ${y1} A ${RADIUS} ${RADIUS} 0 0 1 ${x2} ${y2}`}
+              fill="none"
+              stroke="#337ab7"
+              strokeWidth="1"
+              markerEnd={`url(#arrow-${uid})`}
+            />
           )
         })}
       </svg>
@@ -108,7 +77,7 @@ export default function CircleDiagram({ circle, meId }: { circle: Circle; meId?:
           <span
             key={`${arrow.teacher}-${arrow.learner}`}
             aria-hidden="true"
-            className="absolute -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full bg-ink-50/95 px-2.5 py-1 text-xs font-semibold text-accent-900 shadow-glow"
+            className="absolute -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-[3px] border border-accent-200 bg-accent-50 px-1.5 py-px text-xs font-bold text-accent-800"
             style={{ left: `${x}%`, top: `${y}%` }}
           >
             {arrow.skill.name}
@@ -130,9 +99,9 @@ export default function CircleDiagram({ circle, meId }: { circle: Circle; meId?:
             <Avatar
               name={member.full_name || t('Membre')}
               size={48}
-              className={isMe ? 'ring-[3px] ring-accent-500' : undefined}
+              className={isMe ? 'outline outline-2 outline-offset-2 outline-[#d26911]' : undefined}
             />
-            <span className="whitespace-nowrap rounded-full bg-ink-50/80 px-2 text-xs font-medium text-ink-900">
+            <span className="whitespace-nowrap bg-white px-1 text-xs font-bold text-ink-900">
               {isMe ? t('Vous') : firstName(member.full_name) || t('Membre')}
               {member.country && <span className="ml-1 text-ink-500">{member.country}</span>}
             </span>

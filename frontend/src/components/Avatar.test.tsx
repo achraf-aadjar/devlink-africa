@@ -13,11 +13,12 @@ describe('avatar', () => {
     expect(render(<Avatar name="  " />).container.textContent).toBe('?')
   })
 
-  it('garde la même couleur pour un même nom', () => {
+  it('garde la même couleur unie pour un même nom', () => {
     const colour = (name: string) =>
-      (render(<Avatar name={name} />).container.firstElementChild as HTMLElement).style.background
+      (render(<Avatar name={name} />).container.firstElementChild as HTMLElement).style
+        .backgroundColor
     expect(colour('Kofi Mensah')).toBe(colour('Kofi Mensah'))
-    expect(colour('Kofi Mensah')).toContain('linear-gradient')
+    expect(colour('Kofi Mensah')).toMatch(/^rgb\(/)
   })
 
   it('est décoratif : le nom est déjà écrit à côté', () => {

@@ -83,26 +83,20 @@ export default function ProfilePage() {
 
   return (
     <section className="flex flex-col gap-6">
-      <header className="flex flex-wrap items-start justify-between gap-4">
+      <header className="page-header flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-ink-900">{t('Mon profil')}</h1>
+          <h1 className="text-[26px] font-bold leading-tight text-ink-900">{t('Mon profil')}</h1>
           <p className="mt-1 text-sm text-ink-600">{data.email}</p>
         </div>
         <div className="flex flex-col items-end gap-2">
           <p className="text-xs font-medium text-ink-600">
             {t('Profil complété')}{' '}
-            <span className="text-gradient text-2xl font-bold tabular-nums">
+            <span className="text-2xl font-bold tabular-nums text-ink-900">
               {data.profile.completeness}%
             </span>
           </p>
-          <div
-            aria-hidden="true"
-            className="h-1.5 w-48 overflow-hidden rounded-full bg-white/[0.08]"
-          >
-            <div
-              className="h-full rounded-full bg-gradient-to-r from-[#1f6feb] to-[#a371f7]"
-              style={{ width: `${data.profile.completeness}%` }}
-            />
+          <div aria-hidden="true" className="progress w-48">
+            <div className="progress-bar" style={{ width: `${data.profile.completeness}%` }} />
           </div>
         </div>
       </header>
@@ -134,7 +128,7 @@ export default function ProfilePage() {
           />
 
           <fieldset className="flex flex-col gap-2">
-            <legend className="text-sm font-medium text-ink-800">{t('Disponibilités')}</legend>
+            <legend className="text-sm font-bold text-ink-800">{t('Disponibilités')}</legend>
             <div className="flex flex-wrap gap-3">
               {(Object.keys(AVAILABILITY_LABELS) as Availability[]).map((value) => (
                 <label key={value} className="flex items-center gap-2 text-sm text-ink-700">
@@ -150,11 +144,11 @@ export default function ProfilePage() {
                 </label>
               ))}
             </div>
-            {errors.availability && <p className="text-sm text-red-400">{errors.availability}</p>}
+            {errors.availability && <p className="text-sm text-[#a94442]">{errors.availability}</p>}
           </fieldset>
 
           <fieldset className="flex flex-col gap-2">
-            <legend className="text-sm font-medium text-ink-800">{t('Domaines')}</legend>
+            <legend className="text-sm font-bold text-ink-800">{t('Domaines')}</legend>
             <div className="flex flex-wrap gap-3">
               {(Object.keys(DOMAIN_LABELS) as Domain[]).map((value) => (
                 <label key={value} className="flex items-center gap-2 text-sm text-ink-700">
@@ -168,7 +162,7 @@ export default function ProfilePage() {
                 </label>
               ))}
             </div>
-            {errors.domains && <p className="text-sm text-red-400">{errors.domains}</p>}
+            {errors.domains && <p className="text-sm text-[#a94442]">{errors.domains}</p>}
           </fieldset>
 
           <Field
@@ -192,12 +186,12 @@ export default function ProfilePage() {
           />
 
           {errors.form && (
-            <p role="alert" className="text-sm text-red-400">
+            <p role="alert" className="text-sm text-[#a94442]">
               {errors.form}
             </p>
           )}
           {notice && (
-            <p role="status" className="text-sm text-emerald-400">
+            <p role="status" className="text-sm text-[#3c763d]">
               {notice}
             </p>
           )}

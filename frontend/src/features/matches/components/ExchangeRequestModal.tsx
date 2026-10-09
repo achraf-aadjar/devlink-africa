@@ -88,7 +88,7 @@ export default function ExchangeRequestModal({
         />
 
         {errors.form && (
-          <p role="alert" className="text-sm text-red-400">
+          <p role="alert" className="text-sm text-[#a94442]">
             {errors.form}
           </p>
         )}

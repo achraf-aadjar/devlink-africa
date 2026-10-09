@@ -24,8 +24,8 @@ export default function DashboardPage() {
 
   return (
     <section className="flex flex-col gap-6">
-      <header>
-        <h1 className="text-3xl font-bold tracking-tight text-ink-900">
+      <header className="page-header">
+        <h1 className="text-[26px] font-bold leading-tight text-ink-900">
           {firstName ? t('Bonjour {name}', { name: firstName }) : t('Bonjour')}
         </h1>
         <p className="mt-1 text-sm text-ink-600">{t("Voici où vous en êtes aujourd'hui.")}</p>
@@ -33,8 +33,8 @@ export default function DashboardPage() {
 
       <OnboardingChecklist data={data} />
 
-      {/* Compteurs posés à plat, séparés par de fins traits : pas de boîtes. */}
-      <dl className="grid grid-cols-3 divide-x divide-white/[0.08] py-2">
+      {/* Compteurs : trois colonnes dans un panneau, séparées par de fins traits. */}
+      <dl className="surface grid grid-cols-3 divide-x divide-ink-200 py-4">
         {[
           { value: data.counters.matches, label: tn(data.counters.matches, 'match', 'matchs') },
           { value: data.counters.offered_skills, label: t('compétence(s) proposée(s)') },
@@ -42,9 +42,7 @@ export default function DashboardPage() {
         ].map((counter) => (
           <div key={counter.label} className="flex flex-col items-center gap-1 px-2 text-center">
             <dt className="order-2 text-sm text-ink-600">{counter.label}</dt>
-            <dd className="text-gradient text-4xl font-bold tabular-nums sm:text-5xl">
-              {counter.value}
-            </dd>
+            <dd className="text-3xl font-bold tabular-nums text-ink-900">{counter.value}</dd>
           </div>
         ))}
       </dl>
@@ -71,7 +69,7 @@ export default function DashboardPage() {
             {data.recommended_matches.map((match) => (
               <li
                 key={match.id}
-                className="-mx-3 flex items-center gap-4 rounded-2xl px-3 py-2.5 transition hover:bg-white/[0.04]"
+                className="flex items-center gap-4 border-b border-ink-200 py-2.5 last:border-0"
               >
                 <Avatar name={match.user.full_name || t('Développeur')} size={44} />
                 <div className="min-w-0 flex-1">

@@ -90,7 +90,7 @@ export default function AfricaTileMap({ countries }: { countries: Country[] }) {
     <div className="flex flex-col gap-3">
       <p className="text-sm text-ink-600">
         {t(
-          'Chaque point représente un pays. Ceux en couleur comptent au moins un développeur ou un projet.',
+          'Chaque case représente un pays. Celles en bleu comptent au moins un développeur ou un projet.',
         )}
       </p>
 
@@ -123,12 +123,12 @@ export default function AfricaTileMap({ countries }: { countries: Country[] }) {
               aria-label={label}
               style={{ gridColumn: column, gridRow: row }}
               className={cn(
-                'flex aspect-square items-center justify-center rounded-full text-[0.6rem] font-semibold transition duration-200 hover:scale-110 sm:text-xs',
+                'flex aspect-square items-center justify-center rounded-[2px] text-[0.6rem] font-bold sm:text-xs',
                 populated
-                  ? 'bg-gradient-to-br from-[#1f6feb] to-[#a371f7] text-white shadow-glow'
+                  ? 'bg-[#337ab7] text-white hover:bg-[#23527c]'
                   : // Les pays sans donnée restent gris mais cliquables, comme
                     // l'exige le ticket.
-                    'bg-white/[0.05] text-ink-500 hover:bg-white/10 hover:text-ink-800',
+                    'border border-ink-200 bg-ink-100 text-ink-500 hover:bg-ink-200 hover:text-ink-800',
               )}
             >
               {code}

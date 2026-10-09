@@ -48,7 +48,7 @@ export default function EndorsePanel({
   return (
     <section
       aria-label={t('Valider les compétences de {name}', { name: candidate.user.full_name })}
-      className="flex flex-col gap-3 rounded-2xl bg-accent-50/50 px-5 py-4 ring-1 ring-inset ring-accent-400/20"
+      className="flex flex-col gap-3 rounded border border-accent-200 bg-accent-50 px-4 py-3"
     >
       <div>
         <p className="flex items-center gap-2 text-sm font-medium text-accent-900">
@@ -72,7 +72,7 @@ export default function EndorsePanel({
               </span>
               {skill.endorsement !== null ? (
                 <span className="flex items-center gap-3">
-                  <span className="flex items-center gap-1 text-sm text-emerald-300">
+                  <span className="flex items-center gap-1 text-sm text-[#3c763d]">
                     <Icon name="check" size={14} />
                     {t('Validée')}
                   </span>
@@ -140,7 +140,7 @@ export default function EndorsePanel({
       </ul>
 
       {error && (
-        <p role="alert" className="text-sm text-red-300">
+        <p role="alert" className="text-sm text-[#a94442]">
           {error}
         </p>
       )}

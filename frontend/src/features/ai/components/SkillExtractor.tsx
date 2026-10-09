@@ -115,7 +115,7 @@ export default function SkillExtractor({
                 <button
                   type="button"
                   onClick={() => accept('OFFERED', suggestion)}
-                  className="rounded-full focus-visible:ring-2"
+                  className="rounded focus-visible:ring-2"
                   aria-label={t('Ajouter {skill} à ce que je sais faire', {
                     skill: suggestion.name,
                   })}
@@ -143,7 +143,7 @@ export default function SkillExtractor({
                 <button
                   type="button"
                   onClick={() => accept('WANTED', suggestion)}
-                  className="rounded-full focus-visible:ring-2"
+                  className="rounded focus-visible:ring-2"
                   aria-label={t('Ajouter {skill} à ce que je veux apprendre', {
                     skill: suggestion.name,
                   })}

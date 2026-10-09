@@ -35,18 +35,11 @@ describe('enveloppes de page', () => {
     expect(screen.getByRole('heading', { name: 'Page B' })).toBeInTheDocument()
   })
 
-  it('appliquent la largeur large aux écrans à grille', () => {
-    const { container } = renderShell(WidePage)
-
-    expect(container.querySelector('.max-w-\\[90rem\\]')).not.toBeNull()
-  })
-
-  it('gardent le décor hors de portée des lecteurs d’écran', () => {
-    const { container } = renderShell(StandardPage)
-
-    expect(container.querySelector('.bg-aurora')?.parentElement).toHaveAttribute(
-      'aria-hidden',
-      'true',
-    )
+  it('centrent toutes les pages sur une largeur fixe, comme un container Bootstrap', () => {
+    for (const Shell of [StandardPage, WidePage]) {
+      const { container, unmount } = renderShell(Shell)
+      expect(container.querySelector('.max-w-\\[1170px\\]')).not.toBeNull()
+      unmount()
+    }
   })
 })

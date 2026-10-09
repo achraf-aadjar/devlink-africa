@@ -16,8 +16,8 @@ export default function PrivacyPage() {
   const { t, lang } = useI18n()
   return (
     <section className="mx-auto flex w-full max-w-3xl flex-col gap-6">
-      <header>
-        <h1 className="text-3xl font-bold tracking-tight text-ink-900">
+      <header className="page-header">
+        <h1 className="text-[26px] font-bold leading-tight text-ink-900">
           {t('Politique de confidentialité')}
         </h1>
         <p className="mt-1 text-sm text-ink-600">{t('Dernière mise à jour : octobre 2026.')}</p>

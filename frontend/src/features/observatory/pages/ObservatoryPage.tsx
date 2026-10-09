@@ -76,8 +76,8 @@ export default function ObservatoryPage() {
 
   return (
     <section className="flex flex-col gap-8">
-      <header className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold tracking-tight text-ink-900">
+      <header className="page-header flex flex-col gap-2">
+        <h1 className="text-[26px] font-bold leading-tight text-ink-900">
           {t('Observatoire des compétences')}
         </h1>
         <p className="max-w-3xl text-ink-600">

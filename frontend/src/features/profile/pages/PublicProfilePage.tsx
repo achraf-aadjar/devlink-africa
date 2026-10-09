@@ -44,10 +44,10 @@ export default function PublicProfilePage() {
 
   return (
     <section className="flex flex-col gap-6">
-      <header className="flex flex-wrap items-start justify-between gap-4">
+      <header className="page-header flex flex-wrap items-start justify-between gap-4">
         <div>
-          <Avatar name={name} size={80} className="mb-4 shadow-glow" />
-          <h1 className="text-3xl font-bold tracking-tight text-ink-900">{name}</h1>
+          <Avatar name={name} size={80} className="mb-4" />
+          <h1 className="text-[26px] font-bold leading-tight text-ink-900">{name}</h1>
           <p className="mt-1 text-sm text-ink-600">
             {data.country && (
               <span className="mr-1" aria-hidden="true">

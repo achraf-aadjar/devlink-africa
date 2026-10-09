@@ -36,8 +36,15 @@ const RIGHT_RING: Record<LogoVariant, string> = {
   mono: 'currentColor',
 }
 
+/** Bleu de l'anneau gauche : clair sur fond sombre, plus soutenu sur fond clair. */
+const LEFT_RING: Record<LogoVariant, string> = {
+  color: '#4493f8',
+  light: '#337ab7',
+  mono: 'currentColor',
+}
+
 export function LogoMark({ size = 32, variant = 'color', className, ...rest }: LogoProps) {
-  const left = variant === 'mono' ? 'currentColor' : '#4493f8'
+  const left = LEFT_RING[variant]
   const right = RIGHT_RING[variant]
 
   return (
@@ -58,7 +65,7 @@ export function LogoMark({ size = 32, variant = 'color', className, ...rest }: L
       */}
       <path
         d="M24 12.3a12.5 12.5 0 0 0 0 23.4 12.5 12.5 0 0 0 0-23.4"
-        fill={variant === 'mono' ? 'currentColor' : '#4493f8'}
+        fill={left}
         fillOpacity={0.22}
       />
       {/* Anneau gauche : celui qui apporte. */}
@@ -88,12 +95,12 @@ export function Logo({
   return (
     <span className={cn('inline-flex items-center gap-2.5', className)}>
       <LogoMark size={size} variant={variant} aria-hidden="true" />
-      <span className="text-lg font-bold leading-none tracking-tight">
+      <span className="text-lg font-bold leading-none text-ink-900">
         DevLink{' '}
         <span
           className={cn(
             variant === 'color' && 'text-accent-600',
-            variant === 'light' && 'text-[#0969da]',
+            variant === 'light' && 'text-accent-500',
           )}
         >
           Africa

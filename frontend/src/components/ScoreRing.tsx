@@ -1,9 +1,9 @@
-import { useId } from 'react'
 import { cn } from '../lib/cn'
 import { useI18n } from '../i18n/useI18n'
 
 /**
- * Score de 0 à 100 dessiné comme une jauge circulaire, en dégradé bleu-violet.
+ * Score de 0 à 100 dessiné comme une jauge circulaire, d'une seule couleur :
+ * vert à partir de 70, bleu en dessous.
  *
  * Le chiffre reste un texte normal au centre : lisible, sélectionnable, et lu
  * par les lecteurs d'écran via l'étiquette de la figure.
@@ -23,7 +23,6 @@ export default function ScoreRing({
   showMax?: boolean
 }) {
   const { t } = useI18n()
-  const gradientId = useId()
   const value = Math.round(Math.min(Math.max(score, 0), 100))
   const radius = (size - stroke) / 2
   const circumference = 2 * Math.PI * radius
@@ -36,19 +35,12 @@ export default function ScoreRing({
       style={{ width: size, height: size }}
     >
       <svg width={size} height={size} className="-rotate-90" aria-hidden="true">
-        <defs>
-          <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#79c0ff" />
-            <stop offset="55%" stopColor="#388bfd" />
-            <stop offset="100%" stopColor="#a371f7" />
-          </linearGradient>
-        </defs>
         <circle
           cx={size / 2}
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke="rgb(255 255 255 / 0.08)"
+          stroke="#e5e5e5"
           strokeWidth={stroke}
         />
         <circle
@@ -56,12 +48,10 @@ export default function ScoreRing({
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke={`url(#${gradientId})`}
+          stroke={value >= 70 ? '#3c763d' : '#337ab7'}
           strokeWidth={stroke}
-          strokeLinecap="round"
           strokeDasharray={circumference}
           strokeDashoffset={circumference * (1 - value / 100)}
-          className="transition-[stroke-dashoffset] duration-700 ease-out"
         />
       </svg>
       <span aria-hidden="true" className="absolute flex flex-col items-center leading-none">

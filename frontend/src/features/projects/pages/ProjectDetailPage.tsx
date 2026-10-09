@@ -23,12 +23,7 @@ import { decideJoinRequest, deleteProject, getProject, joinProject } from '../ap
 /** Lien externe stylé comme un bouton secondaire : un vrai `<a>`, pas un bouton imbriqué. */
 function LinkButton({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="inline-flex items-center gap-2 rounded-full bg-white/[0.06] px-5 py-2 ring-1 ring-inset ring-white/10 text-sm font-medium text-ink-800 transition-colors hover:bg-ink-200"
-    >
+    <a href={href} target="_blank" rel="noopener noreferrer" className="btn">
       <Icon name="external" size={16} />
       {children}
     </a>
@@ -129,13 +124,13 @@ export default function ProjectDetailPage() {
         <div className="flex min-w-0 items-start gap-4">
           <span
             aria-hidden="true"
-            className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#1f6feb]/30 to-[#a371f7]/20 text-accent-800 ring-1 ring-inset ring-accent-400/30"
+            className="flex h-14 w-14 shrink-0 items-center justify-center rounded border border-accent-200 bg-accent-50 text-accent-700"
           >
             <Icon name="project" size={28} />
           </span>
 
           <div className="min-w-0 flex-1">
-            <h1 className="text-3xl font-bold tracking-tight text-ink-900">{data.title}</h1>
+            <h1 className="text-[26px] font-bold leading-tight text-ink-900">{data.title}</h1>
             <p className="mt-1 text-sm text-ink-600">
               {t('Porté par')}{' '}
               <Link to={`/developpeurs/${data.owner.id}`} className="hover:underline">
@@ -207,15 +202,12 @@ export default function ProjectDetailPage() {
       </div>
 
       {notice && (
-        <p
-          role="status"
-          className="rounded-lg bg-emerald-950/50 px-4 py-3 text-sm text-emerald-300"
-        >
+        <p role="status" className="alert alert-success">
           {notice}
         </p>
       )}
       {actionError && (
-        <p role="alert" className="rounded-lg bg-red-950/50 px-4 py-3 text-sm text-red-300">
+        <p role="alert" className="alert alert-danger">
           {actionError}
         </p>
       )}

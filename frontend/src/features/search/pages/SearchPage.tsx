@@ -76,8 +76,8 @@ export default function SearchPage() {
 
   return (
     <section className="flex flex-col gap-6">
-      <header>
-        <h1 className="text-3xl font-bold tracking-tight text-ink-900">{t('Recherche')}</h1>
+      <header className="page-header">
+        <h1 className="text-[26px] font-bold leading-tight text-ink-900">{t('Recherche')}</h1>
         <p className="mt-1 text-sm text-ink-600">
           {t('Trouvez un développeur par compétence et par pays, ou un projet à rejoindre.')}
         </p>
@@ -225,7 +225,7 @@ export default function SearchPage() {
               <p className="text-sm text-ink-600">
                 {tn(users.data.count, '{n} développeur trouvé.', '{n} développeurs trouvés.')}
               </p>
-              <ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                 {users.data.results.map((person) => (
                   <Card as="li" key={person.id} interactive className="flex flex-col gap-3">
                     <Avatar name={person.full_name || t('Développeur')} size={52} />
@@ -278,7 +278,7 @@ export default function SearchPage() {
               description={t("Élargissez vos critères pour découvrir d'autres projets.")}
             />
           ) : (
-            <ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               {projects.data.results.map((project) => (
                 <ProjectCard key={project.id} project={project} />
               ))}

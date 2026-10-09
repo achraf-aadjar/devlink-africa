@@ -24,10 +24,7 @@ describe("page d'accueil", () => {
       'href',
       '/inscription',
     )
-    // Sans IntersectionObserver (jsdom), le contenu animé reste visible.
-    expect(screen.getByRole('heading', { name: 'Revue de code' }).closest('.reveal')).toHaveClass(
-      'is-visible',
-    )
+    expect(screen.getByRole('table')).toHaveTextContent('Complémentarité35')
   })
 
   it("additionne le score d'exemple comme l'API : la somme des points", () => {
@@ -70,7 +67,9 @@ describe("page d'accueil", () => {
     ).toHaveTextContent('A score you can read, not a black box.')
     expect(screen.getByRole('heading', { name: 'Four ways to work together' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Code review' })).toBeInTheDocument()
-    expect(screen.getByText('Willingness to collaborate')).toBeInTheDocument()
+    expect(
+      screen.getByRole('rowheader', { name: 'Willingness to collaborate' }),
+    ).toBeInTheDocument()
     expect(screen.getByText('100%')).toBeInTheDocument()
     expect(screen.getAllByRole('link', { name: 'Create my account' })[0]).toHaveAttribute(
       'href',

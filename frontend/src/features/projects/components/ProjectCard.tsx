@@ -22,7 +22,7 @@ export default function ProjectCard({ project }: { project: Project }) {
       <div className="flex items-start gap-3">
         <span
           aria-hidden="true"
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#1f6feb]/30 to-[#a371f7]/20 text-accent-800 ring-1 ring-inset ring-accent-400/30"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded border border-accent-200 bg-accent-50 text-accent-700"
         >
           <Icon name="project" size={20} />
         </span>

@@ -24,7 +24,7 @@ export default function Select({
 
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="text-sm font-medium text-ink-800">
+      <label htmlFor={id} className="text-sm font-bold text-ink-800">
         {label}
       </label>
       <select
@@ -34,7 +34,7 @@ export default function Select({
         aria-describedby={error ? errorId : undefined}
         className={cn(
           'field text-ink-900',
-          error ? 'border-red-500/70' : 'border-white/10',
+          error ? 'border-[#a94442]' : 'border-ink-300',
           className,
         )}
       >
@@ -46,7 +46,7 @@ export default function Select({
         ))}
       </select>
       {error && (
-        <p id={errorId} className="text-sm text-red-400">
+        <p id={errorId} className="text-sm text-[#a94442]">
           {error}
         </p>
       )}

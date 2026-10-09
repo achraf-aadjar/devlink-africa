@@ -49,10 +49,7 @@ export default function MatchCard({ match }: { match: MatchSummary }) {
         </ul>
       )}
 
-      <Link
-        to={`/matchs/${match.id}`}
-        className="mt-auto inline-flex w-fit items-center gap-1 rounded-full bg-white/[0.05] px-4 py-1.5 text-sm font-medium text-accent-800 ring-1 ring-inset ring-white/10 transition hover:bg-white/10"
-      >
+      <Link to={`/matchs/${match.id}`} className="btn btn-sm mt-auto w-fit">
         {t("Voir l'explication détaillée")}
         <span aria-hidden="true">→</span>
       </Link>

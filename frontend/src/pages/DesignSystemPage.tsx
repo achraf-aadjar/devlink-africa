@@ -17,11 +17,11 @@ import {
 export default function DesignSystemPage() {
   return (
     <div className="flex flex-col gap-10">
-      <header>
-        <h1 className="text-3xl font-bold tracking-tight text-ink-900">Design system</h1>
+      <header className="page-header">
+        <h1 className="text-[26px] font-bold leading-tight text-ink-900">Design system</h1>
         <p className="mt-1 text-sm text-ink-600">
-          Les composants réutilisables de l'interface. Thème sombre, un seul accent (bleu), des
-          polices système.
+          Les composants réutilisables de l'interface. Style classique : fond blanc, un bleu de
+          lien, des panneaux à bordure fine, des polices système.
         </p>
       </header>
 
@@ -69,10 +69,10 @@ export default function DesignSystemPage() {
           <span className="flex items-center gap-2 text-sm text-accent-700">
             <Icon name="match" size={18} /> héritent de la couleur
           </span>
-          <span className="flex items-center gap-2 text-sm text-red-400">
+          <span className="flex items-center gap-2 text-sm text-[#a94442]">
             <Icon name="warning" size={18} /> sans réglage
           </span>
-          <span className="flex items-center gap-2 text-sm text-emerald-400">
+          <span className="flex items-center gap-2 text-sm text-[#3c763d]">
             <Icon name="check" size={18} /> ni duplication
           </span>
         </div>
@@ -109,7 +109,7 @@ export default function DesignSystemPage() {
         <div className="flex flex-wrap gap-2">
           {['50', '100', '200', '300', '400', '500', '600', '700', '800', '900'].map((shade) => (
             <div key={shade} className="text-center">
-              <div className={`h-12 w-12 rounded-full ring-1 ring-white/10 bg-accent-${shade}`} />
+              <div className={`h-12 w-12 rounded border border-ink-200 bg-accent-${shade}`} />
               <span className="text-xs text-ink-500">{shade}</span>
             </div>
           ))}
@@ -117,7 +117,7 @@ export default function DesignSystemPage() {
         <div className="flex flex-wrap gap-2">
           {['50', '100', '200', '300', '400', '500', '600', '700', '800', '900'].map((shade) => (
             <div key={shade} className="text-center">
-              <div className={`h-12 w-12 rounded-full ring-1 ring-white/10 bg-ink-${shade}`} />
+              <div className={`h-12 w-12 rounded border border-ink-200 bg-ink-${shade}`} />
               <span className="text-xs text-ink-500">{shade}</span>
             </div>
           ))}

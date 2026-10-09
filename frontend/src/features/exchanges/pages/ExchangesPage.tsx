@@ -48,8 +48,8 @@ export default function ExchangesPage() {
 
   return (
     <section className="flex flex-col gap-6">
-      <header>
-        <h1 className="text-3xl font-bold tracking-tight text-ink-900">{t('Mes échanges')}</h1>
+      <header className="page-header">
+        <h1 className="text-[26px] font-bold leading-tight text-ink-900">{t('Mes échanges')}</h1>
         <p className="mt-1 text-sm text-ink-600">
           {t('Les demandes que vous avez reçues et celles que vous avez envoyées.')}
         </p>
@@ -58,7 +58,7 @@ export default function ExchangesPage() {
       <div
         role="tablist"
         aria-label={t('Direction des échanges')}
-        className="flex w-fit gap-1 rounded-full bg-white/[0.04] p-1 ring-1 ring-inset ring-white/[0.07]"
+        className="flex border-b border-ink-300"
       >
         {(['received', 'sent'] as Tab[]).map((value) => (
           <button
@@ -68,15 +68,15 @@ export default function ExchangesPage() {
             aria-selected={tab === value}
             onClick={() => setTab(value)}
             className={cn(
-              'flex items-center gap-2 rounded-full px-5 py-2 text-sm font-medium transition',
+              '-mb-px flex items-center gap-2 rounded-t border px-4 py-2 text-sm',
               tab === value
-                ? 'bg-[#1f6feb] text-white shadow-glow'
-                : 'text-ink-700 hover:bg-white/[0.06] hover:text-ink-900',
+                ? 'border-ink-300 border-b-white bg-white font-bold text-ink-900'
+                : 'border-transparent text-accent-700 hover:border-ink-200 hover:bg-ink-100',
             )}
           >
             {value === 'received' ? t('Reçues') : t('Envoyées')}
             {value === 'received' && pending > 0 && (
-              <span className="rounded-full bg-white/20 px-2 py-0.5 text-xs tabular-nums">
+              <span className="rounded-[10px] bg-ink-200 px-1.5 text-xs font-bold text-ink-700">
                 <span aria-hidden="true">{pending}</span>
                 <span className="sr-only">{` (${t('{n} en attente', { n: pending })})`}</span>
               </span>
@@ -86,7 +86,7 @@ export default function ExchangesPage() {
       </div>
 
       {actionError && (
-        <p role="alert" className="rounded-2xl bg-red-950/50 px-5 py-3 text-sm text-red-300">
+        <p role="alert" className="alert alert-danger">
           {actionError}
         </p>
       )}

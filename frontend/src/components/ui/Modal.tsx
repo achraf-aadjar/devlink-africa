@@ -51,7 +51,7 @@ export default function Modal({ open, title, onClose, children }: ModalProps) {
         type="button"
         aria-label={t('Fermer')}
         onClick={onClose}
-        className="absolute inset-0 bg-black/60"
+        className="absolute inset-0 bg-black/50"
       />
       <div
         ref={panel}
@@ -59,20 +59,20 @@ export default function Modal({ open, title, onClose, children }: ModalProps) {
         aria-modal="true"
         aria-label={title}
         tabIndex={-1}
-        className="animate-fade-in relative w-full max-w-lg rounded-t-card bg-ink-100 p-6 shadow-glow-soft ring-1 ring-white/10 sm:rounded-card"
+        className="animate-fade-in relative w-full max-w-lg rounded-t-card border border-ink-300 bg-white shadow-[0_5px_15px_rgba(0,0,0,0.5)] sm:rounded-card"
       >
-        <div className="mb-4 flex items-start justify-between gap-4">
-          <h2 className="text-lg font-semibold text-ink-900">{title}</h2>
+        <div className="flex items-center justify-between gap-4 border-b border-ink-200 px-5 py-3">
+          <h2 className="text-lg font-bold text-ink-900">{title}</h2>
           <button
             type="button"
             onClick={onClose}
             aria-label={t('Fermer la fenêtre')}
-            className="rounded-full p-1.5 text-ink-500 hover:bg-ink-200 hover:text-ink-800"
+            className="p-1 text-ink-500 hover:text-ink-900"
           >
-            <Icon name="close" size={20} />
+            <Icon name="close" size={18} />
           </button>
         </div>
-        {children}
+        <div className="p-5">{children}</div>
       </div>
     </div>
   )

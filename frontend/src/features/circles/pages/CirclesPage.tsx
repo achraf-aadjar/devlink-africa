@@ -104,8 +104,10 @@ export default function CirclesPage() {
 
   return (
     <section className="flex flex-col gap-8">
-      <header className="flex flex-col gap-3">
-        <h1 className="text-3xl font-bold tracking-tight text-ink-900">{t("Cercles d'échange")}</h1>
+      <header className="page-header flex flex-col gap-3">
+        <h1 className="text-[26px] font-bold leading-tight text-ink-900">
+          {t("Cercles d'échange")}
+        </h1>
         <p className="max-w-3xl text-ink-600">
           {t(
             "Quand aucune paire parfaite n'existe, l'échange peut circuler entre trois ou quatre personnes : chacun apprend à quelqu'un, et apprend de quelqu'un d'autre.",
@@ -114,7 +116,7 @@ export default function CirclesPage() {
         <ol className="mt-2 grid grid-cols-1 gap-3 md:grid-cols-3">
           {STEPS.map((step, index) => (
             <li key={step} className="surface flex gap-3 p-4 text-sm text-ink-700">
-              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#1f6feb] text-xs font-bold text-white shadow-glow">
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#337ab7] text-xs font-bold text-white">
                 {index + 1}
               </span>
               {t(step)}
@@ -124,7 +126,7 @@ export default function CirclesPage() {
       </header>
 
       {actionError && (
-        <p role="alert" className="rounded-2xl bg-red-950/50 px-5 py-3 text-sm text-red-300">
+        <p role="alert" className="alert alert-danger">
           {actionError}
         </p>
       )}

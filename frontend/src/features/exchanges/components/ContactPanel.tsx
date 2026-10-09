@@ -14,8 +14,8 @@ export default function ContactPanel({ other, me }: { other: ExchangeParty; me: 
   const href = other.contact ? contactHref(other.contact) : null
 
   return (
-    <div className="flex flex-col gap-2 rounded-2xl bg-emerald-950/40 px-5 py-4 ring-1 ring-inset ring-emerald-400/20">
-      <p className="flex items-center gap-2 text-sm font-medium text-emerald-300">
+    <div className="alert alert-success flex flex-col gap-2">
+      <p className="flex items-center gap-2 text-sm font-medium text-[#3c763d]">
         <Icon name="check" size={16} />
         {t('Échange accepté : vous pouvez vous contacter.')}
       </p>

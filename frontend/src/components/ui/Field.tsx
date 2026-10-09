@@ -21,10 +21,10 @@ export default function Field({ label, error, hint, className, required, ...rest
 
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="text-sm font-medium text-ink-800">
+      <label htmlFor={id} className="text-sm font-bold text-ink-800">
         {label}
         {required && (
-          <span className="ml-1 text-accent-700" aria-hidden="true">
+          <span className="ml-1 text-[#a94442]" aria-hidden="true">
             *
           </span>
         )}
@@ -37,7 +37,7 @@ export default function Field({ label, error, hint, className, required, ...rest
         aria-describedby={describedBy || undefined}
         className={cn(
           'field text-ink-900 placeholder:text-ink-400',
-          error ? 'border-red-500/70' : 'border-white/10',
+          error ? 'border-[#a94442]' : 'border-ink-300',
           className,
         )}
       />
@@ -47,7 +47,7 @@ export default function Field({ label, error, hint, className, required, ...rest
         </p>
       )}
       {error && (
-        <p id={errorId} className="text-sm text-red-400">
+        <p id={errorId} className="text-sm text-[#a94442]">
           {error}
         </p>
       )}

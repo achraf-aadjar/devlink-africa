@@ -16,14 +16,9 @@ export default function EmptyState({
   action?: ReactNode
 }) {
   return (
-    <Card className="flex flex-col items-center gap-2 border-dashed py-12 text-center">
-      <span
-        aria-hidden="true"
-        className="mb-2 flex h-12 w-12 items-center justify-center rounded-full border border-accent-300/60 bg-accent-50 text-accent-700 shadow-glow"
-      >
-        <Icon name="info" size={22} />
-      </span>
-      <h2 className="text-lg font-semibold text-ink-800">{title}</h2>
+    <Card className="flex flex-col items-center gap-2 bg-[#fafafa] py-10 text-center shadow-none">
+      <Icon name="info" size={32} className="mb-1 text-ink-400" />
+      <h2 className="text-lg font-bold text-ink-800">{title}</h2>
       <p className="max-w-md text-sm text-ink-600">{description}</p>
       {action && <div className="mt-2">{action}</div>}
     </Card>

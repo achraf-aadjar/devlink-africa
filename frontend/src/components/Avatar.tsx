@@ -1,9 +1,9 @@
-import { avatarColors, initials } from '../lib/avatarColors'
+import { avatarColor, initials } from '../lib/avatarColors'
 import { cn } from '../lib/cn'
 
 /**
- * Pastille ronde aux initiales, à la place d'une photo de profil (le produit
- * n'en stocke pas). La teinte dépend du nom : une même personne garde toujours
+ * Carré aux initiales, à la place d'une photo de profil (le produit n'en
+ * stocke pas). La teinte dépend du nom : une même personne garde toujours
  * la même couleur, et deux personnes voisines dans une liste se distinguent.
  */
 export default function Avatar({
@@ -15,20 +15,18 @@ export default function Avatar({
   size?: number
   className?: string
 }) {
-  const { from, to } = avatarColors(name)
-
   return (
     <span
       aria-hidden="true"
       className={cn(
-        'inline-flex shrink-0 select-none items-center justify-center rounded-full font-semibold text-white ring-2 ring-white/10',
+        'inline-flex shrink-0 select-none items-center justify-center rounded-[3px] font-bold text-white',
         className,
       )}
       style={{
         width: size,
         height: size,
         fontSize: Math.round(size * 0.38),
-        background: `linear-gradient(135deg, ${from}, ${to})`,
+        backgroundColor: avatarColor(name),
       }}
     >
       {initials(name)}

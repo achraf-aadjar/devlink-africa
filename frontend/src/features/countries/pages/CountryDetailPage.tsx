@@ -40,12 +40,12 @@ export default function CountryDetailPage() {
         </Link>
       </nav>
 
-      <header className="flex items-center gap-4">
+      <header className="page-header flex items-center gap-4">
         <span className="text-5xl" aria-hidden="true">
           {data.flag}
         </span>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-ink-900">{name}</h1>
+          <h1 className="text-[26px] font-bold leading-tight text-ink-900">{name}</h1>
           <p className="mt-1 text-sm text-ink-600">
             {tn(data.developers_count, '{n} développeur', '{n} développeurs')} ·{' '}
             {tn(data.projects_count, '{n} projet', '{n} projets')}
@@ -82,7 +82,7 @@ export default function CountryDetailPage() {
           {data.developers.length > 0 && (
             <div className="flex flex-col gap-3">
               <h2 className="font-semibold text-ink-900">{t('Développeurs')}</h2>
-              <ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                 {data.developers.map((person) => (
                   <Card as="li" key={person.id} interactive className="flex flex-col gap-2">
                     <Avatar
@@ -117,7 +117,7 @@ export default function CountryDetailPage() {
           {data.projects.length > 0 && (
             <div className="flex flex-col gap-3">
               <h2 className="font-semibold text-ink-900">{t('Projets')}</h2>
-              <ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                 {data.projects.map((project) => (
                   <ProjectCard key={project.id} project={project} />
                 ))}

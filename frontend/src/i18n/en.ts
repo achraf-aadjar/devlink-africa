@@ -292,7 +292,6 @@ export const EN: Record<string, string> = {
   'Créer mon compte': 'Create my account',
   'Explorer les profils': 'Explore profiles',
   'En quelques chiffres': 'Key figures',
-  'Comment ça marche': 'How it works',
   "Quatre étapes, de l'inscription au premier échange":
     'Four steps from sign-up to your first exchange',
   'Pas de questionnaire interminable : quelques minutes suffisent pour recevoir vos premières propositions.':
@@ -308,11 +307,9 @@ export const EN: Record<string, string> = {
     'A match that isn’t mutual can’t reach a high score.',
   'Votre avis sur un match est enregistré, mais ne modifie jamais le score.':
     'Your feedback on a match is recorded, but it never changes the score.',
-  Échanger: 'Exchange',
   'Quatre façons de travailler ensemble': 'Four ways to work together',
   'Choisissez la forme qui vous convient. Vous pouvez en essayer plusieurs avec la même personne.':
     'Pick the format that suits you. You can try several with the same person.',
-  'Nos principes': 'Our principles',
   'Pensé pour que les deux côtés y gagnent': 'Designed so both sides win',
   'DevLink Africa n’est pas un annuaire : c’est un outil pour trouver la bonne personne avec qui progresser.':
     'DevLink Africa isn’t a directory: it’s a tool for finding the right person to grow with.',
@@ -573,8 +570,8 @@ export const EN: Record<string, string> = {
     'Broaden your criteria to discover other projects.',
   '{n} développeur trouvé.': '{n} developer found.',
   '{n} développeurs trouvés.': '{n} developers found.',
-  'Chaque point représente un pays. Ceux en couleur comptent au moins un développeur ou un projet.':
-    'Each dot is a country. Colored ones have at least one developer or project.',
+  'Chaque case représente un pays. Celles en bleu comptent au moins un développeur ou un projet.':
+    'Each square is a country. Blue squares have at least one developer or project.',
   "Carte de l'Afrique par pays": 'Map of Africa by country',
   '{name} : {developers} développeur(s), {projects} projet(s)':
     '{name}: {developers} developer(s), {projects} project(s)',
@@ -693,7 +690,6 @@ export const EN: Record<string, string> = {
   // --- Accueil : ce qui nous distingue ---
   'Dépôts de code, certifications, contributions open source : chaque compétence peut s’appuyer sur des preuves.':
     'Code repositories, certifications, open-source contributions: every skill can be backed by proof.',
-  'Ce qui nous distingue': 'What sets us apart',
   'Au-delà de la paire parfaite': 'Beyond the perfect pair',
   "Un échange à deux suppose que chacun cherche exactement ce que l'autre sait. DevLink Africa va plus loin.":
     'A one-to-one exchange only works when each person wants exactly what the other knows. DevLink Africa goes further.',
@@ -716,4 +712,19 @@ export const EN: Record<string, string> = {
   'En français et en anglais': 'In French and English',
   'Du Sénégal au Kenya, en passant par le Ghana et le Nigeria : toute la plateforme passe d’une langue à l’autre en un clic.':
     'From Senegal to Kenya, by way of Ghana and Nigeria: the whole platform switches language in one click.',
+  // --- Accueil : tableau des critères ---
+  'Ce que l’un sait et que l’autre veut apprendre, selon le niveau déclaré.':
+    'What one person knows and the other wants to learn, weighted by declared level.',
+  'L’échange va-t-il dans les deux sens ?': 'Does the exchange go both ways?',
+  'Des disponibilités tournées vers le travail à deux : mentorat, projet, open source.':
+    'Availability geared toward working together: mentoring, projects, open source.',
+  'Un socle technique partagé, pour se comprendre vite.':
+    'A shared technical foundation, so you understand each other quickly.',
+  'Chacun a indiqué quand et comment il est disponible.':
+    'Both people have said when and how they are available.',
+  'Un même domaine d’activité : web, mobile, données…': 'The same field: web, mobile, data…',
+  Critère: 'Criterion',
+  Points: 'Points',
+  'Ce qu’il mesure': 'What it measures',
+  Total: 'Total',
 }

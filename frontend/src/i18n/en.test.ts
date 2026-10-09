@@ -66,6 +66,18 @@ describe('traduction anglaise', () => {
     expect(values.filter((value) => !(value in EN))).toEqual([])
   })
 
+  it('ne garde aucune traduction orpheline (texte retiré de l’interface)', () => {
+    // Le dictionnaire lui-même est exclu : sinon chaque clé s'y trouverait.
+    const code = Object.entries(SOURCES)
+      .filter(([file]) => !file.endsWith('/en.ts'))
+      .map(([, source]) => source)
+      .join('\n')
+    const quoted = (text: string) =>
+      [`'${text.replace(/'/g, "\\'")}'`, `"${text}"`].some((form) => code.includes(form))
+
+    expect(Object.keys(EN).filter((text) => !quoted(text))).toEqual([])
+  })
+
   it('garde les mêmes variables dans la traduction', () => {
     const mismatched = Object.entries(EN).filter(
       ([french, english]) => placeholders(french).join() !== placeholders(english).join(),

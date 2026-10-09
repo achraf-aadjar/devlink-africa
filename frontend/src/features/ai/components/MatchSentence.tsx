@@ -37,10 +37,7 @@ export default function MatchSentence({ matchId }: { matchId: number }) {
 
   if (sentence) {
     return (
-      <p
-        role="status"
-        className="rounded-2xl bg-accent-50/60 px-5 py-4 ring-1 ring-inset ring-accent-400/25 text-sm text-ink-800"
-      >
+      <p role="status" className="alert alert-info">
         {sentence}
       </p>
     )

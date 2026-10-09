@@ -1,105 +1,64 @@
 /** @type {import('tailwindcss').Config} */
 // Jetons de design DevLink Africa (DL-07).
 //
-// Thème sombre façon GitHub, repris le 2026-10-08 à la demande d'Achraf :
-// fond quasi noir, un seul accent bleu, plus de terre cuite ni de fond clair.
-// Voir docs/DECISIONS.md pour le détail du calcul de chaque teinte.
+// Style classique, repris le 2026-10-09 à la demande d'Achraf : fond blanc,
+// texte gris foncé, un bleu de lien, des panneaux à bordure fine et des
+// boutons à léger dégradé, dans l'esprit de GitHub ou de Bootstrap 3 vers
+// 2014. Voir docs/DECISIONS.md.
 //
-// `ink` est à l'inverse de l'original : 50 est le fond le plus sombre (la
-// page), 900 le texte le plus clair. Ce sens compte : partout ailleurs dans
-// le code, `bg-ink-50`/`bg-ink-100` désignent un fond et `text-ink-700` à
-// `text-ink-900` du texte lisible — en inversant seulement les valeurs ici,
-// toutes ces classes redeviennent correctes sans toucher aux composants.
+// `ink` est sémantique : 50 est le fond de page, 100 un fond légèrement grisé
+// (en-têtes de panneau, pied de page), 200 et 300 les bordures, 500 à 900 du
+// texte, du plus discret au plus contrasté. Les composants s'en servent
+// partout ; seules les valeurs changent d'un thème à l'autre.
 //
-// `accent` (bleu) a deux familles distinctes, calculées pour chacune passer
-// au moins 4,5:1 :
-//   - 50 à 300 : teintes sombres, pour un fond de bouton ou un encadré (texte
-//     blanc dessus, contraste vérifié).
-//   - 400 à 900 : bleus clairs, pour du texte ou une icône sur fond sombre.
-// Les deux familles se chevauchent volontairement : aucune valeur unique ne
-// pouvait servir à la fois de fond de bouton (doit rester assez sombre pour
-// un texte blanc) et de texte de lien (doit être assez clair sur fond quasi
-// noir) — la fenêtre commune où les deux marchent à la fois est trop étroite
-// (bien en dessous de 4,5:1 des deux côtés à la fois, vérifié par calcul).
+// Contrastes sur blanc, vérifiés : ink-500 4,5:1, ink-600 5,7:1, ink-700
+// 7,5:1 ; accent-700 (lien) 6,4:1 ; accent-400 porte du blanc à 5,3:1.
 export default {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {
     extend: {
       colors: {
         accent: {
-          50: '#0a1f33',
-          100: '#0d2847',
-          200: '#11315c',
-          300: '#163f78',
-          400: '#1f6feb',
-          500: '#388bfd',
-          600: '#4493f8',
-          700: '#58a6ff',
-          800: '#79c0ff',
-          900: '#a5d6ff',
+          50: '#f2f7fc',
+          100: '#e1edf8',
+          200: '#c4dcf0',
+          300: '#94bde2',
+          400: '#2f6fad',
+          500: '#337ab7',
+          600: '#2c6aa3',
+          700: '#2a6496',
+          800: '#23527c',
+          900: '#1a3d5c',
         },
         ink: {
-          50: '#0d1117',
-          100: '#161b22',
-          200: '#21262d',
-          300: '#30363d',
-          400: '#484f58',
-          500: '#6e7681',
-          600: '#8b949e',
-          700: '#adb5bd',
-          800: '#c9d1d9',
-          900: '#e6edf3',
+          50: '#ffffff',
+          100: '#f5f5f5',
+          200: '#e5e5e5',
+          300: '#d0d0d0',
+          400: '#a3a3a3',
+          500: '#767676',
+          600: '#666666',
+          700: '#555555',
+          800: '#333333',
+          900: '#222222',
         },
       },
       fontFamily: {
         // Polices système : aucune dépendance, aucune question de licence.
-        sans: [
-          'system-ui',
-          '-apple-system',
-          'Segoe UI',
-          'Roboto',
-          'Helvetica Neue',
-          'Arial',
-          'sans-serif',
-        ],
-        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace'],
+        sans: ['"Helvetica Neue"', 'Helvetica', 'Arial', 'sans-serif'],
+        mono: ['Consolas', '"Liberation Mono"', 'Menlo', 'Courier', 'monospace'],
       },
-      borderRadius: { card: '1.5rem' },
+      borderRadius: { card: '4px' },
       boxShadow: {
-        // Sur fond sombre, une ombre n'apporte presque rien par elle-même :
-        // c'est surtout la bordure (border-ink-200/300) qui sépare les
-        // cartes. L'ombre reste discrète, en renfort.
-        card: '0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.25)',
-        // Halo bleu des éléments mis en avant (bouton principal, carte active).
-        glow: '0 0 0 1px rgba(56, 139, 253, 0.45), 0 8px 28px -8px rgba(31, 111, 235, 0.7)',
-        'glow-soft': '0 0 0 1px rgba(56, 139, 253, 0.2), 0 20px 60px -24px rgba(56, 139, 253, 0.5)',
+        card: '0 1px 1px rgba(0, 0, 0, 0.05)',
+        raised: '0 1px 3px rgba(0, 0, 0, 0.12)',
+        menu: '0 3px 12px rgba(0, 0, 0, 0.15)',
       },
       keyframes: {
         'fade-in': { from: { opacity: '0' }, to: { opacity: '1' } },
-        // Page d'accueil : pastilles qui flottent, halo bleu qui respire.
-        float: {
-          '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-10px)' },
-        },
-        glow: {
-          '0%, 100%': { opacity: '0.55', transform: 'scale(1)' },
-          '50%': { opacity: '0.85', transform: 'scale(1.06)' },
-        },
-        'bar-fill': { from: { transform: 'scaleX(0)' }, to: { transform: 'scaleX(1)' } },
-        // Cercles d'échange : un trait lumineux qui parcourt chaque flèche.
-        flow: { to: { strokeDashoffset: '-15' } },
-        'page-in': {
-          from: { opacity: '0', transform: 'translateY(8px)' },
-          to: { opacity: '1', transform: 'translateY(0)' },
-        },
       },
       animation: {
         'fade-in': 'fade-in 150ms ease-out',
-        float: 'float 6s ease-in-out infinite',
-        glow: 'glow 8s ease-in-out infinite',
-        'bar-fill': 'bar-fill 1.1s cubic-bezier(0.22, 1, 0.36, 1) both',
-        'page-in': 'page-in 350ms ease-out both',
-        flow: 'flow 1.6s linear infinite',
       },
     },
   },

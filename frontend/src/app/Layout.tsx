@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import Icon from '../components/icons/Icon'
-import Logo from '../components/icons/Logo'
+import Logo, { LogoMark } from '../components/icons/Logo'
 import PageContainer from '../components/PageContainer'
 import CopilotWidget from '../features/ai/components/CopilotWidget'
 import { useAuth } from '../features/auth/hooks/useAuth'
@@ -40,14 +40,14 @@ function PendingBadge({ count, kind = 'request' }: { count: number; kind?: 'requ
         ? t('{count} demandes en attente', { count })
         : t('{count} demande en attente', { count })
   return (
-    <span className="ml-1.5 inline-flex min-w-5 items-center justify-center rounded-full bg-[#1f6feb] px-1.5 text-xs font-semibold leading-5 text-white">
+    <span className="ml-1.5 inline-flex min-w-[18px] items-center justify-center rounded-[9px] bg-[#d26911] px-1.5 text-[11px] font-bold leading-[18px] text-white">
       <span aria-hidden="true">{count}</span>
       <span className="sr-only">{` (${label})`}</span>
     </span>
   )
 }
 
-/** Bascule français ↔ anglais : affiche la langue vers laquelle on passe. */
+/** Bascule français ↔ anglais : affiche, en toutes lettres, la langue proposée. */
 function LanguageSwitch({ className }: { className?: string }) {
   const { lang, setLang, t } = useI18n()
   const next = lang === 'fr' ? 'en' : 'fr'
@@ -58,13 +58,12 @@ function LanguageSwitch({ className }: { className?: string }) {
       // Annoncé dans la langue proposée, comme le font les sites bilingues.
       lang={next}
       aria-label={next === 'en' ? 'Switch to English' : t('Passer en français')}
-      title={next === 'en' ? 'English' : 'Français'}
       className={cn(
-        'shrink-0 rounded-lg px-2.5 py-2 text-sm font-semibold text-[#3d444d] transition-colors hover:bg-[#e3e6eb] hover:text-[#0d1117]',
+        'shrink-0 text-xs text-ink-600 hover:text-accent-700 hover:underline',
         className,
       )}
     >
-      <span aria-hidden="true">{next.toUpperCase()}</span>
+      {next === 'en' ? 'English' : 'Français'}
     </button>
   )
 }
@@ -79,23 +78,23 @@ const PUBLIC_LINKS: NavLinkItem[] = [
 // par le pied de page et la page Pays. Un visiteur, qui a la place, le voit ici.
 const VISITOR_LINKS: NavLinkItem[] = [{ to: '/observatoire', label: msg('Observatoire') }]
 
-// La barre est claire (pastille flottante sur le fond sombre) : ses couleurs
-// sont posées en dur plutôt qu'avec `ink`, dont l'échelle est pensée pour un
-// fond sombre et donnerait ici du texte clair sur du clair.
+// Onglets de la barre : le lien de la page courante est souligné en orange,
+// comme les onglets d'un dépôt sur GitHub à l'époque.
 const linkClass = ({ isActive }: { isActive: boolean }) =>
   cn(
-    'flex items-center whitespace-nowrap rounded-lg px-2.5 py-2 text-[15px] font-medium transition-colors',
-    isActive ? 'text-[#0d1117] bg-[#dde1e7]' : 'text-[#3d444d] hover:text-[#0d1117]',
+    'flex h-full items-center whitespace-nowrap border-b-2 px-2 pt-0.5 text-sm font-bold',
+    isActive
+      ? 'border-[#d26911] text-ink-900'
+      : 'border-transparent text-ink-700 hover:text-accent-700',
   )
 
 const mobileLinkClass = ({ isActive }: { isActive: boolean }) =>
   cn(
-    'block rounded-lg px-3 py-2.5 text-[15px] font-medium transition-colors',
-    isActive ? 'text-[#0d1117] bg-[#dde1e7]' : 'text-[#3d444d] hover:bg-[#e3e6eb]',
+    'flex items-center border-l-2 px-3 py-2 text-sm font-bold',
+    isActive
+      ? 'border-[#d26911] bg-white text-ink-900'
+      : 'border-transparent text-ink-700 hover:bg-white',
   )
-
-const signUpClass =
-  'inline-flex items-center justify-center rounded-xl bg-[#1a6fe0] px-7 py-3 text-[15px] font-semibold text-white transition-colors hover:bg-[#155fc4]'
 
 export default function Layout() {
   const { isAuthenticated, user, signOut } = useAuth()
@@ -127,22 +126,17 @@ export default function Layout() {
         {t('Aller au contenu')}
       </a>
 
-      {/* Pastille flottante, collée en haut au défilement : le contenu passe
-          dessous, visible dans la marge autour de la barre. */}
-      <header className="sticky top-0 z-40 px-3 pt-3 sm:px-6 sm:pt-4">
-        <div className="mx-auto max-w-[90rem] rounded-2xl bg-[#f0f2f5]/95 shadow-card backdrop-blur">
-          <div className="flex items-center gap-3 px-4 py-2.5 sm:px-6">
-            <Link
-              to="/"
-              className="shrink-0 text-[#0d1117]"
-              aria-label={t('DevLink Africa, accueil')}
-            >
-              <Logo size={26} variant="light" />
+      {/* Barre grise pleine largeur, comme sur la plupart des sites de 2014. */}
+      <header className="border-b border-ink-200 bg-[#f5f5f5]">
+        <PageContainer>
+          <div className="flex h-[52px] items-center gap-4">
+            <Link to="/" className="shrink-0" aria-label={t('DevLink Africa, accueil')}>
+              <Logo size={22} variant="light" />
             </Link>
 
             <nav
               aria-label={t('Navigation principale')}
-              className={cn('hidden flex-1 items-center justify-center gap-1', desktop)}
+              className={cn('hidden h-full flex-1 items-stretch gap-1', desktop)}
             >
               {links.map((link) => (
                 <NavLink key={link.to} to={link.to} className={linkClass}>
@@ -155,11 +149,11 @@ export default function Layout() {
               ))}
             </nav>
 
-            <div className={cn('hidden shrink-0 items-center gap-2', desktop)}>
+            <div className={cn('hidden h-full shrink-0 items-center gap-3', desktop)}>
               {isAuthenticated ? (
                 <>
                   <NavLink to="/profil" className={linkClass}>
-                    <Icon name="profile" size={17} className="mr-2" />
+                    <Icon name="profile" size={16} className="mr-1.5 text-ink-500" />
                     {user?.full_name || t('Mon profil')}
                   </NavLink>
                   <button
@@ -167,17 +161,20 @@ export default function Layout() {
                     onClick={handleSignOut}
                     aria-label={t('Se déconnecter')}
                     title={t('Se déconnecter')}
-                    className="rounded-xl border border-[#d0d7de] p-2.5 text-[#3d444d] transition-colors hover:bg-[#e3e6eb] hover:text-[#0d1117]"
+                    className="btn btn-sm"
                   >
-                    <Icon name="logout" size={18} />
+                    <Icon name="logout" size={15} />
                   </button>
                 </>
               ) : (
                 <>
-                  <NavLink to="/connexion" className={linkClass}>
+                  <Link
+                    to="/connexion"
+                    className="text-sm font-bold text-ink-700 hover:text-accent-700"
+                  >
                     {t('Se connecter')}
-                  </NavLink>
-                  <Link to="/inscription" className={signUpClass}>
+                  </Link>
+                  <Link to="/inscription" className="btn btn-primary btn-sm">
                     {t('S’inscrire')}
                   </Link>
                 </>
@@ -192,7 +189,7 @@ export default function Layout() {
               aria-expanded={menuOpen}
               aria-controls="menu-mobile"
               aria-label={t('Menu')}
-              className={cn('rounded-lg p-2 text-[#3d444d] hover:bg-[#e3e6eb]', mobileOnly)}
+              className={cn('btn btn-sm', mobileOnly)}
             >
               <svg
                 viewBox="0 0 24 24"
@@ -210,7 +207,7 @@ export default function Layout() {
             <nav
               id="menu-mobile"
               aria-label={t('Navigation mobile')}
-              className={cn('animate-fade-in border-t border-[#d0d7de] px-3 py-2', mobileOnly)}
+              className={cn('-mx-4 border-t border-ink-200 pb-2 sm:-mx-6', mobileOnly)}
             >
               {links.map((link) => (
                 <NavLink
@@ -226,7 +223,7 @@ export default function Layout() {
                   )}
                 </NavLink>
               ))}
-              <div className="mt-2 border-t border-[#d0d7de] pt-2">
+              <div className="mt-2 border-t border-ink-200 pt-2">
                 {isAuthenticated ? (
                   <>
                     <NavLink
@@ -239,13 +236,13 @@ export default function Layout() {
                     <button
                       type="button"
                       onClick={handleSignOut}
-                      className="block w-full rounded-lg px-3 py-2.5 text-left text-[15px] font-medium text-[#3d444d] hover:bg-[#e3e6eb]"
+                      className="block w-full border-l-2 border-transparent px-3 py-2 text-left text-sm font-bold text-ink-700 hover:bg-white"
                     >
                       {t('Se déconnecter')}
                     </button>
                   </>
                 ) : (
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col gap-2 px-3">
                     <NavLink
                       to="/connexion"
                       className={mobileLinkClass}
@@ -255,7 +252,7 @@ export default function Layout() {
                     </NavLink>
                     <Link
                       to="/inscription"
-                      className={signUpClass}
+                      className="btn btn-primary"
                       onClick={() => setMenuOpen(false)}
                     >
                       {t('S’inscrire')}
@@ -265,7 +262,7 @@ export default function Layout() {
               </div>
             </nav>
           )}
-        </div>
+        </PageContainer>
       </header>
 
       {/* Plus de max-w ici : chaque page décide de sa propre largeur via
@@ -275,20 +272,21 @@ export default function Layout() {
         <Outlet />
       </main>
 
-      <footer className="border-t border-ink-200 bg-ink-100">
-        <PageContainer className="flex flex-col items-center gap-2 py-6 text-sm text-ink-600 sm:flex-row sm:justify-between">
-          <p>{t('DevLink Africa — échange de compétences entre développeurs africains.')}</p>
+      <footer className="mt-10 border-t border-ink-200">
+        <PageContainer className="flex flex-col items-center gap-3 py-8 text-xs text-ink-500 sm:flex-row sm:justify-between">
           <nav aria-label={t('Liens secondaires')} className="flex gap-4">
-            <Link to="/observatoire" className="underline hover:text-accent-700">
+            <Link to="/observatoire" className="text-accent-700 hover:underline">
               {t('Observatoire')}
             </Link>
-            <Link to="/confidentialite" className="underline hover:text-accent-700">
+            <Link to="/confidentialite" className="text-accent-700 hover:underline">
               {t('Confidentialité')}
             </Link>
-            <Link to="/design" className="underline hover:text-accent-700">
+            <Link to="/design" className="text-accent-700 hover:underline">
               Design system
             </Link>
           </nav>
+          <LogoMark size={22} variant="mono" className="hidden text-ink-300 sm:block" />
+          <p>{t('DevLink Africa — échange de compétences entre développeurs africains.')}</p>
         </PageContainer>
       </footer>
 

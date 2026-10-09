@@ -59,10 +59,10 @@ export default function LoginPage() {
 
   return (
     <div className="mx-auto w-full max-w-md">
-      <h1 className="mb-1 text-3xl font-bold tracking-tight text-ink-900">{t('Se connecter')}</h1>
+      <h1 className="mb-1 text-[26px] font-bold leading-tight text-ink-900">{t('Se connecter')}</h1>
       <p className="mb-6 text-sm text-ink-600">{t('Retrouvez vos matchs et vos échanges.')}</p>
 
-      <Card className="border-accent-300/40 p-6 shadow-glow-soft sm:p-8">
+      <Card className="p-6 sm:p-8">
         <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
           <Field
             label={t('Adresse e-mail')}
@@ -86,7 +86,7 @@ export default function LoginPage() {
           />
 
           {errors.form && (
-            <p role="alert" className="text-sm text-red-400">
+            <p role="alert" className="text-sm text-[#a94442]">
               {errors.form}
             </p>
           )}

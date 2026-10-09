@@ -22,9 +22,11 @@ import { cn } from '../lib/cn'
  * Tailwind génère son CSS par ordre alphabétique de classe et non par ordre
  * d'apparition dans le JSX. Chaque appelant précise donc son propre `py-*`.
  */
+// Largeur fixe d'un « container » Bootstrap (1170 px) : la page reste
+// centrée, avec des marges blanches sur un grand écran.
 const SIZES = {
-  default: 'max-w-7xl',
-  wide: 'max-w-[90rem]',
+  default: 'max-w-[1170px]',
+  wide: 'max-w-[1170px]',
 }
 
 export default function PageContainer({

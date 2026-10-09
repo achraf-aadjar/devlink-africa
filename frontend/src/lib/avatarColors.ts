@@ -1,15 +1,9 @@
 /**
  * Couleurs des avatars à initiales, partagées entre l'avatar et le schéma d'un
  * cercle : une même personne garde la même teinte partout dans l'interface.
+ * Teintes unies et assez foncées pour porter des initiales blanches (≥ 4,5:1).
  */
-const PALETTE: Array<{ from: string; to: string }> = [
-  { from: '#1f6feb', to: '#79c0ff' },
-  { from: '#8957e5', to: '#d2a8ff' },
-  { from: '#1a7f64', to: '#56d4bc' },
-  { from: '#bf4b8a', to: '#f778ba' },
-  { from: '#9e6a03', to: '#e3b341' },
-  { from: '#0969da', to: '#a371f7' },
-]
+const PALETTE = ['#2a6496', '#6f42c1', '#2e7d32', '#a94442', '#8a6d3b', '#31708f']
 
 function hash(text: string): number {
   let value = 0
@@ -17,8 +11,8 @@ function hash(text: string): number {
   return value
 }
 
-/** Dégradé d'une personne : stable d'une page à l'autre, car tiré de son nom. */
-export function avatarColors(name: string): { from: string; to: string } {
+/** Couleur d'une personne : stable d'une page à l'autre, car tirée de son nom. */
+export function avatarColor(name: string): string {
   return PALETTE[hash(name) % PALETTE.length]
 }
 

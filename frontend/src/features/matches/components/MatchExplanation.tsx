@@ -19,9 +19,9 @@ const CRITERION_LABELS: Record<string, string> = {
 
 /** Couleur de la barre selon la part du critère obtenue. */
 function barTone(ratio: number): string {
-  if (ratio >= 0.75) return 'bg-accent-600'
-  if (ratio >= 0.4) return 'bg-accent-400'
-  return 'bg-ink-500'
+  if (ratio >= 0.75) return 'bg-[#5cb85c]'
+  if (ratio >= 0.4) return 'bg-[#337ab7]'
+  return 'bg-ink-400'
 }
 
 /**
@@ -49,13 +49,9 @@ export default function MatchExplanation({
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Niveau 1 : le score, en jauge circulaire sur un halo. */}
-      <div className="relative isolate flex flex-col items-center gap-3 py-4 text-center">
-        <div
-          aria-hidden="true"
-          className="glow-blob inset-x-0 top-0 -z-10 mx-auto h-48 w-72 bg-[#1f6feb]/25"
-        />
-        <p className="text-sm font-medium text-accent-800">{t('Score de compatibilité')}</p>
+      {/* Niveau 1 : le score, en jauge circulaire. */}
+      <div className="flex flex-col items-center gap-3 py-2 text-center">
+        <p className="text-sm font-bold text-ink-700">{t('Score de compatibilité')}</p>
         <ScoreRing score={total} size={148} stroke={10} showMax />
         {explanation.capped && (
           <p className="max-w-sm text-sm text-ink-600">
@@ -150,10 +146,10 @@ export default function MatchExplanation({
                     points,
                     weight: item.weight,
                   })}
-                  className="h-2 overflow-hidden rounded-full bg-ink-100"
+                  className="progress"
                 >
                   <div
-                    className={`h-full rounded-full ${barTone(ratio)}`}
+                    className={`h-full ${barTone(ratio)}`}
                     style={{ width: `${Math.max(ratio * 100, 1)}%` }}
                   />
                 </div>

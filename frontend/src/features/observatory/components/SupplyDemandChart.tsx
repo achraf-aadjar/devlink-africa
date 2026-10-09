@@ -8,7 +8,7 @@ function Bar({ value, max, side }: { value: number; max: number; side: 'wanted' 
   return (
     <span
       aria-hidden="true"
-      className={side === 'wanted' ? 'h-3.5 rounded-l-[4px]' : 'h-3.5 rounded-r-[4px]'}
+      className={side === 'wanted' ? 'h-3.5 rounded-l-[2px]' : 'h-3.5 rounded-r-[2px]'}
       style={{ width: `${(value / max) * 100}%`, background: SERIES[side].color }}
     />
   )
@@ -60,7 +60,7 @@ export default function SupplyDemandChart({ skills }: { skills: ObservatorySkill
               onMouseLeave={() => setActive(null)}
               onFocus={() => setActive(index)}
               onBlur={() => setActive(null)}
-              className="relative grid grid-cols-[1fr_7.5rem_1fr] items-center rounded-lg py-1 outline-none transition-colors hover:bg-white/[0.03] focus-visible:bg-white/[0.05] sm:grid-cols-[1fr_9rem_1fr]"
+              className="relative grid grid-cols-[1fr_7.5rem_1fr] items-center rounded py-1 outline-none hover:bg-ink-100 focus-visible:bg-ink-100 sm:grid-cols-[1fr_9rem_1fr]"
             >
               <span aria-hidden="true" className="flex items-center justify-end gap-2">
                 <span className="text-xs tabular-nums text-ink-600">{skill.wanted || ''}</span>
@@ -68,7 +68,7 @@ export default function SupplyDemandChart({ skills }: { skills: ObservatorySkill
               </span>
               <span
                 aria-hidden="true"
-                className="border-x border-white/[0.08] px-2 text-center text-xs leading-tight text-ink-800 sm:text-sm"
+                className="border-x border-ink-200 px-2 text-center text-xs leading-tight text-ink-800 sm:text-sm"
               >
                 {skill.name}
               </span>
@@ -80,14 +80,14 @@ export default function SupplyDemandChart({ skills }: { skills: ObservatorySkill
               {active === index && (
                 <span
                   role="presentation"
-                  className="pointer-events-none absolute -top-12 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-xl bg-ink-200 px-3 py-2 text-xs text-ink-700 shadow-card ring-1 ring-white/10"
+                  className="pointer-events-none absolute -top-12 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded bg-[#333] px-2.5 py-1.5 text-xs text-[#ddd] shadow-menu"
                 >
-                  <strong className="mr-1 text-sm text-ink-900">{skill.name}</strong>
+                  <strong className="mr-1 text-sm text-white">{skill.name}</strong>
                   <span
                     className="mx-1 inline-block h-0.5 w-3 align-middle"
                     style={{ background: SERIES.wanted.color }}
                   />
-                  <strong className="text-ink-900">{skill.wanted}</strong>{' '}
+                  <strong className="text-white">{skill.wanted}</strong>{' '}
                   {tn(skill.wanted, 'veut l’apprendre', 'veulent l’apprendre')}
                   <span
                     className="mx-1 ml-2 inline-block h-0.5 w-3 align-middle"
@@ -122,7 +122,7 @@ export default function SupplyDemandChart({ skills }: { skills: ObservatorySkill
           </thead>
           <tbody>
             {skills.map((skill) => (
-              <tr key={skill.name} className="border-b border-white/[0.05]">
+              <tr key={skill.name} className="border-b border-ink-200">
                 <th scope="row" className="py-1.5 font-normal text-ink-800">
                   {skill.name}
                 </th>

@@ -120,7 +120,7 @@ export default function Combobox({
 
   return (
     <div ref={rootRef} className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="text-sm font-medium text-ink-800">
+      <label htmlFor={id} className="text-sm font-bold text-ink-800">
         {label}
       </label>
       <div className="relative">
@@ -148,8 +148,8 @@ export default function Combobox({
           }}
           onKeyDown={onKeyDown}
           className={cn(
-            'w-full rounded-lg border bg-ink-100 px-3 py-2 pr-9 text-ink-900 placeholder:text-ink-400',
-            error ? 'border-red-500' : 'border-ink-300',
+            'field w-full pr-9 placeholder:text-ink-400',
+            error ? 'border-[#a94442]' : 'border-ink-300',
           )}
         />
         <Icon
@@ -163,7 +163,7 @@ export default function Combobox({
             ref={listRef}
             role="listbox"
             aria-label={label}
-            className="absolute z-20 mt-1 max-h-60 w-full overflow-y-auto rounded-lg border border-ink-300 bg-ink-100 py-1 shadow-card"
+            className="absolute z-20 mt-1 max-h-60 w-full overflow-y-auto rounded border border-ink-300 bg-white py-1 shadow-menu"
           >
             {filtered.length === 0 && (
               <li className="px-3 py-2 text-sm text-ink-500">{t('Aucun résultat.')}</li>
@@ -182,7 +182,7 @@ export default function Combobox({
                 onMouseEnter={() => setActiveIndex(index)}
                 className={cn(
                   'cursor-pointer px-3 py-2 text-sm',
-                  index === activeIndex ? 'bg-accent-50 text-accent-800' : 'text-ink-800',
+                  index === activeIndex ? 'bg-accent-400 text-white' : 'text-ink-800',
                 )}
               >
                 {option.label}
@@ -192,7 +192,7 @@ export default function Combobox({
         )}
       </div>
       {error && (
-        <p role="alert" className="text-sm text-red-400">
+        <p role="alert" className="text-sm text-[#a94442]">
           {error}
         </p>
       )}
