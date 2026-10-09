@@ -280,8 +280,6 @@ export const EN: Record<string, string> = {
   'Chaque score se lit critère par critère. Vous savez toujours pourquoi un profil vous est proposé.':
     'Every score can be read criterion by criterion. You always know why a profile is suggested to you.',
   'Des preuves concrètes': 'Tangible proof',
-  'Après un échange, ce que vous avez produit ensemble reste visible sur votre profil.':
-    'After an exchange, what you built together stays visible on your profile.',
   'Exemple de match': 'Sample match',
   'Pourquoi ce profil ?': 'Why this profile?',
   'Vous voulez apprendre React, elle veut apprendre Django : vos compétences se complètent dans les deux sens.':
@@ -692,4 +690,30 @@ export const EN: Record<string, string> = {
   'Ajouter {skill} à ce que je veux apprendre': 'Add {skill} to what I want to learn',
   "Cliquez sur une proposition pour l'ajouter. Rien n'est enregistré avant votre clic.":
     'Click a suggestion to add it. Nothing is saved until you click.',
+  // --- Accueil : ce qui nous distingue ---
+  'Dépôts de code, certifications, contributions open source : chaque compétence peut s’appuyer sur des preuves.':
+    'Code repositories, certifications, open-source contributions: every skill can be backed by proof.',
+  'Ce qui nous distingue': 'What sets us apart',
+  'Au-delà de la paire parfaite': 'Beyond the perfect pair',
+  "Un échange à deux suppose que chacun cherche exactement ce que l'autre sait. DevLink Africa va plus loin.":
+    'A one-to-one exchange only works when each person wants exactly what the other knows. DevLink Africa goes further.',
+  'Le cercle de la démonstration : Dakar → Accra → Nairobi.':
+    'The demo circle: Dakar → Accra → Nairobi.',
+  'Quand aucune paire n’existe,': 'When no pair exists,',
+  'un cercle': 'a circle',
+  'Aminata, à Dakar, veut apprendre FastAPI. Kwame, à Accra, l’enseigne mais veut Docker. Imani, à Nairobi, enseigne Docker et veut React, qu’Aminata maîtrise. Aucune paire ne fonctionne ; le cercle, si.':
+    'Aminata, in Dakar, wants to learn FastAPI. Kwame, in Accra, teaches it but wants Docker. Imani, in Nairobi, teaches Docker and wants React, which Aminata knows well. No pair works; the circle does.',
+  'DevLink trouve ces boucles de trois ou quatre personnes où chacun apprend au suivant. Les contacts se débloquent quand tout le monde a accepté.':
+    'DevLink finds these loops of three or four people where each person teaches the next. Contact details unlock once everyone has accepted.',
+  'Voir mes cercles': 'See my circles',
+  'Un observatoire du continent': 'A continent-wide observatory',
+  'Les compétences qui manquent, celles qu’on peut partager, et les ponts entre pays. Que des chiffres, aucun nom.':
+    'The skills in short supply, the ones ready to share, and the bridges between countries. Numbers only, no names.',
+  "Ouvrir l'observatoire": 'Open the observatory',
+  'Des compétences validées par les pairs': 'Skills endorsed by peers',
+  'Après un échange terminé, votre partenaire peut valider la compétence que vous lui avez transmise. Sa validation, à son nom, s’affiche sur votre profil.':
+    'After a completed exchange, your partner can endorse the skill you passed on. Their endorsement, under their name, appears on your profile.',
+  'En français et en anglais': 'In French and English',
+  'Du Sénégal au Kenya, en passant par le Ghana et le Nigeria : toute la plateforme passe d’une langue à l’autre en un clic.':
+    'From Senegal to Kenya, by way of Ghana and Nigeria: the whole platform switches language in one click.',
 }

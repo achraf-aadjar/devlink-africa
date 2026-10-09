@@ -150,7 +150,7 @@ deploy/         nginx, guide de déploiement
 | Indicateur | Valeur |
 |---|---|
 | Tests backend | 544, couverture 98 % |
-| Tests frontend | 240, couverture 91 % |
+| Tests frontend | 241, couverture 91 % |
 | Parcours de démonstration | Rejoué par l'API (pytest) **et** dans Chromium (Playwright, 3 scénarios dont le cercle et l'anglais), en CI |
 | Traduction anglaise | Complète par construction : un test échoue si un texte de l'interface ou un message d'erreur de l'API n'est pas traduit |
 | Affichage mobile | Les 18 écrans vérifiés à 390 px, aucun débordement |

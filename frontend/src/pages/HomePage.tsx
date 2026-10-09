@@ -3,9 +3,11 @@ import { Link } from 'react-router-dom'
 import Icon, { type IconName } from '../components/icons/Icon'
 import PageContainer from '../components/PageContainer'
 import { useAuth } from '../features/auth/hooks/useAuth'
+import CircleDiagram from '../features/circles/components/CircleDiagram'
 import { msg } from '../i18n/translate'
 import { useI18n } from '../i18n/useI18n'
 import { cn } from '../lib/cn'
+import type { Circle } from '../lib/types'
 import { useReveal } from '../lib/useReveal'
 
 const STEPS: Array<{ title: string; text: string; icon: IconName }> = [
@@ -106,10 +108,33 @@ const PRINCIPLES: Array<{ icon: IconName; title: string; text: string }> = [
     icon: 'proof',
     title: msg('Des preuves concrètes'),
     text: msg(
-      'Après un échange, ce que vous avez produit ensemble reste visible sur votre profil.',
+      'Dépôts de code, certifications, contributions open source : chaque compétence peut s’appuyer sur des preuves.',
     ),
   },
 ]
+
+/**
+ * Le cercle des données de démonstration (seed_demo) : trois profils fictifs,
+ * aucune vraie personne. Aucun échange à deux ne les réunit ; le cercle, si.
+ */
+const SAMPLE_CIRCLE: Circle = {
+  id: null,
+  key: 'demo',
+  status: 'SUGGESTED',
+  score: 100,
+  members: [
+    { id: 1, full_name: 'Aminata Diallo', country: 'SN' },
+    { id: 2, full_name: 'Kwame Boateng', country: 'GH' },
+    { id: 3, full_name: 'Imani Wanjiru', country: 'KE' },
+  ].map((member) => ({ ...member, is_demo: true, response: null, contact: null })),
+  arrows: [
+    { teacher: 1, learner: 2, skill: { name: 'React', level: 'ADVANCED' } },
+    { teacher: 2, learner: 3, skill: { name: 'FastAPI', level: 'ADVANCED' } },
+    { teacher: 3, learner: 1, skill: { name: 'Docker', level: 'ADVANCED' } },
+  ],
+  created_at: null,
+  activated_at: null,
+}
 
 /**
  * Bloc qui apparaît en glissant vers le haut quand il entre dans l'écran.
@@ -254,6 +279,123 @@ function SampleMatchCard() {
         )}
       </p>
     </div>
+  )
+}
+
+/** Ce qui distingue DevLink : les cercles, puis l'observatoire, les validations, l'anglais. */
+function Distinctives({ isAuthenticated }: { isAuthenticated: boolean }) {
+  const { t, lang, setLang } = useI18n()
+  const linkClass =
+    'mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-accent-700 hover:text-accent-800'
+
+  return (
+    <section
+      aria-labelledby="distinction"
+      className="relative isolate border-b border-ink-200 py-20 sm:py-24"
+    >
+      <div
+        aria-hidden="true"
+        className="glow-blob -z-10 left-1/4 top-24 h-96 w-96 animate-glow bg-[#a371f7]/20"
+      />
+      <PageContainer className="flex flex-col gap-16">
+        <SectionHeading
+          id="distinction"
+          eyebrow={t('Ce qui nous distingue')}
+          title={t('Au-delà de la paire parfaite')}
+          text={t(
+            "Un échange à deux suppose que chacun cherche exactement ce que l'autre sait. DevLink Africa va plus loin.",
+          )}
+        />
+
+        <div className="grid items-center gap-12 lg:grid-cols-2">
+          <Reveal className="flex flex-col items-center gap-3">
+            <CircleDiagram circle={SAMPLE_CIRCLE} />
+            <p className="text-center text-sm text-ink-500">
+              {t('Le cercle de la démonstration : Dakar → Accra → Nairobi.')}
+            </p>
+          </Reveal>
+          <Reveal className="flex flex-col gap-4" delay={120}>
+            <h3 className="text-2xl font-bold text-ink-900 sm:text-3xl">
+              {t('Quand aucune paire n’existe,')}{' '}
+              <span className="text-gradient">{t('un cercle')}</span>.
+            </h3>
+            <p className="text-lg text-ink-600">
+              {t(
+                'Aminata, à Dakar, veut apprendre FastAPI. Kwame, à Accra, l’enseigne mais veut Docker. Imani, à Nairobi, enseigne Docker et veut React, qu’Aminata maîtrise. Aucune paire ne fonctionne ; le cercle, si.',
+              )}
+            </p>
+            <p className="text-ink-600">
+              {t(
+                'DevLink trouve ces boucles de trois ou quatre personnes où chacun apprend au suivant. Les contacts se débloquent quand tout le monde a accepté.',
+              )}
+            </p>
+            {isAuthenticated && (
+              <Link to="/cercles" className={linkClass}>
+                {t('Voir mes cercles')}
+                <span aria-hidden="true">→</span>
+              </Link>
+            )}
+          </Reveal>
+        </div>
+
+        <ul className="grid grid-cols-1 gap-12 md:grid-cols-3 md:divide-x md:divide-white/[0.06]">
+          <Reveal as="li" className="flex flex-col items-center px-4 text-center">
+            <span className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-white/[0.05] text-accent-800 ring-1 ring-inset ring-accent-400/30">
+              <Icon name="map" size={26} />
+            </span>
+            <h3 className="mb-2 text-lg font-semibold text-ink-900">
+              {t('Un observatoire du continent')}
+            </h3>
+            <p className="text-sm leading-relaxed text-ink-600">
+              {t(
+                'Les compétences qui manquent, celles qu’on peut partager, et les ponts entre pays. Que des chiffres, aucun nom.',
+              )}
+            </p>
+            <Link to="/observatoire" className={linkClass}>
+              {t("Ouvrir l'observatoire")}
+              <span aria-hidden="true">→</span>
+            </Link>
+          </Reveal>
+          <Reveal as="li" delay={120} className="flex flex-col items-center px-4 text-center">
+            <span className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-white/[0.05] text-accent-800 ring-1 ring-inset ring-accent-400/30">
+              <Icon name="check" size={26} />
+            </span>
+            <h3 className="mb-2 text-lg font-semibold text-ink-900">
+              {t('Des compétences validées par les pairs')}
+            </h3>
+            <p className="text-sm leading-relaxed text-ink-600">
+              {t(
+                'Après un échange terminé, votre partenaire peut valider la compétence que vous lui avez transmise. Sa validation, à son nom, s’affiche sur votre profil.',
+              )}
+            </p>
+          </Reveal>
+          <Reveal as="li" delay={240} className="flex flex-col items-center px-4 text-center">
+            <span className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-white/[0.05] text-accent-800 ring-1 ring-inset ring-accent-400/30">
+              <Icon name="country" size={26} />
+            </span>
+            <h3 className="mb-2 text-lg font-semibold text-ink-900">
+              {t('En français et en anglais')}
+            </h3>
+            <p className="text-sm leading-relaxed text-ink-600">
+              {t(
+                'Du Sénégal au Kenya, en passant par le Ghana et le Nigeria : toute la plateforme passe d’une langue à l’autre en un clic.',
+              )}
+            </p>
+            {lang === 'fr' ? (
+              <button type="button" lang="en" onClick={() => setLang('en')} className={linkClass}>
+                Switch to English
+                <span aria-hidden="true">→</span>
+              </button>
+            ) : (
+              <button type="button" lang="fr" onClick={() => setLang('fr')} className={linkClass}>
+                {t('Passer en français')}
+                <span aria-hidden="true">→</span>
+              </button>
+            )}
+          </Reveal>
+        </ul>
+      </PageContainer>
+    </section>
   )
 }
 
@@ -435,6 +577,9 @@ export default function HomePage() {
           <SampleMatchCard />
         </PageContainer>
       </section>
+
+      {/* ——— Ce qui nous distingue ——— */}
+      <Distinctives isAuthenticated={isAuthenticated} />
 
       {/* ——— Formes d'échange ——— */}
       <section aria-labelledby="echanges" className="py-20 sm:py-24">
