@@ -206,6 +206,7 @@ Les composants d'IA **ne s'affichent pas** quand le service est inactif : nous n
 | Observatoire | Page publique : offre et demande par compétence, manques, savoirs à partager, ponts entre pays. Que des comptes. |
 | Validations par les pairs | Après un échange terminé ou dans un cercle actif, on valide la compétence vue à l'œuvre ; visible sur le profil public. |
 | Interface en anglais | Bouton `FR`/`EN` ; toute l'interface, les messages d'erreur de l'API, les raisons d'un match et les textes de l'IA suivent. Tests d'exhaustivité côté frontend et backend. |
+| Design | Retour à un style classique (fond blanc, panneaux à bordure fine, boutons à dégradé) : voir `DECISIONS.md`. |
 | Tests | 544 backend, 241 frontend, 3 scénarios navigateur. |
 
 ---

@@ -487,3 +487,23 @@ Repris avec nos propres codes, pas une copie : un voile sombre uniforme (`bg-ink
 **Côté serveur.** Le frontend envoie `Accept-Language`. Django traduit ses propres messages (`LocaleMiddleware`) ; les messages propres à DevLink sont traduits au même endroit (`core/i18n.py`), avec le même garde-fou : un test parcourt le code (module `ast`) et échoue si un message d'erreur levé n'a pas de traduction. Pas de fichiers gettext compilés : il aurait fallu installer les outils GNU gettext dans l'image Docker pour une soixantaine de phrases. Les fonctions d'IA rédigent dans la langue de l'interface.
 
 **Ce qui reste en français.** Le contenu saisi par les utilisateurs (bios, descriptions de projets), qu'on ne traduit pas à leur place, et la page interne du design system.
+
+---
+
+## 2026-10-09 — Retour à un design classique
+
+**Décision.** Achraf a trouvé que le site « se voyait fait par une IA » et a demandé un design classique, comme l'aurait fait un très bon développeur entre 2010 et 2015. Le thème sombre (fond quasi noir, halos bleus et violets, textes en dégradé, cartes translucides, apparitions au défilement) est abandonné partout. Il remplace les décisions visuelles du 2026-10-08 (thème sombre, « sortir des boîtes »).
+
+**Ce qui a été retenu, et pourquoi.** L'esprit de GitHub et de Bootstrap 3 vers 2014, parce que ce sont des interfaces que tout le monde sait lire :
+- fond blanc, texte gris foncé (#333), un seul bleu pour les liens et le bouton principal ;
+- barre de navigation grise pleine largeur, l'onglet de la page courante souligné en orange ;
+- panneaux à bordure fine (1 px, coins de 4 px), en-têtes de panneau grisés, tableaux et listes séparées par des traits ;
+- boutons à léger dégradé avec bordure, comme `.btn` de l'époque ; messages de succès, d'erreur et d'information aux couleurs de Bootstrap 3 ;
+- avatars carrés à initiales, couleurs unies ; jauge du score d'une seule couleur (vert à partir de 70) ;
+- largeur fixe de 1 170 px, centrée ; polices Helvetica et Arial ;
+- plus aucune animation décorative ; le bouton de DevLink Copilot devient un onglet en bas à droite, comme les fenêtres de discussion de l'époque.
+
+**Comment.** Les couleurs restent des jetons sémantiques (`ink`, `accent` dans `tailwind.config.js`) : il a suffi de changer leurs valeurs pour la plupart des écrans. Les styles partagés sont des classes nommées comme celles de Bootstrap (`.btn`, `.btn-primary`, `.alert-success`, `.progress`, `.page-header`) dans `src/index.css`. Les deux couleurs du graphique de l'observatoire ont été revalidées pour un fond blanc (écart pour les daltoniens ΔE 26,8, contraste ≥ 3:1). La page d'accueil a été réécrite : bandeau avec un exemple de match à droite, tableau des six critères du score, puis les sections habituelles.
+
+**Ce qui ne change pas.** Le contenu, le parcours, l'accessibilité (contrastes ≥ 4,5:1 pour le texte, vérifiés), les tests de bout en bout et la version anglaise. Un test vérifie en plus qu'aucune traduction n'est restée orpheline après le retrait de textes de l'accueil.
+

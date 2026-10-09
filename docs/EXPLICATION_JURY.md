@@ -188,7 +188,7 @@ La loi sénégalaise n° 2008-12 est respectée par des fonctionnalités réelle
 - **L'explication du match est la vedette.** Score en évidence, puis « il peut vous apprendre / vous pouvez lui apprendre », puis les raisons en phrases, puis la répartition par critère sous forme de barres. Trois niveaux de lecture, du plus rapide au plus détaillé.
 - **Quatre états sur chaque écran** : chargement (squelettes), vide (avec une action utile), erreur (avec réessai), succès. Un état vide ne dit jamais « aucun résultat » sans proposer quoi faire.
 - **Aucune bibliothèque de composants ni d'icônes.** Neuf composants écrits par nous, icônes en SVG inline, polices système. Moins de dépendances à vérifier, un build léger, et un design qui ne ressemble pas à un modèle générique.
-- **Des surfaces douces plutôt que des boîtes.** Avatars à initiales (pas de photo stockée), score en jauge circulaire, pays en pastilles, carte de l'Afrique en points. Les décors (halos, aurore) sont masqués aux lecteurs d'écran.
+- **Un style classique et sobre.** Fond blanc, barre de navigation grise, panneaux à bordure fine, boutons à léger dégradé, polices système : l'esprit des sites bien faits des années 2010 (GitHub, Bootstrap 3). Aucun halo, aucun texte en dégradé, aucune animation décorative : rien ne détourne l'attention du contenu, et la page s'affiche vite sur une connexion lente.
 - **Un nouveau compte n'est jamais laissé seul.** La liste « Vos premiers pas » dit quoi faire ensuite (profil, compétences, contact, premier échange), avec un seul bouton : la prochaine étape.
 - **Testé sur mobile.** Les 18 écrans vérifiés à 390 px de large, sans aucun débordement horizontal.
 
@@ -196,6 +196,9 @@ La loi sénégalaise n° 2008-12 est respectée par des fonctionnalités réelle
 
 > **« Pourquoi pas de bibliothèque d'interface ? »**
 > Trois raisons. La règle des licences : chaque dépendance est un risque à vérifier, et une police mal licenciée rendrait le projet irrecevable. La note : le cahier demande un design distinctif. Le poids : le JavaScript du build fait 118 ko compressés, ce qui compte pour des connexions africaines parfois lentes.
+
+> **« Pourquoi un style aussi classique ? »**
+> Parce qu'il a fait ses preuves : on sait tout de suite où cliquer, ce qui est un lien, ce qui est un bouton. Les effets à la mode (fonds sombres lumineux, textes en dégradé, cartes qui flottent) se ressemblent tous et vieillissent vite ; nous avons préféré la lisibilité. Les contrastes sont vérifiés (au moins 4,5:1 pour le texte).
 
 > **« Et l'accessibilité ? »**
 > Labels liés aux champs, erreurs annoncées par `aria-describedby`, focus toujours visible, lien d'évitement, barres du score décrites pour les lecteurs d'écran. Nous avons dû retirer `eslint-plugin-jsx-a11y`, qui dépend de `axe-core` (MPL-2.0) : nous l'avons remplacé par six règles ESLint écrites par nous, chacune vérifiée sur un cas de faute.
