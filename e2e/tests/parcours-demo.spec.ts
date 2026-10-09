@@ -51,7 +51,10 @@ test('le parcours de démonstration, de l’inscription au contact', async ({ br
 
   // Le profil, avec un moyen de contact.
   await ada.goto('/profil')
-  await ada.getByLabel('Pays').selectOption({ label: '🇸🇳 Sénégal' })
+  // Pays : liste déroulante avec recherche (pas un <select> natif), on tape
+  // puis on choisit dans la liste qui s'ouvre.
+  await ada.getByLabel('Pays').fill('Sénégal')
+  await ada.getByRole('option', { name: '🇸🇳 Sénégal' }).click()
   await ada
     .getByLabel('Présentation')
     .fill('Développeuse front-end à Thiès, curieuse du déploiement.')
