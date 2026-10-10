@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenRefreshView
 
-from core.throttling import AuthRateThrottle
+from core.throttling import AuthRateThrottle, PasswordResetRateThrottle
 
 from . import services
 from .google_auth import GoogleAuthUnavailable, verify_google_token
@@ -21,6 +21,8 @@ from .serializers import (
     GoogleAuthSerializer,
     GoogleClientIdSerializer,
     LoginSerializer,
+    PasswordResetConfirmSerializer,
+    PasswordResetRequestSerializer,
     RefreshSerializer,
     RegisterSerializer,
     TokenPairSerializer,
@@ -117,6 +119,47 @@ class LoginView(APIView):
         user = services.login_user(**data.validated_data)
         body = {**services.issue_tokens(user), "user": UserSerializer(user).data}
         return Response(body, status=status.HTTP_200_OK)
+
+
+class PasswordResetRequestView(APIView):
+    """POST /auth/password-reset/ : envoie un lien de réinitialisation par e-mail.
+
+    Répond toujours 204, que l'adresse corresponde à un compte ou non.
+    """
+
+    permission_classes = [AllowAny]
+    throttle_classes = [PasswordResetRateThrottle]
+
+    @extend_schema(
+        request=PasswordResetRequestSerializer,
+        responses={204: None},
+        summary="Demander la réinitialisation du mot de passe",
+    )
+    def post(self, request):
+        data = PasswordResetRequestSerializer(data=request.data)
+        data.is_valid(raise_exception=True)
+
+        services.request_password_reset(email=data.validated_data["email"])
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class PasswordResetConfirmView(APIView):
+    """POST /auth/password-reset/confirm/ : choisit un nouveau mot de passe."""
+
+    permission_classes = [AllowAny]
+    throttle_classes = [PasswordResetRateThrottle]
+
+    @extend_schema(
+        request=PasswordResetConfirmSerializer,
+        responses={204: None},
+        summary="Choisir un nouveau mot de passe",
+    )
+    def post(self, request):
+        data = PasswordResetConfirmSerializer(data=request.data)
+        data.is_valid(raise_exception=True)
+
+        services.confirm_password_reset(**data.validated_data)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class RefreshView(TokenRefreshView):

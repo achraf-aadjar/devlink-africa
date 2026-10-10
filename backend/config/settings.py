@@ -209,12 +209,36 @@ REST_FRAMEWORK = {
         # seulement (scripts/e2e_backend.sh), qui ouvrent plusieurs sessions
         # depuis la même adresse ; 5 par minute partout ailleurs.
         "auth": os.environ.get("AUTH_THROTTLE_RATE", "5/minute"),
+        # Demandes de réinitialisation du mot de passe : chacune envoie un e-mail.
+        "password_reset": os.environ.get("PASSWORD_RESET_THROTTLE_RATE", "5/hour"),
         # Signalements : plafond journalier pour éviter le détournement (DL-32).
         "reports": "10/day",
         # Fonctions d'IA : limite par utilisateur, en plus du plafond global.
         "ai": "20/hour",
     },
 }
+
+# --- E-mail ---------------------------------------------------------------
+# En développement et en test, les messages s'affichent dans la console du
+# serveur (on y copie le lien de réinitialisation). En production, renseigner
+# EMAIL_HOST et les identifiants SMTP dans l'environnement.
+EMAIL_BACKEND = os.environ.get(
+    "EMAIL_BACKEND",
+    "django.core.mail.backends.console.EmailBackend"
+    if DEBUG or not os.environ.get("EMAIL_HOST")
+    else "django.core.mail.backends.smtp.EmailBackend",
+)
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "")
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+EMAIL_USE_TLS = env_bool("EMAIL_USE_TLS", True)
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "DevLink Africa <no-reply@devlink.africa>")
+
+# Adresse publique de l'interface : base des liens envoyés par e-mail.
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:5173").rstrip("/")
+# Durée de validité d'un lien de réinitialisation du mot de passe (secondes).
+PASSWORD_RESET_TIMEOUT = 3600
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
