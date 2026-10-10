@@ -101,7 +101,6 @@ export default function PersonalDataCard() {
             label={t('Confirmez avec votre mot de passe')}
             type="password"
             required
-            autoComplete="current-password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
           />

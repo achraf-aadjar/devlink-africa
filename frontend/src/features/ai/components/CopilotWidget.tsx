@@ -135,6 +135,7 @@ export default function CopilotWidget() {
             <input
               id="copilot-input"
               type="text"
+              autoComplete="off"
               value={draft}
               maxLength={1000}
               placeholder={t('Posez votre question…')}

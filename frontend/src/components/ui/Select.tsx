@@ -28,6 +28,7 @@ export default function Select({
         {label}
       </label>
       <select
+        autoComplete="off"
         {...rest}
         id={id}
         aria-invalid={error ? true : undefined}

@@ -32,6 +32,7 @@ export default function Textarea({
         )}
       </label>
       <textarea
+        autoComplete="off"
         {...rest}
         id={id}
         required={required}

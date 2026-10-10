@@ -114,7 +114,6 @@ export default function ProfilePage() {
               label={t('Nom complet')}
               value={form.full_name}
               error={errors.full_name}
-              autoComplete="name"
               onChange={(event) => setForm({ ...form, full_name: event.target.value })}
             />
             <CountrySelect

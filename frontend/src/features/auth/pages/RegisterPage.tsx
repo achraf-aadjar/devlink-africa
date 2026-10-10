@@ -110,7 +110,6 @@ export default function RegisterPage() {
           <Field
             label={t('Nom complet')}
             name="full_name"
-            autoComplete="name"
             hint={t('Affiché sur votre profil et vos échanges.')}
             value={values.full_name}
             error={errors.full_name}
