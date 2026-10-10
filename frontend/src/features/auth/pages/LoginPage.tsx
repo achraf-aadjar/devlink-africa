@@ -20,7 +20,8 @@ export default function LoginPage() {
   const [submitting, setSubmitting] = useState(false)
 
   // Page demandée avant la redirection vers la connexion (voir RequireAuth).
-  const from = (location.state as { from?: string } | null)?.from ?? '/tableau-de-bord'
+  const state = location.state as { from?: string; passwordReset?: boolean } | null
+  const from = state?.from ?? '/tableau-de-bord'
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
@@ -62,7 +63,13 @@ export default function LoginPage() {
       <h1 className="mb-1 text-3xl font-bold tracking-tight text-ink-900">{t('Se connecter')}</h1>
       <p className="mb-6 text-sm text-ink-600">{t('Retrouvez vos matchs et vos échanges.')}</p>
 
-      <Card className="border-accent-300/40 p-6 shadow-glow-soft sm:p-8">
+      {state?.passwordReset && (
+        <p role="status" className="mb-4 text-sm text-ink-800">
+          {t('Mot de passe modifié. Connectez-vous avec le nouveau.')}
+        </p>
+      )}
+
+      <div>
         <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
           <Field
             label={t('Adresse e-mail')}
@@ -84,6 +91,12 @@ export default function LoginPage() {
             error={errors.password}
             onChange={(event) => setValues({ ...values, password: event.target.value })}
           />
+          <Link
+            to="/mot-de-passe/oublie"
+            className="-mt-2 w-fit text-sm text-accent-700 underline hover:text-accent-800"
+          >
+            {t('Mot de passe oublié ?')}
+          </Link>
 
           {errors.form && (
             <p role="alert" className="text-sm text-red-400">
