@@ -31,7 +31,7 @@ export interface LogoProps extends Omit<SVGProps<SVGSVGElement>, 'children'> {
 type LogoVariant = 'color' | 'light' | 'mono'
 
 const RIGHT_RING: Record<LogoVariant, string> = {
-  color: '#e6edf3',
+  color: 'rgb(var(--ink-900))',
   light: '#1f2328',
   mono: 'currentColor',
 }

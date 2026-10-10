@@ -111,6 +111,7 @@ export default function EndorsePanel({
                 </label>
                 <input
                   id={`comment-${skill.user_skill}`}
+                  autoComplete="off"
                   value={comment}
                   maxLength={COMMENT_MAX}
                   onChange={(event) => setComment(event.target.value)}

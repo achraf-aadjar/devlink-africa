@@ -148,14 +148,14 @@ export default function Combobox({
           }}
           onKeyDown={onKeyDown}
           className={cn(
-            'w-full rounded-lg border bg-ink-100 px-3 py-2 pr-9 text-ink-900 placeholder:text-ink-500',
-            error ? 'border-red-500' : 'border-ink-300',
+            'field w-full pr-10 text-ink-900 placeholder:text-ink-500',
+            error ? 'border-red-500/70' : 'border-veil/10',
           )}
         />
         <Icon
           name="chevronDown"
           size={16}
-          className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-ink-500"
+          className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-ink-500"
         />
         {open && (
           <ul

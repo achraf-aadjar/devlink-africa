@@ -38,7 +38,7 @@ export default function ScoreRing({
       <svg width={size} height={size} className="-rotate-90" aria-hidden="true">
         <defs>
           <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#79c0ff" />
+            <stop offset="0%" stopColor="rgb(var(--accent-800))" />
             <stop offset="55%" stopColor="#388bfd" />
             <stop offset="100%" stopColor="#a371f7" />
           </linearGradient>
@@ -48,7 +48,7 @@ export default function ScoreRing({
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke="rgb(255 255 255 / 0.08)"
+          stroke="rgb(var(--veil) / 0.1)"
           strokeWidth={stroke}
         />
         <circle

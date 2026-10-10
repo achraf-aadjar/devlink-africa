@@ -73,6 +73,31 @@ class LoginSerializer(StrictSerializer):
         return value.strip().lower()
 
 
+class PasswordResetRequestSerializer(StrictSerializer):
+    """Entrée de POST /auth/password-reset/."""
+
+    email = serializers.EmailField(max_length=254)
+
+    def validate_email(self, value: str) -> str:
+        return value.strip().lower()
+
+
+class PasswordResetConfirmSerializer(StrictSerializer):
+    """Entrée de POST /auth/password-reset/confirm/."""
+
+    uid = serializers.CharField(max_length=64)
+    token = serializers.CharField(max_length=128)
+    password = serializers.CharField(
+        write_only=True,
+        min_length=MIN_PASSWORD_LENGTH,
+        max_length=128,
+        trim_whitespace=False,
+        error_messages={
+            "min_length": f"Le mot de passe doit contenir au moins {MIN_PASSWORD_LENGTH} caractères."
+        },
+    )
+
+
 class GoogleAuthSerializer(StrictSerializer):
     """Entrée de POST /auth/google/ : le jeton d'identité émis par Google."""
 

@@ -109,7 +109,7 @@ export default function DesignSystemPage() {
         <div className="flex flex-wrap gap-2">
           {['50', '100', '200', '300', '400', '500', '600', '700', '800', '900'].map((shade) => (
             <div key={shade} className="text-center">
-              <div className={`h-12 w-12 rounded-full ring-1 ring-white/10 bg-accent-${shade}`} />
+              <div className={`h-12 w-12 rounded-full ring-1 ring-veil/10 bg-accent-${shade}`} />
               <span className="text-xs text-ink-500">{shade}</span>
             </div>
           ))}
@@ -117,7 +117,7 @@ export default function DesignSystemPage() {
         <div className="flex flex-wrap gap-2">
           {['50', '100', '200', '300', '400', '500', '600', '700', '800', '900'].map((shade) => (
             <div key={shade} className="text-center">
-              <div className={`h-12 w-12 rounded-full ring-1 ring-white/10 bg-ink-${shade}`} />
+              <div className={`h-12 w-12 rounded-full ring-1 ring-veil/10 bg-ink-${shade}`} />
               <span className="text-xs text-ink-500">{shade}</span>
             </div>
           ))}
@@ -140,7 +140,7 @@ export default function DesignSystemPage() {
             ['paper-brand', 'bg-paper-brand'],
           ].map(([name, cls]) => (
             <div key={name} className="text-center">
-              <div className={`h-12 w-12 rounded-full ring-1 ring-white/10 ${cls}`} />
+              <div className={`h-12 w-12 rounded-full ring-1 ring-veil/10 ${cls}`} />
               <span className="text-xs text-ink-500">{name}</span>
             </div>
           ))}

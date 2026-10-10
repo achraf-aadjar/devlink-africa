@@ -1,12 +1,15 @@
 import { lazy } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import HomePage from '../pages/HomePage'
+import AuthLayout from './AuthLayout'
 import Layout from './Layout'
 import RequireAuth from './RequireAuth'
 import StandardPage from './StandardPage'
 import WidePage from './WidePage'
 
 const LoginPage = lazy(() => import('../features/auth/pages/LoginPage'))
+const ForgotPasswordPage = lazy(() => import('../features/auth/pages/ForgotPasswordPage'))
+const ResetPasswordPage = lazy(() => import('../features/auth/pages/ResetPasswordPage'))
 const RegisterPage = lazy(() => import('../features/auth/pages/RegisterPage'))
 const CirclesPage = lazy(() => import('../features/circles/pages/CirclesPage'))
 const CountriesPage = lazy(() => import('../features/countries/pages/CountriesPage'))
@@ -30,14 +33,20 @@ const PrivacyPage = lazy(() => import('../pages/PrivacyPage'))
 export default function AppRoutes() {
   return (
     <Routes>
+      {/* Authentification : sans navigation ni pied de page. */}
+      <Route element={<AuthLayout />}>
+        <Route path="inscription" element={<RegisterPage />} />
+        <Route path="connexion" element={<LoginPage />} />
+        <Route path="mot-de-passe/oublie" element={<ForgotPasswordPage />} />
+        <Route path="mot-de-passe/reinitialiser" element={<ResetPasswordPage />} />
+      </Route>
+
       <Route element={<Layout />}>
         {/* Accueil seul : pas de largeur imposée, pour une bannière pleine largeur. */}
         <Route index element={<HomePage />} />
 
         {/* Pages de lecture : formulaires, détail d'un seul élément. */}
         <Route element={<StandardPage />}>
-          <Route path="inscription" element={<RegisterPage />} />
-          <Route path="connexion" element={<LoginPage />} />
           <Route path="confidentialite" element={<PrivacyPage />} />
           <Route path="design" element={<DesignSystemPage />} />
           <Route path="developpeurs/:id" element={<PublicProfilePage />} />

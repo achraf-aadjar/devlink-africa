@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Button, Card, Field } from '../../../components/ui'
+import { Button, Field } from '../../../components/ui'
 import type { I18n } from '../../../i18n/context'
 import { useI18n } from '../../../i18n/useI18n'
 import { ApiError } from '../../../lib/api'
@@ -105,12 +105,11 @@ export default function RegisterPage() {
         )}
       </p>
 
-      <Card className="border-accent-300/40 p-6 shadow-glow-soft sm:p-8">
+      <div>
         <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
           <Field
             label={t('Nom complet')}
             name="full_name"
-            autoComplete="name"
             hint={t('Affiché sur votre profil et vos échanges.')}
             value={values.full_name}
             error={errors.full_name}
@@ -144,7 +143,7 @@ export default function RegisterPage() {
             onChange={(country) => setValues({ ...values, country })}
           />
 
-          <div className="flex flex-col gap-1.5 border-t border-ink-200 pt-5">
+          <div className="flex flex-col gap-1.5">
             <label className="flex items-start gap-2 text-sm text-ink-700">
               <input
                 type="checkbox"
@@ -176,7 +175,11 @@ export default function RegisterPage() {
             </p>
           )}
 
-          <Button type="submit" loading={submitting} className="w-full">
+          <Button
+            type="submit"
+            loading={submitting}
+            className="w-full !rounded-xl border border-transparent !px-4 !py-2.5 !text-base !shadow-none"
+          >
             {t('Créer mon compte')}
           </Button>
         </form>
@@ -198,7 +201,7 @@ export default function RegisterPage() {
             </p>
           </div>
         )}
-      </Card>
+      </div>
 
       <p className="mt-4 text-center text-sm text-ink-600">
         {t('Vous avez déjà un compte ?')}{' '}

@@ -143,6 +143,26 @@ Connecte ou crée un compte à partir d'un jeton d'identité Google (vérifié c
 
 Erreurs : `400` `google_token_invalid` (jeton invalide, expiré, ou destiné à une autre application) ou `google_email_unverified` (adresse non vérifiée par Google) ; `503` `google_not_configured` si aucun identifiant client n'est renseigné côté serveur.
 
+### `POST /auth/password-reset/` (public)
+
+Envoie par e-mail un lien de réinitialisation, valable une heure.
+
+```json
+{ "email": "ada@example.org" }
+```
+
+`204` sans corps, **que l'adresse corresponde à un compte ou non** (ni un compte inconnu ni un compte désactivé ne reçoivent de message, mais la réponse ne le révèle pas). `400` si l'adresse est mal formée, `429` au-delà de 5 demandes par heure et par adresse IP. Un compte créé avec Google peut aussi s'en servir pour choisir un mot de passe.
+
+### `POST /auth/password-reset/confirm/` (public)
+
+Choisit un nouveau mot de passe depuis le lien reçu (`uid` et `token` sont dans son adresse).
+
+```json
+{ "uid": "MQ", "token": "c1x2y3-...", "password": "nouveau-mot-de-passe-2027" }
+```
+
+`204` sans corps. Le lien ne sert qu'une fois (le jeton est lié à l'ancien mot de passe) et toutes les sessions ouvertes sont révoquées. Erreurs : `400` `invalid_reset_token` (lien falsifié, déjà utilisé ou expiré), `400` avec `errors.password` (moins de 10 caractères, trop courant, trop proche de l'e-mail), `429`.
+
 ### `POST /auth/refresh/` (public)
 
 ```json

@@ -60,7 +60,7 @@ export default function SupplyDemandChart({ skills }: { skills: ObservatorySkill
               onMouseLeave={() => setActive(null)}
               onFocus={() => setActive(index)}
               onBlur={() => setActive(null)}
-              className="relative grid grid-cols-[1fr_7.5rem_1fr] items-center rounded-lg py-1 outline-none transition-colors hover:bg-white/[0.03] focus-visible:bg-white/[0.08] focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-600 sm:grid-cols-[1fr_9rem_1fr]"
+              className="relative grid grid-cols-[1fr_7.5rem_1fr] items-center rounded-lg py-1 outline-none transition-colors hover:bg-veil/[0.03] focus-visible:bg-veil/[0.08] focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-600 sm:grid-cols-[1fr_9rem_1fr]"
             >
               <span aria-hidden="true" className="flex items-center justify-end gap-2">
                 <span className="text-xs tabular-nums text-ink-600">{skill.wanted || ''}</span>
@@ -68,7 +68,7 @@ export default function SupplyDemandChart({ skills }: { skills: ObservatorySkill
               </span>
               <span
                 aria-hidden="true"
-                className="border-x border-white/[0.08] px-2 text-center text-xs leading-tight text-ink-800 sm:text-sm"
+                className="border-x border-veil/[0.08] px-2 text-center text-xs leading-tight text-ink-800 sm:text-sm"
               >
                 {skill.name}
               </span>
@@ -80,7 +80,7 @@ export default function SupplyDemandChart({ skills }: { skills: ObservatorySkill
               {active === index && (
                 <span
                   role="presentation"
-                  className="pointer-events-none absolute -top-12 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-xl bg-ink-200 px-3 py-2 text-xs text-ink-700 shadow-card ring-1 ring-white/10"
+                  className="pointer-events-none absolute -top-12 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-xl bg-ink-200 px-3 py-2 text-xs text-ink-700 shadow-card ring-1 ring-veil/10"
                 >
                   <strong className="mr-1 text-sm text-ink-900">{skill.name}</strong>
                   <span
@@ -108,7 +108,7 @@ export default function SupplyDemandChart({ skills }: { skills: ObservatorySkill
         </summary>
         <table className="mt-3 w-full max-w-md text-left">
           <thead>
-            <tr className="border-b border-white/10 text-ink-600">
+            <tr className="border-b border-veil/10 text-ink-600">
               <th scope="col" className="py-1.5 font-medium">
                 {t('Compétence')}
               </th>
@@ -122,7 +122,7 @@ export default function SupplyDemandChart({ skills }: { skills: ObservatorySkill
           </thead>
           <tbody>
             {skills.map((skill) => (
-              <tr key={skill.name} className="border-b border-white/[0.05]">
+              <tr key={skill.name} className="border-b border-veil/[0.05]">
                 <th scope="row" className="py-1.5 font-normal text-ink-800">
                   {skill.name}
                 </th>

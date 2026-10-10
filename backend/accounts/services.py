@@ -13,10 +13,18 @@ from __future__ import annotations
 import hashlib
 import logging
 
+from django.conf import settings
 from django.contrib.auth import authenticate
+from django.contrib.auth.password_validation import validate_password
+from django.contrib.auth.tokens import default_token_generator
+from django.core.exceptions import ValidationError as DjangoValidationError
+from django.core.mail import send_mail
 from django.db import IntegrityError, models, transaction
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from rest_framework import exceptions
 from rest_framework_simplejwt.exceptions import TokenError
+from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, OutstandingToken
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from circles.models import Circle, CircleMember
@@ -99,6 +107,64 @@ def login_user(*, email: str, password: str) -> User:
         )
     audit.info("login_success user=%s", user.pk)
     return user
+
+
+def request_password_reset(*, email: str) -> None:
+    """Envoie le lien de réinitialisation si un compte actif existe pour cette adresse.
+
+    Ne renvoie rien et ne lève rien dans tous les cas : la réponse de l'API est
+    la même que l'adresse soit connue ou non, pour ne pas révéler les comptes.
+    Le jeton est signé et lié au mot de passe actuel : il cesse de valoir dès
+    que celui-ci change, et expire après `PASSWORD_RESET_TIMEOUT`.
+    """
+    user = User.objects.filter(email=email, is_active=True).first()
+    if user is None:
+        audit.info("password_reset_unknown email_fp=%s", email_fingerprint(email))
+        return
+
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
+    token = default_token_generator.make_token(user)
+    link = f"{settings.FRONTEND_URL}/mot-de-passe/reinitialiser?uid={uid}&token={token}"
+    minutes = settings.PASSWORD_RESET_TIMEOUT // 60
+    send_mail(
+        subject="Réinitialisation de votre mot de passe DevLink Africa",
+        message=(
+            "Bonjour,\n\n"
+            "Vous avez demandé à réinitialiser votre mot de passe DevLink Africa. "
+            f"Ouvrez ce lien pour en choisir un nouveau (valable {minutes} minutes) :\n\n"
+            f"{link}\n\n"
+            "Si vous n'êtes pas à l'origine de cette demande, ignorez ce message : "
+            "votre mot de passe reste inchangé.\n"
+        ),
+        from_email=None,
+        recipient_list=[user.email],
+    )
+    audit.info("password_reset_sent user=%s", user.pk)
+
+
+def confirm_password_reset(*, uid: str, token: str, password: str) -> None:
+    """Change le mot de passe si le lien est valide, puis ferme les autres sessions."""
+    invalid = exceptions.ParseError("Ce lien est invalide ou a expiré.", code="invalid_reset_token")
+    try:
+        user = User.objects.get(pk=force_str(urlsafe_base64_decode(uid)), is_active=True)
+    except (User.DoesNotExist, ValueError, TypeError, OverflowError):
+        raise invalid from None
+    if not default_token_generator.check_token(user, token):
+        audit.info("password_reset_invalid user=%s", user.pk)
+        raise invalid
+
+    try:
+        validate_password(password, user=user)
+    except DjangoValidationError as error:
+        raise exceptions.ValidationError({"password": list(error.messages)}) from error
+
+    with transaction.atomic():
+        user.set_password(password)
+        user.save(update_fields=["password"])
+        # Les sessions ouvertes avec l'ancien mot de passe sont révoquées.
+        for outstanding in OutstandingToken.objects.filter(user=user):
+            BlacklistedToken.objects.get_or_create(token=outstanding)
+    audit.info("password_reset_done user=%s", user.pk)
 
 
 def logout_user(*, user: User, refresh_token: str) -> None:

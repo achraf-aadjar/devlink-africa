@@ -52,7 +52,7 @@ export default function CircleDiagram({ circle, meId }: { circle: Circle; meId?:
             markerHeight="4.5"
             orient="auto"
           >
-            <path d="M0,0 L10,5 L0,10 z" fill="#a5d6ff" />
+            <path d="M0,0 L10,5 L0,10 z" fill="rgb(var(--accent-900))" />
           </marker>
           <radialGradient id={`halo-${uid}`}>
             <stop offset="0%" stopColor="#1f6feb" stopOpacity="0.28" />
@@ -66,7 +66,7 @@ export default function CircleDiagram({ circle, meId }: { circle: Circle; meId?:
           cy="50"
           r={RADIUS}
           fill="none"
-          stroke="rgb(255 255 255 / 0.05)"
+          stroke="rgb(var(--veil) / 0.08)"
           strokeWidth="0.6"
         />
 
@@ -89,7 +89,7 @@ export default function CircleDiagram({ circle, meId }: { circle: Circle; meId?:
               <path
                 d={path}
                 fill="none"
-                stroke="#cfe6ff"
+                stroke="rgb(var(--accent-800))"
                 strokeOpacity="0.85"
                 strokeWidth="0.8"
                 strokeLinecap="round"

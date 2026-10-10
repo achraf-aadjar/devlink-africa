@@ -30,6 +30,7 @@ export default function Field({ label, error, hint, className, required, ...rest
         )}
       </label>
       <input
+        autoComplete="off"
         {...rest}
         id={id}
         required={required}
@@ -37,7 +38,7 @@ export default function Field({ label, error, hint, className, required, ...rest
         aria-describedby={describedBy || undefined}
         className={cn(
           'field text-ink-900 placeholder:text-ink-500',
-          error ? 'border-red-500/70' : 'border-white/10',
+          error ? 'border-red-500/70' : 'border-veil/10',
           className,
         )}
       />

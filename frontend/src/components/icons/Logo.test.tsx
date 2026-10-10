@@ -14,7 +14,7 @@ describe('marque', () => {
 
     const circles = container.querySelectorAll('circle')
     expect(circles[0]).toHaveAttribute('stroke', '#4493f8')
-    expect(circles[1]).toHaveAttribute('stroke', '#e6edf3')
+    expect(circles[1]).toHaveAttribute('stroke', 'rgb(var(--ink-900))')
   })
 
   it('passe en monochrome sur demande, pour un fond coloré', () => {

@@ -94,7 +94,7 @@ export default function OnboardingChecklist({ data }: { data: Dashboard }) {
         </div>
         <div
           aria-hidden="true"
-          className="h-1.5 w-full max-w-56 overflow-hidden rounded-full bg-white/[0.08]"
+          className="h-1.5 w-full max-w-56 overflow-hidden rounded-full bg-veil/[0.08]"
         >
           <div
             className="h-full rounded-full bg-gradient-to-r from-brand to-violet transition-[width] duration-500"
@@ -111,7 +111,7 @@ export default function OnboardingChecklist({ data }: { data: Dashboard }) {
               key={step.title}
               className={cn(
                 'flex flex-wrap items-start gap-x-4 gap-y-3 rounded-2xl px-3 py-3 sm:flex-nowrap',
-                isNext && 'bg-white/[0.04] ring-1 ring-inset ring-accent-400/25',
+                isNext && 'bg-veil/[0.04] ring-1 ring-inset ring-accent-400/25',
               )}
             >
               <span
@@ -121,7 +121,7 @@ export default function OnboardingChecklist({ data }: { data: Dashboard }) {
                     ? 'bg-emerald-500/15 text-emerald-300'
                     : isNext
                       ? 'bg-brand text-white shadow-glow'
-                      : 'bg-white/[0.06] text-ink-500',
+                      : 'bg-veil/[0.06] text-ink-500',
                 )}
               >
                 {step.done ? <Icon name="check" size={16} label={t('Fait')} /> : index + 1}

@@ -33,6 +33,15 @@ describe('page de connexion', () => {
     expect(screen.getByRole('button', { name: 'Se connecter' })).toBeInTheDocument()
   })
 
+  it('propose de récupérer un mot de passe oublié', () => {
+    renderPage()
+
+    expect(screen.getByRole('link', { name: 'Mot de passe oublié ?' })).toHaveAttribute(
+      'href',
+      '/mot-de-passe/oublie',
+    )
+  })
+
   it('valide côté client avant tout appel réseau', async () => {
     const fetchMock = routeFetch(GOOGLE_OFF)
     vi.stubGlobal('fetch', fetchMock)

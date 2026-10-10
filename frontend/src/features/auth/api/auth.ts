@@ -31,3 +31,10 @@ export const googleSignIn = (credential: string) =>
   api.post<TokenPair>('/auth/google/', { credential }, { auth: false })
 
 export type { User }
+
+/** Demande un lien de réinitialisation ; la réponse est la même que le compte existe ou non. */
+export const requestPasswordReset = (email: string) =>
+  api.post<void>('/auth/password-reset/', { email }, { auth: false })
+
+export const confirmPasswordReset = (input: { uid: string; token: string; password: string }) =>
+  api.post<void>('/auth/password-reset/confirm/', input, { auth: false })

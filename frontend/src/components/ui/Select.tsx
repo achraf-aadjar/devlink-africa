@@ -28,13 +28,14 @@ export default function Select({
         {label}
       </label>
       <select
+        autoComplete="off"
         {...rest}
         id={id}
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? errorId : undefined}
         className={cn(
           'field text-ink-900',
-          error ? 'border-red-500/70' : 'border-white/10',
+          error ? 'border-red-500/70' : 'border-veil/10',
           className,
         )}
       >
