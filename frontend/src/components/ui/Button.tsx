@@ -17,16 +17,16 @@ const VARIANTS: Record<Variant, string> = {
   // au survol on fonce (et on allume le halo) plutôt que d'éclaircir, pour
   // garder le contraste.
   primary:
-    'bg-[#1f6feb] text-white shadow-glow hover:bg-[#1a5fd0] disabled:bg-ink-300 disabled:shadow-none',
+    'bg-brand text-white shadow-glow hover:bg-brand-hover disabled:bg-ink-300 disabled:shadow-none',
   secondary: 'bg-white/[0.06] text-ink-900 ring-1 ring-inset ring-white/10 hover:bg-white/10',
   ghost: 'text-ink-700 hover:bg-white/[0.06] hover:text-ink-900',
   danger: 'bg-red-600 text-white hover:bg-red-500',
 }
 
 const SIZES: Record<Size, string> = {
-  sm: 'px-4 py-1.5 text-sm',
-  md: 'px-5 py-2 text-sm',
-  lg: 'px-7 py-3 text-base',
+  sm: 'px-4 py-1.5 text-sm [@media(pointer:coarse)]:min-h-11',
+  md: 'px-5 py-2 text-sm [@media(pointer:coarse)]:min-h-11',
+  lg: 'px-7 py-3 text-base [@media(pointer:coarse)]:min-h-11',
 }
 
 export default function Button({

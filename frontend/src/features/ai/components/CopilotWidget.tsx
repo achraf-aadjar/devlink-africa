@@ -91,7 +91,7 @@ export default function CopilotWidget() {
               type="button"
               onClick={() => setOpen(false)}
               aria-label={t('Fermer DevLink Copilot')}
-              className="rounded p-1 text-ink-500 hover:bg-ink-200 hover:text-ink-800"
+              className="-mr-2 inline-flex h-11 w-11 items-center justify-center rounded-lg text-ink-500 hover:bg-ink-200 hover:text-ink-800"
             >
               <Icon name="close" size={18} />
             </button>
@@ -139,7 +139,7 @@ export default function CopilotWidget() {
               maxLength={1000}
               placeholder={t('Posez votre question…')}
               onChange={(event) => setDraft(event.target.value)}
-              className="flex-1 rounded-lg border border-ink-300 bg-ink-100 px-3 py-2 text-sm text-ink-900 placeholder:text-ink-400"
+              className="flex-1 rounded-lg border border-ink-300 bg-ink-100 px-3 py-2 text-sm text-ink-900 placeholder:text-ink-500"
             />
             <Button type="submit" size="sm" loading={sending} disabled={!draft.trim()}>
               {t('Envoyer')}

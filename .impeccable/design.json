@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-09T12:00:00Z",
+  "title": "Design System: DevLink Africa",
+  "extensions": {
+    "colorMeta": {
+      "brand": { "role": "primary", "displayName": "Bleu d'action", "canonical": "#1f6feb", "tonalRamp": ["#0a1f33", "#0d2847", "#11315c", "#163f78", "#1f6feb", "#388bfd", "#58a6ff", "#a5d6ff"] },
+      "canvas": { "role": "neutral", "displayName": "Canevas", "canonical": "#0d1117", "tonalRamp": ["#0d1117", "#161b22", "#21262d", "#30363d", "#484f58", "#818a95", "#adb5bd", "#e6edf3"] }
+    },
+    "shadows": [
+      { "name": "card", "value": "0 1px 2px rgba(0,0,0,.3), 0 4px 12px rgba(0,0,0,.25)", "purpose": "Pastille d'en-tête et cartes surélevées." },
+      { "name": "glow", "value": "0 0 0 1px rgba(56,139,253,.45), 0 8px 28px -8px rgba(31,111,235,.7)", "purpose": "Action principale et étape active." }
+    ],
+    "motion": [
+      { "name": "fade-in", "value": "150ms ease-out", "purpose": "Ouverture de menu et de fenêtre ; reste actif en mouvement réduit." },
+      { "name": "page-in", "value": "350ms ease-out", "purpose": "Entrée de page ; remplacé par un fondu en mouvement réduit." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Bouton principal",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Action principale d'un écran.",
+      "html": "<button class=\"ds-btn-primary\">Proposer un échange</button>",
+      "css": ".ds-btn-primary{background:#1f6feb;color:#fff;border:0;border-radius:9999px;padding:8px 20px;font:500 14px system-ui,sans-serif;box-shadow:0 0 0 1px rgba(56,139,253,.45),0 8px 28px -8px rgba(31,111,235,.7);transition:background .15s}.ds-btn-primary:hover{background:#1a5fd0}.ds-btn-primary:focus-visible{outline:none;box-shadow:0 0 0 2px #0d1117,0 0 0 4px #4493f8}"
+    },
+    {
+      "name": "Champ",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Champ de saisie translucide.",
+      "html": "<input class=\"ds-field\" placeholder=\"Rechercher une compétence\">",
+      "css": ".ds-field{background:rgba(255,255,255,.03);color:#e6edf3;border:1px solid #30363d;border-radius:12px;padding:10px 16px;font:14px system-ui,sans-serif}.ds-field::placeholder{color:#818a95}.ds-field:focus{outline:none;border-color:rgba(56,139,253,.7);background:rgba(255,255,255,.05)}"
+    },
+    {
+      "name": "Carte",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Surface de contenu à liseré clair.",
+      "html": "<div class=\"ds-card\">Aminata, Dakar</div>",
+      "css": ".ds-card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015));box-shadow:inset 0 0 0 1px rgba(255,255,255,.07);border-radius:24px;padding:24px;color:#c9d1d9;font:14px system-ui,sans-serif}"
+    },
+    {
+      "name": "Pastille d'en-tête",
+      "kind": "nav",
+      "refersTo": "header-pill",
+      "description": "Barre de navigation claire flottante.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-link\">Recherche</a><a class=\"ds-nav-link is-active\">Matchs</a></nav>",
+      "css": ".ds-nav{display:flex;gap:4px;background:#f0f2f5;border-radius:16px;padding:8px 16px;font:500 15px system-ui,sans-serif}.ds-nav-link{color:#3d444d;padding:8px 10px;border-radius:8px}.ds-nav-link:hover{color:#0d1117}.ds-nav-link.is-active{color:#0d1117;background:#dde1e7}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Le Carrefour des pairs",
+    "overview": "Deux anneaux qui se recouvrent, comme le logo : chaque écran montre ce que deux personnes se donnent l'une à l'autre. Le système est sombre, calme et lisible. Un seul accent bleu porte l'action.",
+    "keyCharacteristics": ["Fond quasi noir, cartes séparées par un liseré clair.", "Un seul accent bleu pour l'action.", "Formes arrondies : boutons en pilule, cartes à 24 px.", "Polices système."],
+    "rules": [
+      { "name": "The One Voice Rule", "body": "Le bleu d'action désigne l'action principale de l'écran. Il ne sert pas de décor.", "section": "colors" },
+      { "name": "The Muted Floor Rule", "body": "Aucun texte en dessous de #818a95 sur fond sombre.", "section": "colors" },
+      { "name": "The Border First Rule", "body": "Un liseré sépare ; le halo n'est qu'un renfort sur l'action.", "section": "elevation" }
+    ],
+    "dos": ["Do passer chaque texte par t().", "Do garder le contraste AA.", "Do utiliser les jetons plutôt que des hex.", "Do donner 44 px aux cibles tactiles."],
+    "donts": ["Don't ajouter un deuxième accent à côté du bleu.", "Don't utiliser de texte en dessous de #818a95 sur fond sombre.", "Don't couper tout mouvement en mouvement réduit.", "Don't introduire de ressource tierce non déclarée."]
+  }
+}

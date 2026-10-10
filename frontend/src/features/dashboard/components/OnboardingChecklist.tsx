@@ -80,7 +80,7 @@ export default function OnboardingChecklist({ data }: { data: Dashboard }) {
       aria-labelledby="premiers-pas"
       className="surface relative overflow-hidden p-6 shadow-glow-soft sm:p-8"
     >
-      <div aria-hidden="true" className="glow-blob -right-20 -top-24 h-64 w-64 bg-[#1f6feb]/25" />
+      <div aria-hidden="true" className="glow-blob -right-20 -top-24 h-64 w-64 bg-brand/25" />
       <div className="relative flex flex-wrap items-end justify-between gap-4">
         <div>
           <h2 id="premiers-pas" className="text-xl font-semibold text-ink-900">
@@ -97,7 +97,7 @@ export default function OnboardingChecklist({ data }: { data: Dashboard }) {
           className="h-1.5 w-full max-w-56 overflow-hidden rounded-full bg-white/[0.08]"
         >
           <div
-            className="h-full rounded-full bg-gradient-to-r from-[#1f6feb] to-[#a371f7] transition-[width] duration-500"
+            className="h-full rounded-full bg-gradient-to-r from-brand to-violet transition-[width] duration-500"
             style={{ width: `${(doneCount / steps.length) * 100}%` }}
           />
         </div>
@@ -120,7 +120,7 @@ export default function OnboardingChecklist({ data }: { data: Dashboard }) {
                   step.done
                     ? 'bg-emerald-500/15 text-emerald-300'
                     : isNext
-                      ? 'bg-[#1f6feb] text-white shadow-glow'
+                      ? 'bg-brand text-white shadow-glow'
                       : 'bg-white/[0.06] text-ink-500',
                 )}
               >
@@ -142,7 +142,7 @@ export default function OnboardingChecklist({ data }: { data: Dashboard }) {
                 <div className="basis-full pl-12 sm:basis-auto sm:self-center sm:pl-0">
                   <Link
                     to={step.to}
-                    className="inline-flex shrink-0 rounded-full bg-[#1f6feb] px-4 py-1.5 text-sm font-medium text-white shadow-glow transition hover:bg-[#1a5fd0]"
+                    className="inline-flex shrink-0 rounded-full bg-brand px-4 py-1.5 text-sm font-medium text-white shadow-glow transition hover:bg-brand-hover"
                   >
                     {step.action}
                   </Link>

@@ -243,7 +243,7 @@ function SampleMatchCard() {
         </div>
         <div className="flex h-16 w-16 flex-col items-center justify-center rounded-full border-2 border-accent-500 bg-accent-50 shadow-[0_0_30px_-4px_rgba(56,139,253,0.7)]">
           <span className="text-xl font-bold text-ink-900">{total}</span>
-          <span className="text-[10px] text-ink-600">/ 100</span>
+          <span className="text-xs text-ink-600">/ 100</span>
         </div>
       </div>
 
@@ -259,7 +259,7 @@ function SampleMatchCard() {
             <div className="h-2 overflow-hidden rounded-full bg-ink-200">
               <div
                 className={cn(
-                  'h-full origin-left rounded-full bg-gradient-to-r from-[#1f6feb] to-[#79c0ff]',
+                  'h-full origin-left rounded-full bg-gradient-to-r from-brand to-accent-800',
                   visible ? 'animate-bar-fill' : 'scale-x-0',
                 )}
                 style={{
@@ -295,7 +295,7 @@ function Distinctives({ isAuthenticated }: { isAuthenticated: boolean }) {
     >
       <div
         aria-hidden="true"
-        className="glow-blob -z-10 left-1/4 top-24 h-96 w-96 animate-glow bg-[#a371f7]/20"
+        className="glow-blob -z-10 left-1/4 top-24 h-96 w-96 animate-glow bg-violet/20"
       />
       <PageContainer className="flex flex-col gap-16">
         <SectionHeading
@@ -411,11 +411,11 @@ export default function HomePage() {
         <div aria-hidden="true" className="bg-aurora absolute inset-0 -z-10" />
         <div
           aria-hidden="true"
-          className="glow-blob -z-10 inset-x-0 top-[-10rem] mx-auto h-[32rem] w-[48rem] max-w-full animate-glow bg-[#1f6feb]/40"
+          className="glow-blob -z-10 inset-x-0 top-[-10rem] mx-auto h-[32rem] w-[48rem] max-w-full animate-glow bg-brand/40"
         />
         <div
           aria-hidden="true"
-          className="glow-blob -z-10 right-[-8rem] top-40 h-80 w-80 animate-glow bg-[#a371f7]/25"
+          className="glow-blob -z-10 right-[-8rem] top-40 h-80 w-80 animate-glow bg-violet/25"
           style={{ animationDelay: '-4s' }}
         />
 
@@ -526,7 +526,7 @@ export default function HomePage() {
               >
                 <span className="relative flex h-14 w-14 items-center justify-center rounded-full border border-accent-400/70 bg-ink-100 text-accent-800 shadow-[0_0_30px_-4px_rgba(56,139,253,0.7)]">
                   <Icon name={step.icon} size={24} />
-                  <span className="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full bg-[#1f6feb] text-xs font-bold text-white">
+                  <span className="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full bg-brand text-xs font-bold text-white">
                     {index + 1}
                   </span>
                 </span>
@@ -545,7 +545,7 @@ export default function HomePage() {
       >
         <div
           aria-hidden="true"
-          className="glow-blob -z-10 bottom-0 right-1/4 h-96 w-96 animate-glow bg-[#1f6feb]/25"
+          className="glow-blob -z-10 bottom-0 right-1/4 h-96 w-96 animate-glow bg-brand/25"
         />
         <PageContainer className="grid items-center gap-12 lg:grid-cols-2">
           <Reveal className="flex flex-col gap-5">
@@ -600,7 +600,7 @@ export default function HomePage() {
                 delay={index * 100}
                 className="group flex flex-col items-center text-center"
               >
-                <span className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[#1f6feb] to-[#a371f7] text-white shadow-glow transition duration-300 group-hover:-translate-y-1 group-hover:scale-105">
+                <span className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-brand to-violet text-white shadow-glow transition duration-300 group-hover:-translate-y-1 group-hover:scale-105">
                   <Icon name={kind.icon} size={28} />
                 </span>
                 <h3 className="mb-2 text-lg font-semibold text-ink-900">{t(kind.label)}</h3>
@@ -646,7 +646,7 @@ export default function HomePage() {
         <div aria-hidden="true" className="bg-aurora absolute inset-0 -z-10" />
         <div
           aria-hidden="true"
-          className="glow-blob -z-10 inset-x-0 top-1/2 -mt-40 mx-auto h-80 w-[40rem] max-w-full animate-glow bg-[#1f6feb]/35"
+          className="glow-blob -z-10 inset-x-0 top-1/2 -mt-40 mx-auto h-80 w-[40rem] max-w-full animate-glow bg-brand/35"
         />
         <PageContainer>
           <Reveal className="mx-auto flex max-w-2xl flex-col items-center gap-6 text-center">

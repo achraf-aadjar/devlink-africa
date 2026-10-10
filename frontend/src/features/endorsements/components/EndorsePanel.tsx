@@ -80,7 +80,7 @@ export default function EndorsePanel({
                     type="button"
                     disabled={busy}
                     onClick={() => run(() => withdrawEndorsement(skill.endorsement as number))}
-                    className="text-xs text-ink-500 underline hover:text-ink-800"
+                    className="inline-flex min-h-11 items-center px-2 text-xs text-ink-500 underline hover:text-ink-800"
                   >
                     {t('Retirer')}
                   </button>

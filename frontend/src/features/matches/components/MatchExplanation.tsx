@@ -53,7 +53,7 @@ export default function MatchExplanation({
       <div className="relative isolate flex flex-col items-center gap-3 py-4 text-center">
         <div
           aria-hidden="true"
-          className="glow-blob inset-x-0 top-0 -z-10 mx-auto h-48 w-72 bg-[#1f6feb]/25"
+          className="glow-blob inset-x-0 top-0 -z-10 mx-auto h-48 w-72 bg-brand/25"
         />
         <p className="text-sm font-medium text-accent-800">{t('Score de compatibilité')}</p>
         <ScoreRing score={total} size={148} stroke={10} showMax />

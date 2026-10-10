@@ -1,29 +1,31 @@
+import { lazy } from 'react'
 import { Route, Routes } from 'react-router-dom'
-import LoginPage from '../features/auth/pages/LoginPage'
-import RegisterPage from '../features/auth/pages/RegisterPage'
-import CirclesPage from '../features/circles/pages/CirclesPage'
-import CountriesPage from '../features/countries/pages/CountriesPage'
-import CountryDetailPage from '../features/countries/pages/CountryDetailPage'
-import DashboardPage from '../features/dashboard/pages/DashboardPage'
-import ExchangesPage from '../features/exchanges/pages/ExchangesPage'
-import MatchDetailPage from '../features/matches/pages/MatchDetailPage'
-import MatchesPage from '../features/matches/pages/MatchesPage'
-import ObservatoryPage from '../features/observatory/pages/ObservatoryPage'
-import ProfilePage from '../features/profile/pages/ProfilePage'
-import PublicProfilePage from '../features/profile/pages/PublicProfilePage'
-import ProjectDetailPage from '../features/projects/pages/ProjectDetailPage'
-import ProjectFormPage from '../features/projects/pages/ProjectFormPage'
-import ProjectsPage from '../features/projects/pages/ProjectsPage'
-import SearchPage from '../features/search/pages/SearchPage'
-import SkillsPage from '../features/skills/pages/SkillsPage'
-import DesignSystemPage from '../pages/DesignSystemPage'
 import HomePage from '../pages/HomePage'
-import NotFoundPage from '../pages/NotFoundPage'
-import PrivacyPage from '../pages/PrivacyPage'
 import Layout from './Layout'
 import RequireAuth from './RequireAuth'
 import StandardPage from './StandardPage'
 import WidePage from './WidePage'
+
+const LoginPage = lazy(() => import('../features/auth/pages/LoginPage'))
+const RegisterPage = lazy(() => import('../features/auth/pages/RegisterPage'))
+const CirclesPage = lazy(() => import('../features/circles/pages/CirclesPage'))
+const CountriesPage = lazy(() => import('../features/countries/pages/CountriesPage'))
+const CountryDetailPage = lazy(() => import('../features/countries/pages/CountryDetailPage'))
+const DashboardPage = lazy(() => import('../features/dashboard/pages/DashboardPage'))
+const ExchangesPage = lazy(() => import('../features/exchanges/pages/ExchangesPage'))
+const MatchDetailPage = lazy(() => import('../features/matches/pages/MatchDetailPage'))
+const MatchesPage = lazy(() => import('../features/matches/pages/MatchesPage'))
+const ObservatoryPage = lazy(() => import('../features/observatory/pages/ObservatoryPage'))
+const ProfilePage = lazy(() => import('../features/profile/pages/ProfilePage'))
+const PublicProfilePage = lazy(() => import('../features/profile/pages/PublicProfilePage'))
+const ProjectDetailPage = lazy(() => import('../features/projects/pages/ProjectDetailPage'))
+const ProjectFormPage = lazy(() => import('../features/projects/pages/ProjectFormPage'))
+const ProjectsPage = lazy(() => import('../features/projects/pages/ProjectsPage'))
+const SearchPage = lazy(() => import('../features/search/pages/SearchPage'))
+const SkillsPage = lazy(() => import('../features/skills/pages/SkillsPage'))
+const DesignSystemPage = lazy(() => import('../pages/DesignSystemPage'))
+const NotFoundPage = lazy(() => import('../pages/NotFoundPage'))
+const PrivacyPage = lazy(() => import('../pages/PrivacyPage'))
 
 export default function AppRoutes() {
   return (
