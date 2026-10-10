@@ -97,7 +97,7 @@ export default function ProfilePage() {
           </p>
           <div
             aria-hidden="true"
-            className="h-1.5 w-48 overflow-hidden rounded-full bg-white/[0.08]"
+            className="h-1.5 w-48 overflow-hidden rounded-full bg-veil/[0.08]"
           >
             <div
               className="h-full rounded-full bg-gradient-to-r from-brand to-violet"

@@ -61,7 +61,7 @@ export default function ProjectSummaryButton({
 
       {summary && (
         <div className="flex flex-col gap-2" role="status">
-          <p className="rounded-2xl bg-white/[0.04] p-4 ring-1 ring-inset ring-white/[0.07] text-sm text-ink-800">
+          <p className="rounded-2xl bg-veil/[0.04] p-4 ring-1 ring-inset ring-veil/[0.07] text-sm text-ink-800">
             {summary}
           </p>
           <div className="flex gap-2">

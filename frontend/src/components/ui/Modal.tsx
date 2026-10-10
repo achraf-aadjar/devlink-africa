@@ -59,7 +59,7 @@ export default function Modal({ open, title, onClose, children }: ModalProps) {
         aria-modal="true"
         aria-label={title}
         tabIndex={-1}
-        className="animate-fade-in relative w-full max-w-lg rounded-t-card bg-ink-100 p-6 shadow-glow-soft ring-1 ring-white/10 sm:rounded-card"
+        className="animate-fade-in relative w-full max-w-lg rounded-t-card bg-ink-100 p-6 shadow-glow-soft ring-1 ring-veil/10 sm:rounded-card"
       >
         <div className="mb-4 flex items-start justify-between gap-4">
           <h2 className="text-lg font-semibold text-ink-900">{title}</h2>

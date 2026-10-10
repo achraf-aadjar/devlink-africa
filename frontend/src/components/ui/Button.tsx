@@ -18,8 +18,8 @@ const VARIANTS: Record<Variant, string> = {
   // garder le contraste.
   primary:
     'bg-brand text-white shadow-glow hover:bg-brand-hover disabled:bg-ink-300 disabled:shadow-none',
-  secondary: 'bg-white/[0.06] text-ink-900 ring-1 ring-inset ring-white/10 hover:bg-white/10',
-  ghost: 'text-ink-700 hover:bg-white/[0.06] hover:text-ink-900',
+  secondary: 'bg-veil/[0.06] text-ink-900 ring-1 ring-inset ring-veil/10 hover:bg-veil/10',
+  ghost: 'text-ink-700 hover:bg-veil/[0.06] hover:text-ink-900',
   danger: 'bg-red-600 text-white hover:bg-red-500',
 }
 

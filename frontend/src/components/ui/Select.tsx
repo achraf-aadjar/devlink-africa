@@ -34,7 +34,7 @@ export default function Select({
         aria-describedby={error ? errorId : undefined}
         className={cn(
           'field text-ink-900',
-          error ? 'border-red-500/70' : 'border-white/10',
+          error ? 'border-red-500/70' : 'border-veil/10',
           className,
         )}
       >

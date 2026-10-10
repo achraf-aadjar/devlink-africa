@@ -34,7 +34,7 @@ export default function DashboardPage() {
       <OnboardingChecklist data={data} />
 
       {/* Compteurs posés à plat, séparés par de fins traits : pas de boîtes. */}
-      <dl className="grid grid-cols-3 divide-x divide-white/[0.08] py-2">
+      <dl className="grid grid-cols-3 divide-x divide-veil/[0.08] py-2">
         {[
           { value: data.counters.matches, label: tn(data.counters.matches, 'match', 'matchs') },
           { value: data.counters.offered_skills, label: t('compétence(s) proposée(s)') },
@@ -71,7 +71,7 @@ export default function DashboardPage() {
             {data.recommended_matches.map((match) => (
               <li
                 key={match.id}
-                className="-mx-3 flex items-center gap-4 rounded-2xl px-3 py-2.5 transition hover:bg-white/[0.04]"
+                className="-mx-3 flex items-center gap-4 rounded-2xl px-3 py-2.5 transition hover:bg-veil/[0.04]"
               >
                 <Avatar name={match.user.full_name || t('Développeur')} size={44} />
                 <div className="min-w-0 flex-1">

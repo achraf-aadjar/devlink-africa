@@ -148,8 +148,8 @@ export default function Combobox({
           }}
           onKeyDown={onKeyDown}
           className={cn(
-            'w-full rounded-lg border bg-ink-100 px-3 py-2 pr-9 text-ink-900 placeholder:text-ink-500',
-            error ? 'border-red-500' : 'border-ink-300',
+            'field w-full pr-10 text-ink-900 placeholder:text-ink-500',
+            error ? 'border-red-500/70' : 'border-veil/10',
           )}
         />
         <Icon

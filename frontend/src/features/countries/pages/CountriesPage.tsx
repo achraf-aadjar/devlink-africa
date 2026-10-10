@@ -24,7 +24,7 @@ export default function CountriesPage() {
         </div>
         <Link
           to="/observatoire"
-          className="rounded-full bg-white/[0.06] px-5 py-2 text-sm font-medium text-ink-900 ring-1 ring-inset ring-white/10 transition hover:bg-white/10"
+          className="rounded-full bg-veil/[0.06] px-5 py-2 text-sm font-medium text-ink-900 ring-1 ring-inset ring-veil/10 transition hover:bg-veil/10"
         >
           {t('Observatoire des compétences')} →
         </Link>
@@ -48,11 +48,11 @@ export default function CountriesPage() {
             <li key={country.code}>
               <Link
                 to={`/pays/${country.code}`}
-                className="group flex items-center gap-3 rounded-full bg-white/[0.04] py-2 pl-2 pr-5 ring-1 ring-inset ring-white/[0.07] transition hover:-translate-y-0.5 hover:bg-white/[0.07] hover:ring-accent-400/40"
+                className="group flex items-center gap-3 rounded-full bg-veil/[0.04] py-2 pl-2 pr-5 ring-1 ring-inset ring-veil/[0.07] transition hover:-translate-y-0.5 hover:bg-veil/[0.07] hover:ring-accent-400/40"
               >
                 <span
                   aria-hidden="true"
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-white/[0.06] text-2xl"
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-veil/[0.06] text-2xl"
                 >
                   {country.flag}
                 </span>

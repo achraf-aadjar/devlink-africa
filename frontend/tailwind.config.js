@@ -1,12 +1,14 @@
 /** @type {import('tailwindcss').Config} */
 // Jetons de design DevLink Africa (DL-07).
 //
-// Thème sombre façon GitHub, repris le 2026-10-08 à la demande d'Achraf :
-// fond quasi noir, un seul accent bleu, plus de terre cuite ni de fond clair.
-// Voir docs/DECISIONS.md pour le détail du calcul de chaque teinte.
+// Thème façon GitHub, un seul accent bleu. Clair par défaut, sombre quand
+// l'appareil est en mode sombre (`prefers-color-scheme`). Les valeurs des
+// échelles `ink`, `accent` et `veil` vivent en variables CSS dans index.css ;
+// ce fichier ne garde que les noms. Voir docs/DECISIONS.md pour le calcul des
+// teintes sombres.
 //
-// `ink` est à l'inverse de l'original : 50 est le fond le plus sombre (la
-// page), 900 le texte le plus clair. Ce sens compte : partout ailleurs dans
+// `ink` est à l'inverse de l'original : 50 est le fond de la page, 900 le
+// texte le plus contrasté (le plus clair en sombre, le plus foncé en clair). Ce sens compte : partout ailleurs dans
 // le code, `bg-ink-50`/`bg-ink-100` désignent un fond et `text-ink-700` à
 // `text-ink-900` du texte lisible — en inversant seulement les valeurs ici,
 // toutes ces classes redeviennent correctes sans toucher aux composants.
@@ -27,16 +29,16 @@ export default {
     extend: {
       colors: {
         accent: {
-          50: '#0a1f33',
-          100: '#0d2847',
-          200: '#11315c',
-          300: '#163f78',
-          400: '#1f6feb',
-          500: '#388bfd',
-          600: '#4493f8',
-          700: '#58a6ff',
-          800: '#79c0ff',
-          900: '#a5d6ff',
+          50: 'rgb(var(--accent-50) / <alpha-value>)',
+          100: 'rgb(var(--accent-100) / <alpha-value>)',
+          200: 'rgb(var(--accent-200) / <alpha-value>)',
+          300: 'rgb(var(--accent-300) / <alpha-value>)',
+          400: 'rgb(var(--accent-400) / <alpha-value>)',
+          500: 'rgb(var(--accent-500) / <alpha-value>)',
+          600: 'rgb(var(--accent-600) / <alpha-value>)',
+          700: 'rgb(var(--accent-700) / <alpha-value>)',
+          800: 'rgb(var(--accent-800) / <alpha-value>)',
+          900: 'rgb(var(--accent-900) / <alpha-value>)',
         },
         // Bleu des actions (bouton, pastille) : blanc dessus à 4,6:1.
         brand: { DEFAULT: '#1f6feb', hover: '#1a5fd0' },
@@ -53,17 +55,20 @@ export default {
           brand: '#0969da',
         },
         ink: {
-          50: '#0d1117',
-          100: '#161b22',
-          200: '#21262d',
-          300: '#30363d',
-          400: '#484f58',
-          500: '#818a95',
-          600: '#8b949e',
-          700: '#adb5bd',
-          800: '#c9d1d9',
-          900: '#e6edf3',
+          50: 'rgb(var(--ink-50) / <alpha-value>)',
+          100: 'rgb(var(--ink-100) / <alpha-value>)',
+          200: 'rgb(var(--ink-200) / <alpha-value>)',
+          300: 'rgb(var(--ink-300) / <alpha-value>)',
+          400: 'rgb(var(--ink-400) / <alpha-value>)',
+          500: 'rgb(var(--ink-500) / <alpha-value>)',
+          600: 'rgb(var(--ink-600) / <alpha-value>)',
+          700: 'rgb(var(--ink-700) / <alpha-value>)',
+          800: 'rgb(var(--ink-800) / <alpha-value>)',
+          900: 'rgb(var(--ink-900) / <alpha-value>)',
         },
+        // Voile : blanc en thème sombre, encre en thème clair. Remplace
+        // `white/xx` pour les fonds et liserés translucides.
+        veil: 'rgb(var(--veil) / <alpha-value>)',
       },
       fontFamily: {
         // Polices système : aucune dépendance, aucune question de licence.

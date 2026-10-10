@@ -21,7 +21,7 @@ export default function Avatar({
     <span
       aria-hidden="true"
       className={cn(
-        'inline-flex shrink-0 select-none items-center justify-center rounded-full font-semibold text-white ring-2 ring-white/10',
+        'inline-flex shrink-0 select-none items-center justify-center rounded-full font-semibold text-white ring-2 ring-veil/10',
         className,
       )}
       style={{

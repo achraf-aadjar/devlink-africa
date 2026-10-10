@@ -39,7 +39,7 @@ export default function Textarea({
         aria-describedby={describedBy || undefined}
         className={cn(
           'min-h-24 field text-ink-900 placeholder:text-ink-500',
-          error ? 'border-red-500/70' : 'border-white/10',
+          error ? 'border-red-500/70' : 'border-veil/10',
           className,
         )}
       />

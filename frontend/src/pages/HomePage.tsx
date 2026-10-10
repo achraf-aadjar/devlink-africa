@@ -272,7 +272,7 @@ function SampleMatchCard() {
         ))}
       </ul>
 
-      <p className="mt-5 rounded-2xl bg-white/[0.04] p-4 ring-1 ring-inset ring-white/[0.07] text-sm leading-relaxed text-ink-700">
+      <p className="mt-5 rounded-2xl bg-veil/[0.04] p-4 ring-1 ring-inset ring-veil/[0.07] text-sm leading-relaxed text-ink-700">
         <Icon name="info" size={16} className="mr-1.5 inline text-accent-700" />
         {t(
           'Vous voulez apprendre React, elle veut apprendre Django : vos compétences se complètent dans les deux sens.',
@@ -338,9 +338,9 @@ function Distinctives({ isAuthenticated }: { isAuthenticated: boolean }) {
           </Reveal>
         </div>
 
-        <ul className="grid grid-cols-1 gap-12 md:grid-cols-3 md:divide-x md:divide-white/[0.06]">
+        <ul className="grid grid-cols-1 gap-12 md:grid-cols-3 md:divide-x md:divide-veil/[0.06]">
           <Reveal as="li" className="flex flex-col items-center px-4 text-center">
-            <span className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-white/[0.05] text-accent-800 ring-1 ring-inset ring-accent-400/30">
+            <span className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-veil/[0.05] text-accent-800 ring-1 ring-inset ring-accent-400/30">
               <Icon name="map" size={26} />
             </span>
             <h3 className="mb-2 text-lg font-semibold text-ink-900">
@@ -357,7 +357,7 @@ function Distinctives({ isAuthenticated }: { isAuthenticated: boolean }) {
             </Link>
           </Reveal>
           <Reveal as="li" delay={120} className="flex flex-col items-center px-4 text-center">
-            <span className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-white/[0.05] text-accent-800 ring-1 ring-inset ring-accent-400/30">
+            <span className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-veil/[0.05] text-accent-800 ring-1 ring-inset ring-accent-400/30">
               <Icon name="check" size={26} />
             </span>
             <h3 className="mb-2 text-lg font-semibold text-ink-900">
@@ -370,7 +370,7 @@ function Distinctives({ isAuthenticated }: { isAuthenticated: boolean }) {
             </p>
           </Reveal>
           <Reveal as="li" delay={240} className="flex flex-col items-center px-4 text-center">
-            <span className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-white/[0.05] text-accent-800 ring-1 ring-inset ring-accent-400/30">
+            <span className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-veil/[0.05] text-accent-800 ring-1 ring-inset ring-accent-400/30">
               <Icon name="country" size={26} />
             </span>
             <h3 className="mb-2 text-lg font-semibold text-ink-900">
@@ -469,7 +469,7 @@ export default function HomePage() {
                 </Link>
                 <Link
                   to="/recherche"
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-white/[0.06] px-6 py-3 ring-1 ring-inset ring-white/15 text-base font-semibold text-ink-900 backdrop-blur transition hover:bg-white/10"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-veil/[0.06] px-6 py-3 ring-1 ring-inset ring-veil/15 text-base font-semibold text-ink-900 backdrop-blur transition hover:bg-veil/10"
                 >
                   {t('Explorer les profils')}
                 </Link>
@@ -622,7 +622,7 @@ export default function HomePage() {
               'DevLink Africa n’est pas un annuaire : c’est un outil pour trouver la bonne personne avec qui progresser.',
             )}
           />
-          <ul className="grid gap-12 grid-cols-1 md:grid-cols-3 md:divide-x md:divide-white/[0.06]">
+          <ul className="grid gap-12 grid-cols-1 md:grid-cols-3 md:divide-x md:divide-veil/[0.06]">
             {PRINCIPLES.map((item, index) => (
               <Reveal
                 as="li"
@@ -630,7 +630,7 @@ export default function HomePage() {
                 delay={index * 120}
                 className="flex flex-col items-center px-4 text-center"
               >
-                <span className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-white/[0.05] text-accent-800 ring-1 ring-inset ring-accent-400/30">
+                <span className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-veil/[0.05] text-accent-800 ring-1 ring-inset ring-accent-400/30">
                   <Icon name={item.icon} size={26} />
                 </span>
                 <h3 className="mb-2 text-lg font-semibold text-ink-900">{t(item.title)}</h3>

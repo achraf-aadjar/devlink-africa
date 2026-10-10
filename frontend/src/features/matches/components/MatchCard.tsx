@@ -51,7 +51,7 @@ export default function MatchCard({ match }: { match: MatchSummary }) {
 
       <Link
         to={`/matchs/${match.id}`}
-        className="mt-auto inline-flex w-fit items-center gap-1 rounded-full bg-white/[0.05] px-4 py-1.5 text-sm font-medium text-accent-800 ring-1 ring-inset ring-white/10 transition hover:bg-white/10"
+        className="mt-auto inline-flex w-fit items-center gap-1 rounded-full bg-veil/[0.05] px-4 py-1.5 text-sm font-medium text-accent-800 ring-1 ring-inset ring-veil/10 transition hover:bg-veil/10"
       >
         {t("Voir l'explication détaillée")}
         <span aria-hidden="true">→</span>
