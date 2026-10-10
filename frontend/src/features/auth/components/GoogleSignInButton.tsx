@@ -76,7 +76,7 @@ export default function GoogleSignInButton({
         theme: 'outline',
         size: 'large',
         text: 'continue_with',
-        shape: 'pill',
+        shape: 'rectangular',
         logo_alignment: 'left',
         // Le libellé du bouton est dessiné par Google, dans la langue de l'interface.
         locale: lang,

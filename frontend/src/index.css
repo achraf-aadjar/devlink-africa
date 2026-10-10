@@ -70,6 +70,14 @@
     @apply outline-none ring-2 ring-accent-600 ring-offset-2 ring-offset-ink-50;
   }
 
+  /* Écrans d'authentification : pas de halo de focus ; le champ actif se
+     signale par sa bordure bleue (voir `.field`). */
+  .auth-plain :focus-visible {
+    box-shadow: none;
+    --tw-ring-offset-shadow: 0 0 #0000;
+    --tw-ring-shadow: 0 0 #0000;
+  }
+
   /*
    * « Réduire les animations » : on retire le mouvement (déplacements,
    * zooms, halos qui respirent, traits qui défilent) mais on garde les

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { Button, Card, Field } from '../../../components/ui'
+import { Button, Field } from '../../../components/ui'
 import { useI18n } from '../../../i18n/useI18n'
 import { ApiError } from '../../../lib/api'
 import GoogleSignInButton from '../components/GoogleSignInButton'
@@ -91,7 +91,11 @@ export default function LoginPage() {
             </p>
           )}
 
-          <Button type="submit" loading={submitting} className="mt-2">
+          <Button
+            type="submit"
+            loading={submitting}
+            className="mt-2 w-full !rounded-xl border border-transparent !px-4 !py-2.5 !text-base !shadow-none"
+          >
             {t('Se connecter')}
           </Button>
         </form>
@@ -116,7 +120,7 @@ export default function LoginPage() {
             </p>
           </div>
         )}
-      </Card>
+      </div>
 
       <p className="mt-4 text-center text-sm text-ink-600">
         {t('Pas encore de compte ?')}{' '}
