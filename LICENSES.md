@@ -163,7 +163,9 @@ Aucune des deux licences n'est à réciprocité (GPL, AGPL, LGPL, MPL). Impeccab
 | Drapeaux | `frontend/src/lib/labels.ts` | Emoji du système, construits depuis le code pays. |
 | Polices | `frontend/tailwind.config.js` | `system-ui` uniquement : aucune police chargée. |
 
-Aucune licence graphique à déclarer : tous ces éléments sont du code source écrit par l'équipe (art. 6 et 11).
+Hors la photo ci-dessous, aucune licence graphique à déclarer : tous ces éléments sont du code source écrit par l'équipe (art. 6 et 11).
+
+**Photos des écrans de connexion et d'inscription.** *Connexion* : portrait de Steve Jobs, `frontend/public/auth/portrait.jpg`, par Matthew Yohe, licence [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/), source : [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Steve_Jobs_Headshot_2010-CROP.jpg). Elle est affichée en niveaux de gris sous un voile, avec la mention de l'auteur et de la licence sur la page. La citation (« Great things in business are never done by one person… ») lui est attribuée dans la presse ; la photo est un portrait de personne publique, sans accord de sa part. *Inscription* : portrait de Grace Hopper, `frontend/public/auth/portrait-register.jpg`, par James S. Davis (US Navy), domaine public, source : [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Commodore_Grace_M._Hopper,_USN_(covered).jpg). La phrase « The most dangerous phrase in the language is ‘We’ve always done it this way’ » lui est couramment attribuée ; source primaire non vérifiée.
 
 Une photo générée par IA a servi un temps de fond à la bannière d'accueil, retirée pour de bon le 2026-10-08 avec le passage à un thème sombre (voir `docs/DECISIONS.md` et `AI_USAGE.md` pour l'historique complet).
 

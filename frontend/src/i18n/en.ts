@@ -68,6 +68,33 @@ export const EN: Record<string, string> = {
   'Pays|menu': 'Countries',
   Observatoire: 'Observatory',
   'Aller au contenu': 'Skip to content',
+  '« Les grandes choses ne sont jamais accomplies par une seule personne. Elles le sont par une équipe. »':
+    '“Great things are never done by one person. They’re done by a team of people.”',
+  'cofondateur d’Apple': 'Apple co-founder',
+  Photo: 'Photo',
+  'Mot de passe oublié': 'Forgot password',
+  'Mot de passe oublié ?': 'Forgot your password?',
+  'Indiquez votre adresse e-mail : nous vous envoyons un lien pour en choisir un nouveau.':
+    'Enter your email address and we’ll send you a link to choose a new one.',
+  'Si un compte existe pour cette adresse, un e-mail vient d’être envoyé. Le lien est valable une heure.':
+    'If an account exists for this address, an email has just been sent. The link is valid for one hour.',
+  'Envoyer le lien': 'Send the link',
+  'Retour à la connexion': 'Back to sign in',
+  'Lien invalide': 'Invalid link',
+  'Ce lien est invalide ou a expiré. Demandez-en un nouveau.':
+    'This link is invalid or has expired. Request a new one.',
+  'Demander un nouveau lien': 'Request a new link',
+  'Nouveau mot de passe': 'New password',
+  'Choisissez un mot de passe d’au moins 10 caractères.':
+    'Choose a password of at least 10 characters.',
+  'Le mot de passe doit contenir au moins 10 caractères.':
+    'The password must be at least 10 characters long.',
+  'Changer le mot de passe': 'Change password',
+  'Mot de passe modifié. Connectez-vous avec le nouveau.':
+    'Password changed. Sign in with the new one.',
+  '« La phrase la plus dangereuse : “on a toujours fait comme ça”. »':
+    '“The most dangerous phrase: “we’ve always done it this way.””',
+  'pionnière de l’informatique': 'computing pioneer',
   'DevLink Africa, accueil': 'DevLink Africa, home',
   'Navigation principale': 'Main navigation',
   'Mon profil': 'My profile',
