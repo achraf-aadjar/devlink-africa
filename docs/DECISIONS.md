@@ -487,3 +487,15 @@ Repris avec nos propres codes, pas une copie : un voile sombre uniforme (`bg-ink
 **Côté serveur.** Le frontend envoie `Accept-Language`. Django traduit ses propres messages (`LocaleMiddleware`) ; les messages propres à DevLink sont traduits au même endroit (`core/i18n.py`), avec le même garde-fou : un test parcourt le code (module `ast`) et échoue si un message d'erreur levé n'a pas de traduction. Pas de fichiers gettext compilés : il aurait fallu installer les outils GNU gettext dans l'image Docker pour une soixantaine de phrases. Les fonctions d'IA rédigent dans la langue de l'interface.
 
 **Ce qui reste en français.** Le contenu saisi par les utilisateurs (bios, descriptions de projets), qu'on ne traduit pas à leur place, et la page interne du design system.
+
+---
+
+## 2026-10-12 — Thème clair/sombre explicite
+
+**Problème.** Depuis la PR d'Emmanuel (« thème clair, le sombre suit l'appareil »), le thème dépendait uniquement de `prefers-color-scheme` : pas de bouton, impossible de choisir l'un ou l'autre indépendamment du système.
+
+**Décision.** `ThemeProvider` (même structure que `I18nProvider` : mémorisé dans `localStorage`, sinon celui de l'appareil) pose un attribut `data-theme` sur `<html>` **seulement après un choix explicite**. Sans ce choix, l'attribut reste absent et `index.css` continue de suivre `prefers-color-scheme` en direct, exactement comme avant — y compris si l'appareil change de réglage pendant que la page est ouverte. Dès qu'on clique, le choix est figé et mémorisé.
+
+**CSS.** La règle `@media (prefers-color-scheme: dark)` est restreinte à `:root:not([data-theme='light'])`, pour qu'un choix clair explicite l'emporte sur un appareil en mode sombre ; une règle `:root[data-theme='dark']` séparée couvre le choix sombre explicite sur un appareil resté en clair. Léger doublon des variables (deux blocs identiques) plutôt qu'une règle plus complexe à lire.
+
+**Interface.** Bouton dans la pastille de navigation, à côté du sélecteur de langue, même principe d'affichage (« montre vers quoi on bascule ») : une lune quand on est en clair, un soleil quand on est en sombre. Deux icônes de plus, dessinées à la main sur la même grille que le reste du jeu (`paths.ts`).
