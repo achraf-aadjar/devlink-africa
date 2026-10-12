@@ -216,21 +216,28 @@ function SkillColumn({
         </ul>
       )}
 
-      <div className="mt-auto flex flex-col gap-3 border-t border-ink-200 pt-4">
-        <Select
-          label={t('Ajouter une compétence')}
-          value={skillId}
-          options={options}
-          placeholder={available.length ? t('Choisir…') : t('Tout est déjà déclaré')}
-          onChange={(event) => setSkillId(event.target.value)}
-        />
-        {kind === 'OFFERED' && (
+      <div className="mt-auto flex flex-col gap-3 border-t border-ink-200 pt-4 sm:flex-row sm:items-end">
+        <div className="flex-1">
           <Select
-            label={t('Votre niveau')}
-            value={level}
-            options={levelOptions}
-            onChange={(event) => setLevel(event.target.value as SkillLevel)}
+            label={t('Ajouter une compétence')}
+            value={skillId}
+            options={options}
+            placeholder={available.length ? t('Choisir…') : t('Tout est déjà déclaré')}
+            onChange={(event) => setSkillId(event.target.value)}
           />
+        </div>
+        {/* Le niveau n'apparaît qu'une fois une compétence choisie : poser les
+            deux champs d'un coup, avant même de savoir laquelle ajouter,
+            c'était deux décisions à prendre en même temps. */}
+        {kind === 'OFFERED' && skillId && (
+          <div className="sm:w-36">
+            <Select
+              label={t('Votre niveau')}
+              value={level}
+              options={levelOptions}
+              onChange={(event) => setLevel(event.target.value as SkillLevel)}
+            />
+          </div>
         )}
         <Button
           type="button"
@@ -239,6 +246,7 @@ function SkillColumn({
           onClick={() => {
             onAdd(kind, Number(skillId), level)
             setSkillId('')
+            setLevel('INTERMEDIATE')
           }}
         >
           {t('Ajouter')}
