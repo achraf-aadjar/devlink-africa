@@ -487,3 +487,13 @@ Repris avec nos propres codes, pas une copie : un voile sombre uniforme (`bg-ink
 **Côté serveur.** Le frontend envoie `Accept-Language`. Django traduit ses propres messages (`LocaleMiddleware`) ; les messages propres à DevLink sont traduits au même endroit (`core/i18n.py`), avec le même garde-fou : un test parcourt le code (module `ast`) et échoue si un message d'erreur levé n'a pas de traduction. Pas de fichiers gettext compilés : il aurait fallu installer les outils GNU gettext dans l'image Docker pour une soixantaine de phrases. Les fonctions d'IA rédigent dans la langue de l'interface.
 
 **Ce qui reste en français.** Le contenu saisi par les utilisateurs (bios, descriptions de projets), qu'on ne traduit pas à leur place, et la page interne du design system.
+
+---
+
+## 2026-10-12 — Catalogue de compétences élargi
+
+**Problème.** Le catalogue ne comptait que 14 technologies (migration `0002_seed_catalog`), toutes centrées sur une pile React/Python. Beaucoup de profils plausibles (Java/Spring, PHP/Laravel, mobile natif, bases de données, cloud) n'avaient tout simplement rien à cocher.
+
+**Décision.** Nouvelle migration `0005_elargit_le_catalogue`, même mécanisme que `0002`/`0003` (`get_or_create` par nom, catégorie posée à la création) : 29 compétences de plus, réparties dans les sept catégories existantes — front-end (Vue.js, Angular, HTML/CSS, Tailwind CSS), back-end (Django, Laravel, Spring Boot, Ruby on Rails, Go, Java, PHP, C#/.NET), mobile (React Native, Swift, Kotlin), données (MySQL, MongoDB, Redis, SQL), DevOps (AWS, Git, GitHub Actions, Nginx, Terraform), design (Figma), autre (GraphQL, Rust, Agile/Scrum, Cybersécurité). Catalogue total : 43.
+
+**Tests touchés.** Quatre tests vérifiaient le compte exact du catalogue (14) ou l'ensemble exact d'une catégorie (DEVOPS) : mis à jour pour refléter les nouveaux chiffres, pas contournés.

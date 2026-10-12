@@ -181,7 +181,7 @@ def test_le_parcours_public_fonctionne_sans_compte(demo_data):
     client = APIClient()
 
     assert client.get("/api/v1/health/").status_code == 200
-    assert client.get("/api/v1/skills/").json()["count"] == 14
+    assert client.get("/api/v1/skills/").json()["count"] == 43
 
     users = client.get("/api/v1/search/users/").json()
     assert users["count"] == 22

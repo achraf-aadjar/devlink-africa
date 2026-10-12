@@ -111,7 +111,7 @@ def test_an_injection_in_a_skill_filter_is_harmless():
     response = APIClient().get("/api/v1/search/users/", {"skill": "'; DROP TABLE skills_skill; --"})
 
     assert response.status_code == 200
-    assert Skill.objects.count() == 14
+    assert Skill.objects.count() == 43
 
 
 def test_no_raw_sql_is_built_by_concatenation():
