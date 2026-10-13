@@ -530,3 +530,13 @@ Repris avec nos propres codes, pas une copie : un voile sombre uniforme (`bg-ink
 3. Le profil public affiche maintenant le titre et le lien de chaque preuve sous la compétence, pas seulement leur nombre.
 
 **Performance.** `proofs_prefetch()` (même forme que `endorsements_prefetch()` déjà en place) précharge les preuves de toutes les compétences en une requête, pour le profil public comme pour « Mes compétences ». Le test de non-régression N+1 du profil public est passé de 4 à 5 requêtes constantes (une preuve en plus à précharger), toujours indépendant du nombre de compétences — vérifié jusqu'à 15.
+
+---
+
+## 2026-10-13 — Les signalements n'étaient vus par personne
+
+**Constat.** `Report` (DL-32) a un champ `status` (`OPEN`/`REVIEWED`/`DISMISSED`) qui suggère un vrai circuit de modération — mais `ReportView` n'a qu'un `post()`, aucun `get()`, et **aucune app du projet n'a jamais eu de `admin.py`** (vérifié : aucun fichier de ce nom nulle part dans le code du projet). Un signalement partait dans la base et n'en ressortait plus jamais : ni lu, ni traité, ni rejeté, par personne. Repéré en auditant systématiquement chaque route d'écriture pour vérifier qu'elle a un chemin de lecture quelque part — le même type de trou que les preuves de compétence la veille.
+
+**Décision.** `backend/reports/admin.py` : premier (et seul) enregistrement admin du projet. Liste filtrable par statut/motif/cible, `status` modifiable directement depuis la liste (`list_editable`), le reste en lecture seule (on ne corrige pas le contenu d'un signalement). Délibérément l'admin Django plutôt qu'un nouvel écran React : c'est un outil interne pour l'équipe, pas une fonctionnalité produit, et ça évite d'inventer un rôle « modérateur » et des permissions dédiées pour un besoin qui se résume à « voir la liste et changer un statut ».
+
+**Effet de bord découvert en testant.** La première requête vers une page admin plantait en test : `STORAGES["staticfiles"]` utilise `CompressedManifestStaticFilesStorage` (whitenoise) en production, qui exige un manifeste généré par `collectstatic` — absent en test, où rien n'avait jamais posé de tag `{% static %}` jusqu'ici puisqu'aucune page serveur n'existait. `config/settings_test.py` repasse sur un stockage simple pour les tests ; la configuration de production n'est pas touchée.
