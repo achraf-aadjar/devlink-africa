@@ -490,6 +490,14 @@ Repris avec nos propres codes, pas une copie : un voile sombre uniforme (`bg-ink
 
 ---
 
+## 2026-10-12 — Simplifie l'ajout d'une compétence
+
+**Problème.** Achraf, en capture d'écran : « la façon de ce que l'utilisateur écrit ses compétences c'est pas clair, il va pas savoir, faut simplifier ». La compétence à ajouter, le niveau et le bouton « Ajouter » étaient trois blocs empilés sur toute la largeur de la carte — trois réglages d'apparence indépendante, alors que c'est une seule action en deux étapes.
+
+**Décision.** Les trois tiennent maintenant sur une seule rangée (`flex`, empilée seulement sur mobile). Le sélecteur de niveau n'apparaît qu'une fois une compétence choisie : poser les deux choix d'un coup, avant même de savoir laquelle ajouter, forçait deux décisions simultanées pour une seule action.
+
+---
+
 ## 2026-10-12 — Catalogue de compétences élargi
 
 **Problème.** Le catalogue ne comptait que 14 technologies (migration `0002_seed_catalog`), toutes centrées sur une pile React/Python. Beaucoup de profils plausibles (Java/Spring, PHP/Laravel, mobile natif, bases de données, cloud) n'avaient tout simplement rien à cocher.
