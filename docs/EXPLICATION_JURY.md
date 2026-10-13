@@ -259,7 +259,34 @@ Déclarer « Node.js, avancé » ne coûte rien. Après un échange terminé, ou
 
 ---
 
-## 10. Ce que nous n'avons pas fait, et pourquoi
+## 10. Modèle économique
+
+Le produit n'est pas monétisé aujourd'hui — rien dans le cahier des charges ne l'exige — mais le jury pose souvent la question, et nous avons une réponse cohérente avec nos propres principes (`PRODUCT.md` : « échange entre pairs, pas recrutement »).
+
+### Ce qui reste gratuit, par principe
+
+L'échange de compétences lui-même. Faire payer une étape du troc — une commission sur un échange accepté, par exemple — contredirait l'argument central du produit : deux développeurs qui s'entraident, pas une place de marché. C'est un choix de positionnement, pas une contrainte technique.
+
+### Deux pistes de revenu, sans y toucher
+
+1. **Freemium côté développeurs.** Le compte et l'échange restent gratuits ; des options payantes n'en changent pas l'accès : plus de matchs proposés par jour, mise en avant dans la recherche, badge de profil vérifié (les preuves de compétence, déjà en place, en sont la base factuelle).
+2. **B2B via le Project Hub.** Des entreprises ou organismes de formation paient pour publier un projet, recruter des contributeurs, ou accéder à une lecture agrégée de l'Observatoire des compétences (quelles compétences manquent, où) — la même donnée publique et anonyme, présentée différemment pour un usage professionnel.
+
+### Pourquoi pas une commission sur les échanges
+
+Ça romprait la confiance : un échange entre pairs cesse d'en être un dès qu'une des deux parties sait que la plateforme touche quelque chose dessus. Et ça créerait une incitation perverse à gonfler le nombre d'échanges plutôt que leur qualité, à l'opposé de ce que Dev Match cherche à optimiser (la complémentarité, pas le volume).
+
+### Questions probables
+
+> **« Combien ça rapporterait ? »**
+> Nous n'avons aucune donnée d'usage réel pour chiffrer ça honnêtement (voir `PRODUCT.md`, « Evidence on Hand ») : toute projection serait inventée. Ce que nous pouvons défendre, c'est la cohérence du modèle avec le produit, pas un montant.
+
+> **« Pourquoi pas de la publicité ? »**
+> Deux raisons : la confidentialité est un principe du produit (contact révélé seulement après accord, observatoire anonyme), et une audience de développeurs juniors africains est une cible sensible à ne pas monétiser par la pub sans réflexion plus poussée que le temps du concours ne permettait.
+
+---
+
+## 11. Ce que nous n'avons pas fait, et pourquoi
 
 L'honnêteté sur les limites vaut mieux qu'une promesse non tenue.
 
@@ -271,7 +298,7 @@ L'honnêteté sur les limites vaut mieux qu'une promesse non tenue.
 
 ---
 
-## 11. Répartition pour l'oral
+## 12. Répartition pour l'oral
 
 | Partie | Qui | Durée visée |
 |---|---|---|
@@ -279,6 +306,7 @@ L'honnêteté sur les limites vaut mieux qu'une promesse non tenue.
 | Démonstration du parcours (8 étapes) | Emmanuel | 4 min |
 | Dev Match et son explication | Omar | 2 min |
 | Ce qui nous distingue : cercle, observatoire, validations, anglais | Omar | 2 min |
+| Modèle économique | Omar | 1 min |
 | Architecture, base de données, sécurité | Achraf | 2 min |
 | Conformité (licences, IA, données personnelles) | Achraf | 1 min |
 
