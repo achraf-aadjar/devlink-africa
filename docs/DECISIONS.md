@@ -487,3 +487,16 @@ Repris avec nos propres codes, pas une copie : un voile sombre uniforme (`bg-ink
 **Côté serveur.** Le frontend envoie `Accept-Language`. Django traduit ses propres messages (`LocaleMiddleware`) ; les messages propres à DevLink sont traduits au même endroit (`core/i18n.py`), avec le même garde-fou : un test parcourt le code (module `ast`) et échoue si un message d'erreur levé n'a pas de traduction. Pas de fichiers gettext compilés : il aurait fallu installer les outils GNU gettext dans l'image Docker pour une soixantaine de phrases. Les fonctions d'IA rédigent dans la langue de l'interface.
 
 **Ce qui reste en français.** Le contenu saisi par les utilisateurs (bios, descriptions de projets), qu'on ne traduit pas à leur place, et la page interne du design system.
+
+---
+
+## 2026-10-13 — Les preuves de compétence, jusqu'ici invisibles
+
+**Constat.** `SkillProof` (titre, lien, description) existait en base depuis DL-31, avec une API complète (`POST`/`GET`/`DELETE /me/skills/{id}/proofs/`) — mais **aucun écran ne l'utilisait**. Le profil public n'affichait qu'un chiffre (« 2 ✓ », via `proofs_count`), jamais ce qui le justifie, et rien côté interface ne permettait d'en ajouter une : la donnée la plus crédibilisante du produit (la preuve de ce qu'on sait faire) était entièrement hors de portée d'un vrai utilisateur. Les profils de démo avaient des preuves (créées par `seed_demo` directement en base), ce qui masquait le trou.
+
+**Décision.** Complété des deux côtés plutôt que de n'afficher que la lecture :
+1. `UserSkillSerializer` porte désormais un champ `proofs` (liste complète), en plus de `proofs_count` qui reste pour l'affichage compact (`SkillBadge`). `_detail_payload`, qui recopiait ce même contenu à la main dans `skills/views.py`, est devenu inutile et supprimé.
+2. `ProofManager` (`features/skills/components/`) : sur la page « Mes compétences », chaque compétence « Sait faire » propose d'ajouter une preuve (type, titre, lien facultatif, description facultative) et de retirer les siennes. Repliée par défaut si la compétence a déjà des preuves ; sans aucune, le bouton ouvre directement le formulaire (pas de section vide avec un deuxième bouton au même intitulé — piège repéré en écrivant le test, corrigé avant de le relâcher).
+3. Le profil public affiche maintenant le titre et le lien de chaque preuve sous la compétence, pas seulement leur nombre.
+
+**Performance.** `proofs_prefetch()` (même forme que `endorsements_prefetch()` déjà en place) précharge les preuves de toutes les compétences en une requête, pour le profil public comme pour « Mes compétences ». Le test de non-régression N+1 du profil public est passé de 4 à 5 requêtes constantes (une preuve en plus à précharger), toujours indépendant du nombre de compétences — vérifié jusqu'à 15.

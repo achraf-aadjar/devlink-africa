@@ -151,4 +151,27 @@ describe('profil public', () => {
     await screen.findByRole('heading', { level: 1 })
     expect(screen.queryByRole('region', { name: 'Validé par ses pairs' })).not.toBeInTheDocument()
   })
+
+  it('montre le titre et le lien de chaque preuve, pas seulement leur nombre', async () => {
+    const withProof = structuredClone(PROFILE)
+    withProof.skills.offered[0] = {
+      ...withProof.skills.offered[0],
+      proofs: [
+        {
+          id: 7,
+          kind: 'GITHUB_REPO',
+          title: 'API de collecte',
+          url: 'https://example.org/depot',
+          description: 'Auteur principal.',
+          created_at: '2026-10-09T10:00:00Z',
+        },
+      ],
+    } as (typeof withProof.skills.offered)[number]
+    renderProfile(withProof)
+
+    await screen.findByRole('heading', { name: 'Kofi Mensah' })
+    const link = screen.getByRole('link', { name: 'API de collecte' })
+    expect(link).toHaveAttribute('href', 'https://example.org/depot')
+    expect(screen.getByText('Auteur principal.')).toBeInTheDocument()
+  })
 })

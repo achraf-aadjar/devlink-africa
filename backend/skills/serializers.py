@@ -56,11 +56,12 @@ class UserSkillSerializer(serializers.ModelSerializer):
 
     skill = SkillSerializer(read_only=True)
     proofs_count = serializers.SerializerMethodField()
+    proofs = SkillProofSerializer(many=True, read_only=True)
     endorsements = SkillEndorsementSerializer(many=True, read_only=True)
 
     class Meta:
         model = UserSkill
-        fields = ("id", "skill", "kind", "level", "proofs_count", "endorsements")
+        fields = ("id", "skill", "kind", "level", "proofs_count", "proofs", "endorsements")
 
     def get_proofs_count(self, user_skill: UserSkill) -> int:
         # Annoté par le sélecteur quand la liste est chargée en lot.

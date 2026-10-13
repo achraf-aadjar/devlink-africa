@@ -9,6 +9,7 @@ import type { SkillKind, SkillLevel, UserSkill } from '../../../lib/types'
 import { useQuery } from '../../../lib/useQuery'
 import SkillExtractor from '../../ai/components/SkillExtractor'
 import { addSkill, getMySkills, listCatalog, removeSkill, updateSkillLevel } from '../api/skills'
+import ProofManager from '../components/ProofManager'
 
 const LEVEL_OPTIONS = Object.entries(LEVEL_LABELS).map(([value, label]) => ({ value, label }))
 
@@ -108,6 +109,7 @@ export default function SkillsPage() {
           onAdd={handleAdd}
           onRemove={handleRemove}
           onLevel={handleLevel}
+          onReload={mine.reload}
         />
         <SkillColumn
           title={t('Je veux apprendre')}
@@ -143,6 +145,7 @@ interface ColumnProps {
   onAdd: (kind: SkillKind, skillId: number, level: SkillLevel) => void
   onRemove: (entry: UserSkill) => void
   onLevel?: (entry: UserSkill, level: SkillLevel) => void
+  onReload?: () => void
 }
 
 function SkillColumn({
@@ -155,6 +158,7 @@ function SkillColumn({
   onAdd,
   onRemove,
   onLevel,
+  onReload,
 }: ColumnProps) {
   const { t } = useI18n()
   const [skillId, setSkillId] = useState('')
@@ -182,35 +186,38 @@ function SkillColumn({
       ) : (
         <ul className="flex flex-col gap-2">
           {entries.map((entry) => (
-            <li key={entry.id} className="flex flex-wrap items-center gap-2">
-              <SkillBadge
-                name={entry.skill.name}
-                kind={entry.kind}
-                level={kind === 'OFFERED' ? entry.level : undefined}
-                proofsCount={entry.proofs_count}
-                endorsements={entry.endorsements?.length ?? 0}
-              />
-              {kind === 'OFFERED' && onLevel && (
-                <select
-                  aria-label={t('Niveau pour {skill}', { skill: entry.skill.name })}
-                  value={entry.level}
-                  onChange={(event) => onLevel(entry, event.target.value as SkillLevel)}
-                  className="rounded border border-ink-300 bg-ink-100 px-2 py-1 text-xs text-ink-700"
+            <li key={entry.id} className="flex flex-col gap-1.5">
+              <div className="flex flex-wrap items-center gap-2">
+                <SkillBadge
+                  name={entry.skill.name}
+                  kind={entry.kind}
+                  level={kind === 'OFFERED' ? entry.level : undefined}
+                  proofsCount={entry.proofs_count}
+                  endorsements={entry.endorsements?.length ?? 0}
+                />
+                {kind === 'OFFERED' && onLevel && (
+                  <select
+                    aria-label={t('Niveau pour {skill}', { skill: entry.skill.name })}
+                    value={entry.level}
+                    onChange={(event) => onLevel(entry, event.target.value as SkillLevel)}
+                    className="rounded border border-ink-300 bg-ink-100 px-2 py-1 text-xs text-ink-700"
+                  >
+                    {levelOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                )}
+                <button
+                  type="button"
+                  onClick={() => onRemove(entry)}
+                  className="ml-auto rounded px-2 py-1 text-xs font-medium text-ink-600 hover:bg-ink-200 hover:text-red-400"
                 >
-                  {levelOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              )}
-              <button
-                type="button"
-                onClick={() => onRemove(entry)}
-                className="ml-auto rounded px-2 py-1 text-xs font-medium text-ink-600 hover:bg-ink-200 hover:text-red-400"
-              >
-                {t('Retirer')}
-              </button>
+                  {t('Retirer')}
+                </button>
+              </div>
+              {kind === 'OFFERED' && onReload && <ProofManager entry={entry} onChange={onReload} />}
             </li>
           ))}
         </ul>
