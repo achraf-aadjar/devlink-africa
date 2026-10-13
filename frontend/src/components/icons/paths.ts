@@ -78,6 +78,12 @@ export const PATHS = {
   edit: 'M16.5 4.5 19.5 7.5 9 18H6v-3zM14 7l3 3',
   external:
     'M14 4.5h5.5V10M19 5 12 12M17 14v4.5a1 1 0 0 1-1 1H5.5a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1H10',
+
+  // --- Thème ---------------------------------------------------------------
+  // Soleil : un disque et huit rayons courts, à distance égale du bord.
+  sun: 'M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7M12 3.5v2M12 18.5v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3.5 12h2M18.5 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4',
+  // Lune : un croissant, un disque dont un second vient mordre le bord.
+  moon: 'M19.5 13.3A7.5 7.5 0 1 1 10.7 4.5a6 6 0 0 0 8.8 8.8z',
 } as const
 
 export type IconName = keyof typeof PATHS
