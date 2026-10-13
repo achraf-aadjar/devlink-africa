@@ -39,7 +39,7 @@ def test_catalog_is_public_and_paginated():
 
     assert response.status_code == 200
     body = response.json()
-    assert body["count"] == 14
+    assert body["count"] == 43
     assert {"id", "name", "category"} <= set(body["results"][0])
 
 
@@ -47,7 +47,17 @@ def test_catalog_can_be_filtered_by_category():
     response = APIClient().get(CATALOG, {"category": "DEVOPS"})
 
     names = {item["name"] for item in response.json()["results"]}
-    assert names == {"Docker", "Kubernetes", "CI/CD", "Linux"}
+    assert names == {
+        "Docker",
+        "Kubernetes",
+        "CI/CD",
+        "Linux",
+        "AWS",
+        "Git",
+        "GitHub Actions",
+        "Nginx",
+        "Terraform",
+    }
 
 
 def test_catalog_can_be_searched_by_name():
