@@ -13,3 +13,8 @@ if os.environ.get("DB_ENGINE") != "postgresql":
     os.environ["DATABASE_PATH"] = ":memory:"
 
 from .settings import *  # noqa: E402,F401,F403
+
+# La CompressedManifestStaticFilesStorage de production exige un manifeste
+# généré par `collectstatic`, absent en test : sans ça, toute page qui pose un
+# tag `{% static %}` (l'admin Django, par exemple) échoue au rendu.
+STORAGES["staticfiles"]["BACKEND"] = "django.contrib.staticfiles.storage.StaticFilesStorage"  # noqa: F405
