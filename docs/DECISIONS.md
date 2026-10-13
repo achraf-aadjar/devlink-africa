@@ -487,3 +487,11 @@ Repris avec nos propres codes, pas une copie : un voile sombre uniforme (`bg-ink
 **Côté serveur.** Le frontend envoie `Accept-Language`. Django traduit ses propres messages (`LocaleMiddleware`) ; les messages propres à DevLink sont traduits au même endroit (`core/i18n.py`), avec le même garde-fou : un test parcourt le code (module `ast`) et échoue si un message d'erreur levé n'a pas de traduction. Pas de fichiers gettext compilés : il aurait fallu installer les outils GNU gettext dans l'image Docker pour une soixantaine de phrases. Les fonctions d'IA rédigent dans la langue de l'interface.
 
 **Ce qui reste en français.** Le contenu saisi par les utilisateurs (bios, descriptions de projets), qu'on ne traduit pas à leur place, et la page interne du design system.
+
+---
+
+## 2026-10-12 — Simplifie l'ajout d'une compétence
+
+**Problème.** Achraf, en capture d'écran : « la façon de ce que l'utilisateur écrit ses compétences c'est pas clair, il va pas savoir, faut simplifier ». La compétence à ajouter, le niveau et le bouton « Ajouter » étaient trois blocs empilés sur toute la largeur de la carte — trois réglages d'apparence indépendante, alors que c'est une seule action en deux étapes.
+
+**Décision.** Les trois tiennent maintenant sur une seule rangée (`flex`, empilée seulement sur mobile). Le sélecteur de niveau n'apparaît qu'une fois une compétence choisie : poser les deux choix d'un coup, avant même de savoir laquelle ajouter, forçait deux décisions simultanées pour une seule action.
