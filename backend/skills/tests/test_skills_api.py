@@ -404,3 +404,24 @@ def test_the_public_profile_shows_the_number_of_proofs():
     body = client_for(viewer).get(f"/api/v1/users/{owner.pk}/").json()
 
     assert body["skills"]["offered"][0]["proofs_count"] == 1
+
+
+def test_the_public_profile_shows_the_proofs_themselves():
+    owner = make_user("kofi@example.org")
+    entry = UserSkill.objects.create(user=owner, skill=Skill.objects.get(name="Python"), kind="OFFERED")
+    SkillProof.objects.create(
+        user_skill=entry,
+        kind="GITHUB_REPO",
+        title="API de collecte",
+        url="https://example.org/depot",
+        description="Auteur principal.",
+    )
+    viewer = make_user("ada@example.org")
+
+    body = client_for(viewer).get(f"/api/v1/users/{owner.pk}/").json()
+
+    proofs = body["skills"]["offered"][0]["proofs"]
+    assert len(proofs) == 1
+    assert proofs[0]["title"] == "API de collecte"
+    assert proofs[0]["url"] == "https://example.org/depot"
+    assert proofs[0]["kind"] == "GITHUB_REPO"

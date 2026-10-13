@@ -5,6 +5,8 @@ import type {
   Skill,
   SkillKind,
   SkillLevel,
+  SkillProof,
+  SkillProofKind,
   UserSkill,
 } from '../../../lib/types'
 
@@ -27,3 +29,11 @@ export const updateSkillLevel = (id: number, level: SkillLevel) =>
   api.patch<UserSkill>(`/me/skills/${id}/`, { level })
 
 export const removeSkill = (id: number) => api.delete<void>(`/me/skills/${id}/`)
+
+export const addProof = (
+  userSkillId: number,
+  input: { kind: SkillProofKind; title: string; url?: string; description?: string },
+) => api.post<SkillProof>(`/me/skills/${userSkillId}/proofs/`, input)
+
+export const removeProof = (userSkillId: number, proofId: number) =>
+  api.delete<void>(`/me/skills/${userSkillId}/proofs/${proofId}/`)

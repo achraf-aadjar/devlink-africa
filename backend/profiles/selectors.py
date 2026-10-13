@@ -7,7 +7,7 @@ from django.db.models import Count, Prefetch
 from django.shortcuts import get_object_or_404
 
 from skills.models import UserSkill
-from skills.selectors import endorsements_prefetch
+from skills.selectors import endorsements_prefetch, proofs_prefetch
 
 User = get_user_model()
 
@@ -23,7 +23,7 @@ def get_public_profile(user_id: int):
         # proofs_total évite une requête par compétence pour compter les preuves.
         queryset=UserSkill.objects.select_related("skill")
         .annotate(proofs_total=Count("proofs", distinct=True))
-        .prefetch_related(endorsements_prefetch())
+        .prefetch_related(endorsements_prefetch(), proofs_prefetch())
         .order_by("skill__name"),
     )
     return get_object_or_404(

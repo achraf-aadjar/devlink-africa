@@ -323,10 +323,10 @@ def test_public_profile_avoids_n_plus_one_queries(django_assert_num_queries):
     viewer = make_user("ada@example.org")
     client = client_for(viewer)
 
-    # 4 requêtes constantes : l'utilisateur avec son profil, les compétences
-    # (avec le compte de preuves annoté), leurs validations par les pairs, les
-    # projets. Aucune par compétence.
-    with django_assert_num_queries(4):
+    # 5 requêtes constantes : l'utilisateur avec son profil, les compétences
+    # (avec le compte de preuves annoté), leurs validations par les pairs, leurs
+    # preuves elles-mêmes, les projets. Aucune par compétence.
+    with django_assert_num_queries(5):
         client.get(f"/api/v1/users/{owner.pk}/")
 
     # Deux fois plus de compétences : le nombre de requêtes ne change pas.
@@ -334,7 +334,7 @@ def test_public_profile_avoids_n_plus_one_queries(django_assert_num_queries):
         extra = Skill.objects.create(name=f"Techno {index}")
         UserSkill.objects.create(user=owner, skill=extra, kind=UserSkill.Kind.OFFERED)
 
-    with django_assert_num_queries(4):
+    with django_assert_num_queries(5):
         client.get(f"/api/v1/users/{owner.pk}/")
 
 
