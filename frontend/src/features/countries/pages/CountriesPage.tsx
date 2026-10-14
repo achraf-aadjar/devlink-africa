@@ -40,39 +40,41 @@ export default function CountriesPage() {
         />
       )}
 
-      {data && <AfricaTileMap countries={data.results} />}
+      <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,36rem)_minmax(0,1fr)]">
+        {data && <AfricaTileMap countries={data.results} />}
 
-      {data && data.results.length > 0 && (
-        <ul className="flex flex-wrap gap-3">
-          {data.results.map((country) => (
-            <li key={country.code}>
-              <Link
-                to={`/pays/${country.code}`}
-                className="group flex items-center gap-3 rounded-full bg-veil/[0.04] py-2 pl-2 pr-5 ring-1 ring-inset ring-veil/[0.07] transition hover:-translate-y-0.5 hover:bg-veil/[0.07] hover:ring-accent-400/40"
-              >
-                <span
-                  aria-hidden="true"
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-veil/[0.06] text-2xl"
+        {data && data.results.length > 0 && (
+          <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:self-end">
+            {data.results.map((country) => (
+              <li key={country.code}>
+                <Link
+                  to={`/pays/${country.code}`}
+                  className="group flex h-full items-center gap-3 rounded-full bg-veil/[0.04] py-2 pl-2 pr-5 ring-1 ring-inset ring-veil/[0.07] transition hover:-translate-y-0.5 hover:bg-veil/[0.07] hover:ring-accent-400/40"
                 >
-                  {country.flag}
-                </span>
-                <span className="flex flex-col leading-tight">
-                  <span className="font-semibold text-ink-900 group-hover:text-accent-800">
-                    {localCountryName(country.code, country.name, lang)}
+                  <span
+                    aria-hidden="true"
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-veil/[0.06] text-2xl"
+                  >
+                    {country.flag}
                   </span>
-                  <span className="text-xs text-ink-600">
-                    <span>
-                      {tn(country.developers_count, '{n} développeur', '{n} développeurs')}
+                  <span className="flex flex-col leading-tight">
+                    <span className="font-semibold text-ink-900 group-hover:text-accent-800">
+                      {localCountryName(country.code, country.name, lang)}
                     </span>
-                    {' · '}
-                    <span>{tn(country.projects_count, '{n} projet', '{n} projets')}</span>
+                    <span className="text-xs text-ink-600">
+                      <span>
+                        {tn(country.developers_count, '{n} développeur', '{n} développeurs')}
+                      </span>
+                      {' · '}
+                      <span>{tn(country.projects_count, '{n} projet', '{n} projets')}</span>
+                    </span>
                   </span>
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </section>
   )
 }
