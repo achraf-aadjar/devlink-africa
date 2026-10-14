@@ -338,6 +338,29 @@ def test_countries_without_a_profile_country_are_ignored():
     assert APIClient().get(COUNTRIES).json()["results"] == []
 
 
+def test_a_user_without_any_profile_does_not_break_the_country_list():
+    # Un superutilisateur créé par `createsuperuser` (voir deploy/README.md)
+    # n'a pas de Profile : la relation inverse renvoie None, pas "".
+    User.objects.create_superuser("admin@example.org", "mot-de-passe-solide-2026")
+    make_user("ada@example.org", country="SN")
+
+    response = APIClient().get(COUNTRIES)
+
+    assert response.status_code == 200
+    codes = {item["code"] for item in response.json()["results"]}
+    assert codes == {"SN"}
+
+
+def test_a_project_whose_owner_has_no_profile_does_not_break_the_country_list():
+    owner = User.objects.create_superuser("admin@example.org", "mot-de-passe-solide-2026")
+    Project.objects.create(owner=owner, title="Sans profil")
+
+    response = APIClient().get(COUNTRIES)
+
+    assert response.status_code == 200
+    assert response.json()["results"] == []
+
+
 def test_the_country_detail_lists_developers_projects_and_top_skills():
     ada = make_user("ada@example.org", country="SN", offered=["Python"])
     make_user("fatou@example.org", country="SN", offered=["Python", "Docker"])

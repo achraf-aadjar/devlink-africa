@@ -178,17 +178,23 @@ def country_flag(code: str) -> str:
 
 
 def list_countries() -> list[dict]:
-    """Pays qui comptent au moins un développeur ou un projet (DL-38)."""
+    """Pays qui comptent au moins un développeur ou un projet (DL-38).
+
+    Un compte sans profil (un superutilisateur créé par `createsuperuser`,
+    voir `deploy/README.md`) donne `None` sur la relation inverse, pas une
+    chaîne vide : il faut l'exclure explicitement, `exclude(..._country="")`
+    seul ne suffit pas.
+    """
     developers = {
         row["profile__country"]: row["total"]
         for row in User.objects.filter(is_active=True)
-        .exclude(profile__country="")
+        .exclude(Q(profile__isnull=True) | Q(profile__country=""))
         .values("profile__country")
         .annotate(total=Count("id"))
     }
     projects = {
         row["owner__profile__country"]: row["total"]
-        for row in Project.objects.exclude(owner__profile__country="")
+        for row in Project.objects.exclude(Q(owner__profile__isnull=True) | Q(owner__profile__country=""))
         .values("owner__profile__country")
         .annotate(total=Count("id"))
     }
