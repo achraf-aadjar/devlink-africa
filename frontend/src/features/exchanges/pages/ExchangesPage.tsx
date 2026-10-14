@@ -86,7 +86,7 @@ export default function ExchangesPage() {
       </div>
 
       {actionError && (
-        <p role="alert" className="rounded-2xl bg-red-950/50 px-5 py-3 text-sm text-red-300">
+        <p role="alert" className="rounded-2xl bg-danger/10 px-5 py-3 text-sm text-danger">
           {actionError}
         </p>
       )}

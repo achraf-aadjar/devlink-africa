@@ -82,15 +82,12 @@ export default function SkillsPage() {
       </header>
 
       {notice && (
-        <p
-          role="status"
-          className="rounded-lg bg-emerald-950/50 px-4 py-3 text-sm text-emerald-300"
-        >
+        <p role="status" className="rounded-lg bg-success/10 px-4 py-3 text-sm text-success">
           {notice}
         </p>
       )}
       {formError && (
-        <p role="alert" className="rounded-lg bg-red-950/50 px-4 py-3 text-sm text-red-300">
+        <p role="alert" className="rounded-lg bg-danger/10 px-4 py-3 text-sm text-danger">
           {formError}
         </p>
       )}
@@ -207,7 +204,7 @@ function SkillColumn({
               <button
                 type="button"
                 onClick={() => onRemove(entry)}
-                className="ml-auto rounded px-2 py-1 text-xs font-medium text-ink-600 hover:bg-ink-200 hover:text-red-400"
+                className="shrink-0 rounded-full px-3 py-1 text-xs font-medium text-ink-600 transition hover:bg-danger/10 hover:text-danger [@media(pointer:coarse)]:min-h-11"
               >
                 {t('Retirer')}
               </button>

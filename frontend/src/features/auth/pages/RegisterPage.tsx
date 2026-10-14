@@ -163,14 +163,14 @@ export default function RegisterPage() {
               </span>
             </label>
             {errors.consent && (
-              <p id="consent-error" className="text-sm text-red-400">
+              <p id="consent-error" className="text-sm text-danger">
                 {errors.consent}
               </p>
             )}
           </div>
 
           {errors.form && (
-            <p role="alert" className="text-sm text-red-400">
+            <p role="alert" className="text-sm text-danger">
               {errors.form}
             </p>
           )}

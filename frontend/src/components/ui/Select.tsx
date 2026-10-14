@@ -35,7 +35,7 @@ export default function Select({
         aria-describedby={error ? errorId : undefined}
         className={cn(
           'field text-ink-900',
-          error ? 'border-red-500/70' : 'border-veil/10',
+          error ? 'border-danger/70' : 'border-veil/10',
           className,
         )}
       >
@@ -47,7 +47,7 @@ export default function Select({
         ))}
       </select>
       {error && (
-        <p id={errorId} className="text-sm text-red-400">
+        <p id={errorId} className="text-sm text-danger">
           {error}
         </p>
       )}

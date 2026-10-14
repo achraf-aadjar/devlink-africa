@@ -149,7 +149,7 @@ export default function Combobox({
           onKeyDown={onKeyDown}
           className={cn(
             'field w-full pr-10 text-ink-900 placeholder:text-ink-500',
-            error ? 'border-red-500/70' : 'border-veil/10',
+            error ? 'border-danger/70' : 'border-veil/10',
           )}
         />
         <Icon
@@ -192,7 +192,7 @@ export default function Combobox({
         )}
       </div>
       {error && (
-        <p role="alert" className="text-sm text-red-400">
+        <p role="alert" className="text-sm text-danger">
           {error}
         </p>
       )}

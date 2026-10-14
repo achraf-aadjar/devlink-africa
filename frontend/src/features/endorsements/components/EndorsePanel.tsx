@@ -72,7 +72,7 @@ export default function EndorsePanel({
               </span>
               {skill.endorsement !== null ? (
                 <span className="flex items-center gap-3">
-                  <span className="flex items-center gap-1 text-sm text-emerald-300">
+                  <span className="flex items-center gap-1 text-sm text-success">
                     <Icon name="check" size={14} />
                     {t('Validée')}
                   </span>
@@ -141,7 +141,7 @@ export default function EndorsePanel({
       </ul>
 
       {error && (
-        <p role="alert" className="text-sm text-red-300">
+        <p role="alert" className="text-sm text-danger">
           {error}
         </p>
       )}

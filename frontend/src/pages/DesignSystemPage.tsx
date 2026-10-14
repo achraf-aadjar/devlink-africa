@@ -69,10 +69,10 @@ export default function DesignSystemPage() {
           <span className="flex items-center gap-2 text-sm text-accent-700">
             <Icon name="match" size={18} /> héritent de la couleur
           </span>
-          <span className="flex items-center gap-2 text-sm text-red-400">
+          <span className="flex items-center gap-2 text-sm text-danger">
             <Icon name="warning" size={18} /> sans réglage
           </span>
-          <span className="flex items-center gap-2 text-sm text-emerald-400">
+          <span className="flex items-center gap-2 text-sm text-success">
             <Icon name="check" size={18} /> ni duplication
           </span>
         </div>
