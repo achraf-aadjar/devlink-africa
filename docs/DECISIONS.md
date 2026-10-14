@@ -540,3 +540,13 @@ Repris avec nos propres codes, pas une copie : un voile sombre uniforme (`bg-ink
 **Décision.** `backend/reports/admin.py` : premier (et seul) enregistrement admin du projet. Liste filtrable par statut/motif/cible, `status` modifiable directement depuis la liste (`list_editable`), le reste en lecture seule (on ne corrige pas le contenu d'un signalement). Délibérément l'admin Django plutôt qu'un nouvel écran React : c'est un outil interne pour l'équipe, pas une fonctionnalité produit, et ça évite d'inventer un rôle « modérateur » et des permissions dédiées pour un besoin qui se résume à « voir la liste et changer un statut ».
 
 **Effet de bord découvert en testant.** La première requête vers une page admin plantait en test : `STORAGES["staticfiles"]` utilise `CompressedManifestStaticFilesStorage` (whitenoise) en production, qui exige un manifeste généré par `collectstatic` — absent en test, où rien n'avait jamais posé de tag `{% static %}` jusqu'ici puisqu'aucune page serveur n'existait. `config/settings_test.py` repasse sur un stockage simple pour les tests ; la configuration de production n'est pas touchée.
+
+---
+
+## 2026-10-14 — Clair/sombre et langue accessibles depuis les écrans d'authentification
+
+**Constat.** `ThemeSwitch` et `LanguageSwitch` ne vivaient que dans `Layout.tsx` (la navbar principale). Mais `/connexion` et `/inscription` passent par `AuthLayout`, pas par `Layout` — un visiteur qui arrive directement sur ces pages (lien partagé, retour arrière, favori) n'avait aucun moyen de changer de thème ou de langue avant de se connecter.
+
+**Décision.** Les deux bascules sont extraites dans `components/ThemeSwitch.tsx` et `components/LanguageSwitch.tsx`, avec un `tone` (`paper` pour la pastille claire flottante de la navbar, `ink` pour un fond de page ordinaire qui suit le thème). `AuthLayout` les pose en haut à droite, visibles à toutes les tailles d'écran. `Layout.tsx` n'a pas changé de comportement, seulement de lieu de définition.
+
+**Piège en écrivant le test.** Le premier essai dépendait de `navigator.language` (non maîtrisé en environnement de test, résultat différent d'une exécution à l'autre) : `I18nProvider` prend maintenant `initial="fr"` explicitement dans ce test, comme le fait déjà le reste de la suite.

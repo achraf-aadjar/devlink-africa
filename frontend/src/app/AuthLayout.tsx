@@ -1,6 +1,8 @@
 import { Suspense } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import Logo from '../components/icons/Logo'
+import LanguageSwitch from '../components/LanguageSwitch'
+import ThemeSwitch from '../components/ThemeSwitch'
 import Spinner from '../components/ui/Spinner'
 import { msg } from '../i18n/translate'
 import { useI18n } from '../i18n/useI18n'
@@ -101,6 +103,15 @@ export default function AuthLayout() {
           className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-80 lg:hidden"
         >
           <div className="bg-aurora absolute inset-0" />
+        </div>
+
+        {/* Un visiteur peut arriver directement sur /connexion ou /inscription
+            (lien partagé, retour arrière) sans jamais passer par la navbar
+            principale : la bascule clair/sombre et la langue doivent donc
+            exister ici aussi, pas seulement dans Layout.tsx. */}
+        <div className="absolute right-3 top-3 z-10 flex items-center gap-1 sm:right-6 sm:top-6">
+          <ThemeSwitch tone="ink" />
+          <LanguageSwitch tone="ink" />
         </div>
 
         <header className="flex justify-center px-4 pt-8 lg:hidden">
