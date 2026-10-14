@@ -179,28 +179,30 @@ function SkillColumn({
       ) : (
         <ul className="flex flex-col gap-2">
           {entries.map((entry) => (
-            <li key={entry.id} className="flex flex-wrap items-center gap-2">
-              <SkillBadge
-                name={entry.skill.name}
-                kind={entry.kind}
-                level={kind === 'OFFERED' ? entry.level : undefined}
-                proofsCount={entry.proofs_count}
-                endorsements={entry.endorsements?.length ?? 0}
-              />
-              {kind === 'OFFERED' && onLevel && (
-                <select
-                  aria-label={t('Niveau pour {skill}', { skill: entry.skill.name })}
-                  value={entry.level}
-                  onChange={(event) => onLevel(entry, event.target.value as SkillLevel)}
-                  className="rounded border border-ink-300 bg-ink-100 px-2 py-1 text-xs text-ink-700"
-                >
-                  {levelOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              )}
+            <li key={entry.id} className="flex items-center justify-between gap-3">
+              <div className="flex min-w-0 flex-wrap items-center gap-2">
+                <SkillBadge
+                  name={entry.skill.name}
+                  kind={entry.kind}
+                  level={kind === 'OFFERED' ? entry.level : undefined}
+                  proofsCount={entry.proofs_count}
+                  endorsements={entry.endorsements?.length ?? 0}
+                />
+                {kind === 'OFFERED' && onLevel && (
+                  <select
+                    aria-label={t('Niveau pour {skill}', { skill: entry.skill.name })}
+                    value={entry.level}
+                    onChange={(event) => onLevel(entry, event.target.value as SkillLevel)}
+                    className="field border-veil/10 py-1 pl-3 text-xs text-ink-700 [@media(pointer:coarse)]:min-h-11"
+                  >
+                    {levelOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                )}
+              </div>
               <button
                 type="button"
                 onClick={() => onRemove(entry)}

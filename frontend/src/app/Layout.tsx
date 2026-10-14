@@ -292,7 +292,10 @@ export default function Layout() {
       </main>
 
       <footer className="border-t border-ink-200 bg-ink-100">
-        <PageContainer className="flex flex-col items-center gap-2 py-6 text-sm text-ink-600 sm:flex-row sm:justify-between">
+        <PageContainer
+          size="wide"
+          className="flex flex-col items-center gap-2 py-6 text-sm text-ink-600 sm:flex-row sm:justify-between"
+        >
           <p>{t('DevLink Africa — échange de compétences entre développeurs africains.')}</p>
           <nav aria-label={t('Liens secondaires')} className="flex gap-4">
             <Link to="/observatoire" className="underline hover:text-accent-700">
