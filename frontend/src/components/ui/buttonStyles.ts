@@ -4,14 +4,14 @@ export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger'
 export type ButtonSize = 'sm' | 'md' | 'lg'
 
 const VARIANTS: Record<ButtonVariant, string> = {
-  // Même bleu que la navbar et l'accueil. #1f6feb porte du blanc à 4,6:1 ;
-  // au survol on fonce (et on allume le halo) plutôt que d'éclaircir, pour
-  // garder le contraste.
-  primary:
-    'bg-brand text-white shadow-glow hover:bg-brand-hover disabled:bg-ink-200 disabled:text-ink-600 disabled:shadow-none',
-  secondary: 'bg-veil/[0.06] text-ink-900 ring-1 ring-inset ring-veil/10 hover:bg-veil/10',
+  // Bleu d'action : blanc dessus à 7,2:1 (5,5:1 en sombre). Au survol on
+  // fonce plutôt que d'éclaircir, pour garder le contraste.
+  primary: 'bg-brand text-white hover:bg-brand-hover disabled:bg-ink-200 disabled:text-ink-600',
+  // Feuille blanche cernée d'encre : l'action secondaire reste visible au soleil.
+  secondary:
+    'bg-ink-100 text-ink-900 ring-1 ring-inset ring-veil/25 hover:bg-ink-200 hover:ring-veil/40',
   ghost: 'text-ink-700 hover:bg-veil/[0.06] hover:text-ink-900',
-  danger: 'bg-red-600 text-white hover:bg-red-700',
+  danger: 'bg-danger-solid text-white hover:bg-danger-solid/90',
 }
 
 const SIZES: Record<ButtonSize, string> = {
@@ -27,7 +27,7 @@ export function buttonClasses(
   className?: string,
 ) {
   return cn(
-    'inline-flex items-center justify-center gap-2 rounded-full font-medium transition',
+    'inline-flex items-center justify-center gap-2 rounded-md font-semibold transition-colors',
     'disabled:cursor-not-allowed disabled:opacity-70',
     VARIANTS[variant],
     SIZES[size],

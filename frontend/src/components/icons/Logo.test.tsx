@@ -13,7 +13,7 @@ describe('marque', () => {
     const { container } = render(<LogoMark />)
 
     const circles = container.querySelectorAll('circle')
-    expect(circles[0]).toHaveAttribute('stroke', '#4493f8')
+    expect(circles[0]).toHaveAttribute('stroke', 'rgb(var(--accent-600))')
     expect(circles[1]).toHaveAttribute('stroke', 'rgb(var(--ink-900))')
   })
 

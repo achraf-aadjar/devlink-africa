@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import DemoBadge from '../../../components/DemoBadge'
 import Icon from '../../../components/icons/Icon'
-import ScoreRing from '../../../components/ScoreRing'
+import ScorePlate from '../../../components/ScorePlate'
 import { Badge, Button, Card } from '../../../components/ui'
 import { msg } from '../../../i18n/translate'
 import { useI18n } from '../../../i18n/useI18n'
@@ -87,25 +87,33 @@ export default function CircleCard({
     <Card as="li" className="flex flex-col gap-5">
       <div className="flex items-start justify-between gap-3">
         <div className="flex flex-col gap-2">
-          <Badge tone={status.tone}>{t(status.label)}</Badge>
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge tone={status.tone}>{t(status.label)}</Badge>
+            {hasDemo && <DemoBadge isDemo compact />}
+          </div>
           <p className="text-sm text-ink-600">
             {tn(circle.members.length, '{n} membre', '{n} membres')}
             {circle.status === 'PROPOSED' && ` · ${acceptedCount}`}
           </p>
-          {hasDemo && <DemoBadge isDemo />}
         </div>
-        <ScoreRing score={circle.score} size={52} stroke={5} />
+        <ScorePlate score={circle.score} size="md" />
       </div>
 
-      <CircleDiagram circle={circle} meId={meId} />
+      {/* Le tableau : le cercle posé sur le fond émaillé, comme au vestiaire. */}
+      <div className="-mx-5 border-y border-ink-200 bg-ink-50 px-3 py-5 sm:-mx-6">
+        <CircleDiagram circle={circle} meId={meId} />
+      </div>
 
       <div>
         <h3 className="mb-2 text-sm font-semibold text-ink-900">{t('Qui apprend quoi à qui')}</h3>
-        <ol className="flex flex-col gap-1.5 text-sm text-ink-700">
+        <ol className="flex flex-col divide-y divide-ink-200 text-sm text-ink-800">
           {circle.arrows.map((arrow, index) => (
-            <li key={`${arrow.teacher}-${arrow.learner}`} className="flex gap-2">
-              <span aria-hidden="true" className="text-accent-600">
-                →
+            <li key={`${arrow.teacher}-${arrow.learner}`} className="flex gap-3 py-1.5">
+              <span
+                aria-hidden="true"
+                className="w-4 shrink-0 font-display text-base font-bold leading-5 text-ink-500 tabular-nums"
+              >
+                {index + 1}
               </span>
               {arrowSentence(t, circle, index, meId)}
             </li>
@@ -140,7 +148,7 @@ export default function CircleCard({
       )}
 
       {circle.status === 'ACTIVE' && (
-        <div className="flex flex-col gap-2 rounded-2xl bg-success/10 px-5 py-4 ring-1 ring-inset ring-success/25">
+        <div className="flex flex-col gap-2 rounded-card bg-success/10 px-5 py-4 ring-1 ring-inset ring-success/25">
           <p className="flex items-center gap-2 text-sm font-medium text-success">
             <Icon name="check" size={16} />
             {t('Tout le monde a accepté : vous pouvez vous contacter.')}

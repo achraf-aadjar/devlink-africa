@@ -127,12 +127,12 @@ export default function AfricaTileMap({ countries }: { countries: Country[] }) {
               aria-label={label}
               style={{ gridColumn: column, gridRow: row }}
               className={cn(
-                'flex aspect-square items-center justify-center rounded-full text-[0.6rem] font-semibold transition duration-200 hover:scale-110 sm:text-xs',
+                'flex aspect-square items-center justify-center rounded-[3px] font-display text-[0.7rem] font-bold tracking-wide transition-colors duration-150 sm:text-sm',
                 populated
-                  ? 'bg-gradient-to-br from-brand to-violet text-white shadow-glow'
+                  ? 'bg-brand text-white hover:bg-brand-hover'
                   : // Les pays sans donnée restent gris mais cliquables, comme
                     // l'exige le ticket.
-                    'bg-veil/[0.05] text-ink-500 hover:bg-veil/10 hover:text-ink-800',
+                    'bg-ink-200 text-ink-600 hover:bg-ink-300 hover:text-ink-900',
               )}
             >
               {code}

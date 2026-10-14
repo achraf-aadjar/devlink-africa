@@ -9,12 +9,13 @@ import { getObservatory } from '../api/observatory'
 import SupplyDemandChart from '../components/SupplyDemandChart'
 import { offeredText, SERIES, wantedText } from '../series'
 
-function StatTile({ label, value }: { label: string; value: number }) {
+/** Un chiffre de la ligne de stats : la valeur en capitales condensées, le libellé dessous. */
+function Stat({ label, value }: { label: string; value: number }) {
   const { lang } = useI18n()
   return (
-    <div className="surface flex flex-col gap-1 p-5">
-      <dt className="text-sm text-ink-600">{label}</dt>
-      <dd className="text-3xl font-semibold text-ink-900">
+    <div className="flex flex-col gap-1 px-5 py-4">
+      <dt className="order-2 text-sm text-ink-600">{label}</dt>
+      <dd className="font-display text-[2.25rem] font-bold leading-none text-ink-900 tabular-nums">
         {value.toLocaleString(lang === 'en' ? 'en-GB' : 'fr-FR')}
       </dd>
     </div>
@@ -36,7 +37,7 @@ function Ranking({
   return (
     <section className="surface flex flex-col gap-4 p-6" aria-label={title}>
       <div>
-        <h2 className="flex items-center gap-2 text-lg font-semibold text-ink-900">
+        <h2 className="sheet-title flex items-center gap-2">
           <span
             aria-hidden="true"
             className="h-3 w-3 rounded-[3px]"
@@ -77,9 +78,7 @@ export default function ObservatoryPage() {
   return (
     <section className="flex flex-col gap-8">
       <header className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold tracking-tight text-ink-900">
-          {t('Observatoire des compétences')}
-        </h1>
+        <h1 className="page-title">{t('Observatoire des compétences')}</h1>
         <p className="max-w-3xl text-ink-600">
           {t(
             "Ce que les développeurs inscrits savent faire, et ce qu'ils veulent apprendre, pays par pays. Uniquement des chiffres : aucun nom n'apparaît ici.",
@@ -101,11 +100,11 @@ export default function ObservatoryPage() {
 
       {data && data.skills.length > 0 && (
         <>
-          <dl className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-            <StatTile label={t('Développeurs inscrits')} value={data.totals.developers} />
-            <StatTile label={t('Pays représentés')} value={data.totals.countries} />
-            <StatTile label={t('Compétences proposées')} value={data.totals.offered} />
-            <StatTile label={t("Envies d'apprendre")} value={data.totals.wanted} />
+          <dl className="surface grid grid-cols-2 divide-ink-200 lg:grid-cols-4 lg:divide-x [&>*:nth-child(-n+2)]:border-b [&>*:nth-child(-n+2)]:border-ink-200 lg:[&>*:nth-child(-n+2)]:border-b-0">
+            <Stat label={t('Développeurs inscrits')} value={data.totals.developers} />
+            <Stat label={t('Pays représentés')} value={data.totals.countries} />
+            <Stat label={t('Compétences proposées')} value={data.totals.offered} />
+            <Stat label={t("Envies d'apprendre")} value={data.totals.wanted} />
           </dl>
 
           <div className="surface p-6">
@@ -134,7 +133,7 @@ export default function ObservatoryPage() {
           {data.bridges.length > 0 && (
             <section className="flex flex-col gap-4" aria-labelledby="ponts">
               <div>
-                <h2 id="ponts" className="text-xl font-semibold text-ink-900">
+                <h2 id="ponts" className="sheet-title">
                   {t('Des ponts entre pays')}
                 </h2>
                 <p className="mt-1 text-sm text-ink-600">

@@ -25,15 +25,17 @@ function makeExplanation(overrides: Partial<Explanation> = {}): Explanation {
 }
 
 describe("explication d'un match", () => {
-  it('affiche le score bien en évidence', () => {
-    render(<MatchExplanation explanation={makeExplanation()} score={82.5} partnerName="Kofi" />)
+  it('pose les deux personnes face à face sur le tableau', () => {
+    render(<MatchExplanation explanation={makeExplanation()} partnerName="Kofi" myName="Aminata" />)
 
-    expect(screen.getByText('83')).toBeInTheDocument()
-    expect(screen.getByText('Score de compatibilité')).toBeInTheDocument()
+    const board = screen.getByRole('region', { name: 'Qui apprend quoi à qui' })
+    expect(board).toHaveTextContent('Kofi')
+    expect(board).toHaveTextContent('Aminata')
+    expect(board).toHaveTextContent('vous')
   })
 
   it('montre ce que chacun peut apprendre à lautre', () => {
-    render(<MatchExplanation explanation={makeExplanation()} score={82.5} partnerName="Kofi" />)
+    render(<MatchExplanation explanation={makeExplanation()} partnerName="Kofi" myName="Aminata" />)
 
     expect(screen.getByRole('heading', { name: 'Kofi peut vous apprendre' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Vous pouvez lui apprendre' })).toBeInTheDocument()
@@ -42,24 +44,26 @@ describe("explication d'un match", () => {
   })
 
   it('détaille les six critères avec leur poids', () => {
-    render(<MatchExplanation explanation={makeExplanation()} score={82.5} partnerName="Kofi" />)
+    render(<MatchExplanation explanation={makeExplanation()} partnerName="Kofi" myName="Aminata" />)
 
     const meters = screen.getAllByRole('meter')
     expect(meters).toHaveLength(6)
     expect(screen.getByText('Complémentarité')).toBeInTheDocument()
-    expect(screen.getByText('31.5 / 35')).toBeInTheDocument()
+    const row = screen.getByRole('row', { name: /Complémentarité/ })
+    expect(row).toHaveTextContent('31,5')
+    expect(row).toHaveTextContent('35')
   })
 
   it('décrit chaque barre pour les lecteurs d écran', () => {
-    render(<MatchExplanation explanation={makeExplanation()} score={82.5} partnerName="Kofi" />)
+    render(<MatchExplanation explanation={makeExplanation()} partnerName="Kofi" myName="Aminata" />)
 
     expect(
-      screen.getByRole('meter', { name: 'Réciprocité : 20.0 points sur 20' }),
+      screen.getByRole('meter', { name: 'Réciprocité : 20,0 points sur 20' }),
     ).toBeInTheDocument()
   })
 
   it('affiche les raisons en phrases', () => {
-    render(<MatchExplanation explanation={makeExplanation()} score={82.5} partnerName="Kofi" />)
+    render(<MatchExplanation explanation={makeExplanation()} partnerName="Kofi" myName="Aminata" />)
 
     expect(screen.getByText('Kofi peut vous apprendre Python.')).toBeInTheDocument()
   })
@@ -68,8 +72,8 @@ describe("explication d'un match", () => {
     render(
       <MatchExplanation
         explanation={makeExplanation({ capped: true })}
-        score={55}
         partnerName="Kofi"
+        myName="Aminata"
       />,
     )
 
@@ -80,8 +84,8 @@ describe("explication d'un match", () => {
     render(
       <MatchExplanation
         explanation={makeExplanation({ you_can_teach_them: [], they_can_teach_you: [] })}
-        score={25}
         partnerName="Kofi"
+        myName="Aminata"
       />,
     )
 
@@ -89,7 +93,7 @@ describe("explication d'un match", () => {
   })
 
   it('affiche les technologies communes', () => {
-    render(<MatchExplanation explanation={makeExplanation()} score={82.5} partnerName="Kofi" />)
+    render(<MatchExplanation explanation={makeExplanation()} partnerName="Kofi" myName="Aminata" />)
 
     expect(screen.getByText(/Technologies que vous maîtrisez tous les deux/)).toBeInTheDocument()
     expect(screen.getByText('Docker')).toBeInTheDocument()
@@ -99,8 +103,8 @@ describe("explication d'un match", () => {
     render(
       <MatchExplanation
         explanation={makeExplanation({ common_skills: [] })}
-        score={70}
         partnerName="Kofi"
+        myName="Aminata"
       />,
     )
 

@@ -85,24 +85,18 @@ export default function ProfilePage() {
     <section className="flex flex-col gap-6">
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-ink-900">{t('Mon profil')}</h1>
+          <h1 className="page-title">{t('Mon profil')}</h1>
           <p className="mt-1 text-sm text-ink-600">{data.email}</p>
         </div>
         <div className="flex flex-col items-end gap-2">
           <p className="text-xs font-medium text-ink-600">
             {t('Profil complété')}{' '}
-            <span className="text-gradient text-2xl font-bold tabular-nums">
+            <span className="font-display text-[1.75rem] font-bold leading-none text-ink-900 tabular-nums">
               {data.profile.completeness}%
             </span>
           </p>
-          <div
-            aria-hidden="true"
-            className="h-1.5 w-48 overflow-hidden rounded-full bg-veil/[0.08]"
-          >
-            <div
-              className="h-full rounded-full bg-gradient-to-r from-brand to-violet"
-              style={{ width: `${data.profile.completeness}%` }}
-            />
+          <div aria-hidden="true" className="h-2 w-48 overflow-hidden rounded-sm bg-ink-200">
+            <div className="h-full bg-brand" style={{ width: `${data.profile.completeness}%` }} />
           </div>
         </div>
       </header>

@@ -70,7 +70,7 @@ export default function SkillExtractor({
   return (
     <Card className="flex flex-col gap-4 border-accent-200 bg-accent-50">
       <div>
-        <h2 className="font-semibold text-ink-900">{t('Remplir depuis un texte')}</h2>
+        <h2 className="sheet-title">{t('Remplir depuis un texte')}</h2>
         <p className="mt-1 text-sm text-ink-700">
           {t(
             'Décrivez votre parcours en quelques phrases : nous vous proposerons des compétences à ajouter. Vous gardez la main sur ce qui est enregistré.',
@@ -115,7 +115,7 @@ export default function SkillExtractor({
                 <button
                   type="button"
                   onClick={() => accept('OFFERED', suggestion)}
-                  className="rounded-full focus-visible:ring-2"
+                  className="rounded focus-visible:ring-2"
                   aria-label={t('Ajouter {skill} à ce que je sais faire', {
                     skill: suggestion.name,
                   })}
@@ -143,7 +143,7 @@ export default function SkillExtractor({
                 <button
                   type="button"
                   onClick={() => accept('WANTED', suggestion)}
-                  className="rounded-full focus-visible:ring-2"
+                  className="rounded focus-visible:ring-2"
                   aria-label={t('Ajouter {skill} à ce que je veux apprendre', {
                     skill: suggestion.name,
                   })}

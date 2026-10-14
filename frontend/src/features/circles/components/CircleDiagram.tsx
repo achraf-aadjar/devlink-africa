@@ -3,6 +3,7 @@ import Avatar from '../../../components/Avatar'
 import { useI18n } from '../../../i18n/useI18n'
 import type { Circle } from '../../../lib/types'
 import { arrowSentence } from '../sentences'
+import { cn } from '../../../lib/cn'
 
 /** Rayon du cercle et marge laissée autour de chaque avatar, en unités du schéma (0 à 100). */
 const RADIUS = 34
@@ -18,13 +19,23 @@ function firstName(fullName: string): string {
 }
 
 /**
- * Le cercle dessiné : les membres en rond, et une flèche de chacun vers celui
- * à qui il apprend quelque chose, avec la compétence transmise sur la flèche.
+ * Le cercle dessiné comme au tableau tactique : les membres en aimants, et une
+ * flèche au feutre de chacun vers celui à qui il apprend quelque chose, avec
+ * la compétence écrite sur la flèche. Les flèches se tracent une fois, l'une
+ * après l'autre, dans l'ordre où le savoir circule.
  *
  * Le dessin est décoratif pour les lecteurs d'écran : son contenu est résumé
  * dans `aria-label`, et la carte qui l'entoure le détaille en phrases.
  */
-export default function CircleDiagram({ circle, meId }: { circle: Circle; meId?: number }) {
+export default function CircleDiagram({
+  circle,
+  meId,
+  className,
+}: {
+  circle: Circle
+  meId?: number
+  className?: string
+}) {
   const { t } = useI18n()
   const uid = useId().replace(/:/g, '')
   const count = circle.members.length
@@ -35,40 +46,33 @@ export default function CircleDiagram({ circle, meId }: { circle: Circle; meId?:
     <div
       role="img"
       aria-label={t("Cercle d'échange. {summary}", { summary })}
-      className="relative mx-auto aspect-square w-full max-w-[20rem]"
+      className={cn('relative mx-auto aspect-square w-full max-w-[20rem]', className)}
     >
-      <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full" aria-hidden="true">
+      <svg
+        viewBox="0 0 100 100"
+        className="absolute inset-0 h-full w-full text-ink-900"
+        aria-hidden="true"
+      >
         <defs>
-          <linearGradient id={`flow-${uid}`} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#388bfd" />
-            <stop offset="100%" stopColor="#a371f7" />
-          </linearGradient>
           <marker
             id={`arrow-${uid}`}
             viewBox="0 0 10 10"
-            refX="7"
+            refX="6"
             refY="5"
-            markerWidth="4.5"
-            markerHeight="4.5"
+            markerWidth="5"
+            markerHeight="5"
             orient="auto"
           >
-            <path d="M0,0 L10,5 L0,10 z" fill="rgb(var(--accent-900))" />
+            <path
+              d="M1.5,1.5 L7,5 L1.5,8.5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </marker>
-          <radialGradient id={`halo-${uid}`}>
-            <stop offset="0%" stopColor="#1f6feb" stopOpacity="0.28" />
-            <stop offset="100%" stopColor="#1f6feb" stopOpacity="0" />
-          </radialGradient>
         </defs>
-
-        <circle cx="50" cy="50" r="46" fill={`url(#halo-${uid})`} />
-        <circle
-          cx="50"
-          cy="50"
-          r={RADIUS}
-          fill="none"
-          stroke="rgb(var(--veil) / 0.08)"
-          strokeWidth="0.6"
-        />
 
         {circle.members.map((member, index) => {
           const start = angleOf(index) + GAP
@@ -77,38 +81,28 @@ export default function CircleDiagram({ circle, meId }: { circle: Circle; meId?:
           const [x2, y2] = point(end)
           const path = `M ${x1} ${y1} A ${RADIUS} ${RADIUS} 0 0 1 ${x2} ${y2}`
           return (
-            <g key={member.id}>
-              <path
-                d={path}
-                fill="none"
-                stroke={`url(#flow-${uid})`}
-                strokeWidth="1.1"
-                strokeLinecap="round"
-                markerEnd={`url(#arrow-${uid})`}
-              />
-              <path
-                d={path}
-                fill="none"
-                stroke="rgb(var(--accent-800))"
-                strokeOpacity="0.85"
-                strokeWidth="0.8"
-                strokeLinecap="round"
-                strokeDasharray="1.2 6"
-                className="animate-flow"
-              />
-            </g>
+            <path
+              key={member.id}
+              d={path}
+              pathLength={1}
+              className="marker marker-draw animate-draw"
+              stroke="currentColor"
+              strokeWidth="1.1"
+              markerEnd={`url(#arrow-${uid})`}
+              style={{ animationDelay: `${index * 250}ms` }}
+            />
           )
         })}
       </svg>
 
-      {/* Compétences, posées au milieu de chaque flèche. */}
+      {/* Compétences, écrites au milieu de chaque flèche. */}
       {circle.arrows.map((arrow, index) => {
         const [x, y] = point(angleOf(index) + Math.PI / count)
         return (
           <span
             key={`${arrow.teacher}-${arrow.learner}`}
             aria-hidden="true"
-            className="absolute -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full bg-ink-50/95 px-2.5 py-1 text-xs font-semibold text-accent-900 shadow-glow"
+            className="absolute -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-sm bg-ink-100 px-1.5 py-0.5 font-display text-sm font-bold uppercase leading-tight tracking-[0.02em] text-ink-900 ring-1 ring-ink-900/70"
             style={{ left: `${x}%`, top: `${y}%` }}
           >
             {arrow.skill.name}
@@ -116,7 +110,7 @@ export default function CircleDiagram({ circle, meId }: { circle: Circle; meId?:
         )
       })}
 
-      {/* Membres. */}
+      {/* Membres : un aimant chacun. */}
       {circle.members.map((member, index) => {
         const [x, y] = point(angleOf(index))
         const isMe = member.id === meId
@@ -124,17 +118,23 @@ export default function CircleDiagram({ circle, meId }: { circle: Circle; meId?:
           <div
             key={member.id}
             aria-hidden="true"
-            className="absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1"
+            className="absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-0.5"
             style={{ left: `${x}%`, top: `${y}%` }}
           >
             <Avatar
               name={member.full_name || t('Membre')}
               size={48}
-              className={isMe ? 'ring-[3px] ring-accent-500' : undefined}
+              className={
+                isMe ? 'ring-[3px] ring-ink-900 ring-offset-2 ring-offset-ink-50' : undefined
+              }
             />
-            <span className="whitespace-nowrap rounded-full bg-ink-50/80 px-2 text-xs font-medium text-ink-900">
+            <span className="whitespace-nowrap font-display text-sm font-bold uppercase leading-tight text-ink-900">
               {isMe ? t('Vous') : firstName(member.full_name) || t('Membre')}
-              {member.country && <span className="ml-1 text-ink-500">{member.country}</span>}
+              {member.country && (
+                <span className="ml-1 font-sans text-xs font-medium normal-case text-ink-600">
+                  {member.country}
+                </span>
+              )}
             </span>
           </div>
         )

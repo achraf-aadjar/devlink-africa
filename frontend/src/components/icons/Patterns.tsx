@@ -14,16 +14,9 @@ import { cn } from '../../lib/cn'
  */
 
 /**
- * Trame d'anneaux entrelacés sur un dégradé sombre : le motif de la marque,
- * posé sur la même progression bleu nuit → bleu qui traverse toute notre
- * palette sombre. Pensée pour habiller une bannière pleine largeur, donc elle
- * prend toute la hauteur et la largeur de son conteneur — c'est à l'appelant
- * de donner une hauteur au conteneur (une bannière, pas un paragraphe).
- *
- * Le dégradé va de accent-50 à accent-400 : chaque palier garde un contraste
- * d'au moins 4,5:1 avec notre texte ink-900, qui reste donc lisible sur toute
- * la hauteur sans aucun réglage de couleur au cas par cas (vérifié, voir
- * docs/DECISIONS.md).
+ * Trame d'anneaux entrelacés : le motif de la marque (les deux anneaux du
+ * logo), tracé à l'encre très légère sur la feuille. Il prend toute la hauteur
+ * et la largeur de son conteneur : c'est à l'appelant de lui donner une taille.
  */
 export function RingsPattern({
   children,
@@ -33,12 +26,7 @@ export function RingsPattern({
   className?: string
 }) {
   return (
-    <div
-      className={cn(
-        'relative isolate overflow-hidden bg-gradient-to-b from-accent-50 via-accent-200 to-accent-400',
-        className,
-      )}
-    >
+    <div className={cn('relative isolate overflow-hidden bg-ink-100', className)}>
       <svg
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 h-full w-full"
@@ -46,8 +34,24 @@ export function RingsPattern({
       >
         <defs>
           <pattern id="dla-rings" width="96" height="96" patternUnits="userSpaceOnUse">
-            <circle cx="34" cy="48" r="22" fill="none" stroke="#4493f8" strokeWidth="1.5" />
-            <circle cx="62" cy="48" r="22" fill="none" stroke="#4493f8" strokeWidth="1.5" />
+            <circle
+              cx="34"
+              cy="48"
+              r="22"
+              fill="none"
+              stroke="rgb(var(--accent-600))"
+              strokeWidth="1.5"
+              strokeOpacity="0.35"
+            />
+            <circle
+              cx="62"
+              cy="48"
+              r="22"
+              fill="none"
+              stroke="rgb(var(--ink-900))"
+              strokeWidth="1.5"
+              strokeOpacity="0.2"
+            />
           </pattern>
           {/* Fondu du motif vers le bas : net en haut, s'efface où le texte
               est le plus dense, pour ne jamais gêner la lecture. */}
@@ -79,7 +83,7 @@ export function WeavePattern({
   className?: string
 }) {
   return (
-    <div className={cn('relative isolate overflow-hidden bg-accent-50', className)}>
+    <div className={cn('relative isolate overflow-hidden bg-ink-100', className)}>
       <svg
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 h-full w-full"
@@ -87,8 +91,13 @@ export function WeavePattern({
       >
         <defs>
           <pattern id="dla-weave" width="32" height="32" patternUnits="userSpaceOnUse">
-            <path d="M16 2 30 16 16 30 2 16z" fill="none" stroke="#4493f8" strokeWidth="1.2" />
-            <path d="M16 10 22 16 16 22 10 16z" fill="#4493f8" fillOpacity="0.6" />
+            <path
+              d="M16 2 30 16 16 30 2 16z"
+              fill="none"
+              stroke="rgb(var(--ink-900))"
+              strokeWidth="1.2"
+            />
+            <path d="M16 10 22 16 16 22 10 16z" fill="rgb(var(--accent-600))" fillOpacity="0.6" />
           </pattern>
         </defs>
         <rect width="100%" height="100%" fill="url(#dla-weave)" opacity="0.16" />
@@ -112,7 +121,7 @@ export function DotsPattern({ children, className }: { children?: ReactNode; cla
       >
         <defs>
           <pattern id="dla-dots" width="18" height="18" patternUnits="userSpaceOnUse">
-            <circle cx="9" cy="9" r="1.3" fill="#8b949e" />
+            <circle cx="9" cy="9" r="1.3" fill="rgb(var(--ink-500))" />
           </pattern>
         </defs>
         <rect width="100%" height="100%" fill="url(#dla-dots)" opacity="0.1" />

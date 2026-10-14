@@ -46,15 +46,13 @@ export default function ResetPasswordPage() {
   if (linkInvalid) {
     return (
       <div className="mx-auto w-full max-w-md">
-        <h1 className="mb-1 text-3xl font-bold tracking-tight text-ink-900">
-          {t('Lien invalide')}
-        </h1>
+        <h1 className="mb-1 page-title">{t('Lien invalide')}</h1>
         <p role="alert" className="mb-6 text-sm text-ink-600">
           {t('Ce lien est invalide ou a expiré. Demandez-en un nouveau.')}
         </p>
         <Link
           to="/mot-de-passe/oublie"
-          className="inline-flex w-full items-center justify-center rounded-xl bg-brand px-4 py-2.5 text-base font-medium text-white transition hover:bg-brand-hover"
+          className="inline-flex w-full items-center justify-center rounded-md bg-brand px-4 py-2.5 text-base font-medium text-white transition hover:bg-brand-hover"
         >
           {t('Demander un nouveau lien')}
         </Link>
@@ -64,9 +62,7 @@ export default function ResetPasswordPage() {
 
   return (
     <div className="mx-auto w-full max-w-md">
-      <h1 className="mb-1 text-3xl font-bold tracking-tight text-ink-900">
-        {t('Nouveau mot de passe')}
-      </h1>
+      <h1 className="mb-1 page-title">{t('Nouveau mot de passe')}</h1>
       <p className="mb-6 text-sm text-ink-600">
         {t('Choisissez un mot de passe d’au moins 10 caractères.')}
       </p>
@@ -82,11 +78,7 @@ export default function ResetPasswordPage() {
           error={error}
           onChange={(event) => setPassword(event.target.value)}
         />
-        <Button
-          type="submit"
-          loading={submitting}
-          className="mt-2 w-full !rounded-xl border border-transparent !px-4 !py-2.5 !text-base !shadow-none"
-        >
+        <Button type="submit" loading={submitting} className="mt-2 w-full">
           {t('Changer le mot de passe')}
         </Button>
       </form>

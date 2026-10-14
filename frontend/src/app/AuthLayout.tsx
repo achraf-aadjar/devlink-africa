@@ -2,121 +2,87 @@ import { Suspense } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import Logo from '../components/icons/Logo'
 import Spinner from '../components/ui/Spinner'
+import CircleDiagram from '../features/circles/components/CircleDiagram'
+import { DEMO_CIRCLE } from '../features/circles/demoCircle'
 import { msg } from '../i18n/translate'
 import { useI18n } from '../i18n/useI18n'
 
 /**
  * Enveloppe des écrans d'authentification (connexion, inscription) : ni barre
- * de navigation ni pied de page. L'écran est coupé en deux : à gauche une
- * illustration (portrait, voile, citation), à droite le formulaire. Sous `lg`
- * l'illustration disparaît et le formulaire prend toute la largeur.
+ * de navigation ni pied de page. Sur grand écran, l'écran est coupé en deux : à
+ * gauche une ardoise où se trace le cercle de démonstration, à droite le
+ * formulaire. Sous `lg`, l'ardoise disparaît et le formulaire prend toute la
+ * largeur.
  *
- * Chaque écran a sa propre illustration et sa propre citation (voir `SLIDES`).
- * Crédits des photos : LICENSES.md.
+ * Aucune photo : le produit se montre lui-même, avec des personnes fictives
+ * signalées comme telles.
  */
-const SLIDES = {
+const PANELS = {
   login: {
-    image: '/auth/portrait.jpg',
-    quote: msg(
-      '« Les grandes choses ne sont jamais accomplies par une seule personne. Elles le sont par une équipe. »',
+    title: msg('Vos matchs vous attendent.'),
+    text: msg(
+      'Chaque proposition est expliquée point par point : vous savez toujours pourquoi un profil vous est proposé.',
     ),
-    author: 'Steve Jobs',
-    role: msg('cofondateur d’Apple'),
-    creditHref: 'https://commons.wikimedia.org/wiki/File:Steve_Jobs_Headshot_2010-CROP.jpg',
-    credit: 'Matthew Yohe, CC BY-SA 3.0',
   },
   register: {
-    image: '/auth/portrait-register.jpg',
-    quote: msg('« La phrase la plus dangereuse : “on a toujours fait comme ça”. »'),
-    author: 'Grace Hopper',
-    role: msg('pionnière de l’informatique'),
-    creditHref:
-      'https://commons.wikimedia.org/wiki/File:Commodore_Grace_M._Hopper,_USN_(covered).jpg',
-    credit: 'James S. Davis, domaine public',
+    title: msg('Dites ce que vous savez. Dites ce qui vous manque.'),
+    text: msg(
+      'Dev Match trouve les développeurs qui vous complètent, partout en Afrique. Quand aucune paire ne marche, un cercle fait circuler le savoir.',
+    ),
   },
 }
 
 export default function AuthLayout() {
   const { t } = useI18n()
   const { pathname } = useLocation()
-  const slide = pathname.startsWith('/inscription') ? SLIDES.register : SLIDES.login
+  const panel = pathname.startsWith('/inscription') ? PANELS.register : PANELS.login
 
   return (
-    <div className="grid min-h-screen bg-ink-50 lg:grid-cols-2">
+    <div className="grid min-h-screen bg-ink-50 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
       <a
         href="#contenu"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-ink-100 focus:px-3 focus:py-2 focus:shadow-card"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-ink-100 focus:px-3 focus:py-2 focus:shadow-lift"
       >
         {t('Aller au contenu')}
       </a>
 
-      <aside className="relative hidden overflow-hidden bg-[#0d1117] lg:block">
-        <img
-          src={slide.image}
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover object-top grayscale"
-        />
-        {/* Voile : bleu de marque en haut, noir en bas pour porter la citation. */}
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-t from-[#0d1117] via-[#0d1117]/60 to-brand/40"
-        />
+      <aside className="scope-dark relative hidden flex-col justify-between gap-10 bg-ink-50 p-10 lg:flex xl:p-14">
+        <Link
+          to="/"
+          className="inline-flex w-fit rounded-md p-1 text-ink-900"
+          aria-label={t('DevLink Africa, accueil')}
+        >
+          <Logo size={30} />
+        </Link>
 
-        <div className="relative flex h-full flex-col justify-between p-10 xl:p-14">
-          <Link
-            to="/"
-            className="inline-flex w-fit rounded-lg p-1 text-[#e6edf3]"
-            aria-label={t('DevLink Africa, accueil')}
-          >
-            <Logo size={32} />
-          </Link>
-
-          <figure className="max-w-xl">
-            <blockquote className="text-2xl font-semibold leading-snug tracking-tight text-white xl:text-3xl">
-              {t(slide.quote)}
-            </blockquote>
-            <figcaption className="mt-5 text-sm text-[#c9d1d9]">
-              <span className="font-semibold text-white">{slide.author}</span>
-              <span className="text-[#adb5bd]"> · {t(slide.role)}</span>
+        <div className="flex flex-col gap-8">
+          <div className="max-w-lg">
+            <p className="font-display text-[2.75rem] font-bold uppercase leading-[0.95] text-ink-900 xl:text-[3.25rem]">
+              {t(panel.title)}
+            </p>
+            <p className="mt-4 max-w-md text-ink-700">{t(panel.text)}</p>
+          </div>
+          <figure className="flex flex-col items-start gap-3">
+            <CircleDiagram circle={DEMO_CIRCLE} className="!mx-0 max-w-[22rem]" />
+            <figcaption className="text-sm text-ink-600">
+              {t('Exemple de cercle : Dakar, Accra, Nairobi. Personnes fictives.')}
             </figcaption>
           </figure>
         </div>
-
-        <p className="absolute bottom-2 right-3 text-xs text-[#adb5bd]">
-          {t('Photo')} :{' '}
-          <a
-            href={slide.creditHref}
-            className="underline"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {slide.credit}
-          </a>
-        </p>
       </aside>
 
-      <div className="relative isolate flex flex-col">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-80 lg:hidden"
-        >
-          <div className="bg-aurora absolute inset-0" />
-        </div>
-
+      <div className="flex flex-col">
         <header className="flex justify-center px-4 pt-8 lg:hidden">
           <Link
             to="/"
-            className="inline-flex rounded-lg p-1 text-ink-900"
+            className="inline-flex rounded-md p-1 text-ink-900"
             aria-label={t('DevLink Africa, accueil')}
           >
-            <Logo size={32} />
+            <Logo size={30} />
           </Link>
         </header>
 
-        <main
-          id="contenu"
-          className="auth-plain flex flex-1 flex-col justify-center px-6 py-10 sm:px-10"
-        >
+        <main id="contenu" className="flex flex-1 flex-col justify-center px-6 py-10 sm:px-10">
           <Suspense
             fallback={
               <div

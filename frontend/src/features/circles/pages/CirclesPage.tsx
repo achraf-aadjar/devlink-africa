@@ -25,7 +25,7 @@ const STEPS = [
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="flex flex-col gap-4" aria-label={title}>
-      <h2 className="text-xl font-semibold text-ink-900">{title}</h2>
+      <h2 className="sheet-title">{title}</h2>
       <ul className="grid grid-cols-1 gap-5 lg:grid-cols-2 xl:grid-cols-3">{children}</ul>
     </section>
   )
@@ -104,16 +104,20 @@ export default function CirclesPage() {
   return (
     <section className="flex flex-col gap-8">
       <header className="flex flex-col gap-3">
-        <h1 className="text-3xl font-bold tracking-tight text-ink-900">{t("Cercles d'échange")}</h1>
-        <p className="max-w-3xl text-ink-600">
+        <h1 className="page-title">{t("Cercles d'échange")}</h1>
+        <p className="max-w-3xl text-ink-700">
           {t(
             "Quand aucune paire parfaite n'existe, l'échange peut circuler entre trois ou quatre personnes : chacun apprend à quelqu'un, et apprend de quelqu'un d'autre.",
           )}
         </p>
-        <ol className="mt-2 grid grid-cols-1 gap-3 md:grid-cols-3">
+        {/* Les trois temps d'un cercle, lus de gauche à droite sur une seule ligne. */}
+        <ol className="mt-2 grid grid-cols-1 border-y border-ink-300 md:grid-cols-3 md:divide-x md:divide-ink-300">
           {STEPS.map((step, index) => (
-            <li key={step} className="surface flex gap-3 p-4 text-sm text-ink-700">
-              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand text-xs font-bold text-white shadow-glow">
+            <li key={step} className="flex gap-3 py-3 text-sm text-ink-700 md:px-4 md:first:pl-0">
+              <span
+                aria-hidden="true"
+                className="font-display text-2xl font-bold leading-none text-ink-900 tabular-nums"
+              >
                 {index + 1}
               </span>
               {t(step)}
@@ -123,7 +127,10 @@ export default function CirclesPage() {
       </header>
 
       {actionError && (
-        <p role="alert" className="rounded-2xl bg-danger/10 px-5 py-3 text-sm text-danger">
+        <p
+          role="alert"
+          className="rounded-card bg-danger/10 px-5 py-3 text-sm text-danger ring-1 ring-inset ring-danger/25"
+        >
           {actionError}
         </p>
       )}

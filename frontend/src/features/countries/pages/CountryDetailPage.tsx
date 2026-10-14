@@ -45,7 +45,7 @@ export default function CountryDetailPage() {
           {data.flag}
         </span>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-ink-900">{name}</h1>
+          <h1 className="page-title">{name}</h1>
           <p className="mt-1 text-sm text-ink-600">
             {tn(data.developers_count, '{n} développeur', '{n} développeurs')} ·{' '}
             {tn(data.projects_count, '{n} projet', '{n} projets')}
@@ -64,9 +64,7 @@ export default function CountryDetailPage() {
         <>
           {data.top_skills.length > 0 && (
             <Card>
-              <h2 className="mb-3 font-semibold text-ink-900">
-                {t('Technologies les plus présentes')}
-              </h2>
+              <h2 className="sheet-title mb-3">{t('Technologies les plus présentes')}</h2>
               <ul className="flex flex-wrap gap-2">
                 {data.top_skills.map((skill) => (
                   <li key={skill.id}>
@@ -81,7 +79,7 @@ export default function CountryDetailPage() {
 
           {data.developers.length > 0 && (
             <div className="flex flex-col gap-3">
-              <h2 className="font-semibold text-ink-900">{t('Développeurs')}</h2>
+              <h2 className="sheet-title">{t('Développeurs')}</h2>
               <ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {data.developers.map((person) => (
                   <Card as="li" key={person.id} interactive className="flex flex-col gap-2">
@@ -116,7 +114,7 @@ export default function CountryDetailPage() {
 
           {data.projects.length > 0 && (
             <div className="flex flex-col gap-3">
-              <h2 className="font-semibold text-ink-900">{t('Projets')}</h2>
+              <h2 className="sheet-title">{t('Projets')}</h2>
               <ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {data.projects.map((project) => (
                   <ProjectCard key={project.id} project={project} />

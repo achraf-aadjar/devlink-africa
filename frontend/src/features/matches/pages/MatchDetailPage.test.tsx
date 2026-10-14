@@ -93,6 +93,8 @@ describe('détail d un match', () => {
 
     await userEvent.click(await screen.findByRole('button', { name: 'Proposer un échange' }))
     const dialog = await screen.findByRole('dialog')
+    expect(dialog).toHaveTextContent('Vous recevez')
+    expect(dialog).toHaveTextContent(/ne s'affichent que si Kofi Mensah accepte/)
     await userEvent.type(screen.getByLabelText(/Votre message/), 'Bonjour Kofi')
     await userEvent.click(screen.getByRole('button', { name: 'Envoyer la demande' }))
 
@@ -103,6 +105,12 @@ describe('détail d un match', () => {
         message: 'Bonjour Kofi',
       })
     })
+    expect(await screen.findByText('Demande envoyée à Kofi Mensah.')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Voir mes échanges' })).toHaveAttribute(
+      'href',
+      '/echanges',
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'Rester sur ce match' }))
     expect(dialog).not.toBeInTheDocument()
   })
 

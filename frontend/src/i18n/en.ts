@@ -754,4 +754,62 @@ export const EN: Record<string, string> = {
   'En français et en anglais': 'In French and English',
   'Du Sénégal au Kenya, en passant par le Ghana et le Nigeria : toute la plateforme passe d’une langue à l’autre en un clic.':
     'From Senegal to Kenya, by way of Ghana and Nigeria: the whole platform switches language in one click.',
+
+  // --- Refonte « feuille de match » ---
+  'Vos matchs vous attendent.': 'Your matches are waiting.',
+  'Chaque proposition est expliquée point par point : vous savez toujours pourquoi un profil vous est proposé.':
+    'Every suggestion is explained point by point: you always know why a profile is suggested to you.',
+  'Dites ce que vous savez. Dites ce qui vous manque.':
+    'Say what you know. Say what you’re missing.',
+  'Dev Match trouve les développeurs qui vous complètent, partout en Afrique. Quand aucune paire ne marche, un cercle fait circuler le savoir.':
+    'Dev Match finds the developers who complete you, anywhere in Africa. When no pair works, a circle keeps the knowledge moving.',
+  'Exemple de cercle : Dakar, Accra, Nairobi. Personnes fictives.':
+    'Sample circle: Dakar, Accra, Nairobi. Fictional people.',
+  Démo: 'Demo',
+  'Échange refusé : il est clos.': 'Exchange declined: it is closed.',
+  'Demande annulée.': 'Request cancelled.',
+  "Étapes de l'échange": 'Exchange stages',
+  'Demande envoyée à {name}.': 'Request sent to {name}.',
+  "Sa réponse apparaîtra dans vos échanges. S'il y a accord, vos moyens de contact s'afficheront des deux côtés.":
+    'Their answer will appear in your exchanges. If they agree, both sides will see each other’s contact details.',
+  'Rester sur ce match': 'Stay on this match',
+  'Voir mes échanges': 'See my exchanges',
+  'Vous recevez': 'You receive',
+  'Vous donnez': 'You give',
+  "Vos moyens de contact restent cachés : ils ne s'affichent que si {name} accepte.":
+    'Your contact details stay hidden: they only appear if {name} accepts.',
+  vous: 'you',
+  'Points obtenus par critère': 'Points earned per criterion',
+  Critère: 'Criterion',
+  Points: 'Points',
+  Sur: 'Out of',
+  'Vous apprend': 'Teaches you',
+  'Vous lui apprenez': 'You teach them',
+  'Masquer les raisons': 'Hide the reasons',
+  'Voir les raisons': 'Show the reasons',
+  Score: 'Score',
+  "Son contact ne s'affiche qu'une fois votre échange accepté. Le vôtre non plus n'est montré qu'à ce moment-là.":
+    'Their contact details only appear once your exchange is accepted. Yours are only shown at that moment too.',
+  'Créer mon compte pour échanger': 'Create my account to exchange',
+  'Disponible pour': 'Available for',
+  'Créer mon compte pour rejoindre': 'Create my account to join',
+  'Plus de filtres': 'More filters',
+  'Plus de filtres ({n} actif)': 'More filters ({n} active)',
+  'Plus de filtres ({n} actifs)': 'More filters ({n} active)',
+  'Votre feuille de match': 'Your match sheet',
+  'Voir qui me complète': 'See who completes me',
+  'Quand aucune paire n’existe, un cercle.': 'When no pair exists, a circle.',
+  'Personnes fictives.': 'Fictional people.',
+  'Score du cercle': 'Circle score',
+  Total: 'Total',
+  'Aminata, à Dakar, veut apprendre Docker. Imani, à Nairobi, l’enseigne mais veut FastAPI. Kwame, à Accra, enseigne FastAPI et veut React, qu’Aminata maîtrise. Aucune paire ne fonctionne ; le cercle, si.':
+    'Aminata, in Dakar, wants to learn Docker. Imani, in Nairobi, teaches it but wants FastAPI. Kwame, in Accra, teaches FastAPI and wants React, which Aminata knows well. No pair works; the circle does.',
+  'Progresser sur une compétence précise': 'Getting better at one specific skill',
+  'Un code déjà écrit, à rendre plus solide':
+    'Code you’ve already written and want to make sturdier',
+  'Débloquer un problème concret, à deux': 'Getting unstuck on a real problem, together',
+  'Repartir avec une réalisation à montrer': 'Walking away with something to show',
+  Format: 'Format',
+  'Comment ça se passe': 'How it works',
+  'Idéal pour': 'Best for',
 }

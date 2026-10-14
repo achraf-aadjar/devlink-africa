@@ -2,155 +2,202 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Fira Sans (SIL Open Font License 1.1, voir assets/fonts/OFL.txt et
+ * LICENSES.md). Fichiers réduits aux caractères utiles, latin africain compris
+ * (ɛ, ɔ, ŋ, ɓ, ɗ, ƙ, ƴ, ẹ, ọ, ṣ et les tons) : environ 33 Ko chacun. `swap` :
+ * le texte s'affiche tout de suite en police système, puis bascule.
+ */
+@font-face {
+  font-family: 'Fira Sans';
+  font-style: normal;
+  font-weight: 300 400;
+  font-display: swap;
+  src: url('./assets/fonts/FiraSans-Regular.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Fira Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('./assets/fonts/FiraSans-Medium.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Fira Sans';
+  font-style: normal;
+  font-weight: 600 800;
+  font-display: swap;
+  src: url('./assets/fonts/FiraSans-SemiBold.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Fira Sans Extra Condensed';
+  font-style: normal;
+  font-weight: 500 900;
+  font-display: swap;
+  src: url('./assets/fonts/FiraSansExtraCondensed-Bold.woff2') format('woff2');
+}
+
 @layer base {
+  /*
+   * Thème clair : le tableau tactique émaillé. Valeurs en triplets RVB pour
+   * que Tailwind puisse y appliquer une opacité (`bg-ink-200/60`).
+   * Contrastes vérifiés : texte discret (ink-500) à 5,0:1 sur le tableau et
+   * 5,7:1 sur la feuille ; liens (accent-600) à 7,0:1.
+   */
   :root {
     color-scheme: light;
-    /* Hauteur de l'en-tête flottant, mesurée en direct par Layout.tsx.
-       Valeur de départ proche du réel pour le tout premier rendu. */
-    --header-h: 5rem;
-    --ink-50: 255 255 255;
-    --ink-100: 246 248 250;
-    --ink-200: 234 238 242;
-    --ink-300: 208 215 222;
-    --ink-400: 140 149 159;
-    --ink-500: 89 99 110;
-    --ink-600: 87 96 106;
-    --ink-700: 66 74 83;
-    --ink-800: 50 56 63;
-    --ink-900: 31 35 40;
-    --accent-50: 221 244 255;
-    --accent-100: 182 227 255;
-    --accent-200: 128 204 255;
-    --accent-300: 26 95 208;
-    --accent-400: 31 111 235;
-    --accent-500: 56 139 253;
-    --accent-600: 9 105 218;
-    --accent-700: 5 80 174;
-    --accent-800: 10 48 105;
-    --accent-900: 5 34 80;
-    --veil: 13 17 23;
-    /* États (erreur, réussite, avertissement, information) : une valeur
-       lisible en texte (≥ 4,5:1 sur la page et les cartes), réutilisée à
-       10–15 % d'opacité pour le fond d'un encadré ou d'une étiquette. */
-    --danger: 179 29 40;
-    --success: 26 112 49;
-    --warning: 125 78 0;
-    --info: 7 89 133;
+    --ink-50: 242 242 237;
+    --ink-100: 255 255 255;
+    --ink-200: 231 231 225;
+    --ink-300: 201 202 195;
+    --ink-400: 154 156 152;
+    --ink-500: 100 103 109;
+    --ink-600: 90 93 99;
+    --ink-700: 67 70 76;
+    --ink-800: 45 48 54;
+    --ink-900: 22 24 29;
+    --accent-50: 232 238 251;
+    --accent-100: 211 222 246;
+    --accent-200: 175 194 238;
+    --accent-300: 26 79 192;
+    --accent-400: 26 79 192;
+    --accent-500: 58 106 214;
+    --accent-600: 26 74 181;
+    --accent-700: 22 63 158;
+    --accent-800: 16 48 122;
+    --accent-900: 10 34 87;
+    --brand: 26 79 192;
+    --brand-hover: 20 62 154;
+    --demand: 161 63 10;
+    --bar: 22 24 29;
+    --veil: 22 24 29;
+    --danger: 180 35 24;
+    --success: 23 112 58;
+    --warning: 133 80 0;
+    --info: 11 95 134;
   }
 
-  /* Sans choix explicite (voir ThemeProvider), le thème suit l'appareil :
-     exclu dès qu'un `data-theme` est posé, pour qu'un choix clair/sombre
-     explicite l'emporte toujours sur la préférence système. */
+  /* Thème sombre : l'ardoise. Suit l'appareil sauf choix explicite (ThemeProvider). */
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme='light']) {
       color-scheme: dark;
-      --ink-50: 13 17 23;
-      --ink-100: 22 27 34;
-      --ink-200: 33 38 45;
-      --ink-300: 48 54 61;
-      --ink-400: 72 79 88;
-      --ink-500: 129 138 149;
-      --ink-600: 139 148 158;
-      --ink-700: 173 181 189;
-      --ink-800: 201 209 217;
-      --ink-900: 230 237 243;
-      --accent-50: 10 31 51;
-      --accent-100: 13 40 71;
-      --accent-200: 17 49 92;
-      --accent-300: 22 63 120;
-      --accent-400: 31 111 235;
-      --accent-500: 56 139 253;
-      --accent-600: 68 147 248;
-      --accent-700: 88 166 255;
-      --accent-800: 121 192 255;
-      --accent-900: 165 214 255;
+      --ink-50: 19 21 24;
+      --ink-100: 27 30 35;
+      --ink-200: 36 40 46;
+      --ink-300: 51 55 62;
+      --ink-400: 74 79 87;
+      --ink-500: 142 147 154;
+      --ink-600: 160 165 172;
+      --ink-700: 181 185 191;
+      --ink-800: 211 214 218;
+      --ink-900: 238 239 236;
+      --accent-50: 20 32 58;
+      --accent-100: 24 42 76;
+      --accent-200: 29 52 96;
+      --accent-300: 35 64 128;
+      --accent-400: 47 98 214;
+      --accent-500: 85 131 236;
+      --accent-600: 111 152 240;
+      --accent-700: 127 166 255;
+      --accent-800: 166 193 255;
+      --accent-900: 203 217 255;
+      --brand: 47 98 214;
+      --brand-hover: 37 82 189;
+      --demand: 255 154 98;
+      --bar: 10 11 13;
       --veil: 255 255 255;
-      --danger: 255 123 114;
-      --success: 63 185 80;
-      --warning: 210 153 34;
-      --info: 125 211 252;
+      --danger: 255 123 110;
+      --success: 76 192 122;
+      --warning: 224 163 58;
+      --info: 124 200 238;
     }
   }
 
-  /* Choix explicite « sombre », quel que soit l'appareil (voir ThemeProvider). */
-  :root[data-theme='dark'] {
+  /*
+   * Choix explicite « sombre », quel que soit l'appareil. `.scope-dark` pose
+   * l'ardoise sur une seule zone (le panneau des écrans de connexion) : les
+   * composants à l'intérieur prennent les teintes sombres sans autre code.
+   */
+  :root[data-theme='dark'],
+  .scope-dark {
     color-scheme: dark;
-    --ink-50: 13 17 23;
-    --ink-100: 22 27 34;
-    --ink-200: 33 38 45;
-    --ink-300: 48 54 61;
-    --ink-400: 72 79 88;
-    --ink-500: 129 138 149;
-    --ink-600: 139 148 158;
-    --ink-700: 173 181 189;
-    --ink-800: 201 209 217;
-    --ink-900: 230 237 243;
-    --accent-50: 10 31 51;
-    --accent-100: 13 40 71;
-    --accent-200: 17 49 92;
-    --accent-300: 22 63 120;
-    --accent-400: 31 111 235;
-    --accent-500: 56 139 253;
-    --accent-600: 68 147 248;
-    --accent-700: 88 166 255;
-    --accent-800: 121 192 255;
-    --accent-900: 165 214 255;
+    --ink-50: 19 21 24;
+    --ink-100: 27 30 35;
+    --ink-200: 36 40 46;
+    --ink-300: 51 55 62;
+    --ink-400: 74 79 87;
+    --ink-500: 142 147 154;
+    --ink-600: 160 165 172;
+    --ink-700: 181 185 191;
+    --ink-800: 211 214 218;
+    --ink-900: 238 239 236;
+    --accent-50: 20 32 58;
+    --accent-100: 24 42 76;
+    --accent-200: 29 52 96;
+    --accent-300: 35 64 128;
+    --accent-400: 47 98 214;
+    --accent-500: 85 131 236;
+    --accent-600: 111 152 240;
+    --accent-700: 127 166 255;
+    --accent-800: 166 193 255;
+    --accent-900: 203 217 255;
+    --brand: 47 98 214;
+    --brand-hover: 37 82 189;
+    --demand: 255 154 98;
+    --bar: 10 11 13;
     --veil: 255 255 255;
+    --danger: 255 123 110;
+    --success: 76 192 122;
+    --warning: 224 163 58;
+    --info: 124 200 238;
   }
 }
 
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
+    accent-color: rgb(var(--brand));
+    scrollbar-color: rgb(var(--ink-300)) transparent;
   }
 
   body {
     @apply bg-ink-50 font-sans text-ink-800 antialiased;
+    caret-color: rgb(var(--brand));
   }
 
-  /* Focus toujours visible : exigence d'accessibilité (DL-07, DL-34). */
+  /* La zone ardoise recalcule sa couleur de texte avec ses propres teintes. */
+  .scope-dark {
+    color: rgb(var(--ink-800));
+  }
+
+  ::selection {
+    background: rgb(var(--accent-200));
+    color: rgb(var(--ink-900));
+  }
+
+  a {
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
+  }
+
+  /* Focus toujours visible, y compris sur les écrans de connexion. */
   :focus-visible {
     @apply outline-none ring-2 ring-accent-600 ring-offset-2 ring-offset-ink-50;
   }
 
-  /* Écrans d'authentification : pas de halo de focus ; le champ actif se
-     signale par sa bordure bleue (voir `.field`). */
-  .auth-plain :focus-visible {
-    box-shadow: none;
-    --tw-ring-offset-shadow: 0 0 #0000;
-    --tw-ring-shadow: 0 0 #0000;
-  }
-
   /*
-   * « Réduire les animations » : on retire le mouvement (déplacements,
-   * zooms, halos qui respirent, traits qui défilent) mais on garde les
-   * retours d'état courts en fondu, pour que l'ouverture d'une fenêtre ou
-   * d'un menu reste lisible. Le spinner de chargement continue de tourner :
-   * c'est un signal d'attente, pas de la décoration.
+   * « Réduire les animations » : les flèches s'affichent déjà tracées et les
+   * barres déjà pleines ; les fondus courts restent, pour que l'ouverture
+   * d'une fenêtre ou d'un menu reste lisible.
    */
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;
     }
 
-    .animate-float,
-    .animate-glow,
-    .animate-flow {
-      animation: none !important;
-    }
-
-    .animate-page-in {
-      animation: fade-in 150ms ease-out both !important;
-    }
-
+    .animate-draw,
     .animate-bar-fill {
       animation: none !important;
-    }
-
-    .reveal {
-      transform: none;
-      transition-property: opacity;
-      transition-duration: 200ms;
     }
 
     *,
@@ -159,87 +206,52 @@
       transition-duration: 150ms !important;
     }
   }
-
-  /* Petits écrans : halos plus légers à peindre, et immobiles. */
-  @media (max-width: 767px) {
-    .glow-blob {
-      filter: blur(60px) !important;
-      animation: none !important;
-    }
-  }
 }
 
-/*
- * Effets de la page d'accueil, façon github.com : halos bleus flous, grille
- * fine qui s'efface vers les bords, bordure lumineuse au survol des cartes,
- * apparition des sections au défilement.
- */
 @layer components {
-  /*
-   * Fond d'ambiance : deux lueurs radiales (bleu, violet) très diffuses. Plus
-   * de grille : ses lignes dessinaient des carrés derrière chaque page.
-   */
-  .bg-aurora {
-    background:
-      radial-gradient(60% 50% at 20% 0%, rgb(31 111 235 / 0.18), transparent 70%),
-      radial-gradient(45% 40% at 85% 10%, rgb(163 113 247 / 0.12), transparent 70%);
+  /* Titre de page : capitales condensées de la feuille de match, en casse normale. */
+  .page-title {
+    @apply font-display text-[2rem] font-bold leading-[1.05] text-ink-900 sm:text-[2.5rem];
   }
 
   /*
-   * Surface : remplace la « boîte » grise à bordure. Un voile clair à peine
-   * plus lumineux en haut, et un liseré intérieur presque invisible.
+   * Titre d'une feuille (carte, section) : en capitales, comme l'en-tête d'une
+   * colonne de feuille de match. Réservé aux titres courts.
    */
+  .sheet-title {
+    @apply font-display text-xl font-bold uppercase leading-tight tracking-[0.01em] text-ink-900;
+  }
+
+  /* Feuille posée sur le tableau : blanche, filet d'encre, ombre courte. */
   .surface {
-    @apply rounded-card ring-1 ring-inset ring-veil/[0.07];
-    background: linear-gradient(180deg, rgb(var(--veil) / 0.045), rgb(var(--veil) / 0.015));
+    @apply rounded-card bg-ink-100 shadow-sheet ring-1 ring-inset ring-veil/[0.12];
   }
 
-  /* Champ de saisie : arrondi, translucide, liseré bleu au focus. */
+  /* Champ de saisie : feuille blanche, filet net, bleu au focus. */
   .field {
-    @apply rounded-xl border bg-veil/[0.03] px-4 py-2.5 transition-colors focus:border-accent-500/70 focus:bg-veil/[0.05];
+    @apply rounded-md border bg-ink-100 px-3.5 py-2.5 transition-colors focus:border-accent-600;
   }
 
-  /* Liste déroulante native : même gabarit qu'un champ texte (le rendu
-     natif varie selon le navigateur), avec un chevron dessiné par nous. */
+  /* Liste déroulante native : même gabarit, chevron dessiné par nous. */
   select.field {
     @apply appearance-none bg-no-repeat pr-10;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%238b949e' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 8 5 5 5-5'/%3E%3C/svg%3E");
-    background-position: right 0.875rem center;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%238e939a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 8 5 5 5-5'/%3E%3C/svg%3E");
+    background-position: right 0.75rem center;
     background-size: 1.25rem;
   }
 
-  /* Halo : une tache de couleur très floue, posée derrière le contenu.
-     Pas de translate pour le centrer : l'animation `glow` pose son propre
-     transform et l'écraserait. Centrer avec inset-x-0 + mx-auto. */
-  .glow-blob {
-    @apply pointer-events-none absolute rounded-full;
-    filter: blur(90px);
+  /*
+   * Trait de feutre du tableau tactique : bouts ronds, tracé une fois.
+   * `--len` doit valoir la longueur du chemin (pathLength="1" → 1).
+   */
+  .marker {
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
-
-  /* Texte en dégradé bleu → violet, comme les titres de github.com. */
-  .text-gradient {
-    @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(90deg, rgb(var(--accent-800)) 0%, #388bfd 45%, #a371f7 100%);
-  }
-
-  /* Bouton bleu lumineux, pour l'appel à l'action principal. */
-  .btn-glow {
-    @apply inline-flex items-center justify-center gap-2 rounded-full bg-brand px-6 py-3 text-base font-semibold text-white transition duration-200 hover:bg-accent-500;
-    box-shadow:
-      0 0 0 1px rgb(56 139 253 / 0.5),
-      0 8px 30px -6px rgb(31 111 235 / 0.7);
-  }
-  .btn-glow:hover {
-    box-shadow:
-      0 0 0 1px rgb(121 192 255 / 0.6),
-      0 10px 40px -4px rgb(56 139 253 / 0.85);
-  }
-
-  /* Apparition au défilement : voir useReveal. */
-  .reveal {
-    @apply translate-y-6 opacity-0 transition duration-700 ease-out;
-  }
-  .reveal.is-visible {
-    @apply translate-y-0 opacity-100;
+  .marker-draw {
+    stroke-dasharray: 1;
+    --len: 1;
   }
 }
