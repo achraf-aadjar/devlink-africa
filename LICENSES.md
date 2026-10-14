@@ -151,7 +151,7 @@ Aucune des deux licences n'est à réciprocité (GPL, AGPL, LGPL, MPL). Impeccab
 
 ## Polices, icônes et éléments graphiques
 
-**Aucune ressource tierce. Tout a été dessiné pour le concours.**
+**Une seule ressource tierce : la police Fira Sans (SIL Open Font License 1.1). Tout le reste a été dessiné pour le concours.**
 
 | Élément | Où | Détail |
 |---|---|---|
@@ -161,11 +161,11 @@ Aucune des deux licences n'est à réciprocité (GPL, AGPL, LGPL, MPL). Impeccab
 | 3 motifs de fond | `frontend/src/components/icons/Patterns.tsx` | Anneaux, tissage, points. SVG répétables, opacité de 0,06 à 0,10. |
 | Carte de l'Afrique | `frontend/src/features/countries/components/AfricaTileMap.tsx` | Grille de 54 tuiles. Aucune donnée cartographique importée. |
 | Drapeaux | `frontend/src/lib/labels.ts` | Emoji du système, construits depuis le code pays. |
-| Polices | `frontend/tailwind.config.js` | `system-ui` uniquement : aucune police chargée. |
+| Polices | `frontend/src/assets/fonts/` | **Fira Sans** (Regular, Medium, SemiBold) et **Fira Sans Extra Condensed** (Bold), © 2012-2015 The Mozilla Foundation and Telefonica S.A., licence [SIL Open Font License 1.1](https://openfontlicense.org) (texte complet dans `frontend/src/assets/fonts/OFL.txt`). Source : [google/fonts](https://github.com/google/fonts/tree/main/ofl/firasans). Fichiers réduits (sous-ensemble WOFF2, ~33 Ko chacun) aux caractères utiles, dont le latin africain (ɛ, ɔ, ŋ, ɓ, ɗ, ƙ, ƴ, ẹ, ọ, ṣ). L'OFL autorise ce sous-ensemble et l'intégration dans un logiciel, sans vente de la police seule ; le nom « Fira » n'est pas réservé. |
 
-Hors la photo ci-dessous, aucune licence graphique à déclarer : tous ces éléments sont du code source écrit par l'équipe (art. 6 et 11).
+Hors la police ci-dessus, aucune licence graphique à déclarer : tous ces éléments sont du code source écrit par l'équipe (art. 6 et 11).
 
-**Photos des écrans de connexion et d'inscription.** *Connexion* : portrait de Steve Jobs, `frontend/public/auth/portrait.jpg`, par Matthew Yohe, licence [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/), source : [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Steve_Jobs_Headshot_2010-CROP.jpg). Elle est affichée en niveaux de gris sous un voile, avec la mention de l'auteur et de la licence sur la page. La citation (« Great things in business are never done by one person… ») lui est attribuée dans la presse ; la photo est un portrait de personne publique, sans accord de sa part. *Inscription* : portrait de Grace Hopper, `frontend/public/auth/portrait-register.jpg`, par James S. Davis (US Navy), domaine public, source : [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Commodore_Grace_M._Hopper,_USN_(covered).jpg). La phrase « The most dangerous phrase in the language is ‘We’ve always done it this way’ » lui est couramment attribuée ; source primaire non vérifiée.
+**Photos des écrans de connexion et d'inscription : retirées le 2026-10-14.** Les deux portraits ci-dessous ont été supprimés du dépôt avec la refonte « feuille de match » ; les écrans montrent désormais le cercle de démonstration, dessiné en SVG par l'équipe. Historique : *Connexion* : portrait de Steve Jobs, `frontend/public/auth/portrait.jpg`, par Matthew Yohe, licence [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/), source : [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Steve_Jobs_Headshot_2010-CROP.jpg). Elle est affichée en niveaux de gris sous un voile, avec la mention de l'auteur et de la licence sur la page. La citation (« Great things in business are never done by one person… ») lui est attribuée dans la presse ; la photo est un portrait de personne publique, sans accord de sa part. *Inscription* : portrait de Grace Hopper, `frontend/public/auth/portrait-register.jpg`, par James S. Davis (US Navy), domaine public, source : [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Commodore_Grace_M._Hopper,_USN_(covered).jpg). La phrase « The most dangerous phrase in the language is ‘We’ve always done it this way’ » lui est couramment attribuée ; source primaire non vérifiée.
 
 Une photo générée par IA a servi un temps de fond à la bannière d'accueil, retirée pour de bon le 2026-10-08 avec le passage à un thème sombre (voir `docs/DECISIONS.md` et `AI_USAGE.md` pour l'historique complet).
 
