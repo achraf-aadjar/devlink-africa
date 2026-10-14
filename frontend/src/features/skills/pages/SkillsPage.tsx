@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import SkillBadge from '../../../components/SkillBadge'
-import { Button, Card, ErrorState, LoadingState, Select } from '../../../components/ui'
+import { Button, Card, Combobox, ErrorState, LoadingState, Select } from '../../../components/ui'
 import { useI18n } from '../../../i18n/useI18n'
 import { ApiError } from '../../../lib/api'
 import { CATEGORY_LABELS, LEVEL_LABELS } from '../../../lib/labels'
@@ -225,12 +225,12 @@ function SkillColumn({
 
       <div className="mt-auto flex flex-col gap-3 border-t border-ink-200 pt-4 sm:flex-row sm:items-end">
         <div className="flex-1">
-          <Select
+          <Combobox
             label={t('Ajouter une compétence')}
             value={skillId}
             options={options}
             placeholder={available.length ? t('Choisir…') : t('Tout est déjà déclaré')}
-            onChange={(event) => setSkillId(event.target.value)}
+            onChange={setSkillId}
           />
         </div>
         {/* Le niveau n'apparaît qu'une fois une compétence choisie : poser les

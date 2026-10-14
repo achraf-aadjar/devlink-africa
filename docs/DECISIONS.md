@@ -540,3 +540,13 @@ Repris avec nos propres codes, pas une copie : un voile sombre uniforme (`bg-ink
 **Décision.** `backend/reports/admin.py` : premier (et seul) enregistrement admin du projet. Liste filtrable par statut/motif/cible, `status` modifiable directement depuis la liste (`list_editable`), le reste en lecture seule (on ne corrige pas le contenu d'un signalement). Délibérément l'admin Django plutôt qu'un nouvel écran React : c'est un outil interne pour l'équipe, pas une fonctionnalité produit, et ça évite d'inventer un rôle « modérateur » et des permissions dédiées pour un besoin qui se résume à « voir la liste et changer un statut ».
 
 **Effet de bord découvert en testant.** La première requête vers une page admin plantait en test : `STORAGES["staticfiles"]` utilise `CompressedManifestStaticFilesStorage` (whitenoise) en production, qui exige un manifeste généré par `collectstatic` — absent en test, où rien n'avait jamais posé de tag `{% static %}` jusqu'ici puisqu'aucune page serveur n'existait. `config/settings_test.py` repasse sur un stockage simple pour les tests ; la configuration de production n'est pas touchée.
+
+---
+
+## 2026-10-14 — Le même bug de défilement, revenu par la porte du catalogue élargi
+
+**Constat.** Le `<select>` natif du pays à l'inscription avait été remplacé par un `Combobox` précisément parce qu'une longue liste change de valeur au survol de la molette. Le catalogue de compétences comptait 14 entrées à l'époque — pas assez long pour que quiconque s'en plaigne. Il en compte 43 depuis l'élargissement du 12 octobre : deux sélecteurs de compétences natifs en souffrent maintenant, dans « Mes compétences » (ajouter une compétence) et dans `/recherche` (deux filtres, « sait faire » et « veut apprendre »).
+
+**Décision.** Les trois passent au même `Combobox` déjà en place pour les pays. Pour les deux filtres de recherche (où « aucune valeur » = « toutes les compétences », contrairement à l'ajout qui impose un choix), une option `{ value: '', label: 'Toutes' }` est ajoutée en tête de liste : elle sert à la fois de valeur par défaut affichée et de façon d'y revenir après avoir filtré.
+
+**Tests.** Les interactions `selectOptions`/`getAllByRole('option', …)` sur un `<select>` fermé ne marchent plus sur un Combobox (ses options n'existent dans le DOM que liste ouverte) : migrées vers clic + recherche dans la liste ouverte, comme déjà fait pour le pays. Un nouveau test de `/recherche` vérifie le filtre et son retour à « Toutes ».
