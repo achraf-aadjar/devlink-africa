@@ -11,6 +11,7 @@ import { usePendingRequests } from '../features/exchanges/hooks/usePendingReques
 import { msg } from '../i18n/translate'
 import { useI18n } from '../i18n/useI18n'
 import { cn } from '../lib/cn'
+import { useTheme } from '../theme/useTheme'
 
 /**
  * Mesure la hauteur de l'en-tête et l'expose en `--header-h` sur la racine,
@@ -94,6 +95,27 @@ function LanguageSwitch({ className }: { className?: string }) {
       )}
     >
       <span aria-hidden="true">{next.toUpperCase()}</span>
+    </button>
+  )
+}
+
+/** Bascule clair ↔ sombre : affiche le thème vers lequel on passe. */
+function ThemeSwitch({ className }: { className?: string }) {
+  const { theme, toggleTheme } = useTheme()
+  const { t } = useI18n()
+  const next = theme === 'dark' ? 'light' : 'dark'
+  return (
+    <button
+      type="button"
+      onClick={toggleTheme}
+      aria-label={next === 'dark' ? t('Passer au thème sombre') : t('Passer au thème clair')}
+      title={next === 'dark' ? t('Thème sombre') : t('Thème clair')}
+      className={cn(
+        'inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-paper-text transition-colors hover:bg-paper-hover hover:text-paper-ink',
+        className,
+      )}
+    >
+      <Icon name={next === 'dark' ? 'moon' : 'sun'} size={18} />
     </button>
   )
 }
@@ -215,7 +237,15 @@ export default function Layout() {
               )}
             </div>
 
-            <LanguageSwitch className={cn('ml-auto', isAuthenticated ? 'xl:ml-0' : 'lg:ml-0')} />
+            <div
+              className={cn(
+                'ml-auto flex items-center gap-1',
+                isAuthenticated ? 'xl:ml-0' : 'lg:ml-0',
+              )}
+            >
+              <ThemeSwitch />
+              <LanguageSwitch />
+            </div>
 
             <button
               type="button"

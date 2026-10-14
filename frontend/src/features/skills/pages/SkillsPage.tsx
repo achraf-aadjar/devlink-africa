@@ -9,6 +9,7 @@ import type { SkillKind, SkillLevel, UserSkill } from '../../../lib/types'
 import { useQuery } from '../../../lib/useQuery'
 import SkillExtractor from '../../ai/components/SkillExtractor'
 import { addSkill, getMySkills, listCatalog, removeSkill, updateSkillLevel } from '../api/skills'
+import ProofManager from '../components/ProofManager'
 
 const LEVEL_OPTIONS = Object.entries(LEVEL_LABELS).map(([value, label]) => ({ value, label }))
 
@@ -105,6 +106,7 @@ export default function SkillsPage() {
           onAdd={handleAdd}
           onRemove={handleRemove}
           onLevel={handleLevel}
+          onReload={mine.reload}
         />
         <SkillColumn
           title={t('Je veux apprendre')}
@@ -140,6 +142,7 @@ interface ColumnProps {
   onAdd: (kind: SkillKind, skillId: number, level: SkillLevel) => void
   onRemove: (entry: UserSkill) => void
   onLevel?: (entry: UserSkill, level: SkillLevel) => void
+  onReload?: () => void
 }
 
 function SkillColumn({
@@ -152,6 +155,7 @@ function SkillColumn({
   onAdd,
   onRemove,
   onLevel,
+  onReload,
 }: ColumnProps) {
   const { t } = useI18n()
   const [skillId, setSkillId] = useState('')
@@ -179,57 +183,68 @@ function SkillColumn({
       ) : (
         <ul className="flex flex-col gap-2">
           {entries.map((entry) => (
-            <li key={entry.id} className="flex items-center justify-between gap-3">
-              <div className="flex min-w-0 flex-wrap items-center gap-2">
-                <SkillBadge
-                  name={entry.skill.name}
-                  kind={entry.kind}
-                  level={kind === 'OFFERED' ? entry.level : undefined}
-                  proofsCount={entry.proofs_count}
-                  endorsements={entry.endorsements?.length ?? 0}
-                />
-                {kind === 'OFFERED' && onLevel && (
-                  <select
-                    aria-label={t('Niveau pour {skill}', { skill: entry.skill.name })}
-                    value={entry.level}
-                    onChange={(event) => onLevel(entry, event.target.value as SkillLevel)}
-                    className="field border-veil/10 py-1 pl-3 text-xs text-ink-700 [@media(pointer:coarse)]:min-h-11"
-                  >
-                    {levelOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                )}
+            <li key={entry.id} className="flex flex-col gap-1.5">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex min-w-0 flex-wrap items-center gap-2">
+                  <SkillBadge
+                    name={entry.skill.name}
+                    kind={entry.kind}
+                    level={kind === 'OFFERED' ? entry.level : undefined}
+                    proofsCount={entry.proofs_count}
+                    endorsements={entry.endorsements?.length ?? 0}
+                  />
+                  {kind === 'OFFERED' && onLevel && (
+                    <select
+                      aria-label={t('Niveau pour {skill}', { skill: entry.skill.name })}
+                      value={entry.level}
+                      onChange={(event) => onLevel(entry, event.target.value as SkillLevel)}
+                      className="field border-veil/10 py-1 pl-3 text-xs text-ink-700 [@media(pointer:coarse)]:min-h-11"
+                    >
+                      {levelOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => onRemove(entry)}
+                  className="shrink-0 rounded-full px-3 py-1 text-xs font-medium text-ink-600 transition hover:bg-danger/10 hover:text-danger [@media(pointer:coarse)]:min-h-11"
+                >
+                  {t('Retirer')}
+                </button>
               </div>
-              <button
-                type="button"
-                onClick={() => onRemove(entry)}
-                className="shrink-0 rounded-full px-3 py-1 text-xs font-medium text-ink-600 transition hover:bg-danger/10 hover:text-danger [@media(pointer:coarse)]:min-h-11"
-              >
-                {t('Retirer')}
-              </button>
+
+              {kind === 'OFFERED' && onReload && <ProofManager entry={entry} onChange={onReload} />}
             </li>
           ))}
         </ul>
       )}
 
-      <div className="mt-auto flex flex-col gap-3 border-t border-ink-200 pt-4">
-        <Select
-          label={t('Ajouter une compétence')}
-          value={skillId}
-          options={options}
-          placeholder={available.length ? t('Choisir…') : t('Tout est déjà déclaré')}
-          onChange={(event) => setSkillId(event.target.value)}
-        />
-        {kind === 'OFFERED' && (
+      <div className="mt-auto flex flex-col gap-3 border-t border-ink-200 pt-4 sm:flex-row sm:items-end">
+        <div className="flex-1">
           <Select
-            label={t('Votre niveau')}
-            value={level}
-            options={levelOptions}
-            onChange={(event) => setLevel(event.target.value as SkillLevel)}
+            label={t('Ajouter une compétence')}
+            value={skillId}
+            options={options}
+            placeholder={available.length ? t('Choisir…') : t('Tout est déjà déclaré')}
+            onChange={(event) => setSkillId(event.target.value)}
           />
+        </div>
+        {/* Le niveau n'apparaît qu'une fois une compétence choisie : poser les
+            deux champs d'un coup, avant même de savoir laquelle ajouter,
+            c'était deux décisions à prendre en même temps. */}
+        {kind === 'OFFERED' && skillId && (
+          <div className="sm:w-36">
+            <Select
+              label={t('Votre niveau')}
+              value={level}
+              options={levelOptions}
+              onChange={(event) => setLevel(event.target.value as SkillLevel)}
+            />
+          </div>
         )}
         <Button
           type="button"
@@ -238,6 +253,7 @@ function SkillColumn({
           onClick={() => {
             onAdd(kind, Number(skillId), level)
             setSkillId('')
+            setLevel('INTERMEDIATE')
           }}
         >
           {t('Ajouter')}

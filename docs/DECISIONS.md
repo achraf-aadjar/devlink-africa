@@ -487,3 +487,56 @@ Repris avec nos propres codes, pas une copie : un voile sombre uniforme (`bg-ink
 **Côté serveur.** Le frontend envoie `Accept-Language`. Django traduit ses propres messages (`LocaleMiddleware`) ; les messages propres à DevLink sont traduits au même endroit (`core/i18n.py`), avec le même garde-fou : un test parcourt le code (module `ast`) et échoue si un message d'erreur levé n'a pas de traduction. Pas de fichiers gettext compilés : il aurait fallu installer les outils GNU gettext dans l'image Docker pour une soixantaine de phrases. Les fonctions d'IA rédigent dans la langue de l'interface.
 
 **Ce qui reste en français.** Le contenu saisi par les utilisateurs (bios, descriptions de projets), qu'on ne traduit pas à leur place, et la page interne du design system.
+
+---
+
+## 2026-10-12 — Simplifie l'ajout d'une compétence
+
+**Problème.** Achraf, en capture d'écran : « la façon de ce que l'utilisateur écrit ses compétences c'est pas clair, il va pas savoir, faut simplifier ». La compétence à ajouter, le niveau et le bouton « Ajouter » étaient trois blocs empilés sur toute la largeur de la carte — trois réglages d'apparence indépendante, alors que c'est une seule action en deux étapes.
+
+**Décision.** Les trois tiennent maintenant sur une seule rangée (`flex`, empilée seulement sur mobile). Le sélecteur de niveau n'apparaît qu'une fois une compétence choisie : poser les deux choix d'un coup, avant même de savoir laquelle ajouter, forçait deux décisions simultanées pour une seule action.
+
+---
+
+## 2026-10-12 — Catalogue de compétences élargi
+
+**Problème.** Le catalogue ne comptait que 14 technologies (migration `0002_seed_catalog`), toutes centrées sur une pile React/Python. Beaucoup de profils plausibles (Java/Spring, PHP/Laravel, mobile natif, bases de données, cloud) n'avaient tout simplement rien à cocher.
+
+**Décision.** Nouvelle migration `0005_elargit_le_catalogue`, même mécanisme que `0002`/`0003` (`get_or_create` par nom, catégorie posée à la création) : 29 compétences de plus, réparties dans les sept catégories existantes — front-end (Vue.js, Angular, HTML/CSS, Tailwind CSS), back-end (Django, Laravel, Spring Boot, Ruby on Rails, Go, Java, PHP, C#/.NET), mobile (React Native, Swift, Kotlin), données (MySQL, MongoDB, Redis, SQL), DevOps (AWS, Git, GitHub Actions, Nginx, Terraform), design (Figma), autre (GraphQL, Rust, Agile/Scrum, Cybersécurité). Catalogue total : 43.
+
+**Tests touchés.** Quatre tests vérifiaient le compte exact du catalogue (14) ou l'ensemble exact d'une catégorie (DEVOPS) : mis à jour pour refléter les nouveaux chiffres, pas contournés.
+
+---
+
+## 2026-10-12 — Thème clair/sombre explicite
+
+**Problème.** Depuis la PR d'Emmanuel (« thème clair, le sombre suit l'appareil »), le thème dépendait uniquement de `prefers-color-scheme` : pas de bouton, impossible de choisir l'un ou l'autre indépendamment du système.
+
+**Décision.** `ThemeProvider` (même structure que `I18nProvider` : mémorisé dans `localStorage`, sinon celui de l'appareil) pose un attribut `data-theme` sur `<html>` **seulement après un choix explicite**. Sans ce choix, l'attribut reste absent et `index.css` continue de suivre `prefers-color-scheme` en direct, exactement comme avant — y compris si l'appareil change de réglage pendant que la page est ouverte. Dès qu'on clique, le choix est figé et mémorisé.
+
+**CSS.** La règle `@media (prefers-color-scheme: dark)` est restreinte à `:root:not([data-theme='light'])`, pour qu'un choix clair explicite l'emporte sur un appareil en mode sombre ; une règle `:root[data-theme='dark']` séparée couvre le choix sombre explicite sur un appareil resté en clair. Léger doublon des variables (deux blocs identiques) plutôt qu'une règle plus complexe à lire.
+
+**Interface.** Bouton dans la pastille de navigation, à côté du sélecteur de langue, même principe d'affichage (« montre vers quoi on bascule ») : une lune quand on est en clair, un soleil quand on est en sombre. Deux icônes de plus, dessinées à la main sur la même grille que le reste du jeu (`paths.ts`).
+
+---
+
+## 2026-10-13 — Les preuves de compétence, jusqu'ici invisibles
+
+**Constat.** `SkillProof` (titre, lien, description) existait en base depuis DL-31, avec une API complète (`POST`/`GET`/`DELETE /me/skills/{id}/proofs/`) — mais **aucun écran ne l'utilisait**. Le profil public n'affichait qu'un chiffre (« 2 ✓ », via `proofs_count`), jamais ce qui le justifie, et rien côté interface ne permettait d'en ajouter une : la donnée la plus crédibilisante du produit (la preuve de ce qu'on sait faire) était entièrement hors de portée d'un vrai utilisateur. Les profils de démo avaient des preuves (créées par `seed_demo` directement en base), ce qui masquait le trou.
+
+**Décision.** Complété des deux côtés plutôt que de n'afficher que la lecture :
+1. `UserSkillSerializer` porte désormais un champ `proofs` (liste complète), en plus de `proofs_count` qui reste pour l'affichage compact (`SkillBadge`). `_detail_payload`, qui recopiait ce même contenu à la main dans `skills/views.py`, est devenu inutile et supprimé.
+2. `ProofManager` (`features/skills/components/`) : sur la page « Mes compétences », chaque compétence « Sait faire » propose d'ajouter une preuve (type, titre, lien facultatif, description facultative) et de retirer les siennes. Repliée par défaut si la compétence a déjà des preuves ; sans aucune, le bouton ouvre directement le formulaire (pas de section vide avec un deuxième bouton au même intitulé — piège repéré en écrivant le test, corrigé avant de le relâcher).
+3. Le profil public affiche maintenant le titre et le lien de chaque preuve sous la compétence, pas seulement leur nombre.
+
+**Performance.** `proofs_prefetch()` (même forme que `endorsements_prefetch()` déjà en place) précharge les preuves de toutes les compétences en une requête, pour le profil public comme pour « Mes compétences ». Le test de non-régression N+1 du profil public est passé de 4 à 5 requêtes constantes (une preuve en plus à précharger), toujours indépendant du nombre de compétences — vérifié jusqu'à 15.
+
+---
+
+## 2026-10-13 — Les signalements n'étaient vus par personne
+
+**Constat.** `Report` (DL-32) a un champ `status` (`OPEN`/`REVIEWED`/`DISMISSED`) qui suggère un vrai circuit de modération — mais `ReportView` n'a qu'un `post()`, aucun `get()`, et **aucune app du projet n'a jamais eu de `admin.py`** (vérifié : aucun fichier de ce nom nulle part dans le code du projet). Un signalement partait dans la base et n'en ressortait plus jamais : ni lu, ni traité, ni rejeté, par personne. Repéré en auditant systématiquement chaque route d'écriture pour vérifier qu'elle a un chemin de lecture quelque part — le même type de trou que les preuves de compétence la veille.
+
+**Décision.** `backend/reports/admin.py` : premier (et seul) enregistrement admin du projet. Liste filtrable par statut/motif/cible, `status` modifiable directement depuis la liste (`list_editable`), le reste en lecture seule (on ne corrige pas le contenu d'un signalement). Délibérément l'admin Django plutôt qu'un nouvel écran React : c'est un outil interne pour l'équipe, pas une fonctionnalité produit, et ça évite d'inventer un rôle « modérateur » et des permissions dédiées pour un besoin qui se résume à « voir la liste et changer un statut ».
+
+**Effet de bord découvert en testant.** La première requête vers une page admin plantait en test : `STORAGES["staticfiles"]` utilise `CompressedManifestStaticFilesStorage` (whitenoise) en production, qui exige un manifeste généré par `collectstatic` — absent en test, où rien n'avait jamais posé de tag `{% static %}` jusqu'ici puisqu'aucune page serveur n'existait. `config/settings_test.py` repasse sur un stockage simple pour les tests ; la configuration de production n'est pas touchée.

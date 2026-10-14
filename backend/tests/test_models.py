@@ -37,7 +37,7 @@ def test_user_is_identified_by_email():
 
 @pytest.mark.django_db
 def test_starter_skill_catalog_is_loaded():
-    assert Skill.objects.count() == 14
+    assert Skill.objects.count() == 43
     assert Skill.objects.filter(name="CI/CD").exists()
 
 

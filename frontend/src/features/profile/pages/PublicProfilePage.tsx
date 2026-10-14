@@ -12,6 +12,7 @@ import {
   countryFlag,
   DOMAIN_LABELS,
   PROJECT_STATUS_LABELS,
+  PROOF_KIND_LABELS,
 } from '../../../lib/labels'
 import type { Availability, Domain } from '../../../lib/types'
 import { useQuery } from '../../../lib/useQuery'
@@ -107,7 +108,7 @@ export default function PublicProfilePage() {
           {data.skills.offered.length === 0 ? (
             <p className="text-sm text-ink-600">{t('Aucune compétence déclarée.')}</p>
           ) : (
-            <ul className="flex flex-wrap gap-2">
+            <ul className="flex flex-col gap-2">
               {data.skills.offered.map((entry) => (
                 <li key={entry.id}>
                   <SkillBadge
@@ -117,6 +118,30 @@ export default function PublicProfilePage() {
                     proofsCount={entry.proofs_count}
                     endorsements={entry.endorsements?.length ?? 0}
                   />
+                  {entry.proofs && entry.proofs.length > 0 && (
+                    <ul className="mt-1.5 flex flex-col gap-1 border-l-2 border-ink-200 pl-3">
+                      {entry.proofs.map((proof) => (
+                        <li key={proof.id} className="text-xs">
+                          {proof.url ? (
+                            <a
+                              href={proof.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="font-medium text-accent-700 hover:underline"
+                            >
+                              {proof.title}
+                            </a>
+                          ) : (
+                            <span className="font-medium text-ink-800">{proof.title}</span>
+                          )}
+                          <span className="ml-2 text-ink-500">
+                            {t(PROOF_KIND_LABELS[proof.kind])}
+                          </span>
+                          {proof.description && <p className="text-ink-600">{proof.description}</p>}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </li>
               ))}
             </ul>

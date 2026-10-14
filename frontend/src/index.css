@@ -38,8 +38,11 @@
     --info: 7 89 133;
   }
 
+  /* Sans choix explicite (voir ThemeProvider), le thème suit l'appareil :
+     exclu dès qu'un `data-theme` est posé, pour qu'un choix clair/sombre
+     explicite l'emporte toujours sur la préférence système. */
   @media (prefers-color-scheme: dark) {
-    :root {
+    :root:not([data-theme='light']) {
       color-scheme: dark;
       --ink-50: 13 17 23;
       --ink-100: 22 27 34;
@@ -67,6 +70,32 @@
       --warning: 210 153 34;
       --info: 125 211 252;
     }
+  }
+
+  /* Choix explicite « sombre », quel que soit l'appareil (voir ThemeProvider). */
+  :root[data-theme='dark'] {
+    color-scheme: dark;
+    --ink-50: 13 17 23;
+    --ink-100: 22 27 34;
+    --ink-200: 33 38 45;
+    --ink-300: 48 54 61;
+    --ink-400: 72 79 88;
+    --ink-500: 129 138 149;
+    --ink-600: 139 148 158;
+    --ink-700: 173 181 189;
+    --ink-800: 201 209 217;
+    --ink-900: 230 237 243;
+    --accent-50: 10 31 51;
+    --accent-100: 13 40 71;
+    --accent-200: 17 49 92;
+    --accent-300: 22 63 120;
+    --accent-400: 31 111 235;
+    --accent-500: 56 139 253;
+    --accent-600: 68 147 248;
+    --accent-700: 88 166 255;
+    --accent-800: 121 192 255;
+    --accent-900: 165 214 255;
+    --veil: 255 255 255;
   }
 }
 

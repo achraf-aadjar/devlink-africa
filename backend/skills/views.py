@@ -51,13 +51,6 @@ class SkillCatalogView(ListAPIView):
         return list_catalog(category=category, search=self.request.query_params.get("search"))
 
 
-def _detail_payload(entry: UserSkill) -> dict:
-    """Représentation d'une compétence déclarée, avec ses preuves."""
-    data = UserSkillSerializer(entry).data
-    data["proofs"] = SkillProofSerializer(entry.proofs.all(), many=True).data
-    return data
-
-
 class MySkillsView(APIView):
     """GET et POST /me/skills/."""
 
@@ -87,7 +80,7 @@ class MySkillsView(APIView):
         data.is_valid(raise_exception=True)
 
         entry = services.add_user_skill(user=request.user, **data.validated_data)
-        return Response(_detail_payload(entry), status=status.HTTP_201_CREATED)
+        return Response(UserSkillSerializer(entry).data, status=status.HTTP_201_CREATED)
 
 
 class MySkillDetailView(APIView):
@@ -112,7 +105,7 @@ class MySkillDetailView(APIView):
         data.is_valid(raise_exception=True)
 
         entry = services.update_user_skill(entry=entry, level=data.validated_data["level"])
-        return Response(_detail_payload(entry))
+        return Response(UserSkillSerializer(entry).data)
 
     @extend_schema(responses={204: None}, summary="Supprimer une compétence")
     def delete(self, request, pk: int):
