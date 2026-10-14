@@ -37,7 +37,7 @@ export default function DashboardPage() {
       <dl className="grid grid-cols-3 divide-x divide-veil/[0.08] py-2">
         {[
           { value: data.counters.matches, label: tn(data.counters.matches, 'match', 'matchs') },
-          { value: data.counters.offered_skills, label: t('compétence(s) proposée(s)') },
+          { value: data.counters.offered_skills, label: t('à enseigner') },
           { value: data.counters.wanted_skills, label: t('à apprendre') },
         ].map((counter) => (
           <div key={counter.label} className="flex flex-col items-center gap-1 px-2 text-center">
@@ -101,10 +101,8 @@ export default function DashboardPage() {
             </Link>
           </div>
           <p className="mb-3 text-sm text-ink-600">
-            {t('{received} reçue(s) · {sent} envoyée(s)', {
-              received: data.pending_exchanges.received,
-              sent: data.pending_exchanges.sent,
-            })}
+            {tn(data.pending_exchanges.received, '{n} reçue', '{n} reçues')} ·{' '}
+            {tn(data.pending_exchanges.sent, '{n} envoyée', '{n} envoyées')}
           </p>
           {data.pending_exchanges.items.length === 0 ? (
             <p className="text-sm text-ink-500">{t('Rien en attente.')}</p>

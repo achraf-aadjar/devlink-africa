@@ -39,9 +39,10 @@ describe('exploration par pays', () => {
     expect(screen.getByText('6 developers')).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Browse by country' })).toBeInTheDocument()
     // La tuile de la carte aussi, y compris pour un pays sans donnée.
-    expect(
-      screen.getByRole('link', { name: 'Senegal: 6 developer(s), 3 project(s)' }),
-    ).toHaveAttribute('href', '/pays/SN')
+    expect(screen.getByRole('link', { name: 'Senegal: 6 developers, 3 projects' })).toHaveAttribute(
+      'href',
+      '/pays/SN',
+    )
     expect(screen.getByRole('link', { name: 'Chad: no sign-ups yet' })).toHaveAttribute(
       'href',
       '/pays/TD',
