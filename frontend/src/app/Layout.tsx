@@ -1,4 +1,4 @@
-import { Suspense, useState } from 'react'
+import { Suspense, useLayoutEffect, useRef, useState } from 'react'
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import Icon from '../components/icons/Icon'
 import Logo from '../components/icons/Logo'
@@ -11,6 +11,34 @@ import { usePendingRequests } from '../features/exchanges/hooks/usePendingReques
 import { msg } from '../i18n/translate'
 import { useI18n } from '../i18n/useI18n'
 import { cn } from '../lib/cn'
+
+/**
+ * Mesure la hauteur de l'en-tête et l'expose en `--header-h` sur la racine,
+ * pour que les pages se calent dessous (voir `main`). La hauteur change avec
+ * la largeur d'écran, la taille du texte et l'ouverture du menu mobile : on la
+ * suit avec un ResizeObserver plutôt que de la figer dans le CSS.
+ */
+function useHeaderHeight() {
+  const ref = useRef<HTMLElement>(null)
+
+  useLayoutEffect(() => {
+    const node = ref.current
+    if (!node) return
+    const root = document.documentElement
+    const update = () =>
+      root.style.setProperty('--header-h', `${node.getBoundingClientRect().height}px`)
+    update()
+    if (typeof ResizeObserver === 'undefined') return
+    const observer = new ResizeObserver(update)
+    observer.observe(node)
+    return () => {
+      observer.disconnect()
+      root.style.removeProperty('--header-h')
+    }
+  }, [])
+
+  return ref
+}
 
 interface NavLinkItem {
   to: string
@@ -119,6 +147,8 @@ export default function Layout() {
     navigate('/', { replace: true })
   }
 
+  const headerRef = useHeaderHeight()
+
   return (
     <div className="flex min-h-screen flex-col">
       <a
@@ -130,7 +160,7 @@ export default function Layout() {
 
       {/* Pastille flottante, collée en haut au défilement : le contenu passe
           dessous, visible dans la marge autour de la barre. */}
-      <header className="sticky top-0 z-40 px-3 pt-3 sm:px-6 sm:pt-4">
+      <header ref={headerRef} className="sticky top-0 z-40 px-3 pt-3 sm:px-6 sm:pt-4">
         <div className="mx-auto max-w-[90rem] rounded-2xl bg-paper/95 shadow-card backdrop-blur">
           <div className="flex items-center gap-3 px-4 py-2.5 sm:px-6">
             <Link
@@ -274,8 +304,13 @@ export default function Layout() {
 
       {/* Plus de max-w ici : chaque page décide de sa propre largeur via
           PageContainer, pour pouvoir poser des sections pleine largeur
-          (bannière, fond de section) sans que ça devienne la norme partout. */}
-      <main id="contenu" className="flex-1 bg-ink-50">
+          (bannière, fond de section) sans que ça devienne la norme partout.
+
+          `main` remonte sous l'en-tête (marge négative de sa hauteur) : le fond
+          de chaque page (halo, bannière) commence en haut de l'écran au lieu
+          de laisser une bande vide autour de la pastille. Les pages repoussent
+          leur contenu d'autant avec `pt-[var(--header-h)]`. */}
+      <main id="contenu" className="-mt-[var(--header-h)] flex-1 bg-ink-50">
         <Suspense
           fallback={
             <div

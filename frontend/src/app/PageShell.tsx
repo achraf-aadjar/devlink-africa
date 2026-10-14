@@ -13,8 +13,11 @@ export default function PageShell({ size }: { size: 'default' | 'wide' }) {
   const { pathname } = useLocation()
 
   return (
-    <div className="relative isolate">
-      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-80">
+    <div className="relative isolate pt-[var(--header-h)]">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[calc(var(--header-h)+20rem)]"
+      >
         <div className="bg-aurora absolute inset-0" />
         <div className="glow-blob inset-x-0 -top-40 mx-auto h-72 w-[42rem] max-w-full bg-brand/20" />
       </div>
