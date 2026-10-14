@@ -2,40 +2,48 @@ import { Suspense } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import Logo from '../components/icons/Logo'
 import Spinner from '../components/ui/Spinner'
-import CircleDiagram from '../features/circles/components/CircleDiagram'
-import { DEMO_CIRCLE } from '../features/circles/demoCircle'
 import { msg } from '../i18n/translate'
 import { useI18n } from '../i18n/useI18n'
 
 /**
  * Enveloppe des écrans d'authentification (connexion, inscription) : ni barre
  * de navigation ni pied de page. Sur grand écran, l'écran est coupé en deux : à
- * gauche une ardoise où se trace le cercle de démonstration, à droite le
- * formulaire. Sous `lg`, l'ardoise disparaît et le formulaire prend toute la
- * largeur.
+ * gauche le portrait d'une bâtisseuse de la tech africaine, sous un voile, avec
+ * une de ses phrases ; à droite le formulaire. Sous `lg`, le portrait
+ * disparaît et le formulaire prend toute la largeur.
  *
- * Aucune photo : le produit se montre lui-même, avec des personnes fictives
- * signalées comme telles.
+ * Photos sous licence libre et citations sourcées : voir LICENSES.md.
  */
-const PANELS = {
+const SLIDES = {
   login: {
-    title: msg('Vos matchs vous attendent.'),
-    text: msg(
-      'Chaque proposition est expliquée point par point : vous savez toujours pourquoi un profil vous est proposé.',
+    image: '/auth/rotich.webp',
+    quote: msg(
+      '« Il existe une autre tribu à laquelle je me sens liée : celle d’Internet, qui dépasse les cultures et la géographie. »',
     ),
+    author: 'Juliana Rotich',
+    role: msg('cofondatrice d’Ushahidi et de BRCK, Kenya'),
+    quoteSource: 'TechCentral, 2013',
+    quoteHref: 'https://techcentral.co.za/?p=187844',
+    credit: 'World Economic Forum (Martin Dixon), CC BY-SA 2.0',
+    creditHref:
+      'https://commons.wikimedia.org/wiki/File:Juliana_Rotich_-_World_Economic_Forum_on_Africa_2012.jpg',
   },
   register: {
-    title: msg('Dites ce que vous savez. Dites ce qui vous manque.'),
-    text: msg(
-      'Dev Match trouve les développeurs qui vous complètent, partout en Afrique. Quand aucune paire ne marche, un cercle fait circuler le savoir.',
-    ),
+    image: '/auth/enonchong.webp',
+    quote: msg('« Travaillez dur, voyez grand, et n’abandonnez jamais. »'),
+    author: 'Rebecca Enonchong',
+    role: msg('fondatrice d’AppsTech, Cameroun'),
+    quoteSource: 'How we made it in Africa, 2013',
+    quoteHref: 'https://www.howwemadeitinafrica.com/meet-the-boss-rebecca-enonchong-ceo-appstech/',
+    credit: 'Minette Lontsie, CC BY-SA 4.0',
+    creditHref: 'https://commons.wikimedia.org/wiki/File:Rebecca_Enonchong_in_2018.jpg',
   },
 }
 
 export default function AuthLayout() {
   const { t } = useI18n()
   const { pathname } = useLocation()
-  const panel = pathname.startsWith('/inscription') ? PANELS.register : PANELS.login
+  const slide = pathname.startsWith('/inscription') ? SLIDES.register : SLIDES.login
 
   return (
     <div className="grid min-h-screen bg-ink-50 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
@@ -46,29 +54,68 @@ export default function AuthLayout() {
         {t('Aller au contenu')}
       </a>
 
-      <aside className="scope-dark relative hidden flex-col justify-between gap-10 bg-ink-50 p-10 lg:flex xl:p-14">
-        <Link
-          to="/"
-          className="inline-flex w-fit rounded-md p-1 text-ink-900"
-          aria-label={t('DevLink Africa, accueil')}
-        >
-          <Logo size={30} />
-        </Link>
+      <aside className="relative hidden overflow-hidden bg-bar lg:block">
+        <img
+          src={slide.image}
+          alt=""
+          width={1120}
+          height={1400}
+          decoding="async"
+          className="absolute inset-0 h-full w-full object-cover object-[50%_20%] grayscale"
+        />
+        {/* Voile : léger en haut pour le logo, dense en bas pour la citation. */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-gradient-to-t from-bar via-bar/55 to-bar/25"
+        />
+        <div
+          aria-hidden="true"
+          className="absolute inset-x-0 top-0 h-56 bg-gradient-to-b from-bar/85 to-transparent"
+        />
 
-        <div className="flex flex-col gap-8">
-          <div className="max-w-lg">
-            <p className="font-display text-[2.75rem] font-bold uppercase leading-[0.95] text-ink-900 xl:text-[3.25rem]">
-              {t(panel.title)}
-            </p>
-            <p className="mt-4 max-w-md text-ink-700">{t(panel.text)}</p>
-          </div>
-          <figure className="flex flex-col items-start gap-3">
-            <CircleDiagram circle={DEMO_CIRCLE} className="!mx-0 max-w-[22rem]" />
-            <figcaption className="text-sm text-ink-600">
-              {t('Exemple de cercle : Dakar, Accra, Nairobi. Personnes fictives.')}
+        <div className="relative flex h-full flex-col justify-between p-10 xl:p-14">
+          <Link
+            to="/"
+            className="inline-flex w-fit rounded-md p-1 text-white"
+            aria-label={t('DevLink Africa, accueil')}
+          >
+            <Logo size={30} variant="bar" />
+          </Link>
+
+          <figure className="max-w-xl">
+            <blockquote className="font-display text-[2.25rem] font-bold leading-[1.05] text-white xl:text-[2.75rem]">
+              {t(slide.quote)}
+            </blockquote>
+            <figcaption className="mt-5 text-bar-text">
+              <span className="block font-display text-xl font-bold uppercase text-white">
+                {slide.author}
+              </span>
+              <span className="text-sm text-bar-muted">{t(slide.role)}</span>
             </figcaption>
           </figure>
         </div>
+
+        <p className="absolute bottom-3 right-4 text-right text-xs text-bar-muted">
+          {t('Citation')} :{' '}
+          <a
+            href={slide.quoteHref}
+            className="underline hover:text-white"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {slide.quoteSource}
+          </a>
+          {' · '}
+          {t('Photo')} :{' '}
+          <a
+            href={slide.creditHref}
+            className="underline hover:text-white"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {slide.credit}
+          </a>
+        </p>
       </aside>
 
       <div className="flex flex-col">

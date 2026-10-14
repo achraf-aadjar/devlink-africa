@@ -165,7 +165,7 @@
     ],
     "dos": [
       "Do poser chaque contenu sur une feuille (`.surface` : `ink-100`, filet voile 12 %, ombre feuille, coins 8px) et laisser la page au tableau `ink-50`.",
-      "Do utiliser les échelles `ink`, `accent`, `brand`, `demand`, `veil` et les états par leur nom Tailwind : elles changent seules entre tableau, ardoise et `.scope-dark`.",
+      "Do utiliser les échelles `ink`, `accent`, `brand`, `demand`, `veil` et les états par leur nom Tailwind : elles changent seules entre tableau et ardoise.",
       "Do montrer un échange avec ses deux aimants : bleu pour l'offre et ce que vous donnez, orange pour la demande et ce que vous recevez, et écrire le sens en toutes lettres à côté.",
       "Do afficher un score sur une plaque noire (`ScorePlate`), en creux sous 50 dans un classement, et l'expliquer par une barre de 100 points découpée selon le poids des critères.",
       "Do présenter un classement en lignes à colonnes fixes, une seule ligne ouverte à la fois.",

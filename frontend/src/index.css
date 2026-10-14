@@ -113,13 +113,8 @@
     }
   }
 
-  /*
-   * Choix explicite « sombre », quel que soit l'appareil. `.scope-dark` pose
-   * l'ardoise sur une seule zone (le panneau des écrans de connexion) : les
-   * composants à l'intérieur prennent les teintes sombres sans autre code.
-   */
-  :root[data-theme='dark'],
-  .scope-dark {
+  /* Choix explicite « sombre », quel que soit l'appareil. */
+  :root[data-theme='dark'] {
     color-scheme: dark;
     --ink-50: 19 21 24;
     --ink-100: 27 30 35;
@@ -163,11 +158,6 @@
   body {
     @apply bg-ink-50 font-sans text-ink-800 antialiased;
     caret-color: rgb(var(--brand));
-  }
-
-  /* La zone ardoise recalcule sa couleur de texte avec ses propres teintes. */
-  .scope-dark {
-    color: rgb(var(--ink-800));
   }
 
   ::selection {

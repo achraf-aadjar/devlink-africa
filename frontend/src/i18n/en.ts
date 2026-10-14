@@ -812,4 +812,11 @@ export const EN: Record<string, string> = {
   Format: 'Format',
   'Comment ça se passe': 'How it works',
   'Idéal pour': 'Best for',
+  '« Il existe une autre tribu à laquelle je me sens liée : celle d’Internet, qui dépasse les cultures et la géographie. »':
+    '“There’s another tribe I feel a connection with and that’s the Internet tribe, which transcends culture and geography.”',
+  'cofondatrice d’Ushahidi et de BRCK, Kenya': 'co-founder of Ushahidi and BRCK, Kenya',
+  '« Travaillez dur, voyez grand, et n’abandonnez jamais. »':
+    '“Work hard, think big and never give up.”',
+  'fondatrice d’AppsTech, Cameroun': 'founder of AppsTech, Cameroon',
+  Citation: 'Quote',
 }

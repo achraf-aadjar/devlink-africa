@@ -156,7 +156,7 @@ components:
 
 Chaque Dev Match se montre comme un entraîneur montre une combinaison : des aimants ronds posés sur un tableau tactique émaillé, des flèches tracées au feutre entre eux, une plaque de score noire et une feuille de match imprimée. La page est le tableau (blanc chaud, presque blanc) ; les cartes, champs et fenêtres sont des feuilles blanches posées dessus, cernées d'un filet d'encre ; l'en-tête est le tableau d'affichage, noir dans les deux thèmes. L'encre est noire, l'action et l'offre sont en bleu maillot, la demande en orange : les deux couleurs d'aimants de l'entraîneur.
 
-Le monde est dense et lisible en plein soleil, sur un Android de milieu de gamme : peu de tailles décisives, des capitales condensées pour ce qui se lit de loin (titres, noms, scores), une interface en Fira Sans pour tout le reste. Le thème sombre n'est pas une inversion mais une ardoise : même grammaire, mêmes rôles, teintes recalculées. Une zone peut porter l'ardoise localement (le panneau des écrans de connexion) sans toucher le reste de la page.
+Le monde est dense et lisible en plein soleil, sur un Android de milieu de gamme : peu de tailles décisives, des capitales condensées pour ce qui se lit de loin (titres, noms, scores), une interface en Fira Sans pour tout le reste. Le thème sombre n'est pas une inversion mais une ardoise : même grammaire, mêmes rôles, teintes recalculées.
 
 Rejets confirmés : pas de dégradé, pas de halo ni d'ombre colorée, pas de violet, pas de hero SaaS centré, pas d'anneau de progression, jamais de pelouse verte ni d'esthétique de ticket de pari.
 
@@ -211,7 +211,7 @@ Sept teintes pleines tirées du nom (`frontend/src/lib/avatarColors.ts`), initia
 **Character:** Les capitales condensées de la feuille de match et du tableau d'affichage, pour ce qui se lit d'un coup d'œil ; une humaniste sobre et robuste pour lire et agir. Les deux sont sous SIL OFL 1.1, hébergées avec le site et réduites aux caractères utiles, latin africain compris (ɛ, ɔ, ŋ, ɓ, ɗ, ƙ, ƴ, ẹ, ọ, ṣ et les tons), en `font-display: swap`.
 
 ### Hierarchy
-- **Display** (700, 2,75rem → 4rem → 4,75rem, interligne 0,92, capitales) : le titre du tableau tactique de l'accueil et le panneau ardoise de connexion (2,75rem → 3,25rem). Un seul par écran.
+- **Display** (700, 2,75rem → 4rem → 4,75rem, interligne 0,92, capitales) : le titre du tableau tactique de l'accueil et la citation du panneau de connexion (2,25rem → 2,75rem, casse normale). Un seul par écran.
 - **Headline** (700, 2rem → 2,5rem, interligne 1,05, casse normale) : titre de page (`.page-title`), un par page. Les titres de section de l'accueil montent à 2,25rem → 3rem (interligne 1,02).
 - **Title** (700, 1,25rem, interligne 1,25, capitales, +0,01em) : titre d'une feuille (`.sheet-title`) : carte, section, fenêtre. Réservé aux titres courts. Les noms sous un aimant et les en-têtes de colonnes d'un classement suivent la même voix condensée en capitales.
 - **Score** (700, 1,25rem / 1,75rem / 3,75rem selon la plaque, chiffres tabulaires) : plaques de score, totaux, compteurs.
@@ -293,11 +293,14 @@ Vide : ligne en pointillés `ink-400` sur feuille à 60 %, pastille ronde `ink-2
 ### Modal
 Feuille au-dessus d'un voile noir à 50 %, ombre levée, filet voile 15 %, 512px de large ; sur mobile elle monte du bas, coins arrondis en haut seulement. Titre en `.sheet-title`, bouton de fermeture de 44px, Échap et clic sur le fond ferment, apparition en fondu de 150ms.
 
+### Écrans de connexion et d'inscription
+Sur grand écran, le panneau de gauche porte le portrait d'une bâtisseuse de la tech africaine (Juliana Rotich pour la connexion, Rebecca Enonchong pour l'inscription), en niveaux de gris sous un voile `bar` (dense en bas, renforcé en haut pour le logo), avec une phrase sourcée en Fira Sans Extra Condensed, son nom en capitales, son rôle, et les crédits de la photo et de la citation en bas à droite. Photos sous licence libre déclarées dans `LICENSES.md`. Sous `lg`, le formulaire seul.
+
 ## Do's and Don'ts
 
 ### Do:
 - **Do** poser chaque contenu sur une feuille (`.surface` : `ink-100`, filet voile 12 %, ombre feuille, coins 8px) et laisser la page au tableau `ink-50`.
-- **Do** utiliser les échelles `ink`, `accent`, `brand`, `demand`, `veil` et les états par leur nom Tailwind : elles changent seules entre tableau, ardoise et `.scope-dark`.
+- **Do** utiliser les échelles `ink`, `accent`, `brand`, `demand`, `veil` et les états par leur nom Tailwind : elles changent seules entre tableau et ardoise.
 - **Do** montrer un échange avec ses deux aimants : bleu pour l'offre et ce que vous donnez, orange pour la demande et ce que vous recevez, et écrire le sens en toutes lettres à côté.
 - **Do** afficher un score sur une plaque noire (`ScorePlate`), en creux sous 50 dans un classement, et l'expliquer par une barre de 100 points découpée selon le poids des critères.
 - **Do** présenter un classement en lignes à colonnes fixes, une seule ligne ouverte à la fois.
