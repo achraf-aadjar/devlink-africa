@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Button, EmptyState, ErrorState, LoadingState } from '../../../components/ui'
+import { ButtonLink, EmptyState, ErrorState, LoadingState } from '../../../components/ui'
 import { msg } from '../../../i18n/translate'
 import { useI18n } from '../../../i18n/useI18n'
 import { ApiError } from '../../../lib/api'
@@ -145,11 +144,7 @@ export default function CirclesPage() {
           description={t(
             'Les cercles se forment à partir de ce que vous savez et de ce que vous voulez apprendre. Déclarez vos compétences : chaque nouvel inscrit peut fermer un cercle.',
           )}
-          action={
-            <Link to="/competences">
-              <Button>{t('Ajouter mes compétences')}</Button>
-            </Link>
-          }
+          action={<ButtonLink to="/competences">{t('Ajouter mes compétences')}</ButtonLink>}
         />
       )}
 

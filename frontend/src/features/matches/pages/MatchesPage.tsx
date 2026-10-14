@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Button, EmptyState, ErrorState, LoadingState } from '../../../components/ui'
+import { ButtonLink, EmptyState, ErrorState, LoadingState } from '../../../components/ui'
 import { useI18n } from '../../../i18n/useI18n'
 import { useQuery } from '../../../lib/useQuery'
 import { listMatches } from '../api/matches'
@@ -43,11 +43,7 @@ export default function MatchesPage() {
           description={t(
             'Déclarez ce que vous savez faire et ce que vous voulez apprendre : nous chercherons alors des développeurs complémentaires.',
           )}
-          action={
-            <Link to="/competences">
-              <Button>{t('Ajouter mes compétences')}</Button>
-            </Link>
-          }
+          action={<ButtonLink to="/competences">{t('Ajouter mes compétences')}</ButtonLink>}
         />
       )}
 

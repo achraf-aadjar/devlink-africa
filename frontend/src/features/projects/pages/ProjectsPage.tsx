@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import {
-  Button,
+  ButtonLink,
   Card,
   EmptyState,
   ErrorState,
@@ -60,9 +60,7 @@ export default function ProjectsPage() {
           </p>
         </div>
         {isAuthenticated && (
-          <Link to="/projets/nouveau">
-            <Button>{t('Proposer un projet')}</Button>
-          </Link>
+          <ButtonLink to="/projets/nouveau">{t('Proposer un projet')}</ButtonLink>
         )}
       </header>
 
@@ -111,9 +109,9 @@ export default function ProjectsPage() {
           )}
           action={
             isAuthenticated ? (
-              <Link to="/projets/nouveau">
-                <Button size="sm">{t('Proposer un projet')}</Button>
-              </Link>
+              <ButtonLink to="/projets/nouveau" size="sm">
+                {t('Proposer un projet')}
+              </ButtonLink>
             ) : undefined
           }
         />

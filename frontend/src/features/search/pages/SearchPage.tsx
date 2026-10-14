@@ -5,6 +5,7 @@ import DemoBadge from '../../../components/DemoBadge'
 import SkillBadge from '../../../components/SkillBadge'
 import {
   Button,
+  ButtonLink,
   Card,
   EmptyState,
   ErrorState,
@@ -215,9 +216,9 @@ export default function SearchPage() {
               title={t('Aucun développeur ne correspond')}
               description={t('Essayez avec moins de filtres, ou explorez les profils par pays.')}
               action={
-                <Link to="/pays">
-                  <Button size="sm">{t('Explorer par pays')}</Button>
-                </Link>
+                <ButtonLink to="/pays" size="sm">
+                  {t('Explorer par pays')}
+                </ButtonLink>
               }
             />
           ) : (

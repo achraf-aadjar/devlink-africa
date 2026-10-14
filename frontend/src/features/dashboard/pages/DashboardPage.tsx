@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import Avatar from '../../../components/Avatar'
 import ScoreRing from '../../../components/ScoreRing'
-import { Badge, Button, Card, ErrorState, LoadingState } from '../../../components/ui'
+import { Badge, ButtonLink, Card, ErrorState, LoadingState } from '../../../components/ui'
 import { useI18n } from '../../../i18n/useI18n'
 import { EXCHANGE_TYPE_LABELS } from '../../../lib/labels'
 import { useQuery } from '../../../lib/useQuery'
@@ -62,9 +62,9 @@ export default function DashboardPage() {
             <p className="text-sm text-ink-600">
               {t("Aucun match pour l'instant. Déclarez vos compétences pour en recevoir.")}
             </p>
-            <Link to="/competences">
-              <Button size="sm">{t('Ajouter mes compétences')}</Button>
-            </Link>
+            <ButtonLink to="/competences" size="sm">
+              {t('Ajouter mes compétences')}
+            </ButtonLink>
           </div>
         ) : (
           <ul className="flex flex-col gap-1">
