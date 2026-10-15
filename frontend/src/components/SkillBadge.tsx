@@ -2,6 +2,7 @@ import { useI18n } from '../i18n/useI18n'
 import { LEVEL_LABELS } from '../lib/labels'
 import type { SkillKind, SkillLevel } from '../lib/types'
 import { Badge } from './ui'
+import Icon from './icons/Icon'
 
 export default function SkillBadge({
   name,
@@ -26,10 +27,11 @@ export default function SkillBadge({
       {level && <span className="ml-1 font-normal opacity-80">· {t(LEVEL_LABELS[level])}</span>}
       {proofsCount > 0 && (
         <span
-          className="ml-1 font-normal opacity-80"
+          className="ml-1 inline-flex items-center gap-0.5 font-normal opacity-80"
           title={tn(proofsCount, '{n} preuve', '{n} preuves')}
         >
-          · {proofsCount} ✓
+          · {proofsCount}
+          <Icon name="proof" size={12} label={tn(proofsCount, '{n} preuve', '{n} preuves')} />
         </span>
       )}
       {endorsements > 0 && (

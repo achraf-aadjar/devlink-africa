@@ -41,12 +41,9 @@ describe('enveloppes de page', () => {
     expect(container.querySelector('.max-w-\\[90rem\\]')).not.toBeNull()
   })
 
-  it('gardent le décor hors de portée des lecteurs d’écran', () => {
+  it('alignent toutes les pages sur la largeur de l’en-tête', () => {
     const { container } = renderShell(StandardPage)
 
-    expect(container.querySelector('.bg-aurora')?.parentElement).toHaveAttribute(
-      'aria-hidden',
-      'true',
-    )
+    expect(container.querySelector('.max-w-\\[90rem\\]')).not.toBeNull()
   })
 })

@@ -185,10 +185,10 @@ La loi sénégalaise n° 2008-12 est respectée par des fonctionnalités réelle
 
 ### Les partis pris
 
-- **L'explication du match est la vedette.** Score en évidence, puis « il peut vous apprendre / vous pouvez lui apprendre », puis les raisons en phrases, puis la répartition par critère sous forme de barres. Trois niveaux de lecture, du plus rapide au plus détaillé.
+- **L'explication du match est la vedette.** Les deux personnes face à face comme sur le tableau d'un entraîneur, avec ce que chacune apprend à l'autre ; puis les raisons en phrases ; puis le score découpé en une seule barre de 100 points, une case par critère, à la taille de son poids. Trois niveaux de lecture, du plus rapide au plus détaillé.
 - **Quatre états sur chaque écran** : chargement (squelettes), vide (avec une action utile), erreur (avec réessai), succès. Un état vide ne dit jamais « aucun résultat » sans proposer quoi faire.
-- **Aucune bibliothèque de composants ni d'icônes.** Neuf composants écrits par nous, icônes en SVG inline, polices système. Moins de dépendances à vérifier, un build léger, et un design qui ne ressemble pas à un modèle générique.
-- **Des surfaces douces plutôt que des boîtes.** Avatars à initiales (pas de photo stockée), score en jauge circulaire, pays en pastilles, carte de l'Afrique en points. Les décors (halos, aurore) sont masqués aux lecteurs d'écran.
+- **Aucune bibliothèque de composants ni d'icônes.** Composants écrits par nous, icônes en SVG inline. Une seule ressource tierce, déclarée : la police Fira Sans (licence OFL), choisie parce qu'elle couvre le latin africain (ɛ, ɔ, ŋ, ɓ, ɗ, ẹ, ọ, ṣ…) et réduite à ~33 Ko par graisse.
+- **Un monde visuel à nous : la feuille de match.** Le tableau tactique de l'entraîneur et la feuille de match imprimée, connus de tout le continent : tableau clair (ardoise en sombre), barre noire en tête, avatars en aimants, flèches au feutre pour les cercles, score sur une plaque noire. Bleu pour ce qu'on donne, orange pour ce qu'on cherche, partout, observatoire compris. Aucun halo, aucun dégradé : rien qui sente le modèle généré (voir `docs/DECISIONS.md`, 2026-10-14).
 - **Un nouveau compte n'est jamais laissé seul.** La liste « Vos premiers pas » dit quoi faire ensuite (profil, compétences, contact, premier échange), avec un seul bouton : la prochaine étape.
 - **Testé sur mobile.** Les 18 écrans vérifiés à 390 px de large, sans aucun débordement horizontal.
 

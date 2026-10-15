@@ -51,7 +51,7 @@ export default function Modal({ open, title, onClose, children }: ModalProps) {
         type="button"
         aria-label={t('Fermer')}
         onClick={onClose}
-        className="absolute inset-0 bg-black/60"
+        className="absolute inset-0 bg-black/50"
       />
       <div
         ref={panel}
@@ -59,15 +59,15 @@ export default function Modal({ open, title, onClose, children }: ModalProps) {
         aria-modal="true"
         aria-label={title}
         tabIndex={-1}
-        className="animate-fade-in relative w-full max-w-lg rounded-t-card bg-ink-100 p-6 shadow-glow-soft ring-1 ring-veil/10 sm:rounded-card"
+        className="animate-fade-in relative w-full max-w-lg rounded-t-card bg-ink-100 p-6 shadow-lift ring-1 ring-veil/15 sm:rounded-card"
       >
         <div className="mb-4 flex items-start justify-between gap-4">
-          <h2 className="text-lg font-semibold text-ink-900">{title}</h2>
+          <h2 className="sheet-title">{title}</h2>
           <button
             type="button"
             onClick={onClose}
             aria-label={t('Fermer la fenêtre')}
-            className="-mr-2 -mt-2 inline-flex h-11 w-11 items-center justify-center rounded-full text-ink-500 hover:bg-ink-200 hover:text-ink-800"
+            className="-mr-2 -mt-2 inline-flex h-11 w-11 items-center justify-center rounded-md text-ink-600 hover:bg-ink-200 hover:text-ink-900"
           >
             <Icon name="close" size={20} />
           </button>

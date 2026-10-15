@@ -96,9 +96,7 @@ export default function RegisterPage() {
 
   return (
     <div className="mx-auto w-full max-w-lg">
-      <h1 className="mb-1 text-3xl font-bold tracking-tight text-ink-900">
-        {t('Créer un compte')}
-      </h1>
+      <h1 className="mb-1 page-title">{t('Créer un compte')}</h1>
       <p className="mb-6 text-sm text-ink-600">
         {t(
           "Rejoignez les développeuses et développeurs d'Afrique qui échangent leurs compétences.",
@@ -175,18 +173,14 @@ export default function RegisterPage() {
             </p>
           )}
 
-          <Button
-            type="submit"
-            loading={submitting}
-            className="w-full !rounded-xl border border-transparent !px-4 !py-2.5 !text-base !shadow-none"
-          >
+          <Button type="submit" loading={submitting} className="w-full">
             {t('Créer mon compte')}
           </Button>
         </form>
 
         {googleClientId && (
           <div className="mt-5 flex flex-col gap-4">
-            <div className="flex items-center gap-3 text-xs font-medium uppercase tracking-wide text-ink-500">
+            <div className="flex items-center gap-3 text-sm text-ink-600">
               <span className="h-px flex-1 bg-ink-200" aria-hidden="true" />
               {t('ou')}
               <span className="h-px flex-1 bg-ink-200" aria-hidden="true" />

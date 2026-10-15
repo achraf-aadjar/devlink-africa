@@ -149,7 +149,7 @@ export default function Combobox({
           onKeyDown={onKeyDown}
           className={cn(
             'field w-full pr-10 text-ink-900 placeholder:text-ink-500',
-            error ? 'border-danger/70' : 'border-veil/10',
+            error ? 'border-danger/70' : 'border-ink-300',
           )}
         />
         <Icon
@@ -163,7 +163,7 @@ export default function Combobox({
             ref={listRef}
             role="listbox"
             aria-label={label}
-            className="absolute z-20 mt-1 max-h-60 w-full overflow-y-auto rounded-lg border border-ink-300 bg-ink-100 py-1 shadow-card"
+            className="absolute z-20 mt-1 max-h-60 w-full overflow-y-auto rounded-lg border border-ink-300 bg-ink-100 py-1 shadow-lift"
           >
             {filtered.length === 0 && (
               <li className="px-3 py-2 text-sm text-ink-500">{t('Aucun résultat.')}</li>

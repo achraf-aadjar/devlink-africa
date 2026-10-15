@@ -1,4 +1,4 @@
-import { Suspense, useLayoutEffect, useRef, useState } from 'react'
+import { Suspense, useState } from 'react'
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import Icon from '../components/icons/Icon'
 import Logo from '../components/icons/Logo'
@@ -12,34 +12,6 @@ import { msg } from '../i18n/translate'
 import { useI18n } from '../i18n/useI18n'
 import { cn } from '../lib/cn'
 import { useTheme } from '../theme/useTheme'
-
-/**
- * Mesure la hauteur de l'en-tête et l'expose en `--header-h` sur la racine,
- * pour que les pages se calent dessous (voir `main`). La hauteur change avec
- * la largeur d'écran, la taille du texte et l'ouverture du menu mobile : on la
- * suit avec un ResizeObserver plutôt que de la figer dans le CSS.
- */
-function useHeaderHeight() {
-  const ref = useRef<HTMLElement>(null)
-
-  useLayoutEffect(() => {
-    const node = ref.current
-    if (!node) return
-    const root = document.documentElement
-    const update = () =>
-      root.style.setProperty('--header-h', `${node.getBoundingClientRect().height}px`)
-    update()
-    if (typeof ResizeObserver === 'undefined') return
-    const observer = new ResizeObserver(update)
-    observer.observe(node)
-    return () => {
-      observer.disconnect()
-      root.style.removeProperty('--header-h')
-    }
-  }, [])
-
-  return ref
-}
 
 interface NavLinkItem {
   to: string
@@ -70,7 +42,7 @@ function PendingBadge({ count, kind = 'request' }: { count: number; kind?: 'requ
         ? t('{count} demandes en attente', { count })
         : t('{count} demande en attente', { count })
   return (
-    <span className="ml-1.5 inline-flex min-w-5 items-center justify-center rounded-full bg-brand px-1.5 text-xs font-semibold leading-5 text-white">
+    <span className="ml-1.5 inline-flex min-w-5 items-center justify-center rounded bg-demand-fill px-1.5 font-display text-sm font-bold leading-5 text-white tabular-nums">
       <span aria-hidden="true">{count}</span>
       <span className="sr-only">{` (${label})`}</span>
     </span>
@@ -90,7 +62,7 @@ function LanguageSwitch({ className }: { className?: string }) {
       aria-label={next === 'en' ? 'Switch to English' : t('Passer en français')}
       title={next === 'en' ? 'English' : 'Français'}
       className={cn(
-        'inline-flex h-11 min-w-11 shrink-0 items-center justify-center rounded-lg px-2.5 text-sm font-semibold text-paper-text transition-colors hover:bg-paper-hover hover:text-paper-ink',
+        'inline-flex h-11 min-w-11 shrink-0 items-center justify-center rounded-md px-2.5 font-display text-base font-bold tracking-wide text-bar-muted transition-colors hover:bg-white/10 hover:text-white',
         className,
       )}
     >
@@ -111,7 +83,7 @@ function ThemeSwitch({ className }: { className?: string }) {
       aria-label={next === 'dark' ? t('Passer au thème sombre') : t('Passer au thème clair')}
       title={next === 'dark' ? t('Thème sombre') : t('Thème clair')}
       className={cn(
-        'inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-paper-text transition-colors hover:bg-paper-hover hover:text-paper-ink',
+        'inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-bar-muted transition-colors hover:bg-white/10 hover:text-white',
         className,
       )}
     >
@@ -123,30 +95,39 @@ function ThemeSwitch({ className }: { className?: string }) {
 const PUBLIC_LINKS: NavLinkItem[] = [
   { to: '/recherche', label: msg('Recherche') },
   { to: '/projets', label: msg('Projets') },
-  { to: '/pays', label: msg('Pays|menu') },
 ]
 
-// Connecté, la barre est pleine à 1280 px : l'observatoire reste alors joignable
-// par le pied de page et la page Pays. Un visiteur, qui a la place, le voit ici.
-const VISITOR_LINKS: NavLinkItem[] = [{ to: '/observatoire', label: msg('Observatoire') }]
+// Un visiteur a la place de voir aussi les pays et l'observatoire. Connecté,
+// la barre garde ses sept liens de travail : pays et observatoire restent
+// joignables par le pied de page.
+const VISITOR_LINKS: NavLinkItem[] = [
+  { to: '/pays', label: msg('Pays|menu') },
+  { to: '/observatoire', label: msg('Observatoire') },
+]
 
-// La barre est claire (pastille flottante sur le fond sombre) : ses couleurs
-// sont posées en dur plutôt qu'avec `ink`, dont l'échelle est pensée pour un
-// fond sombre et donnerait ici du texte clair sur du clair.
+// La barre est noire dans les deux thèmes (le tableau d'affichage) : ses
+// couleurs viennent de `bar`, pas de l'échelle `ink` qui change avec le thème.
+// Le lien actif est souligné d'un trait bleu clair, comme la ligne en cours
+// d'un tableau des départs.
 const linkClass = ({ isActive }: { isActive: boolean }) =>
   cn(
-    'flex min-h-11 items-center whitespace-nowrap rounded-lg px-2.5 py-2 text-[15px] font-medium transition-colors',
-    isActive ? 'text-paper-ink bg-paper-active' : 'text-paper-text hover:text-paper-ink',
+    'relative flex min-h-11 items-center whitespace-nowrap px-2.5 py-2 text-[15px] font-medium transition-colors',
+    'after:absolute after:inset-x-2.5 after:-bottom-2 after:h-[3px] after:rounded-t-sm',
+    isActive
+      ? 'text-white after:bg-bar-accent'
+      : 'text-bar-muted hover:text-white after:bg-transparent',
   )
 
 const mobileLinkClass = ({ isActive }: { isActive: boolean }) =>
   cn(
-    'flex min-h-11 items-center rounded-lg px-3 py-2.5 text-[15px] font-medium transition-colors',
-    isActive ? 'text-paper-ink bg-paper-active' : 'text-paper-text hover:bg-paper-hover',
+    'flex min-h-11 items-center rounded-md border-l-[3px] px-3 py-2.5 text-[15px] font-medium transition-colors',
+    isActive
+      ? 'border-bar-accent bg-white/10 text-white'
+      : 'border-transparent text-bar-muted hover:bg-white/10 hover:text-white',
   )
 
 const signUpClass =
-  'inline-flex items-center justify-center rounded-xl bg-brand px-7 py-3 text-[15px] font-semibold text-white transition-colors hover:bg-brand-hover'
+  'inline-flex min-h-11 items-center justify-center rounded-md bg-brand px-5 py-2 text-[15px] font-semibold text-white transition-colors hover:bg-brand-hover'
 
 export default function Layout() {
   const { isAuthenticated, user, signOut } = useAuth()
@@ -160,7 +141,7 @@ export default function Layout() {
     ? [...PRIVATE_LINKS, ...PUBLIC_LINKS]
     : [...PUBLIC_LINKS, ...VISITOR_LINKS]
   // Connecté, la barre porte sept liens plus le profil : elle ne tient sur
-  // une ligne qu'à partir de xl. En visiteur, trois liens tiennent dès lg.
+  // une ligne qu'à partir de xl. En visiteur, quatre liens tiennent dès lg.
   const desktop = isAuthenticated ? 'xl:flex' : 'lg:flex'
   const mobileOnly = isAuthenticated ? 'xl:hidden' : 'lg:hidden'
 
@@ -169,33 +150,26 @@ export default function Layout() {
     navigate('/', { replace: true })
   }
 
-  const headerRef = useHeaderHeight()
-
   return (
     <div className="flex min-h-screen flex-col">
       <a
         href="#contenu"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-ink-100 focus:px-3 focus:py-2 focus:shadow-card"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-ink-100 focus:px-3 focus:py-2 focus:shadow-lift"
       >
         {t('Aller au contenu')}
       </a>
 
-      {/* Pastille flottante, collée en haut au défilement : le contenu passe
-          dessous, visible dans la marge autour de la barre. */}
-      <header ref={headerRef} className="sticky top-0 z-40 px-3 pt-3 sm:px-6 sm:pt-4">
-        <div className="mx-auto max-w-[90rem] rounded-2xl bg-paper/95 shadow-card backdrop-blur">
-          <div className="flex items-center gap-3 px-4 py-2.5 sm:px-6">
-            <Link
-              to="/"
-              className="shrink-0 text-paper-ink"
-              aria-label={t('DevLink Africa, accueil')}
-            >
-              <Logo size={26} variant="light" />
+      {/* Barre noire collée en haut, pleine largeur : le tableau d'affichage. */}
+      <header className="sticky top-0 z-40 bg-bar text-bar-text">
+        <div className="mx-auto max-w-[90rem] px-4 sm:px-6">
+          <div className="flex min-h-[3.75rem] items-center gap-3 py-2">
+            <Link to="/" className="shrink-0 text-white" aria-label={t('DevLink Africa, accueil')}>
+              <Logo size={26} variant="bar" />
             </Link>
 
             <nav
               aria-label={t('Navigation principale')}
-              className={cn('hidden flex-1 items-center justify-center gap-1', desktop)}
+              className={cn('ml-6 hidden flex-1 items-center gap-1', desktop)}
             >
               {links.map((link) => (
                 <NavLink key={link.to} to={link.to} className={linkClass}>
@@ -220,7 +194,7 @@ export default function Layout() {
                     onClick={handleSignOut}
                     aria-label={t('Se déconnecter')}
                     title={t('Se déconnecter')}
-                    className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-paper-line text-paper-text transition-colors hover:bg-paper-hover hover:text-paper-ink"
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-md text-bar-muted transition-colors hover:bg-white/10 hover:text-white"
                   >
                     <Icon name="logout" size={18} />
                   </button>
@@ -254,7 +228,7 @@ export default function Layout() {
               aria-controls="menu-mobile"
               aria-label={t('Menu')}
               className={cn(
-                'inline-flex h-11 w-11 items-center justify-center rounded-lg text-paper-text hover:bg-paper-hover',
+                'inline-flex h-11 w-11 items-center justify-center rounded-md text-bar-text hover:bg-white/10',
                 mobileOnly,
               )}
             >
@@ -274,7 +248,10 @@ export default function Layout() {
             <nav
               id="menu-mobile"
               aria-label={t('Navigation mobile')}
-              className={cn('animate-fade-in border-t border-paper-line px-3 py-2', mobileOnly)}
+              className={cn(
+                'animate-fade-in -mx-4 border-t border-bar-line px-3 pb-3 pt-2 sm:-mx-6',
+                mobileOnly,
+              )}
             >
               {links.map((link) => (
                 <NavLink
@@ -290,7 +267,7 @@ export default function Layout() {
                   )}
                 </NavLink>
               ))}
-              <div className="mt-2 border-t border-paper-line pt-2">
+              <div className="mt-2 border-t border-bar-line pt-2">
                 {isAuthenticated ? (
                   <>
                     <NavLink
@@ -303,7 +280,7 @@ export default function Layout() {
                     <button
                       type="button"
                       onClick={handleSignOut}
-                      className="flex min-h-11 w-full items-center rounded-lg px-3 py-2.5 text-left text-[15px] font-medium text-paper-text hover:bg-paper-hover"
+                      className="flex min-h-11 w-full items-center rounded-md border-l-[3px] border-transparent px-3 py-2.5 text-left text-[15px] font-medium text-bar-muted hover:bg-white/10 hover:text-white"
                     >
                       {t('Se déconnecter')}
                     </button>
@@ -332,15 +309,9 @@ export default function Layout() {
         </div>
       </header>
 
-      {/* Plus de max-w ici : chaque page décide de sa propre largeur via
-          PageContainer, pour pouvoir poser des sections pleine largeur
-          (bannière, fond de section) sans que ça devienne la norme partout.
-
-          `main` remonte sous l'en-tête (marge négative de sa hauteur) : le fond
-          de chaque page (halo, bannière) commence en haut de l'écran au lieu
-          de laisser une bande vide autour de la pastille. Les pages repoussent
-          leur contenu d'autant avec `pt-[var(--header-h)]`. */}
-      <main id="contenu" className="-mt-[var(--header-h)] flex-1 bg-ink-50">
+      {/* Chaque page décide de sa largeur via PageContainer, pour que
+          l'accueil puisse poser des sections pleine largeur. */}
+      <main id="contenu" className="flex-1 bg-ink-50">
         <Suspense
           fallback={
             <div
@@ -356,13 +327,16 @@ export default function Layout() {
         </Suspense>
       </main>
 
-      <footer className="border-t border-ink-200 bg-ink-100">
+      <footer className="border-t border-ink-300 bg-ink-50">
         <PageContainer
           size="wide"
-          className="flex flex-col items-center gap-2 py-6 text-sm text-ink-600 sm:flex-row sm:justify-between"
+          className="flex flex-col gap-3 py-6 text-sm text-ink-600 sm:flex-row sm:items-center sm:justify-between"
         >
           <p>{t('DevLink Africa — échange de compétences entre développeurs africains.')}</p>
-          <nav aria-label={t('Liens secondaires')} className="flex gap-4">
+          <nav aria-label={t('Liens secondaires')} className="flex flex-wrap gap-x-5 gap-y-2">
+            <Link to="/pays" className="underline hover:text-accent-700">
+              {t('Pays|menu')}
+            </Link>
             <Link to="/observatoire" className="underline hover:text-accent-700">
               {t('Observatoire')}
             </Link>

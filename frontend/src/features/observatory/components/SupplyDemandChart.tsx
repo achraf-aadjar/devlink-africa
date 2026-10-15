@@ -80,7 +80,7 @@ export default function SupplyDemandChart({ skills }: { skills: ObservatorySkill
               {active === index && (
                 <span
                   role="presentation"
-                  className="pointer-events-none absolute -top-12 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-xl bg-ink-200 px-3 py-2 text-xs text-ink-700 shadow-card ring-1 ring-veil/10"
+                  className="pointer-events-none absolute -top-12 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-md bg-ink-200 px-3 py-2 text-xs text-ink-700 shadow-lift ring-1 ring-veil/10"
                 >
                   <strong className="mr-1 text-sm text-ink-900">{skill.name}</strong>
                   <span
@@ -108,7 +108,7 @@ export default function SupplyDemandChart({ skills }: { skills: ObservatorySkill
         </summary>
         <table className="mt-3 w-full max-w-md text-left">
           <thead>
-            <tr className="border-b border-veil/10 text-ink-600">
+            <tr className="border-b border-ink-300 text-ink-600">
               <th scope="col" className="py-1.5 font-medium">
                 {t('Compétence')}
               </th>

@@ -7,32 +7,36 @@ import { useI18n } from '../i18n/useI18n'
 
 /**
  * Enveloppe des écrans d'authentification (connexion, inscription) : ni barre
- * de navigation ni pied de page. L'écran est coupé en deux : à gauche une
- * illustration (portrait, voile, citation), à droite le formulaire. Sous `lg`
- * l'illustration disparaît et le formulaire prend toute la largeur.
+ * de navigation ni pied de page. Sur grand écran, l'écran est coupé en deux : à
+ * gauche le portrait d'une bâtisseuse de la tech africaine, sous un voile, avec
+ * une de ses phrases ; à droite le formulaire. Sous `lg`, le portrait
+ * disparaît et le formulaire prend toute la largeur.
  *
- * Chaque écran a sa propre illustration et sa propre citation (voir `SLIDES`).
- * Crédits des photos : LICENSES.md.
+ * Photos sous licence libre et citations sourcées : voir LICENSES.md.
  */
 const SLIDES = {
   login: {
-    image: '/auth/portrait.jpg',
+    image: '/auth/rotich.webp',
     quote: msg(
-      '« Les grandes choses ne sont jamais accomplies par une seule personne. Elles le sont par une équipe. »',
+      '« Il existe une autre tribu à laquelle je me sens liée : celle d’Internet, qui dépasse les cultures et la géographie. »',
     ),
-    author: 'Steve Jobs',
-    role: msg('cofondateur d’Apple'),
-    creditHref: 'https://commons.wikimedia.org/wiki/File:Steve_Jobs_Headshot_2010-CROP.jpg',
-    credit: 'Matthew Yohe, CC BY-SA 3.0',
+    author: 'Juliana Rotich',
+    role: msg('cofondatrice d’Ushahidi et de BRCK, Kenya'),
+    quoteSource: 'TechCentral, 2013',
+    quoteHref: 'https://techcentral.co.za/?p=187844',
+    credit: 'World Economic Forum (Martin Dixon), CC BY-SA 2.0',
+    creditHref:
+      'https://commons.wikimedia.org/wiki/File:Juliana_Rotich_-_World_Economic_Forum_on_Africa_2012.jpg',
   },
   register: {
-    image: '/auth/portrait-register.jpg',
-    quote: msg('« La phrase la plus dangereuse : “on a toujours fait comme ça”. »'),
-    author: 'Grace Hopper',
-    role: msg('pionnière de l’informatique'),
-    creditHref:
-      'https://commons.wikimedia.org/wiki/File:Commodore_Grace_M._Hopper,_USN_(covered).jpg',
-    credit: 'James S. Davis, domaine public',
+    image: '/auth/enonchong.webp',
+    quote: msg('« Travaillez dur, voyez grand, et n’abandonnez jamais. »'),
+    author: 'Rebecca Enonchong',
+    role: msg('fondatrice d’AppsTech, Cameroun'),
+    quoteSource: 'How we made it in Africa, 2013',
+    quoteHref: 'https://www.howwemadeitinafrica.com/meet-the-boss-rebecca-enonchong-ceo-appstech/',
+    credit: 'Minette Lontsie, CC BY-SA 4.0',
+    creditHref: 'https://commons.wikimedia.org/wiki/File:Rebecca_Enonchong_in_2018.jpg',
   },
 }
 
@@ -42,51 +46,70 @@ export default function AuthLayout() {
   const slide = pathname.startsWith('/inscription') ? SLIDES.register : SLIDES.login
 
   return (
-    <div className="grid min-h-screen bg-ink-50 lg:grid-cols-2">
+    <div className="grid min-h-screen bg-ink-50 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
       <a
         href="#contenu"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-ink-100 focus:px-3 focus:py-2 focus:shadow-card"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-ink-100 focus:px-3 focus:py-2 focus:shadow-lift"
       >
         {t('Aller au contenu')}
       </a>
 
-      <aside className="relative hidden overflow-hidden bg-[#0d1117] lg:block">
+      <aside className="relative hidden overflow-hidden bg-bar lg:block">
         <img
           src={slide.image}
           alt=""
-          className="absolute inset-0 h-full w-full object-cover object-top grayscale"
+          width={1120}
+          height={1400}
+          decoding="async"
+          className="absolute inset-0 h-full w-full object-cover object-[50%_20%] grayscale"
         />
-        {/* Voile : bleu de marque en haut, noir en bas pour porter la citation. */}
+        {/* Voile : léger en haut pour le logo, dense en bas pour la citation. */}
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-t from-[#0d1117] via-[#0d1117]/60 to-brand/40"
+          className="absolute inset-0 bg-gradient-to-t from-bar via-bar/55 to-bar/25"
+        />
+        <div
+          aria-hidden="true"
+          className="absolute inset-x-0 top-0 h-56 bg-gradient-to-b from-bar/85 to-transparent"
         />
 
         <div className="relative flex h-full flex-col justify-between p-10 xl:p-14">
           <Link
             to="/"
-            className="inline-flex w-fit rounded-lg p-1 text-[#e6edf3]"
+            className="inline-flex w-fit rounded-md p-1 text-white"
             aria-label={t('DevLink Africa, accueil')}
           >
-            <Logo size={32} />
+            <Logo size={30} variant="bar" />
           </Link>
 
           <figure className="max-w-xl">
-            <blockquote className="text-2xl font-semibold leading-snug tracking-tight text-white xl:text-3xl">
+            <blockquote className="font-display text-[2.25rem] font-bold leading-[1.05] text-white xl:text-[2.75rem]">
               {t(slide.quote)}
             </blockquote>
-            <figcaption className="mt-5 text-sm text-[#c9d1d9]">
-              <span className="font-semibold text-white">{slide.author}</span>
-              <span className="text-[#adb5bd]"> · {t(slide.role)}</span>
+            <figcaption className="mt-5 text-bar-text">
+              <span className="block font-display text-xl font-bold uppercase text-white">
+                {slide.author}
+              </span>
+              <span className="text-sm text-bar-muted">{t(slide.role)}</span>
             </figcaption>
           </figure>
         </div>
 
-        <p className="absolute bottom-2 right-3 text-xs text-[#adb5bd]">
+        <p className="absolute bottom-3 right-4 text-right text-xs text-bar-muted">
+          {t('Citation')} :{' '}
+          <a
+            href={slide.quoteHref}
+            className="underline hover:text-white"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {slide.quoteSource}
+          </a>
+          {' · '}
           {t('Photo')} :{' '}
           <a
             href={slide.creditHref}
-            className="underline"
+            className="underline hover:text-white"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -95,28 +118,18 @@ export default function AuthLayout() {
         </p>
       </aside>
 
-      <div className="relative isolate flex flex-col">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-80 lg:hidden"
-        >
-          <div className="bg-aurora absolute inset-0" />
-        </div>
-
+      <div className="flex flex-col">
         <header className="flex justify-center px-4 pt-8 lg:hidden">
           <Link
             to="/"
-            className="inline-flex rounded-lg p-1 text-ink-900"
+            className="inline-flex rounded-md p-1 text-ink-900"
             aria-label={t('DevLink Africa, accueil')}
           >
-            <Logo size={32} />
+            <Logo size={30} />
           </Link>
         </header>
 
-        <main
-          id="contenu"
-          className="auth-plain flex flex-1 flex-col justify-center px-6 py-10 sm:px-10"
-        >
+        <main id="contenu" className="flex flex-1 flex-col justify-center px-6 py-10 sm:px-10">
           <Suspense
             fallback={
               <div

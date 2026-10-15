@@ -1,8 +1,14 @@
 import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { Route, Routes, useLocation } from 'react-router-dom'
 import { describe, expect, it, vi } from 'vitest'
 import { SESSION_USER, jsonResponse, renderWithRouter } from '../test/helpers'
 import HomePage from './HomePage'
+
+function SearchProbe() {
+  const { search } = useLocation()
+  return <p data-testid="recherche">{search}</p>
+}
 
 describe("page d'accueil", () => {
   it('présente les sections et invite un visiteur à créer un compte', async () => {
@@ -13,10 +19,10 @@ describe("page d'accueil", () => {
       'Apprenez ce qui vous manque',
     )
     for (const name of [
-      "Quatre étapes, de l'inscription au premier échange",
+      'Votre feuille de match',
       'Au-delà de la paire parfaite',
       'Quatre façons de travailler ensemble',
-      'Pensé pour que les deux côtés y gagnent',
+      'Revue de code',
     ]) {
       expect(screen.getByRole('heading', { name })).toBeInTheDocument()
     }
@@ -24,9 +30,24 @@ describe("page d'accueil", () => {
       'href',
       '/inscription',
     )
-    // Sans IntersectionObserver (jsdom), le contenu animé reste visible.
-    expect(screen.getByRole('heading', { name: 'Revue de code' }).closest('.reveal')).toHaveClass(
-      'is-visible',
+  })
+
+  it('ouvre la recherche des profils complémentaires depuis la feuille de match', async () => {
+    vi.stubGlobal('fetch', vi.fn())
+    renderWithRouter(
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/recherche" element={<SearchProbe />} />
+      </Routes>,
+    )
+
+    await userEvent.selectOptions(screen.getByLabelText('Je sais faire'), 'Python')
+    await userEvent.selectOptions(screen.getByLabelText('Je veux apprendre'), 'Flutter')
+    await userEvent.click(screen.getByRole('button', { name: 'Voir qui me complète' }))
+
+    // Les personnes qui savent ce que je veux apprendre, et veulent ce que je sais.
+    expect(await screen.findByTestId('recherche')).toHaveTextContent(
+      'skill=Flutter&skill_wanted=Python',
     )
   })
 
@@ -34,7 +55,7 @@ describe("page d'accueil", () => {
     vi.stubGlobal('fetch', vi.fn())
     renderWithRouter(<HomePage />)
 
-    expect(screen.getByText('82.5')).toBeInTheDocument()
+    expect(screen.getAllByText('82,5').length).toBeGreaterThan(0)
   })
 
   it('montre le cercle de démonstration et bascule toute la page en anglais', async () => {
@@ -46,6 +67,7 @@ describe("page d'accueil", () => {
         name: "Cercle d'échange. Aminata Diallo apprend React à Kwame Boateng. Kwame Boateng apprend FastAPI à Imani Wanjiru. Imani Wanjiru apprend Docker à Aminata Diallo.",
       }),
     ).toBeInTheDocument()
+    expect(screen.getAllByText(/Personnes fictives/).length).toBeGreaterThan(0)
     expect(screen.getByRole('link', { name: /Ouvrir l'observatoire/ })).toHaveAttribute(
       'href',
       '/observatoire',
@@ -71,7 +93,6 @@ describe("page d'accueil", () => {
     expect(screen.getByRole('heading', { name: 'Four ways to work together' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Code review' })).toBeInTheDocument()
     expect(screen.getByText('Willingness to collaborate')).toBeInTheDocument()
-    expect(screen.getByText('100%')).toBeInTheDocument()
     expect(screen.getAllByRole('link', { name: 'Create my account' })[0]).toHaveAttribute(
       'href',
       '/inscription',
@@ -80,7 +101,11 @@ describe("page d'accueil", () => {
   })
 
   it('renvoie vers les matchs quand la session est ouverte', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(jsonResponse(SESSION_USER)))
+    // Une réponse neuve par appel : la page charge aussi le catalogue.
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() => Promise.resolve(jsonResponse(SESSION_USER))),
+    )
     renderWithRouter(<HomePage />, { authenticated: true })
 
     expect((await screen.findAllByRole('link', { name: 'Voir mes matchs' }))[0]).toHaveAttribute(

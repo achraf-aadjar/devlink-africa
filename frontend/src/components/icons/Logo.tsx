@@ -13,31 +13,37 @@ import { cn } from '../../lib/cn'
  * géométrique abstraite reste lisible à 16 pixels, se décline en monochrome, et
  * ne ressemble à aucun logo existant.
  *
- * La couleur : l'anneau de gauche en bleu (notre accent), celui de droite en
- * clair. Deux acteurs différents, une zone commune. Les deux teintes
- * reprennent exactement accent-600 et ink-900 du thème sombre.
+ * La couleur : l'anneau de gauche en bleu (celui qui apporte, comme l'offre
+ * « Je sais faire »), celui de droite en encre (celui qui reçoit). Sur la
+ * barre noire de l'en-tête, l'anneau droit passe en clair.
  */
 
 export interface LogoProps extends Omit<SVGProps<SVGSVGElement>, 'children'> {
   size?: number
   /**
+   * `color` : sur le tableau (fond de page), dans les deux thèmes.
+   * `bar` : sur la barre noire de l'en-tête.
    * `mono` utilise currentColor : pour une impression ou un fond coloré.
-   * `light` : pour un fond clair (barre de navigation) — l'anneau droit passe
-   * en quasi-noir, sinon il disparaît sur le blanc.
    */
   variant?: LogoVariant
 }
 
-type LogoVariant = 'color' | 'light' | 'mono'
+type LogoVariant = 'color' | 'bar' | 'mono'
 
 const RIGHT_RING: Record<LogoVariant, string> = {
   color: 'rgb(var(--ink-900))',
-  light: '#1f2328',
+  bar: '#e9eae6',
+  mono: 'currentColor',
+}
+
+const LEFT_RING: Record<LogoVariant, string> = {
+  color: 'rgb(var(--accent-600))',
+  bar: '#8fb1ff',
   mono: 'currentColor',
 }
 
 export function LogoMark({ size = 32, variant = 'color', className, ...rest }: LogoProps) {
-  const left = variant === 'mono' ? 'currentColor' : '#4493f8'
+  const left = LEFT_RING[variant]
   const right = RIGHT_RING[variant]
 
   return (
@@ -58,7 +64,7 @@ export function LogoMark({ size = 32, variant = 'color', className, ...rest }: L
       */}
       <path
         d="M24 12.3a12.5 12.5 0 0 0 0 23.4 12.5 12.5 0 0 0 0-23.4"
-        fill={variant === 'mono' ? 'currentColor' : '#4493f8'}
+        fill={left}
         fillOpacity={0.22}
       />
       {/* Anneau gauche : celui qui apporte. */}
@@ -70,11 +76,8 @@ export function LogoMark({ size = 32, variant = 'color', className, ...rest }: L
 }
 
 /**
- * Marque horizontale : le symbole suivi du nom.
- *
- * Le nom est composé en police système, à dessein : aucune police à charger,
- * donc aucune licence tierce à déclarer et aucun décalage de rendu au
- * chargement de la page.
+ * Marque horizontale : le symbole suivi du nom, en capitales condensées de la
+ * feuille de match (Fira Sans Extra Condensed, SIL OFL).
  */
 export function Logo({
   size = 28,
@@ -88,12 +91,12 @@ export function Logo({
   return (
     <span className={cn('inline-flex items-center gap-2.5', className)}>
       <LogoMark size={size} variant={variant} aria-hidden="true" />
-      <span className="text-lg font-bold leading-none tracking-tight">
+      <span className="pt-0.5 font-display text-[1.375rem] font-bold uppercase leading-none tracking-[0.02em]">
         DevLink{' '}
         <span
           className={cn(
             variant === 'color' && 'text-accent-600',
-            variant === 'light' && 'text-paper-brand',
+            variant === 'bar' && 'text-bar-accent',
           )}
         >
           Africa

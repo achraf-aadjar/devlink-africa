@@ -37,9 +37,7 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="mx-auto w-full max-w-md">
-      <h1 className="mb-1 text-3xl font-bold tracking-tight text-ink-900">
-        {t('Mot de passe oublié')}
-      </h1>
+      <h1 className="mb-1 page-title">{t('Mot de passe oublié')}</h1>
       <p className="mb-6 text-sm text-ink-600">
         {t(
           'Indiquez votre adresse e-mail : nous vous envoyons un lien pour en choisir un nouveau.',
@@ -47,7 +45,7 @@ export default function ForgotPasswordPage() {
       </p>
 
       {sent ? (
-        <p role="status" className="rounded-xl border border-ink-300 p-4 text-sm text-ink-800">
+        <p role="status" className="rounded-md border border-ink-300 p-4 text-sm text-ink-800">
           {t(
             'Si un compte existe pour cette adresse, un e-mail vient d’être envoyé. Le lien est valable une heure.',
           )}
@@ -64,11 +62,7 @@ export default function ForgotPasswordPage() {
             error={error}
             onChange={(event) => setEmail(event.target.value)}
           />
-          <Button
-            type="submit"
-            loading={submitting}
-            className="mt-2 w-full !rounded-xl border border-transparent !px-4 !py-2.5 !text-base !shadow-none"
-          >
+          <Button type="submit" loading={submitting} className="mt-2 w-full">
             {t('Envoyer le lien')}
           </Button>
         </form>

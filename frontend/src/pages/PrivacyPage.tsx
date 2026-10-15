@@ -17,9 +17,7 @@ export default function PrivacyPage() {
   return (
     <section className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <header>
-        <h1 className="text-3xl font-bold tracking-tight text-ink-900">
-          {t('Politique de confidentialité')}
-        </h1>
+        <h1 className="page-title">{t('Politique de confidentialité')}</h1>
         <p className="mt-1 text-sm text-ink-600">{t('Dernière mise à jour : octobre 2026.')}</p>
       </header>
 

@@ -22,9 +22,9 @@ export default function EndorsementList({ skills }: { skills: UserSkill[] }) {
   if (endorsed.length === 0) return null
 
   return (
-    <Card as="section" labelledBy="passeport-verifie" className="flex flex-col gap-4">
+    <Card as="section" labelledBy="passeport-verifie" className="flex flex-col gap-4 !p-5">
       <div>
-        <h2 id="passeport-verifie" className="flex items-center gap-2 font-semibold text-ink-900">
+        <h2 id="passeport-verifie" className="sheet-title flex items-center gap-2">
           <Icon name="proof" size={18} className="text-success" />
           {t('Validé par ses pairs')}
         </h2>

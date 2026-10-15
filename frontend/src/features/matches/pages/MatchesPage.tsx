@@ -3,7 +3,7 @@ import { ButtonLink, EmptyState, ErrorState, LoadingState } from '../../../compo
 import { useI18n } from '../../../i18n/useI18n'
 import { useQuery } from '../../../lib/useQuery'
 import { listMatches } from '../api/matches'
-import MatchCard from '../components/MatchCard'
+import MatchList from '../components/MatchList'
 
 export default function MatchesPage() {
   const { t, tn } = useI18n()
@@ -11,27 +11,23 @@ export default function MatchesPage() {
 
   return (
     <section className="flex flex-col gap-6">
-      <header>
-        <h1 className="text-3xl font-bold tracking-tight text-ink-900">{t('Mes matchs')}</h1>
-        <p className="mt-1 text-sm text-ink-600">
-          {t(
-            "Dev Match vous propose des profils complémentaires : chacun sait ce que l'autre veut apprendre.",
-          )}
+      <header className="flex flex-wrap items-end justify-between gap-4">
+        <div className="max-w-2xl">
+          <h1 className="page-title">{t('Mes matchs')}</h1>
+          <p className="mt-2 text-sm text-ink-600">
+            {t(
+              "Dev Match vous propose des profils complémentaires : chacun sait ce que l'autre veut apprendre.",
+            )}
+          </p>
+        </div>
+        <p className="max-w-sm text-sm text-ink-700">
+          <strong className="font-semibold text-ink-900">{t('Pas de paire parfaite ?')}</strong>{' '}
+          {t('Vos compétences peuvent aussi circuler dans un cercle de trois ou quatre personnes.')}{' '}
+          <Link to="/cercles" className="font-semibold text-accent-700 underline">
+            {t("Voir mes cercles d'échange")}
+          </Link>
         </p>
       </header>
-
-      <Link
-        to="/cercles"
-        className="surface group flex flex-wrap items-center justify-between gap-3 px-6 py-4 transition hover:ring-accent-400/40"
-      >
-        <span className="text-sm text-ink-700">
-          <strong className="font-semibold text-ink-900">{t('Pas de paire parfaite ?')}</strong>{' '}
-          {t('Vos compétences peuvent aussi circuler dans un cercle de trois ou quatre personnes.')}
-        </span>
-        <span className="text-sm font-medium text-accent-800 group-hover:underline">
-          {t("Voir mes cercles d'échange")} →
-        </span>
-      </Link>
 
       {loading && <LoadingState rows={3} label={t('Chargement de vos matchs…')} />}
 
@@ -43,24 +39,21 @@ export default function MatchesPage() {
           description={t(
             'Déclarez ce que vous savez faire et ce que vous voulez apprendre : nous chercherons alors des développeurs complémentaires.',
           )}
+          icon="match"
           action={<ButtonLink to="/competences">{t('Ajouter mes compétences')}</ButtonLink>}
         />
       )}
 
       {data && data.results.length > 0 && (
         <>
-          <p className="text-sm text-ink-600">
+          <p className="-mb-3 text-sm text-ink-600">
             {tn(
               data.count,
               '{n} développeur correspond à votre profil.',
               '{n} développeurs correspondent à votre profil.',
             )}
           </p>
-          <ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {data.results.map((match) => (
-              <MatchCard key={match.id} match={match} />
-            ))}
-          </ul>
+          <MatchList matches={data.results} />
         </>
       )}
     </section>

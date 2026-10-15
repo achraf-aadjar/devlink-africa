@@ -22,8 +22,11 @@ import { cn } from '../lib/cn'
  * Tailwind génère son CSS par ordre alphabétique de classe et non par ordre
  * d'apparition dans le JSX. Chaque appelant précise donc son propre `py-*`.
  */
+// Une seule largeur d'écran pour toute l'application : le bord gauche du
+// contenu reste aligné sur celui de l'en-tête d'une page à l'autre. Les pages
+// de lecture limitent la longueur de leurs lignes à l'intérieur.
 const SIZES = {
-  default: 'max-w-7xl',
+  default: 'max-w-[90rem]',
   wide: 'max-w-[90rem]',
 }
 

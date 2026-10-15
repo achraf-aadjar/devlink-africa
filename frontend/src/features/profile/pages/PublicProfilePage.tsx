@@ -3,7 +3,7 @@ import Avatar from '../../../components/Avatar'
 import DemoBadge from '../../../components/DemoBadge'
 import SkillBadge from '../../../components/SkillBadge'
 import EndorsementList from '../../endorsements/components/EndorsementList'
-import { Badge, Card, ErrorState, LoadingState } from '../../../components/ui'
+import { Badge, ButtonLink, ErrorState, LoadingState } from '../../../components/ui'
 import { useI18n } from '../../../i18n/useI18n'
 import { ApiError } from '../../../lib/api'
 import { localCountryName } from '../../../lib/countryName'
@@ -47,9 +47,9 @@ export default function PublicProfilePage() {
     <section className="flex flex-col gap-6">
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex min-w-0 items-center gap-5">
-          <Avatar name={name} size={80} className="shrink-0 shadow-glow" />
+          <Avatar name={name} size={80} className="shrink-0" />
           <div className="min-w-0">
-            <h1 className="text-3xl font-bold tracking-tight text-ink-900">{name}</h1>
+            <h1 className="page-title">{name}</h1>
             <p className="mt-1 text-sm text-ink-600">
               {data.country && (
                 <span className="mr-1" aria-hidden="true">
@@ -62,125 +62,159 @@ export default function PublicProfilePage() {
             </p>
             <div className="mt-2 flex flex-wrap gap-2">
               <DemoBadge isDemo={data.is_demo} />
-              {data.availability.map((value) => (
-                <Badge key={value} tone="accent">
-                  {t(AVAILABILITY_LABELS[value as Availability] ?? value)}
-                </Badge>
-              ))}
             </div>
           </div>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {isMe ? (
-            <Link to="/profil" className="text-sm font-medium text-accent-700 hover:underline">
+            <ButtonLink to="/profil" variant="secondary">
               {t('Modifier mon profil')}
-            </Link>
+            </ButtonLink>
+          ) : isAuthenticated ? (
+            <ReportButton targetType="USER" targetId={data.id} />
           ) : (
-            isAuthenticated && <ReportButton targetType="USER" targetId={data.id} />
+            <ButtonLink to="/inscription">{t('Créer mon compte pour échanger')}</ButtonLink>
           )}
         </div>
       </header>
 
-      {data.bio && (
-        <Card>
-          <h2 className="mb-2 font-semibold text-ink-900">{t('Présentation')}</h2>
-          <p className="whitespace-pre-line text-sm text-ink-700">{data.bio}</p>
-        </Card>
-      )}
-
-      {data.domains.length > 0 && (
-        <Card>
-          <h2 className="mb-3 font-semibold text-ink-900">{t('Domaines')}</h2>
-          <ul className="flex flex-wrap gap-2">
-            {data.domains.map((value) => (
-              <li key={value}>
-                <Badge>{t(DOMAIN_LABELS[value as Domain] ?? value)}</Badge>
-              </li>
-            ))}
-          </ul>
-        </Card>
-      )}
-
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
-        <Card>
-          <h2 className="mb-3 font-semibold text-ink-900">{t('Sait faire')}</h2>
-          {data.skills.offered.length === 0 ? (
-            <p className="text-sm text-ink-600">{t('Aucune compétence déclarée.')}</p>
-          ) : (
-            <ul className="flex flex-col gap-2">
-              {data.skills.offered.map((entry) => (
-                <li key={entry.id}>
-                  <SkillBadge
-                    name={entry.skill.name}
-                    kind="OFFERED"
-                    level={entry.level}
-                    proofsCount={entry.proofs_count}
-                    endorsements={entry.endorsements?.length ?? 0}
-                  />
-                  {entry.proofs && entry.proofs.length > 0 && (
-                    <ul className="mt-1.5 flex flex-col gap-1 border-l-2 border-ink-200 pl-3">
-                      {entry.proofs.map((proof) => (
-                        <li key={proof.id} className="text-xs">
-                          {proof.url ? (
-                            <a
-                              href={proof.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="font-medium text-accent-700 hover:underline"
-                            >
-                              {proof.title}
-                            </a>
-                          ) : (
-                            <span className="font-medium text-ink-800">{proof.title}</span>
-                          )}
-                          <span className="ml-2 text-ink-500">
-                            {t(PROOF_KIND_LABELS[proof.kind])}
-                          </span>
-                          {proof.description && <p className="text-ink-600">{proof.description}</p>}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </li>
-              ))}
-            </ul>
+      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
+        {/* La fiche : présentation, puis ce que la personne donne et cherche. */}
+        <article className="surface divide-y divide-ink-200">
+          {data.bio && (
+            <section aria-labelledby="presentation" className="p-5 sm:p-6">
+              <h2 id="presentation" className="sheet-title">
+                {t('Présentation')}
+              </h2>
+              <p className="mt-2 max-w-prose whitespace-pre-line text-ink-800">{data.bio}</p>
+            </section>
           )}
-        </Card>
 
-        <Card>
-          <h2 className="mb-3 font-semibold text-ink-900">{t('Veut apprendre')}</h2>
-          {data.skills.wanted.length === 0 ? (
-            <p className="text-sm text-ink-600">{t('Aucun souhait déclaré.')}</p>
-          ) : (
-            <ul className="flex flex-wrap gap-2">
-              {data.skills.wanted.map((entry) => (
-                <li key={entry.id}>
-                  <SkillBadge name={entry.skill.name} kind="WANTED" />
-                </li>
-              ))}
-            </ul>
+          <section aria-labelledby="sait-faire" className="p-5 sm:p-6">
+            <h2 id="sait-faire" className="sheet-title">
+              {t('Sait faire')}
+            </h2>
+            {data.skills.offered.length === 0 ? (
+              <p className="mt-2 text-sm text-ink-600">{t('Aucune compétence déclarée.')}</p>
+            ) : (
+              <ul className="mt-3 flex flex-col gap-3">
+                {data.skills.offered.map((entry) => (
+                  <li key={entry.id}>
+                    <SkillBadge
+                      name={entry.skill.name}
+                      kind="OFFERED"
+                      level={entry.level}
+                      proofsCount={entry.proofs_count}
+                      endorsements={entry.endorsements?.length ?? 0}
+                    />
+                    {entry.proofs && entry.proofs.length > 0 && (
+                      <ul className="mt-1.5 flex flex-col gap-1 pl-3">
+                        {entry.proofs.map((proof) => (
+                          <li key={proof.id} className="text-sm">
+                            {proof.url ? (
+                              <a
+                                href={proof.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="font-medium text-accent-700 hover:underline"
+                              >
+                                {proof.title}
+                              </a>
+                            ) : (
+                              <span className="font-medium text-ink-800">{proof.title}</span>
+                            )}
+                            <span className="ml-2 text-ink-600">
+                              {t(PROOF_KIND_LABELS[proof.kind])}
+                            </span>
+                            {proof.description && (
+                              <p className="text-ink-600">{proof.description}</p>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+
+          <section aria-labelledby="veut-apprendre" className="p-5 sm:p-6">
+            <h2 id="veut-apprendre" className="sheet-title">
+              {t('Veut apprendre')}
+            </h2>
+            {data.skills.wanted.length === 0 ? (
+              <p className="mt-2 text-sm text-ink-600">{t('Aucun souhait déclaré.')}</p>
+            ) : (
+              <ul className="mt-3 flex flex-wrap gap-2">
+                {data.skills.wanted.map((entry) => (
+                  <li key={entry.id}>
+                    <SkillBadge name={entry.skill.name} kind="WANTED" />
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+        </article>
+
+        <aside className="flex flex-col gap-6">
+          {(data.availability.length > 0 || data.domains.length > 0) && (
+            <section className="surface flex flex-col gap-4 p-5">
+              {data.availability.length > 0 && (
+                <div>
+                  <h2 className="text-sm font-semibold text-ink-900">{t('Disponible pour')}</h2>
+                  <ul className="mt-2 flex flex-wrap gap-1.5">
+                    {data.availability.map((value) => (
+                      <li key={value}>
+                        <Badge>{t(AVAILABILITY_LABELS[value as Availability] ?? value)}</Badge>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {data.domains.length > 0 && (
+                <div>
+                  <h2 className="text-sm font-semibold text-ink-900">{t('Domaines')}</h2>
+                  <ul className="mt-2 flex flex-wrap gap-1.5">
+                    {data.domains.map((value) => (
+                      <li key={value}>
+                        <Badge>{t(DOMAIN_LABELS[value as Domain] ?? value)}</Badge>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </section>
           )}
-        </Card>
+
+          <EndorsementList skills={data.skills.offered} />
+
+          {data.projects.length > 0 && (
+            <section aria-labelledby="projets-profil" className="surface p-5">
+              <h2 id="projets-profil" className="sheet-title">
+                {t('Projets')}
+              </h2>
+              <ul className="mt-3 flex flex-col divide-y divide-ink-200">
+                {data.projects.map((project) => (
+                  <li
+                    key={project.id}
+                    className="flex items-center justify-between gap-3 py-2 text-sm"
+                  >
+                    <Link
+                      to={`/projets/${project.id}`}
+                      className="font-medium text-accent-700 hover:underline"
+                    >
+                      {project.title}
+                    </Link>
+                    <Badge>{t(PROJECT_STATUS_LABELS[project.status])}</Badge>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+        </aside>
       </div>
-
-      <EndorsementList skills={data.skills.offered} />
-
-      {data.projects.length > 0 && (
-        <Card>
-          <h2 className="mb-3 font-semibold text-ink-900">{t('Projets')}</h2>
-          <ul className="flex flex-col gap-2">
-            {data.projects.map((project) => (
-              <li key={project.id} className="flex items-center justify-between gap-3 text-sm">
-                <Link to={`/projets/${project.id}`} className="text-accent-700 hover:underline">
-                  {project.title}
-                </Link>
-                <Badge>{t(PROJECT_STATUS_LABELS[project.status])}</Badge>
-              </li>
-            ))}
-          </ul>
-        </Card>
-      )}
     </section>
   )
 }
