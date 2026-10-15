@@ -99,7 +99,7 @@ export default function LoginPage() {
           </Link>
 
           {errors.form && (
-            <p role="alert" className="text-sm text-red-400">
+            <p role="alert" className="text-sm text-danger">
               {errors.form}
             </p>
           )}

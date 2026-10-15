@@ -128,7 +128,7 @@ export default function ProofManager({
                     type="button"
                     onClick={() => handleRemove(proof.id)}
                     disabled={removingId === proof.id}
-                    className="shrink-0 text-xs font-medium text-ink-600 hover:text-red-400"
+                    className="shrink-0 text-xs font-medium text-ink-600 hover:text-danger"
                   >
                     {t('Retirer')}
                   </button>
@@ -169,7 +169,7 @@ export default function ProofManager({
                 onChange={(event) => setForm({ ...form, description: event.target.value })}
               />
               {errors.form && (
-                <p role="alert" className="text-xs text-red-400">
+                <p role="alert" className="text-xs text-danger">
                   {errors.form}
                 </p>
               )}

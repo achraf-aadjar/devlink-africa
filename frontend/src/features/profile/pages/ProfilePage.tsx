@@ -149,7 +149,7 @@ export default function ProfilePage() {
                 </label>
               ))}
             </div>
-            {errors.availability && <p className="text-sm text-red-400">{errors.availability}</p>}
+            {errors.availability && <p className="text-sm text-danger">{errors.availability}</p>}
           </fieldset>
 
           <fieldset className="flex flex-col gap-2">
@@ -167,7 +167,7 @@ export default function ProfilePage() {
                 </label>
               ))}
             </div>
-            {errors.domains && <p className="text-sm text-red-400">{errors.domains}</p>}
+            {errors.domains && <p className="text-sm text-danger">{errors.domains}</p>}
           </fieldset>
 
           <Field
@@ -191,12 +191,12 @@ export default function ProfilePage() {
           />
 
           {errors.form && (
-            <p role="alert" className="text-sm text-red-400">
+            <p role="alert" className="text-sm text-danger">
               {errors.form}
             </p>
           )}
           {notice && (
-            <p role="status" className="text-sm text-emerald-400">
+            <p role="status" className="text-sm text-success">
               {notice}
             </p>
           )}

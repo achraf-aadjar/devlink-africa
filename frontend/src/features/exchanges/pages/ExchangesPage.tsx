@@ -1,7 +1,15 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Avatar from '../../../components/Avatar'
-import { Badge, Button, Card, EmptyState, ErrorState, LoadingState } from '../../../components/ui'
+import {
+  Badge,
+  Button,
+  ButtonLink,
+  Card,
+  EmptyState,
+  ErrorState,
+  LoadingState,
+} from '../../../components/ui'
 import { useI18n } from '../../../i18n/useI18n'
 import { EXCHANGE_STATUS_LABELS, EXCHANGE_TYPE_LABELS } from '../../../lib/labels'
 import type { Exchange, ExchangeStatus } from '../../../lib/types'
@@ -86,7 +94,7 @@ export default function ExchangesPage() {
       </div>
 
       {actionError && (
-        <p role="alert" className="rounded-2xl bg-red-950/50 px-5 py-3 text-sm text-red-300">
+        <p role="alert" className="rounded-2xl bg-danger/10 px-5 py-3 text-sm text-danger">
           {actionError}
         </p>
       )}
@@ -105,9 +113,9 @@ export default function ExchangesPage() {
               : t("Parcourez vos matchs et proposez un échange à quelqu'un de complémentaire.")
           }
           action={
-            <Link to="/matchs">
-              <Button size="sm">{t('Voir mes matchs')}</Button>
-            </Link>
+            <ButtonLink to="/matchs" size="sm">
+              {t('Voir mes matchs')}
+            </ButtonLink>
           }
         />
       )}

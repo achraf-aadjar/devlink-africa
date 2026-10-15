@@ -22,7 +22,7 @@ describe('carte en tuiles', () => {
     renderMap()
 
     expect(
-      screen.getByRole('link', { name: 'Sénégal : 6 développeur(s), 3 projet(s)' }),
+      screen.getByRole('link', { name: 'Sénégal : 6 développeurs, 3 projets' }),
     ).toHaveAttribute('href', '/pays/SN')
   })
 

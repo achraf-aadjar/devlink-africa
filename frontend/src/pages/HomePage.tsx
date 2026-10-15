@@ -406,16 +406,16 @@ export default function HomePage() {
   return (
     <div className="flex flex-col overflow-x-clip">
       {/* ——— Bannière ——— */}
-      <section className="relative isolate overflow-hidden border-b border-ink-200">
+      <section className="relative isolate overflow-hidden border-b border-ink-200 pt-[var(--header-h)]">
         {/* Effets de fond façon github.com : grille estompée et halos bleus. */}
         <div aria-hidden="true" className="bg-aurora absolute inset-0 -z-10" />
         <div
           aria-hidden="true"
-          className="glow-blob -z-10 inset-x-0 top-[-10rem] mx-auto h-[32rem] w-[48rem] max-w-full animate-glow bg-brand/40"
+          className="glow-blob -z-10 inset-x-0 top-[calc(var(--header-h)-10rem)] mx-auto h-[32rem] w-[48rem] max-w-full animate-glow bg-brand/40"
         />
         <div
           aria-hidden="true"
-          className="glow-blob -z-10 right-[-8rem] top-40 h-80 w-80 animate-glow bg-violet/25"
+          className="glow-blob -z-10 right-[-8rem] top-[calc(var(--header-h)+10rem)] h-80 w-80 animate-glow bg-violet/25"
           style={{ animationDelay: '-4s' }}
         />
 
@@ -423,13 +423,13 @@ export default function HomePage() {
           icon="mentoring"
           label={t('Mentorat')}
           delay="0s"
-          className="left-6 top-20 -rotate-6 lg:left-16"
+          className="left-6 top-[calc(var(--header-h)+5rem)] -rotate-6 lg:left-16"
         />
         <FloatingChip
           icon="debugging"
           label={t('Revue de code')}
           delay="-1.5s"
-          className="right-6 top-32 rotate-3 lg:right-20"
+          className="right-6 top-[calc(var(--header-h)+8rem)] rotate-3 lg:right-20"
         />
         <FloatingChip
           icon="project"

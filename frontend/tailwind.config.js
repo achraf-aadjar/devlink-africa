@@ -69,6 +69,11 @@ export default {
         // Voile : blanc en thème sombre, encre en thème clair. Remplace
         // `white/xx` pour les fonds et liserés translucides.
         veil: 'rgb(var(--veil) / <alpha-value>)',
+        // États : valeurs claires ou sombres selon le thème (index.css).
+        danger: 'rgb(var(--danger) / <alpha-value>)',
+        success: 'rgb(var(--success) / <alpha-value>)',
+        warning: 'rgb(var(--warning) / <alpha-value>)',
+        info: 'rgb(var(--info) / <alpha-value>)',
       },
       fontFamily: {
         // Polices système : aucune dépendance, aucune question de licence.

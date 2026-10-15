@@ -83,7 +83,7 @@ const GRID: Record<string, [number, number]> = {
 }
 
 export default function AfricaTileMap({ countries }: { countries: Country[] }) {
-  const { t, lang } = useI18n()
+  const { t, tn, lang } = useI18n()
   const byCode = new Map(countries.map((country) => [country.code, country]))
 
   return (
@@ -108,10 +108,14 @@ export default function AfricaTileMap({ countries }: { countries: Country[] }) {
           )
           const name = localCountryName(code, country?.name ?? code, lang)
           const label = populated
-            ? t('{name} : {developers} développeur(s), {projects} projet(s)', {
+            ? t('{name} : {developers}, {projects}', {
                 name,
-                developers: country?.developers_count ?? 0,
-                projects: country?.projects_count ?? 0,
+                developers: tn(
+                  country?.developers_count ?? 0,
+                  '{n} développeur',
+                  '{n} développeurs',
+                ),
+                projects: tn(country?.projects_count ?? 0, '{n} projet', '{n} projets'),
               })
             : t('{name} : aucune inscription pour le moment', { name })
 

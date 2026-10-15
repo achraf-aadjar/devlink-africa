@@ -5,6 +5,7 @@ import Icon from '../../../components/icons/Icon'
 import {
   Badge,
   Button,
+  ButtonLink,
   Card,
   ErrorState,
   LoadingState,
@@ -164,9 +165,9 @@ export default function ProjectDetailPage() {
           )}
           {isOwner ? (
             <>
-              <Link to={`/projets/${projectId}/modifier`}>
-                <Button variant="secondary">{t('Modifier')}</Button>
-              </Link>
+              <ButtonLink to={`/projets/${projectId}/modifier`} variant="secondary">
+                {t('Modifier')}
+              </ButtonLink>
               <Button variant="danger" onClick={handleDelete}>
                 {t('Supprimer')}
               </Button>
@@ -207,15 +208,12 @@ export default function ProjectDetailPage() {
       </div>
 
       {notice && (
-        <p
-          role="status"
-          className="rounded-lg bg-emerald-950/50 px-4 py-3 text-sm text-emerald-300"
-        >
+        <p role="status" className="rounded-lg bg-success/10 px-4 py-3 text-sm text-success">
           {notice}
         </p>
       )}
       {actionError && (
-        <p role="alert" className="rounded-lg bg-red-950/50 px-4 py-3 text-sm text-red-300">
+        <p role="alert" className="rounded-lg bg-danger/10 px-4 py-3 text-sm text-danger">
           {actionError}
         </p>
       )}

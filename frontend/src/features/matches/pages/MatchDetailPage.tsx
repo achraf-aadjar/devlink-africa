@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import Avatar from '../../../components/Avatar'
 import DemoBadge from '../../../components/DemoBadge'
-import { Button, Card, ErrorState, LoadingState } from '../../../components/ui'
+import { Button, ButtonLink, Card, ErrorState, LoadingState } from '../../../components/ui'
+import { localCountryName } from '../../../lib/countryName'
 import { useI18n } from '../../../i18n/useI18n'
 import { ApiError } from '../../../lib/api'
 import { countryFlag } from '../../../lib/labels'
@@ -13,7 +14,7 @@ import ExchangeRequestModal from '../components/ExchangeRequestModal'
 import MatchExplanation from '../components/MatchExplanation'
 
 export default function MatchDetailPage() {
-  const { t } = useI18n()
+  const { t, lang } = useI18n()
   const { id } = useParams<{ id: string }>()
   const matchId = Number(id)
   const { data, loading, error, reload } = useQuery(() => getMatch(matchId), [matchId])
@@ -73,35 +74,36 @@ export default function MatchDetailPage() {
       </nav>
 
       <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <Avatar name={partnerName} size={80} className="mb-4 shadow-glow" />
-          <h1 className="text-3xl font-bold tracking-tight text-ink-900">{partnerName}</h1>
-          <p className="mt-1 text-sm text-ink-600">
-            {data.user.country && (
-              <span className="mr-1" aria-hidden="true">
-                {countryFlag(data.user.country)}
-              </span>
-            )}
-            {data.user.country || t('Pays non renseigné')}
-          </p>
-          <div className="mt-2 flex gap-2">
-            <DemoBadge isDemo={data.user.is_demo} />
+        <div className="flex min-w-0 items-center gap-5">
+          <Avatar name={partnerName} size={80} className="shrink-0 shadow-glow" />
+          <div className="min-w-0">
+            <h1 className="text-3xl font-bold tracking-tight text-ink-900">{partnerName}</h1>
+            <p className="mt-1 text-sm text-ink-600">
+              {data.user.country && (
+                <span className="mr-1" aria-hidden="true">
+                  {countryFlag(data.user.country)}
+                </span>
+              )}
+              {data.user.country
+                ? localCountryName(data.user.country, data.user.country, lang)
+                : t('Pays non renseigné')}
+            </p>
+            <div className="mt-2 flex gap-2">
+              <DemoBadge isDemo={data.user.is_demo} />
+            </div>
           </div>
         </div>
 
         <div className="flex flex-wrap gap-2">
-          <Link to={`/developpeurs/${data.user.id}`}>
-            <Button variant="secondary">{t('Voir le profil')}</Button>
-          </Link>
+          <ButtonLink to={`/developpeurs/${data.user.id}`} variant="secondary">
+            {t('Voir le profil')}
+          </ButtonLink>
           <Button onClick={() => setModalOpen(true)}>{t('Proposer un échange')}</Button>
         </div>
       </header>
 
       {notice && (
-        <p
-          role="status"
-          className="rounded-lg bg-emerald-950/50 px-4 py-3 text-sm text-emerald-300"
-        >
+        <p role="status" className="rounded-lg bg-success/10 px-4 py-3 text-sm text-success">
           {notice}
         </p>
       )}
@@ -139,7 +141,7 @@ export default function MatchDetailPage() {
         )}
 
         {feedbackError && (
-          <p role="alert" className="mt-2 text-sm text-red-400">
+          <p role="alert" className="mt-2 text-sm text-danger">
             {feedbackError}
           </p>
         )}

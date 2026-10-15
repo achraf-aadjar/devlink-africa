@@ -118,7 +118,7 @@ export default function OnboardingChecklist({ data }: { data: Dashboard }) {
                 className={cn(
                   'mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold',
                   step.done
-                    ? 'bg-emerald-500/15 text-emerald-300'
+                    ? 'bg-success/15 text-success'
                     : isNext
                       ? 'bg-brand text-white shadow-glow'
                       : 'bg-veil/[0.06] text-ink-500',

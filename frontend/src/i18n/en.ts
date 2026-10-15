@@ -423,14 +423,17 @@ export const EN: Record<string, string> = {
   "Voici où vous en êtes aujourd'hui.": "Here's where you stand today.",
   match: 'match',
   matchs: 'matches',
-  'compétence(s) proposée(s)': 'to teach',
+  'à enseigner': 'to teach',
   'à apprendre': 'to learn',
   'Développeurs recommandés': 'Recommended developers',
   'Tout voir': 'See all',
   "Aucun match pour l'instant. Déclarez vos compétences pour en recevoir.":
     'No matches yet. Add your skills to get some.',
   'Échanges en attente': 'Pending exchanges',
-  '{received} reçue(s) · {sent} envoyée(s)': '{received} received · {sent} sent',
+  '{n} reçue': '{n} received',
+  '{n} reçues': '{n} received',
+  '{n} envoyée': '{n} sent',
+  '{n} envoyées': '{n} sent',
   'Rien en attente.': 'Nothing pending.',
   '{type} avec {name}': '{type} with {name}',
   'Demandes sur mes projets': 'Join requests on my projects',
@@ -612,8 +615,7 @@ export const EN: Record<string, string> = {
   'Chaque point représente un pays. Ceux en couleur comptent au moins un développeur ou un projet.':
     'Each dot is a country. Colored ones have at least one developer or project.',
   "Carte de l'Afrique par pays": 'Map of Africa by country',
-  '{name} : {developers} développeur(s), {projects} projet(s)':
-    '{name}: {developers} developer(s), {projects} project(s)',
+  '{name} : {developers}, {projects}': '{name}: {developers}, {projects}',
   '{name} : aucune inscription pour le moment': '{name}: no sign-ups yet',
   'Les développeurs et les projets présents sur la plateforme, pays par pays.':
     'Developers and projects on the platform, country by country.',

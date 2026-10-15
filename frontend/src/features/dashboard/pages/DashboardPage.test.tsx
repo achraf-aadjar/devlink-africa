@@ -120,7 +120,7 @@ describe('tableau de bord', () => {
     stub(FULL)
     renderWithRouter(<DashboardPage />, { authenticated: true })
 
-    expect(await screen.findByText(/1 reçue\(s\) · 0 envoyée\(s\)/)).toBeInTheDocument()
+    expect(await screen.findByText(/1 reçue · 0 envoyée/)).toBeInTheDocument()
     expect(screen.getByText('Fatou Kone souhaite rejoindre un de vos projets')).toBeInTheDocument()
   })
 
