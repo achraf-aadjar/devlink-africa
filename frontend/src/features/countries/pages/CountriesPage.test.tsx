@@ -55,4 +55,14 @@ describe('exploration par pays', () => {
 
     expect(await screen.findByText('Aucun pays représenté')).toBeInTheDocument()
   })
+
+  it('descend automatiquement jusqu’à la carte une fois chargée', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(jsonResponse(COUNTRIES)))
+    renderWithRouter(<CountriesPage />)
+
+    await screen.findByText('Sénégal')
+    expect(Element.prototype.scrollIntoView).toHaveBeenCalledWith(
+      expect.objectContaining({ block: 'start' }),
+    )
+  })
 })
