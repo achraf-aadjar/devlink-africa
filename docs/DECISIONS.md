@@ -549,3 +549,13 @@ Repris avec nos propres codes, pas une copie : un voile sombre uniforme (`bg-ink
 **Correction.** `list_countries()` exclut maintenant explicitement `Q(profile__isnull=True)` (développeurs) et `Q(owner__profile__isnull=True)` (projets), en plus de la chaîne vide. Deux tests de régression : un compte sans profil, et un projet dont le propriétaire n'a pas de profil.
 
 **Pendant que j'y étais.** Le filtre pays et compétence de `/recherche` utilisent encore des `<select>` natifs. Vérifié : la liste des pays réellement représentés ne compte que 16 entrées (pas le bug de défilement déjà corrigé pour l'inscription) ; le catalogue de compétences, lui, en a 43 depuis l'élargissement — assez long pour justifier le même traitement.
+
+---
+
+## 2026-10-14 — Clair/sombre et langue accessibles depuis les écrans d'authentification
+
+**Constat.** `ThemeSwitch` et `LanguageSwitch` ne vivaient que dans `Layout.tsx` (la navbar principale). Mais `/connexion` et `/inscription` passent par `AuthLayout`, pas par `Layout` — un visiteur qui arrive directement sur ces pages (lien partagé, retour arrière, favori) n'avait aucun moyen de changer de thème ou de langue avant de se connecter.
+
+**Décision.** Les deux bascules sont extraites dans `components/ThemeSwitch.tsx` et `components/LanguageSwitch.tsx`, avec un `tone` (`paper` pour la pastille claire flottante de la navbar, `ink` pour un fond de page ordinaire qui suit le thème). `AuthLayout` les pose en haut à droite, visibles à toutes les tailles d'écran. `Layout.tsx` n'a pas changé de comportement, seulement de lieu de définition.
+
+**Piège en écrivant le test.** Le premier essai dépendait de `navigator.language` (non maîtrisé en environnement de test, résultat différent d'une exécution à l'autre) : `I18nProvider` prend maintenant `initial="fr"` explicitement dans ce test, comme le fait déjà le reste de la suite.
