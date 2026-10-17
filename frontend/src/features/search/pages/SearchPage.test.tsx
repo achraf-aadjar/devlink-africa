@@ -1,4 +1,4 @@
-import { screen, waitFor } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import {
@@ -22,13 +22,18 @@ const PERSON = {
   wanted_skills: [],
 }
 
+const CATALOG = page([
+  { id: 6, name: 'Python', category: 'BACKEND' },
+  { id: 9, name: 'Docker', category: 'DEVOPS' },
+])
+
 function stub(users: unknown[] = [PERSON]) {
   const fetchMock = vi.fn((url: string) => {
     const path = String(url)
     if (path.includes('/search/users/')) return Promise.resolve(jsonResponse(page(users)))
     if (path.includes('/search/projects/')) return Promise.resolve(jsonResponse(emptyPage()))
     if (path.includes('/countries/')) return Promise.resolve(jsonResponse({ results: [] }))
-    if (path.includes('/skills/')) return Promise.resolve(jsonResponse(emptyPage()))
+    if (path.includes('/skills/')) return Promise.resolve(jsonResponse(CATALOG))
     return Promise.resolve(jsonResponse(SESSION_USER))
   })
   vi.stubGlobal('fetch', fetchMock)
@@ -77,6 +82,40 @@ describe('page de recherche', () => {
 
     expect(await screen.findByText('Aucun développeur ne correspond')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Explorer par pays' })).toHaveAttribute('href', '/pays')
+  })
+
+  it('filtre par compétence via la liste avec recherche', async () => {
+    const fetchMock = stub()
+    renderWithRouter(<SearchPage />, { route: '/recherche' })
+    await screen.findByRole('link', { name: 'Kofi Mensah' })
+
+    const combobox = screen.getByLabelText('Sait faire')
+    await userEvent.click(combobox)
+    const listbox = screen.getByRole('listbox', { name: 'Sait faire' })
+    await userEvent.click(within(listbox).getByRole('option', { name: 'Docker' }))
+
+    await waitFor(() =>
+      expect(fetchMock.mock.calls.some((call) => String(call[0]).includes('skill=Docker'))).toBe(
+        true,
+      ),
+    )
+
+    // Revenir à « Toutes » retire le filtre.
+    await userEvent.click(combobox)
+    await userEvent.click(
+      within(screen.getByRole('listbox', { name: 'Sait faire' })).getByRole('option', {
+        name: 'Toutes',
+      }),
+    )
+
+    await waitFor(() =>
+      expect(
+        fetchMock.mock.calls.some(
+          (call) =>
+            String(call[0]).includes('/search/users/') && !String(call[0]).includes('skill='),
+        ),
+      ).toBe(true),
+    )
   })
 
   it('réinitialise les filtres', async () => {

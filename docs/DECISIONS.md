@@ -559,3 +559,13 @@ Repris avec nos propres codes, pas une copie : un voile sombre uniforme (`bg-ink
 **Décision.** Les deux bascules sont extraites dans `components/ThemeSwitch.tsx` et `components/LanguageSwitch.tsx`, avec un `tone` (`paper` pour la pastille claire flottante de la navbar, `ink` pour un fond de page ordinaire qui suit le thème). `AuthLayout` les pose en haut à droite, visibles à toutes les tailles d'écran. `Layout.tsx` n'a pas changé de comportement, seulement de lieu de définition.
 
 **Piège en écrivant le test.** Le premier essai dépendait de `navigator.language` (non maîtrisé en environnement de test, résultat différent d'une exécution à l'autre) : `I18nProvider` prend maintenant `initial="fr"` explicitement dans ce test, comme le fait déjà le reste de la suite.
+
+---
+
+## 2026-10-14 — Le même bug de défilement, revenu par la porte du catalogue élargi
+
+**Constat.** Le `<select>` natif du pays à l'inscription avait été remplacé par un `Combobox` précisément parce qu'une longue liste change de valeur au survol de la molette. Le catalogue de compétences comptait 14 entrées à l'époque — pas assez long pour que quiconque s'en plaigne. Il en compte 43 depuis l'élargissement du 12 octobre : deux sélecteurs de compétences natifs en souffrent maintenant, dans « Mes compétences » (ajouter une compétence) et dans `/recherche` (deux filtres, « sait faire » et « veut apprendre »).
+
+**Décision.** Les trois passent au même `Combobox` déjà en place pour les pays. Pour les deux filtres de recherche (où « aucune valeur » = « toutes les compétences », contrairement à l'ajout qui impose un choix), une option `{ value: '', label: 'Toutes' }` est ajoutée en tête de liste : elle sert à la fois de valeur par défaut affichée et de façon d'y revenir après avoir filtré.
+
+**Tests.** Les interactions `selectOptions`/`getAllByRole('option', …)` sur un `<select>` fermé ne marchent plus sur un Combobox (ses options n'existent dans le DOM que liste ouverte) : migrées vers clic + recherche dans la liste ouverte, comme déjà fait pour le pays. Un nouveau test de `/recherche` vérifie le filtre et son retour à « Toutes ».

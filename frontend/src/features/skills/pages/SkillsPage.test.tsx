@@ -74,8 +74,9 @@ describe('page des compétences', () => {
     renderWithRouter(<SkillsPage />, { authenticated: true })
     await screen.findByRole('heading', { name: 'Je sais faire' })
 
-    const selects = screen.getAllByLabelText('Ajouter une compétence')
-    await userEvent.selectOptions(selects[0], '9')
+    const combobox = screen.getAllByLabelText('Ajouter une compétence')[0]
+    await userEvent.click(combobox)
+    await userEvent.click(await screen.findByRole('option', { name: 'Docker — DevOps' }))
     await userEvent.click(screen.getAllByRole('button', { name: 'Ajouter' })[0])
 
     await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent(/recalculés/))
@@ -99,7 +100,9 @@ describe('page des compétences', () => {
     renderWithRouter(<SkillsPage />, { authenticated: true })
     await screen.findByRole('heading', { name: 'Je sais faire' })
 
-    await userEvent.selectOptions(screen.getAllByLabelText('Ajouter une compétence')[0], '9')
+    const combobox = screen.getAllByLabelText('Ajouter une compétence')[0]
+    await userEvent.click(combobox)
+    await userEvent.click(await screen.findByRole('option', { name: 'Docker — DevOps' }))
     await userEvent.click(screen.getAllByRole('button', { name: 'Ajouter' })[0])
 
     expect(await screen.findByRole('alert')).toHaveTextContent(/déjà déclaré/)
@@ -127,6 +130,9 @@ describe('page des compétences', () => {
     const levelSelect = screen.getByLabelText('Level for React')
     expect(levelSelect.closest('li')).toHaveTextContent('Advanced')
     expect(screen.getAllByRole('button', { name: 'Remove' })).toHaveLength(2)
-    expect(screen.getAllByRole('option', { name: 'Docker — DevOps' })).toHaveLength(2)
+
+    const combobox = screen.getAllByLabelText('Add a skill')[0]
+    await userEvent.click(combobox)
+    expect(await screen.findByRole('option', { name: 'Docker — DevOps' })).toBeInTheDocument()
   })
 })

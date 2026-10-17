@@ -7,6 +7,7 @@ import {
   Button,
   ButtonLink,
   Card,
+  Combobox,
   EmptyState,
   ErrorState,
   Field,
@@ -69,10 +70,10 @@ export default function SearchPage() {
     setParams(merged)
   }
 
-  const skillOptions = (catalog.data?.results ?? []).map((skill) => ({
-    value: skill.name,
-    label: skill.name,
-  }))
+  const skillOptions = [
+    { value: '', label: t('Toutes') },
+    ...(catalog.data?.results ?? []).map((skill) => ({ value: skill.name, label: skill.name })),
+  ]
   const active = tab === 'users' ? users : projects
 
   return (
@@ -146,22 +147,20 @@ export default function SearchPage() {
             }))}
             onChange={(event) => update({ country: event.target.value })}
           />
-          <Select
+          <Combobox
             label={tab === 'users' ? t('Sait faire') : t('Compétence recherchée')}
             value={filters.skill}
-            placeholder={t('Toutes')}
             options={skillOptions}
-            onChange={(event) => update({ skill: event.target.value })}
+            onChange={(value) => update({ skill: value })}
           />
 
           {tab === 'users' && (
             <>
-              <Select
+              <Combobox
                 label={t('Veut apprendre')}
                 value={filters.skill_wanted}
-                placeholder={t('Toutes')}
                 options={skillOptions}
-                onChange={(event) => update({ skill_wanted: event.target.value })}
+                onChange={(value) => update({ skill_wanted: value })}
               />
               <Select
                 label={t('Niveau')}

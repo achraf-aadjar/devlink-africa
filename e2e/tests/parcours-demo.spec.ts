@@ -23,7 +23,10 @@ async function login(page: Page, email: string, password: string) {
 
 async function addSkill(page: Page, column: string, label: string) {
   const region = page.getByRole('region', { name: column })
-  await region.getByLabel('Ajouter une compétence').selectOption({ label })
+  // Liste déroulante avec recherche (pas un <select> natif) : on tape puis on
+  // choisit dans la liste qui s'ouvre, comme pour le pays à l'inscription.
+  await region.getByLabel('Ajouter une compétence').click()
+  await region.getByRole('option', { name: label }).click()
   if (column === 'Je sais faire') {
     await region.getByLabel('Votre niveau').selectOption({ label: 'Avancé' })
   }
