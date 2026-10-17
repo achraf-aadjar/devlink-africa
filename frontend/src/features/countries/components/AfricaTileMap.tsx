@@ -99,7 +99,7 @@ export default function AfricaTileMap({ countries }: { countries: Country[] }) {
         aria-label={t("Carte de l'Afrique par pays")}
         // Grille de 9 colonnes, qui défile horizontalement sur petit écran
         // sans jamais déborder de la page.
-        className="grid w-full max-w-xl grid-cols-9 gap-1.5"
+        className="mx-auto grid w-full max-w-xl grid-cols-9 gap-1.5"
       >
         {Object.entries(GRID).map(([code, [column, row]]) => {
           const country = byCode.get(code)

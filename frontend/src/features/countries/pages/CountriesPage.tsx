@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { EmptyState, ErrorState, LoadingState } from '../../../components/ui'
 import { useI18n } from '../../../i18n/useI18n'
@@ -10,6 +11,17 @@ import AfricaTileMap from '../components/AfricaTileMap'
 export default function CountriesPage() {
   const { t, tn, lang } = useI18n()
   const { data, loading, error, reload } = useQuery(() => listCountries(), [])
+  const mapRef = useRef<HTMLDivElement>(null)
+
+  // La carte est ce qu'on vient voir en arrivant sur cette page : on y
+  // descend dès qu'elle est prête, pour ne pas la laisser sous le pli.
+  useEffect(() => {
+    if (!data) return
+    const reduceMotion =
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    mapRef.current?.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' })
+  }, [data])
 
   return (
     <section className="flex flex-col gap-6">
@@ -41,7 +53,11 @@ export default function CountriesPage() {
       )}
 
       <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,36rem)_minmax(0,1fr)]">
-        {data && <AfricaTileMap countries={data.results} />}
+        {data && (
+          <div ref={mapRef}>
+            <AfricaTileMap countries={data.results} />
+          </div>
+        )}
 
         {data && data.results.length > 0 && (
           <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:self-end">
