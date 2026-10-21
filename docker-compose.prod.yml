@@ -1,10 +1,12 @@
 # Production (VPS Datacloud). Les secrets viennent de deploy/.env (jamais commité).
+# Les ${...} ci-dessous sont lus dans le .env de la racine, pas dans deploy/.env :
+# d'où le lien symbolique `ln -s deploy/.env .env` (deploy/README.md, étape 6).
 services:
   db:
     image: postgres:17-alpine
     environment:
       POSTGRES_USER: ${DB_USER:-devlink}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD manquant dans deploy/.env}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD introuvable, lancer « ln -s deploy/.env .env » à la racine (deploy/README.md, étape 6)}
       POSTGRES_DB: ${DB_NAME:-devlink}
     volumes:
       - pg_data:/var/lib/postgresql/data

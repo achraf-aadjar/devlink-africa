@@ -63,7 +63,7 @@ docker compose version            # doit répondre
 ```bash
 git clone https://github.com/achraf-aadjar/devlink-africa.git
 cd devlink-africa
-git checkout main
+git checkout chore/setup-environnement   # il n'y a pas de branche main
 ```
 
 ### 6. Configurer les secrets
@@ -71,6 +71,9 @@ git checkout main
 ```bash
 cp deploy/.env.example deploy/.env
 nano deploy/.env
+# Indispensable : Docker Compose lit ${DB_PASSWORD} dans le .env de la racine,
+# pas dans deploy/.env. Sans ce lien, l'étape 9 et backup.sh échouent.
+ln -s deploy/.env .env
 ```
 
 À renseigner :
@@ -82,6 +85,9 @@ nano deploy/.env
 | `ALLOWED_HOSTS` | `votre-domaine` |
 | `CORS_ALLOWED_ORIGINS` | `https://votre-domaine` |
 | `CSRF_TRUSTED_ORIGINS` | `https://votre-domaine` |
+| `FRONTEND_URL` | `https://votre-domaine` (sinon le lien « mot de passe oublié » pointe vers `localhost`) |
+
+Le reste (e-mail, IA, Google) est facultatif et décrit dans le fichier.
 
 > `deploy/.env` est exclu par `.gitignore`. **Ne le commitez jamais.** Un test de la CI échoue si un secret apparaît dans un fichier suivi.
 
@@ -89,7 +95,7 @@ nano deploy/.env
 
 ```bash
 sed -i 's/example\.org/votre-domaine/g' deploy/nginx.conf
-grep -c votre-domaine deploy/nginx.conf   # doit afficher 4
+grep -c example.org deploy/nginx.conf     # doit afficher 0
 ```
 
 ### 8. Obtenir le certificat TLS
@@ -239,7 +245,8 @@ docker compose -f docker-compose.prod.yml start backend
 |---|---|
 | Throttling par worker | Le cache est local à chaque worker Gunicorn : le quota de 5 par minute s'applique par worker, soit 15 avec trois workers. Un cache partagé le corrigerait, au prix d'un service de plus. |
 | Pas de répartition de charge | Un seul serveur. Suffisant à cette échelle, mais c'est un point unique de défaillance. |
-| Renouvellement TLS | Automatique via le timer de certbot, mais à vérifier une fois avant la soumission. |
+| Renouvellement TLS | Le certificat obtenu en mode `--standalone` vaut 90 jours, donc au-delà du 2 novembre. Son renouvellement automatique, lui, a besoin du port 80, occupé par nginx : il faudrait arrêter le conteneur `web` le temps du renouvellement. |
+| E-mails | Sans `EMAIL_HOST`, le lien « mot de passe oublié » n'est pas envoyé : il s'écrit dans `docker compose -f docker-compose.prod.yml logs backend`. |
 | Sauvegardes locales | Elles vivent sur le même serveur. Les copier ailleurs (`scp`) au moins une fois avant la soumission. |
 
 ---
