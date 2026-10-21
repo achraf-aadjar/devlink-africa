@@ -122,5 +122,7 @@ export default function GoogleSignInButton({
 
   if (loading || !clientId) return null
 
-  return <div ref={containerRef} className="w-full" />
+  // Google plafonne la largeur du bouton à 400 px : centré, il ne paraît pas
+  // tronqué quand le formulaire est plus large.
+  return <div ref={containerRef} className="flex w-full justify-center" />
 }
