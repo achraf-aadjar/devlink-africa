@@ -1,4 +1,4 @@
-import { screen, waitFor } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { jsonResponse, page, renderWithRouter, SESSION_USER } from '../../../test/helpers'
@@ -66,7 +66,8 @@ describe('page des compétences', () => {
     const levelSelect = await screen.findByLabelText('Niveau pour React')
     const row = levelSelect.closest('li')
     expect(row).toHaveTextContent('Avancé')
-    expect(row).toHaveTextContent('2 ✓')
+    expect(row).toHaveTextContent('· 2')
+    expect(within(row as HTMLElement).getByRole('img', { name: '2 preuves' })).toBeInTheDocument()
   })
 
   it('ajoute une compétence et annonce le recalcul des matchs', async () => {

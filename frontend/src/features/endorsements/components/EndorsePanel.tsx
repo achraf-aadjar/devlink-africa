@@ -48,7 +48,7 @@ export default function EndorsePanel({
   return (
     <section
       aria-label={t('Valider les compétences de {name}', { name: candidate.user.full_name })}
-      className="flex flex-col gap-3 rounded-2xl bg-accent-50/50 px-5 py-4 ring-1 ring-inset ring-accent-400/20"
+      className="flex flex-col gap-3 rounded-card bg-accent-50/50 px-5 py-4 ring-1 ring-inset ring-accent-400/20"
     >
       <div>
         <p className="flex items-center gap-2 text-sm font-medium text-accent-900">

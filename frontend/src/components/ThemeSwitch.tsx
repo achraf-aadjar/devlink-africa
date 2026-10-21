@@ -4,15 +4,15 @@ import { cn } from '../lib/cn'
 import { useTheme } from '../theme/useTheme'
 
 const TONES = {
-  // Pastille claire flottante de la navbar (toujours claire, même en thème sombre).
-  paper: 'text-paper-text hover:bg-paper-hover hover:text-paper-ink',
+  // Barre de navigation sombre (toujours sombre, même en thème clair).
+  bar: 'rounded-md text-bar-muted hover:bg-white/10 hover:text-white',
   // Fond ordinaire de page, qui suit le thème clair/sombre.
-  ink: 'text-ink-700 hover:bg-ink-200 hover:text-ink-900',
+  ink: 'rounded-lg text-ink-700 hover:bg-ink-200 hover:text-ink-900',
 }
 
 /** Bascule clair ↔ sombre : affiche le thème vers lequel on passe. */
 export default function ThemeSwitch({
-  tone = 'paper',
+  tone = 'bar',
   className,
 }: {
   tone?: keyof typeof TONES
@@ -28,7 +28,7 @@ export default function ThemeSwitch({
       aria-label={next === 'dark' ? t('Passer au thème sombre') : t('Passer au thème clair')}
       title={next === 'dark' ? t('Thème sombre') : t('Thème clair')}
       className={cn(
-        'inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg transition-colors',
+        'inline-flex h-11 w-11 shrink-0 items-center justify-center transition-colors',
         TONES[tone],
         className,
       )}

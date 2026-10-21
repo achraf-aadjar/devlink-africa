@@ -74,7 +74,7 @@ export default function SkillsPage() {
   return (
     <section className="flex flex-col gap-6">
       <header>
-        <h1 className="text-3xl font-bold tracking-tight text-ink-900">{t('Mes compétences')}</h1>
+        <h1 className="page-title">{t('Mes compétences')}</h1>
         <p className="mt-1 text-sm text-ink-600">
           {t(
             "Déclarez ce que vous savez faire et ce que vous voulez apprendre. Dev Match s'appuie sur ces deux listes.",
@@ -198,7 +198,7 @@ function SkillColumn({
                       aria-label={t('Niveau pour {skill}', { skill: entry.skill.name })}
                       value={entry.level}
                       onChange={(event) => onLevel(entry, event.target.value as SkillLevel)}
-                      className="field border-veil/10 py-1 pl-3 text-xs text-ink-700 [@media(pointer:coarse)]:min-h-11"
+                      className="field border-ink-300 py-1 pl-3 text-xs text-ink-700 [@media(pointer:coarse)]:min-h-11"
                     >
                       {levelOptions.map((option) => (
                         <option key={option.value} value={option.value}>
@@ -211,7 +211,7 @@ function SkillColumn({
                 <button
                   type="button"
                   onClick={() => onRemove(entry)}
-                  className="shrink-0 rounded-full px-3 py-1 text-xs font-medium text-ink-600 transition hover:bg-danger/10 hover:text-danger [@media(pointer:coarse)]:min-h-11"
+                  className="shrink-0 rounded-md px-3 py-1 text-xs font-medium text-ink-600 transition hover:bg-danger/10 hover:text-danger [@media(pointer:coarse)]:min-h-11"
                 >
                   {t('Retirer')}
                 </button>

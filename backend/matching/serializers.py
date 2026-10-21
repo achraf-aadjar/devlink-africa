@@ -98,6 +98,10 @@ class MatchListSerializer(serializers.Serializer):
     computed_at = serializers.DateTimeField(read_only=True)
     user = serializers.SerializerMethodField()
     reasons = serializers.SerializerMethodField()
+    # Noms des compétences seulement : la liste les affiche en colonnes
+    # (« vous apprend », « vous lui apprenez ») sans charger chaque détail.
+    teaches_you = serializers.SerializerMethodField()
+    learns_from_you = serializers.SerializerMethodField()
 
     @property
     def viewer_id(self) -> int:
@@ -120,6 +124,12 @@ class MatchListSerializer(serializers.Serializer):
     def get_reasons(self, match: Match) -> list[str]:
         partner = self._partner(match)
         return build_reasons(match, self.viewer_id, self._partner_name(partner), self.lang)[:3]
+
+    def get_teaches_you(self, match: Match) -> list[str]:
+        return [item["name"] for item in oriented_explanation(match, self.viewer_id)["they_can_teach_you"]]
+
+    def get_learns_from_you(self, match: Match) -> list[str]:
+        return [item["name"] for item in oriented_explanation(match, self.viewer_id)["you_can_teach_them"]]
 
 
 class MatchDetailSerializer(MatchListSerializer):

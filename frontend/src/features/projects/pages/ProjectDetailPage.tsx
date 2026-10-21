@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import DemoBadge from '../../../components/DemoBadge'
 import Icon from '../../../components/icons/Icon'
+import { buttonClasses } from '../../../components/ui/buttonStyles'
 import {
   Badge,
   Button,
@@ -28,7 +29,7 @@ function LinkButton({ href, children }: { href: string; children: React.ReactNod
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-flex items-center gap-2 rounded-full bg-veil/[0.06] px-5 py-2 ring-1 ring-inset ring-veil/10 text-sm font-medium text-ink-800 transition-colors hover:bg-ink-200"
+      className={buttonClasses('secondary', 'md')}
     >
       <Icon name="external" size={16} />
       {children}
@@ -121,22 +122,15 @@ export default function ProjectDetailPage() {
     <section className="flex flex-col gap-6">
       <nav aria-label={t("Fil d'Ariane")}>
         <Link to="/projets" className="text-sm text-ink-600 hover:text-accent-700 hover:underline">
-          ← Project Hub
+          ← {t('Projets')}
         </Link>
       </nav>
 
       {/* Sur petit écran, les actions passent sous le titre au lieu de l'écraser. */}
       <header className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div className="flex min-w-0 items-start gap-4">
-          <span
-            aria-hidden="true"
-            className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-brand/30 to-violet/20 text-accent-800 ring-1 ring-inset ring-accent-400/30"
-          >
-            <Icon name="project" size={28} />
-          </span>
-
           <div className="min-w-0 flex-1">
-            <h1 className="text-3xl font-bold tracking-tight text-ink-900">{data.title}</h1>
+            <h1 className="page-title">{data.title}</h1>
             <p className="mt-1 text-sm text-ink-600">
               {t('Porté par')}{' '}
               <Link to={`/developpeurs/${data.owner.id}`} className="hover:underline">
@@ -172,13 +166,14 @@ export default function ProjectDetailPage() {
                 {t('Supprimer')}
               </Button>
             </>
+          ) : isAuthenticated ? (
+            <>
+              <Button onClick={() => setJoinOpen(true)}>{t('Rejoindre le projet')}</Button>
+              <ReportButton targetType="PROJECT" targetId={projectId} label={t('Signaler')} />
+            </>
           ) : (
-            isAuthenticated && (
-              <>
-                <Button onClick={() => setJoinOpen(true)}>{t('Rejoindre le projet')}</Button>
-                <ReportButton targetType="PROJECT" targetId={projectId} label={t('Signaler')} />
-              </>
-            )
+            // Un visiteur voit l'action qui l'attend, au lieu d'une impasse.
+            <ButtonLink to="/inscription">{t('Créer mon compte pour rejoindre')}</ButtonLink>
           )}
         </div>
       </header>
@@ -220,14 +215,14 @@ export default function ProjectDetailPage() {
 
       {data.description && (
         <Card>
-          <h2 className="mb-2 font-semibold text-ink-900">{t('Le projet')}</h2>
+          <h2 className="sheet-title mb-2">{t('Le projet')}</h2>
           <p className="whitespace-pre-line text-sm text-ink-700">{data.description}</p>
         </Card>
       )}
 
       {data.needs.length > 0 && (
         <Card>
-          <h2 className="mb-3 font-semibold text-ink-900">{t('Compétences recherchées')}</h2>
+          <h2 className="sheet-title mb-3">{t('Compétences recherchées')}</h2>
           <ul className="flex flex-wrap gap-2">
             {data.needs.map((skill) => (
               <li key={skill.id}>
@@ -240,7 +235,7 @@ export default function ProjectDetailPage() {
 
       {isOwner && data.join_requests && (
         <Card>
-          <h2 className="mb-3 font-semibold text-ink-900">
+          <h2 className="sheet-title mb-3">
             {t('Demandes reçues ({count})', { count: data.join_requests.length })}
           </h2>
           {data.join_requests.length === 0 ? (

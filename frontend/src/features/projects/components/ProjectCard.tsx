@@ -20,15 +20,9 @@ export default function ProjectCard({ project }: { project: Project }) {
   return (
     <Card as="li" interactive className="flex flex-col gap-3">
       <div className="flex items-start gap-3">
-        <span
-          aria-hidden="true"
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-brand/30 to-violet/20 text-accent-800 ring-1 ring-inset ring-accent-400/30"
-        >
-          <Icon name="project" size={20} />
-        </span>
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-start justify-between gap-x-2 gap-y-1">
-            <h2 className="min-w-0 break-words font-semibold text-ink-900">
+            <h2 className="min-w-0 break-words font-display text-xl font-bold leading-tight text-ink-900">
               <Link to={`/projets/${project.id}`} className="hover:text-accent-700 hover:underline">
                 {project.title}
               </Link>

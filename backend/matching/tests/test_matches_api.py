@@ -76,6 +76,19 @@ def test_the_list_describes_the_partner_from_my_point_of_view(pair):
     assert kofi_view["user"]["full_name"] == "Ada"
 
 
+def test_the_list_names_what_each_side_teaches_from_my_point_of_view(pair):
+    """Colonnes de la liste : ce que l'autre m'apprend, ce que je lui apprends."""
+    ada, kofi, _ = pair
+
+    ada_view = client_for(ada).get(MATCHES).json()["results"][0]
+    kofi_view = client_for(kofi).get(MATCHES).json()["results"][0]
+
+    assert ada_view["teaches_you"] == ["Python"]
+    assert ada_view["learns_from_you"] == ["React"]
+    assert kofi_view["teaches_you"] == ["React"]
+    assert kofi_view["learns_from_you"] == ["Python"]
+
+
 def test_the_list_never_exposes_an_email(pair):
     ada, _, _ = pair
 

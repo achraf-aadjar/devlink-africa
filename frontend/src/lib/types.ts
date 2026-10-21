@@ -189,6 +189,10 @@ export interface MatchSummary {
   score: number
   reasons: string[]
   computed_at: string
+  /** Noms des compétences que l'autre peut vous apprendre. */
+  teaches_you?: string[]
+  /** Noms des compétences que vous pouvez lui apprendre. */
+  learns_from_you?: string[]
 }
 
 export interface MatchDetail extends MatchSummary {

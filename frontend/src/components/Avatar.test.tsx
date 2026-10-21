@@ -17,7 +17,7 @@ describe('avatar', () => {
     const colour = (name: string) =>
       (render(<Avatar name={name} />).container.firstElementChild as HTMLElement).style.background
     expect(colour('Kofi Mensah')).toBe(colour('Kofi Mensah'))
-    expect(colour('Kofi Mensah')).toContain('linear-gradient')
+    expect(colour('Kofi Mensah')).toMatch(/^rgb\(/)
   })
 
   it('est décoratif : le nom est déjà écrit à côté', () => {

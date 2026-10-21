@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import Avatar from '../../../components/Avatar'
+import Icon from '../../../components/icons/Icon'
 import DemoBadge from '../../../components/DemoBadge'
 import SkillBadge from '../../../components/SkillBadge'
 import {
@@ -75,17 +76,24 @@ export default function SearchPage() {
     ...(catalog.data?.results ?? []).map((skill) => ({ value: skill.name, label: skill.name })),
   ]
   const active = tab === 'users' ? users : projects
+  const secondaryCount = [filters.level, filters.availability, filters.domain].filter(
+    Boolean,
+  ).length
 
   return (
     <section className="flex flex-col gap-6">
       <header>
-        <h1 className="text-3xl font-bold tracking-tight text-ink-900">{t('Recherche')}</h1>
-        <p className="mt-1 text-sm text-ink-600">
+        <h1 className="page-title">{t('Recherche')}</h1>
+        <p className="mt-2 text-sm text-ink-600">
           {t('Trouvez un développeur par compétence et par pays, ou un projet à rejoindre.')}
         </p>
       </header>
 
-      <div role="tablist" aria-label={t('Type de recherche')} className="flex gap-2">
+      <div
+        role="tablist"
+        aria-label={t('Type de recherche')}
+        className="flex gap-1 border-b border-ink-300"
+      >
         {(['users', 'projects'] as Tab[]).map((value) => (
           <button
             key={value}
@@ -93,10 +101,10 @@ export default function SearchPage() {
             role="tab"
             aria-selected={tab === value}
             onClick={() => update({ onglet: value === 'users' ? '' : value })}
-            className={`rounded-lg px-4 py-2 text-sm font-medium ${
+            className={`-mb-px min-h-11 border-b-[3px] px-4 font-display text-lg font-bold uppercase tracking-[0.02em] transition-colors ${
               tab === value
-                ? 'bg-accent-400 text-white'
-                : 'bg-ink-100 text-ink-700 hover:bg-ink-200'
+                ? 'border-brand text-ink-900'
+                : 'border-transparent text-ink-600 hover:text-ink-900'
             }`}
           >
             {value === 'users' ? t('Développeurs') : t('Projets')}
@@ -123,9 +131,9 @@ export default function SearchPage() {
         />
       )}
 
-      <Card>
+      <Card className="!p-4 sm:!p-5">
         <form
-          className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+          className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-[1.3fr_1fr_1fr_1fr_auto] xl:items-end"
           onSubmit={(event) => {
             event.preventDefault()
             update({ q: draft })
@@ -155,41 +163,16 @@ export default function SearchPage() {
           />
 
           {tab === 'users' && (
-            <>
-              <Combobox
-                label={t('Veut apprendre')}
-                value={filters.skill_wanted}
-                options={skillOptions}
-                onChange={(value) => update({ skill_wanted: value })}
-              />
-              <Select
-                label={t('Niveau')}
-                value={filters.level}
-                placeholder={t('Tous')}
-                options={toOptions(LEVEL_LABELS, t)}
-                onChange={(event) => update({ level: event.target.value })}
-              />
-              <Select
-                label={t('Disponibilité')}
-                value={filters.availability}
-                placeholder={t('Toutes')}
-                options={toOptions(AVAILABILITY_LABELS, t)}
-                onChange={(event) => update({ availability: event.target.value })}
-              />
-              <Select
-                label={t('Domaine')}
-                value={filters.domain}
-                placeholder={t('Tous')}
-                options={toOptions(DOMAIN_LABELS, t)}
-                onChange={(event) => update({ domain: event.target.value })}
-              />
-            </>
+            <Combobox
+              label={t('Veut apprendre')}
+              value={filters.skill_wanted}
+              options={skillOptions}
+              onChange={(value) => update({ skill_wanted: value })}
+            />
           )}
 
           <div className="flex items-end gap-2">
-            <Button type="submit" size="sm">
-              {t('Rechercher')}
-            </Button>
+            <Button type="submit">{t('Rechercher')}</Button>
             <Button
               type="button"
               size="sm"
@@ -202,6 +185,51 @@ export default function SearchPage() {
               {t('Réinitialiser')}
             </Button>
           </div>
+
+          {tab === 'users' && (
+            <details
+              className="group col-span-full border-t border-ink-200 pt-3"
+              open={secondaryCount > 0}
+            >
+              <summary className="inline-flex min-h-11 cursor-pointer list-none items-center gap-1.5 text-sm font-semibold text-accent-700 [&::-webkit-details-marker]:hidden">
+                <Icon
+                  name="chevronDown"
+                  size={18}
+                  className="transition-transform group-open:rotate-180"
+                />
+                {secondaryCount > 0
+                  ? tn(
+                      secondaryCount,
+                      'Plus de filtres ({n} actif)',
+                      'Plus de filtres ({n} actifs)',
+                    )
+                  : t('Plus de filtres')}
+              </summary>
+              <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <Select
+                  label={t('Niveau')}
+                  value={filters.level}
+                  placeholder={t('Tous')}
+                  options={toOptions(LEVEL_LABELS, t)}
+                  onChange={(event) => update({ level: event.target.value })}
+                />
+                <Select
+                  label={t('Disponibilité')}
+                  value={filters.availability}
+                  placeholder={t('Toutes')}
+                  options={toOptions(AVAILABILITY_LABELS, t)}
+                  onChange={(event) => update({ availability: event.target.value })}
+                />
+                <Select
+                  label={t('Domaine')}
+                  value={filters.domain}
+                  placeholder={t('Tous')}
+                  options={toOptions(DOMAIN_LABELS, t)}
+                  onChange={(event) => update({ domain: event.target.value })}
+                />
+              </div>
+            </details>
+          )}
         </form>
       </Card>
 
@@ -225,44 +253,72 @@ export default function SearchPage() {
               <p className="text-sm text-ink-600">
                 {tn(users.data.count, '{n} développeur trouvé.', '{n} développeurs trouvés.')}
               </p>
-              <ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <ul className="surface divide-y divide-ink-200 overflow-hidden">
                 {users.data.results.map((person) => (
-                  <Card as="li" key={person.id} interactive className="flex flex-col gap-3">
-                    <Avatar name={person.full_name || t('Développeur')} size={52} />
-                    <div>
-                      <h2 className="font-semibold text-ink-900">
-                        <Link
-                          to={`/developpeurs/${person.id}`}
-                          className="hover:text-accent-700 hover:underline"
-                        >
-                          {person.full_name || t('Développeur')}
-                        </Link>
-                      </h2>
-                      <p className="mt-0.5 text-sm text-ink-600">
-                        {person.country && (
-                          <span className="mr-1" aria-hidden="true">
-                            {countryFlag(person.country)}
+                  <li
+                    key={person.id}
+                    className="grid gap-x-6 gap-y-3 px-4 py-4 transition-colors hover:bg-ink-50 sm:px-5 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)_minmax(0,1fr)] lg:items-start"
+                  >
+                    <div className="flex min-w-0 items-start gap-3">
+                      <Avatar name={person.full_name || t('Développeur')} size={44} />
+                      <div className="min-w-0">
+                        <h2 className="font-semibold text-ink-900">
+                          <Link
+                            to={`/developpeurs/${person.id}`}
+                            className="hover:text-accent-700 hover:underline"
+                          >
+                            {person.full_name || t('Développeur')}
+                          </Link>
+                        </h2>
+                        <p className="mt-0.5 flex flex-wrap items-center gap-2 text-sm text-ink-600">
+                          <span>
+                            {person.country && (
+                              <span className="mr-1" aria-hidden="true">
+                                {countryFlag(person.country)}
+                              </span>
+                            )}
+                            {person.country
+                              ? localCountryName(person.country, person.country, lang)
+                              : t('Pays non renseigné')}
                           </span>
+                          <DemoBadge isDemo={person.is_demo} compact />
+                        </p>
+                        {person.bio && (
+                          <p className="mt-1 line-clamp-2 text-sm text-ink-700">{person.bio}</p>
                         )}
-                        {person.country
-                          ? localCountryName(person.country, person.country, lang)
-                          : t('Pays non renseigné')}
-                      </p>
+                      </div>
                     </div>
-                    <DemoBadge isDemo={person.is_demo} />
-                    {person.bio && (
-                      <p className="line-clamp-2 text-sm text-ink-600">{person.bio}</p>
-                    )}
-                    {person.offered_skills.length > 0 && (
-                      <ul className="flex flex-wrap gap-1.5">
-                        {person.offered_skills.slice(0, 4).map((skill) => (
-                          <li key={skill.id}>
-                            <SkillBadge name={skill.name} kind="OFFERED" />
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </Card>
+                    <div className="flex flex-col gap-1.5 pl-14 lg:pl-0">
+                      <span className="text-xs font-medium text-ink-600">{t('Sait faire')}</span>
+                      {person.offered_skills.length > 0 ? (
+                        <ul className="flex flex-wrap gap-1.5">
+                          {person.offered_skills.slice(0, 4).map((skill) => (
+                            <li key={skill.id}>
+                              <SkillBadge name={skill.name} kind="OFFERED" />
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <span className="text-sm text-ink-500">—</span>
+                      )}
+                    </div>
+                    <div className="flex flex-col gap-1.5 pl-14 lg:pl-0">
+                      <span className="text-xs font-medium text-ink-600">
+                        {t('Veut apprendre')}
+                      </span>
+                      {person.wanted_skills.length > 0 ? (
+                        <ul className="flex flex-wrap gap-1.5">
+                          {person.wanted_skills.slice(0, 4).map((skill) => (
+                            <li key={skill.id}>
+                              <SkillBadge name={skill.name} kind="WANTED" />
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <span className="text-sm text-ink-500">—</span>
+                      )}
+                    </div>
+                  </li>
                 ))}
               </ul>
             </>
@@ -278,7 +334,7 @@ export default function SearchPage() {
               description={t("Élargissez vos critères pour découvrir d'autres projets.")}
             />
           ) : (
-            <ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
               {projects.data.results.map((project) => (
                 <ProjectCard key={project.id} project={project} />
               ))}

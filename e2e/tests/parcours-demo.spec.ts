@@ -93,6 +93,9 @@ test('le parcours de démonstration, de l’inscription au contact', async ({ br
     .getByLabel('Votre message')
     .fill('Bonjour Mamadou, tu me montrerais Docker ? Je t’aide sur React.')
   await dialog.getByRole('button', { name: 'Envoyer la demande' }).click()
+  // La fenêtre confirme l'envoi et rappelle la suite avant de se fermer.
+  await expect(dialog.getByText(`Demande envoyée à ${RECIPIENT.name}.`)).toBeVisible()
+  await dialog.getByRole('button', { name: 'Rester sur ce match' }).click()
   await expect(dialog).toBeHidden()
 
   // Mamadou voit la demande signalée dans la barre, et l'accepte.

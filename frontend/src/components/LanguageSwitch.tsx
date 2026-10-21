@@ -2,15 +2,15 @@ import { useI18n } from '../i18n/useI18n'
 import { cn } from '../lib/cn'
 
 const TONES = {
-  // Pastille claire flottante de la navbar (toujours claire, même en thème sombre).
-  paper: 'text-paper-text hover:bg-paper-hover hover:text-paper-ink',
+  // Barre de navigation sombre (toujours sombre, même en thème clair).
+  bar: 'rounded-md font-display text-base font-bold tracking-wide text-bar-muted hover:bg-white/10 hover:text-white',
   // Fond ordinaire de page, qui suit le thème clair/sombre.
-  ink: 'text-ink-700 hover:bg-ink-200 hover:text-ink-900',
+  ink: 'rounded-lg text-sm font-semibold text-ink-700 hover:bg-ink-200 hover:text-ink-900',
 }
 
 /** Bascule français ↔ anglais : affiche la langue vers laquelle on passe. */
 export default function LanguageSwitch({
-  tone = 'paper',
+  tone = 'bar',
   className,
 }: {
   tone?: keyof typeof TONES
@@ -27,7 +27,7 @@ export default function LanguageSwitch({
       aria-label={next === 'en' ? 'Switch to English' : t('Passer en français')}
       title={next === 'en' ? 'English' : 'Français'}
       className={cn(
-        'inline-flex h-11 min-w-11 shrink-0 items-center justify-center rounded-lg px-2.5 text-sm font-semibold transition-colors',
+        'inline-flex h-11 min-w-11 shrink-0 items-center justify-center px-2.5 transition-colors',
         TONES[tone],
         className,
       )}

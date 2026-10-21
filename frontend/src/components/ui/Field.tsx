@@ -38,7 +38,7 @@ export default function Field({ label, error, hint, className, required, ...rest
         aria-describedby={describedBy || undefined}
         className={cn(
           'field text-ink-900 placeholder:text-ink-500',
-          error ? 'border-danger/70' : 'border-veil/10',
+          error ? 'border-danger/70' : 'border-ink-300',
           className,
         )}
       />

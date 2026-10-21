@@ -540,6 +540,9 @@ Repris avec nos propres codes, pas une copie : un voile sombre uniforme (`bg-ink
 **Décision.** `backend/reports/admin.py` : premier (et seul) enregistrement admin du projet. Liste filtrable par statut/motif/cible, `status` modifiable directement depuis la liste (`list_editable`), le reste en lecture seule (on ne corrige pas le contenu d'un signalement). Délibérément l'admin Django plutôt qu'un nouvel écran React : c'est un outil interne pour l'équipe, pas une fonctionnalité produit, et ça évite d'inventer un rôle « modérateur » et des permissions dédiées pour un besoin qui se résume à « voir la liste et changer un statut ».
 
 **Effet de bord découvert en testant.** La première requête vers une page admin plantait en test : `STORAGES["staticfiles"]` utilise `CompressedManifestStaticFilesStorage` (whitenoise) en production, qui exige un manifeste généré par `collectstatic` — absent en test, où rien n'avait jamais posé de tag `{% static %}` jusqu'ici puisqu'aucune page serveur n'existait. `config/settings_test.py` repasse sur un stockage simple pour les tests ; la configuration de production n'est pas touchée.
+
+---
+
 ## 2026-10-14 — `/pays` cassait pour un compte sans profil
 
 **Constat.** En créant un superutilisateur pour essayer l'admin des signalements (voir plus haut), `GET /countries/` s'est mis à renvoyer une 500 : `'NoneType' object has no attribute 'upper'`. Cause : `list_countries()` filtrait avec `.exclude(profile__country="")`, qui exclut la chaîne vide mais pas `None` — or un compte sans `Profile` du tout (exactement ce que produit `python manage.py createsuperuser`, documenté dans `deploy/README.md`) donne `None` sur la relation inverse, pas `""`. Cette page publique aurait donc cassé **dès le premier `createsuperuser` en production**.
@@ -569,3 +572,23 @@ Repris avec nos propres codes, pas une copie : un voile sombre uniforme (`bg-ink
 **Décision.** Les trois passent au même `Combobox` déjà en place pour les pays. Pour les deux filtres de recherche (où « aucune valeur » = « toutes les compétences », contrairement à l'ajout qui impose un choix), une option `{ value: '', label: 'Toutes' }` est ajoutée en tête de liste : elle sert à la fois de valeur par défaut affichée et de façon d'y revenir après avoir filtré.
 
 **Tests.** Les interactions `selectOptions`/`getAllByRole('option', …)` sur un `<select>` fermé ne marchent plus sur un Combobox (ses options n'existent dans le DOM que liste ouverte) : migrées vers clic + recherche dans la liste ouverte, comme déjà fait pour le pays. Un nouveau test de `/recherche` vérifie le filtre et son retour à « Toutes ».
+
+---
+
+## 2026-10-14 — Refonte « feuille de match » : sortir du look généré
+
+**Constat.** Une critique complète du front (deux revues indépendantes, détecteur Impeccable dans le navigateur, recherche sur ce qui trahit une interface générée) a conclu que l'aspect « fait par une IA » venait surtout d'une couche d'effets posée sur une palette copiée de GitHub Primer (`#0d1117`, `#1f6feb`, `#a371f7`, revendiquée dans les commentaires) : halos flous et dégradés bleu → violet (~50 occurrences), texte en dégradé, boutons lumineux, avatars en dégradé (initiales à 2,4–4,1:1), cartes de 24 px identiques pour tout, page d'accueil au gabarit standard (titre centré, étiquettes flottantes, bande de chiffres, colonnes d'icônes, sur-titres en capitales). 77 problèmes relevés par le détecteur dans le navigateur. L'architecture de l'information, les parcours et les composants propres (cercle, carte en tuiles, observatoire, score expliqué) étaient bons.
+
+**Décision.** Refonte partielle mais profonde, en gardant tout le fond :
+- **Monde visuel** : le tableau tactique de l'entraîneur et la feuille de match imprimée, connus de Dakar à Nairobi, et accordés au vocabulaire du produit (« Dev Match », « matchs »). Tableau émaillé presque blanc en clair, ardoise en sombre, feuilles blanches à filet d'encre, barre d'en-tête noire comme un tableau d'affichage.
+- **Couleurs** : un bleu d'action à nous (`#1a4fc0`, blanc dessus à 7,2:1), un orange pour la demande (« Je veux apprendre »), le même couple que l'observatoire. Plus de violet, plus aucun halo ni dégradé.
+- **Typographie** : Fira Sans, la seule famille libre testée qui ait une largeur condensée et couvre tout le latin africain vérifié (ɛ, ɔ, ŋ, ɓ, ɗ, ƙ, ƴ, ẹ, ọ, ṣ, tons). Conçue pour les téléphones de Firefox OS. Sous-ensemble WOFF2 de ~33 Ko par graisse, `font-display: swap`.
+- **Geste signature** : les flèches au feutre (cercles, tableau d'un match), tracées une fois ; la plaque de score noire remplace l'anneau de progression.
+- **Pages** : accueil reconstruit autour du cercle de démonstration et d'une « feuille de match » qui est un vrai formulaire de recherche ; connexion sans portraits (le cercle à la place) ; matchs et recherche en listes à colonnes fixes ; détail d'un match en feuille de stats (une barre de 100 points découpée selon le poids des critères) avec l'action collée sous le pouce sur mobile ; fenêtre d'échange avec récapitulatif « vous donnez / vous recevez », rappel que les contacts restent cachés, et confirmation.
+
+**Écartés.** Le tirage de directions proposait aussi un carnet de tontine (très juste pour les cercles, mais associé à l'argent et proche du « papier crème » typique des interfaces générées), un carnet de croquis dessiné à la main (clair pour expliquer le score, mais enfantin devant un jury), et le standard de la catégorie (propre, mais indiscernable des concurrents).
+
+**Risque surveillé.** Le football est très masculin dans l'imaginaire et proche de l'univers des paris sportifs : on reste côté tableau du coach et feuille de match, jamais pelouse verte ni ticket de pari.
+
+**Effet mesuré.** Détecteur dans le navigateur, sur les mêmes six pages : 77 signalements avant, 4 au premier passage après la refonte. Trois ont été corrigés ensuite (bloc imbriqué dans une carte sur le tableau de bord et l'accueil, niveau de titre sauté sur le détail d'un match) ; le quatrième est assumé : la feuille de match épinglée sur le tableau de l'accueil.
+

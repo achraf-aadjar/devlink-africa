@@ -43,7 +43,7 @@ export default function ProjectSummaryButton({
   }
 
   return (
-    <div className="flex flex-col gap-2 rounded-2xl bg-accent-50/60 p-4 ring-1 ring-inset ring-accent-400/20">
+    <div className="flex flex-col gap-2 rounded-card bg-accent-50/60 p-4 ring-1 ring-inset ring-accent-400/20">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-sm text-ink-700">
           {t("Besoin d'une présentation courte pour la carte ?")}
@@ -61,7 +61,7 @@ export default function ProjectSummaryButton({
 
       {summary && (
         <div className="flex flex-col gap-2" role="status">
-          <p className="rounded-2xl bg-veil/[0.04] p-4 ring-1 ring-inset ring-veil/[0.07] text-sm text-ink-800">
+          <p className="rounded-card bg-veil/[0.04] p-4 ring-1 ring-inset ring-veil/[0.07] text-sm text-ink-800">
             {summary}
           </p>
           <div className="flex gap-2">

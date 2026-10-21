@@ -429,11 +429,15 @@ Liste des matchs de l'utilisateur connecté, triée par score décroissant, pagi
         "Vous pouvez lui apprendre TypeScript.",
         "Vous êtes tous les deux disponibles pour du mentorat."
       ],
+      "teaches_you": ["Python"],
+      "learns_from_you": ["TypeScript"],
       "computed_at": "2026-10-15T09:00:00Z"
     }
   ]
 }
 ```
+
+`teaches_you` et `learns_from_you` (ajoutés le 2026-10-14) : noms des compétences que l'autre peut vous apprendre, et que vous pouvez lui apprendre, du point de vue de la personne connectée. Ils alimentent les colonnes de la liste des matchs sans charger chaque détail.
 
 ### `GET /matches/{id}/`
 

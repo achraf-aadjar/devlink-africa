@@ -1,28 +1,19 @@
 /** @type {import('tailwindcss').Config} */
-// Jetons de design DevLink Africa (DL-07).
+// Jetons de design DevLink Africa : « la feuille de match ».
 //
-// Thème façon GitHub, un seul accent bleu. Clair par défaut, sombre quand
-// l'appareil est en mode sombre (`prefers-color-scheme`). Les valeurs des
-// échelles `ink`, `accent` et `veil` vivent en variables CSS dans index.css ;
-// ce fichier ne garde que les noms. Voir docs/DECISIONS.md pour le calcul des
-// teintes sombres.
+// Un tableau tactique émaillé (fond chaud presque blanc), des feuilles
+// blanches posées dessus, de l'encre noire, un bleu d'action et un orange
+// pour la demande, comme les deux couleurs d'aimants d'un entraîneur.
+// Clair par défaut, ardoise quand l'appareil est en mode sombre. Les valeurs
+// vivent en variables CSS dans index.css ; ce fichier ne garde que les noms.
 //
-// `ink` est à l'inverse de l'original : 50 est le fond de la page, 900 le
-// texte le plus contrasté (le plus clair en sombre, le plus foncé en clair). Ce sens compte : partout ailleurs dans
-// le code, `bg-ink-50`/`bg-ink-100` désignent un fond et `text-ink-700` à
-// `text-ink-900` du texte lisible — en inversant seulement les valeurs ici,
-// toutes ces classes redeviennent correctes sans toucher aux composants.
+// `ink` : 50 est le fond de la page (le tableau), 100 la feuille (cartes,
+// champs, fenêtres), 900 le texte le plus contrasté. Le sens est le même dans
+// les deux thèmes, donc `bg-ink-100` ou `text-ink-700` marchent partout.
 //
-// `accent` (bleu) a deux familles distinctes, calculées pour chacune passer
-// au moins 4,5:1 :
-//   - 50 à 300 : teintes sombres, pour un fond de bouton ou un encadré (texte
-//     blanc dessus, contraste vérifié).
-//   - 400 à 900 : bleus clairs, pour du texte ou une icône sur fond sombre.
-// Les deux familles se chevauchent volontairement : aucune valeur unique ne
-// pouvait servir à la fois de fond de bouton (doit rester assez sombre pour
-// un texte blanc) et de texte de lien (doit être assez clair sur fond quasi
-// noir) — la fenêtre commune où les deux marchent à la fois est trop étroite
-// (bien en dessous de 4,5:1 des deux côtés à la fois, vérifié par calcul).
+// `accent` (bleu) a deux familles : 50 à 200 pour un fond teinté, 300 à 900
+// pour un aplat, une icône ou du texte. Chaque teinte de texte tient 4,5:1
+// sur le tableau et sur la feuille, dans son thème.
 export default {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {
@@ -40,19 +31,25 @@ export default {
           800: 'rgb(var(--accent-800) / <alpha-value>)',
           900: 'rgb(var(--accent-900) / <alpha-value>)',
         },
-        // Bleu des actions (bouton, pastille) : blanc dessus à 4,6:1.
-        brand: { DEFAULT: '#1f6feb', hover: '#1a5fd0' },
-        // Second ton des dégradés et des halos.
-        violet: '#a371f7',
-        // Pastille claire de l'en-tête, posée sur le fond sombre.
-        paper: {
-          DEFAULT: '#f0f2f5',
-          hover: '#e3e6eb',
-          active: '#dde1e7',
-          line: '#d0d7de',
-          text: '#3d444d',
-          ink: '#0d1117',
-          brand: '#0969da',
+        // Bleu des actions et de l'offre (« Je sais faire ») : blanc dessus à
+        // 7,2:1 en clair, 5,5:1 en sombre.
+        brand: {
+          DEFAULT: 'rgb(var(--brand) / <alpha-value>)',
+          hover: 'rgb(var(--brand-hover) / <alpha-value>)',
+        },
+        // Orange de la demande (« Je veux apprendre ») : `demand` pour un
+        // texte, `demand-fill` pour un aimant ou une barre (blanc dessus 4,8:1).
+        demand: {
+          DEFAULT: 'rgb(var(--demand) / <alpha-value>)',
+          fill: '#c24d12',
+        },
+        // Barre d'en-tête et plaques de score : le noir du tableau d'affichage.
+        bar: {
+          DEFAULT: 'rgb(var(--bar) / <alpha-value>)',
+          text: '#e9eae6',
+          muted: '#b3b6bb',
+          line: 'rgb(255 255 255 / 0.14)',
+          accent: '#8fb1ff',
         },
         ink: {
           50: 'rgb(var(--ink-50) / <alpha-value>)',
@@ -66,64 +63,56 @@ export default {
           800: 'rgb(var(--ink-800) / <alpha-value>)',
           900: 'rgb(var(--ink-900) / <alpha-value>)',
         },
-        // Voile : blanc en thème sombre, encre en thème clair. Remplace
-        // `white/xx` pour les fonds et liserés translucides.
+        // Voile : encre en thème clair, blanc en thème sombre. Pour les
+        // liserés et les fonds translucides qui doivent marcher dans les deux.
         veil: 'rgb(var(--veil) / <alpha-value>)',
         // États : valeurs claires ou sombres selon le thème (index.css).
-        danger: 'rgb(var(--danger) / <alpha-value>)',
+        danger: {
+          DEFAULT: 'rgb(var(--danger) / <alpha-value>)',
+          // Aplat d'un bouton destructif, texte blanc à 6,6:1.
+          solid: '#b42318',
+        },
         success: 'rgb(var(--success) / <alpha-value>)',
         warning: 'rgb(var(--warning) / <alpha-value>)',
         info: 'rgb(var(--info) / <alpha-value>)',
       },
       fontFamily: {
-        // Polices système : aucune dépendance, aucune question de licence.
+        // Fira Sans (SIL OFL 1.1, voir LICENSES.md), hébergée avec le site et
+        // réduite aux caractères utiles, dont le latin africain (ɛ, ɔ, ŋ, ɓ,
+        // ɗ, ƙ, ƴ, ẹ, ọ, ṣ…). Les polices système prennent le relais pour le
+        // reste.
         sans: [
+          '"Fira Sans"',
           'system-ui',
           '-apple-system',
           'Segoe UI',
           'Roboto',
-          'Helvetica Neue',
           'Arial',
           'sans-serif',
         ],
+        // Capitales et chiffres de la feuille de match : titres, noms, scores.
+        display: ['"Fira Sans Extra Condensed"', '"Fira Sans"', 'Arial Narrow', 'sans-serif'],
         mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace'],
       },
-      borderRadius: { card: '1.5rem' },
+      borderRadius: { card: '0.5rem' },
       boxShadow: {
-        // Sur fond sombre, une ombre n'apporte presque rien par elle-même :
-        // c'est surtout la bordure (border-ink-200/300) qui sépare les
-        // cartes. L'ombre reste discrète, en renfort.
-        card: '0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.25)',
-        // Halo bleu des éléments mis en avant (bouton principal, carte active).
-        glow: '0 0 0 1px rgba(56, 139, 253, 0.45), 0 8px 28px -8px rgba(31, 111, 235, 0.7)',
-        'glow-soft': '0 0 0 1px rgba(56, 139, 253, 0.2), 0 20px 60px -24px rgba(56, 139, 253, 0.5)',
+        // Feuille posée sur le tableau : ombre courte et décalée vers le bas.
+        sheet: '0 1px 0 rgb(var(--veil) / 0.06), 0 2px 6px -2px rgb(var(--veil) / 0.12)',
+        // Fenêtre au-dessus de la page.
+        lift: '0 12px 32px -12px rgb(0 0 0 / 0.35), 0 2px 6px rgb(0 0 0 / 0.12)',
+        // Aimant : un petit relief, comme un disque posé sur le tableau.
+        magnet: 'inset 0 -2px 0 rgb(0 0 0 / 0.18), 0 1px 2px rgb(0 0 0 / 0.25)',
       },
       keyframes: {
         'fade-in': { from: { opacity: '0' }, to: { opacity: '1' } },
-        // Page d'accueil : pastilles qui flottent, halo bleu qui respire.
-        float: {
-          '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-10px)' },
-        },
-        glow: {
-          '0%, 100%': { opacity: '0.55', transform: 'scale(1)' },
-          '50%': { opacity: '0.85', transform: 'scale(1.06)' },
-        },
+        // Flèche au feutre qui se trace une fois.
+        draw: { from: { strokeDashoffset: 'var(--len, 400)' }, to: { strokeDashoffset: '0' } },
         'bar-fill': { from: { transform: 'scaleX(0)' }, to: { transform: 'scaleX(1)' } },
-        // Cercles d'échange : un trait lumineux qui parcourt chaque flèche.
-        flow: { to: { strokeDashoffset: '-15' } },
-        'page-in': {
-          from: { opacity: '0', transform: 'translateY(8px)' },
-          to: { opacity: '1', transform: 'translateY(0)' },
-        },
       },
       animation: {
         'fade-in': 'fade-in 150ms ease-out',
-        float: 'float 6s ease-in-out infinite',
-        glow: 'glow 8s ease-in-out infinite',
-        'bar-fill': 'bar-fill 1.1s cubic-bezier(0.22, 1, 0.36, 1) both',
-        'page-in': 'page-in 350ms ease-out both',
-        flow: 'flow 1.6s linear infinite',
+        draw: 'draw 900ms cubic-bezier(0.22, 1, 0.36, 1) both',
+        'bar-fill': 'bar-fill 700ms cubic-bezier(0.22, 1, 0.36, 1) both',
       },
     },
   },

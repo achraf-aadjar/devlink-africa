@@ -80,7 +80,7 @@ export default function CopilotWidget() {
         <div
           role="dialog"
           aria-label="DevLink Copilot"
-          className="flex h-[28rem] w-[22rem] max-w-[calc(100vw-2.5rem)] flex-col overflow-hidden rounded-card border border-ink-200 bg-ink-100 shadow-card"
+          className="flex h-[28rem] w-[22rem] max-w-[calc(100vw-2.5rem)] flex-col overflow-hidden rounded-card border border-ink-200 bg-ink-100 shadow-lift"
         >
           <div className="flex items-center justify-between border-b border-ink-200 bg-ink-50 px-4 py-3">
             <div className="flex items-center gap-2">
@@ -154,7 +154,7 @@ export default function CopilotWidget() {
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
         aria-label={open ? t('Réduire DevLink Copilot') : t('Ouvrir DevLink Copilot')}
-        className="flex h-14 w-14 items-center justify-center rounded-full bg-accent-400 text-white shadow-card transition-colors hover:bg-accent-300"
+        className="flex h-14 w-14 items-center justify-center rounded-full bg-bar text-bar-text shadow-lift ring-1 ring-bar-line transition-colors hover:bg-ink-800"
       >
         <Icon name={open ? 'close' : 'discussion'} size={24} />
       </button>

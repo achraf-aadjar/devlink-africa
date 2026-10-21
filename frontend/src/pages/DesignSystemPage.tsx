@@ -18,15 +18,15 @@ export default function DesignSystemPage() {
   return (
     <div className="flex flex-col gap-10">
       <header>
-        <h1 className="text-3xl font-bold tracking-tight text-ink-900">Design system</h1>
+        <h1 className="page-title">Design system</h1>
         <p className="mt-1 text-sm text-ink-600">
-          Les composants réutilisables de l'interface. Thème sombre, un seul accent (bleu), des
-          polices système.
+          Les composants réutilisables de l'interface : la feuille de match. Tableau clair par
+          défaut, ardoise en sombre, un bleu d'action, un orange pour la demande, Fira Sans.
         </p>
       </header>
 
       <section aria-labelledby="marque" className="flex flex-col gap-3">
-        <h2 id="marque" className="text-lg font-semibold text-ink-800">
+        <h2 id="marque" className="sheet-title">
           La marque
         </h2>
         <p className="text-sm text-ink-600">
@@ -50,7 +50,7 @@ export default function DesignSystemPage() {
       </section>
 
       <section aria-labelledby="icones" className="flex flex-col gap-3">
-        <h2 id="icones" className="text-lg font-semibold text-ink-800">
+        <h2 id="icones" className="sheet-title">
           Icônes
         </h2>
         <p className="text-sm text-ink-600">
@@ -79,37 +79,38 @@ export default function DesignSystemPage() {
       </section>
 
       <section aria-labelledby="motifs" className="flex flex-col gap-3">
-        <h2 id="motifs" className="text-lg font-semibold text-ink-800">
+        <h2 id="motifs" className="sheet-title">
           Motifs d'arrière-plan
         </h2>
         <p className="text-sm text-ink-600">
           Un fond ne doit jamais se remarquer : s'il attire l'œil, il nuit au texte posé dessus.
-          D'où ces opacités très basses.
+          D'où ces opacités très basses. Le monde visuel est le tableau tactique ; ces motifs
+          restent en réserve.
         </p>
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-3">
           <RingsPattern className="surface p-6">
             <p className="text-sm font-medium text-ink-800">Anneaux</p>
-            <p className="text-xs text-ink-600">Page d'accueil</p>
+            <p className="text-xs text-ink-600">Les deux anneaux du logo</p>
           </RingsPattern>
           <WeavePattern className="surface p-6">
             <p className="text-sm font-medium text-ink-800">Tissage</p>
-            <p className="text-xs text-ink-600">En-tête du score</p>
+            <p className="text-xs text-ink-600">Trame tissée</p>
           </WeavePattern>
           <DotsPattern className="surface p-6">
             <p className="text-sm font-medium text-ink-800">Points</p>
-            <p className="text-xs text-ink-600">Cartes de projet</p>
+            <p className="text-xs text-ink-600">Trame discrète</p>
           </DotsPattern>
         </div>
       </section>
 
       <section aria-labelledby="couleurs" className="flex flex-col gap-3">
-        <h2 id="couleurs" className="text-lg font-semibold text-ink-800">
+        <h2 id="couleurs" className="sheet-title">
           Couleurs
         </h2>
         <div className="flex flex-wrap gap-2">
           {['50', '100', '200', '300', '400', '500', '600', '700', '800', '900'].map((shade) => (
             <div key={shade} className="text-center">
-              <div className={`h-12 w-12 rounded-full ring-1 ring-veil/10 bg-accent-${shade}`} />
+              <div className={`h-12 w-12 rounded ring-1 ring-veil/15 bg-accent-${shade}`} />
               <span className="text-xs text-ink-500">{shade}</span>
             </div>
           ))}
@@ -117,30 +118,29 @@ export default function DesignSystemPage() {
         <div className="flex flex-wrap gap-2">
           {['50', '100', '200', '300', '400', '500', '600', '700', '800', '900'].map((shade) => (
             <div key={shade} className="text-center">
-              <div className={`h-12 w-12 rounded-full ring-1 ring-veil/10 bg-ink-${shade}`} />
+              <div className={`h-12 w-12 rounded ring-1 ring-veil/15 bg-ink-${shade}`} />
               <span className="text-xs text-ink-500">{shade}</span>
             </div>
           ))}
         </div>
         <p className="text-sm text-ink-600">
-          Jetons d'action et de surface claire : <code>brand</code> (boutons), <code>violet</code>{' '}
-          (second ton des dégradés), <code>paper</code> (pastille claire de l'en-tête).
+          Les deux couleurs d'aimant : <code>brand</code> (l'action et l'offre, « Je sais faire »)
+          et <code>demand</code> (la demande, « Je veux apprendre »). <code>bar</code> est le noir
+          du tableau d'affichage : en-tête et plaques de score.
         </p>
         <div className="flex flex-wrap gap-2">
           {[
             ['brand', 'bg-brand'],
             ['brand-hover', 'bg-brand-hover'],
-            ['violet', 'bg-violet'],
-            ['paper', 'bg-paper'],
-            ['paper-hover', 'bg-paper-hover'],
-            ['paper-active', 'bg-paper-active'],
-            ['paper-line', 'bg-paper-line'],
-            ['paper-text', 'bg-paper-text'],
-            ['paper-ink', 'bg-paper-ink'],
-            ['paper-brand', 'bg-paper-brand'],
+            ['demand', 'bg-demand'],
+            ['demand-fill', 'bg-demand-fill'],
+            ['bar', 'bg-bar'],
+            ['danger', 'bg-danger'],
+            ['success', 'bg-success'],
+            ['warning', 'bg-warning'],
           ].map(([name, cls]) => (
             <div key={name} className="text-center">
-              <div className={`h-12 w-12 rounded-full ring-1 ring-veil/10 ${cls}`} />
+              <div className={`h-12 w-12 rounded ring-1 ring-veil/15 ${cls}`} />
               <span className="text-xs text-ink-500">{name}</span>
             </div>
           ))}
@@ -148,7 +148,7 @@ export default function DesignSystemPage() {
       </section>
 
       <section aria-labelledby="boutons" className="flex flex-col gap-3">
-        <h2 id="boutons" className="text-lg font-semibold text-ink-800">
+        <h2 id="boutons" className="sheet-title">
           Boutons
         </h2>
         <div className="flex flex-wrap items-center gap-3">
@@ -167,7 +167,7 @@ export default function DesignSystemPage() {
       </section>
 
       <section aria-labelledby="champs" className="flex flex-col gap-3">
-        <h2 id="champs" className="text-lg font-semibold text-ink-800">
+        <h2 id="champs" className="sheet-title">
           Champs
         </h2>
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
@@ -179,7 +179,7 @@ export default function DesignSystemPage() {
       </section>
 
       <section aria-labelledby="badges" className="flex flex-col gap-3">
-        <h2 id="badges" className="text-lg font-semibold text-ink-800">
+        <h2 id="badges" className="sheet-title">
           Badges de compétence
         </h2>
         <div className="flex flex-wrap gap-2">
@@ -194,7 +194,7 @@ export default function DesignSystemPage() {
       </section>
 
       <section aria-labelledby="etats" className="flex flex-col gap-4">
-        <h2 id="etats" className="text-lg font-semibold text-ink-800">
+        <h2 id="etats" className="sheet-title">
           Les quatre états d'un écran
         </h2>
         <div>
@@ -227,7 +227,7 @@ export default function DesignSystemPage() {
       </section>
 
       <section aria-labelledby="squelette" className="flex flex-col gap-3">
-        <h2 id="squelette" className="text-lg font-semibold text-ink-800">
+        <h2 id="squelette" className="sheet-title">
           Squelettes
         </h2>
         <div className="flex flex-col gap-2">

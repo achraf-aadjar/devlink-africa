@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import Icon from '../../../components/icons/Icon'
 import Avatar from '../../../components/Avatar'
 import {
-  Badge,
   Button,
   ButtonLink,
   Card,
@@ -24,12 +24,58 @@ import { EXCHANGES_CHANGED, usePendingRequests } from '../hooks/usePendingReques
 
 type Tab = 'received' | 'sent'
 
-const STATUS_TONE: Record<ExchangeStatus, 'warning' | 'success' | 'neutral'> = {
-  PROPOSED: 'warning',
-  ACCEPTED: 'success',
-  COMPLETED: 'success',
-  DECLINED: 'neutral',
-  CANCELLED: 'neutral',
+/** Les trois temps d'un échange qui aboutit. */
+const PHASES: ExchangeStatus[] = ['PROPOSED', 'ACCEPTED', 'COMPLETED']
+
+/**
+ * Où en est l'échange : trois phases nommées, la phase atteinte cochée. Le
+ * texte et le pictogramme portent l'information, jamais la couleur seule. Un
+ * échange refusé ou annulé le dit en toutes lettres.
+ */
+function ExchangePhases({ status }: { status: ExchangeStatus }) {
+  const { t } = useI18n()
+  if (status === 'DECLINED' || status === 'CANCELLED') {
+    return (
+      <p className="text-sm text-ink-600">
+        {status === 'DECLINED' ? t('Échange refusé : il est clos.') : t('Demande annulée.')}
+      </p>
+    )
+  }
+  const reached = PHASES.indexOf(status)
+  return (
+    <ol
+      aria-label={t("Étapes de l'échange")}
+      className="flex flex-wrap items-center gap-x-2 gap-y-1"
+    >
+      {PHASES.map((phase, index) => {
+        const done = index <= reached
+        return (
+          <li key={phase} className="flex items-center gap-2">
+            {index > 0 && (
+              <span
+                aria-hidden="true"
+                className={cn('h-0.5 w-6 rounded', done ? 'bg-ink-900' : 'bg-ink-300')}
+              />
+            )}
+            <span
+              aria-current={index === reached ? 'step' : undefined}
+              className={cn(
+                'inline-flex items-center gap-1.5 text-sm',
+                done ? 'font-semibold text-ink-900' : 'text-ink-500',
+              )}
+            >
+              {done ? (
+                <Icon name="check" size={16} className="text-success" />
+              ) : (
+                <span aria-hidden="true" className="h-3 w-3 rounded-full border-2 border-ink-400" />
+              )}
+              {t(EXCHANGE_STATUS_LABELS[phase])}
+            </span>
+          </li>
+        )
+      })}
+    </ol>
+  )
 }
 
 export default function ExchangesPage() {
@@ -57,7 +103,7 @@ export default function ExchangesPage() {
   return (
     <section className="flex flex-col gap-6">
       <header>
-        <h1 className="text-3xl font-bold tracking-tight text-ink-900">{t('Mes échanges')}</h1>
+        <h1 className="page-title">{t('Mes échanges')}</h1>
         <p className="mt-1 text-sm text-ink-600">
           {t('Les demandes que vous avez reçues et celles que vous avez envoyées.')}
         </p>
@@ -66,7 +112,7 @@ export default function ExchangesPage() {
       <div
         role="tablist"
         aria-label={t('Direction des échanges')}
-        className="flex w-fit gap-1 rounded-full bg-veil/[0.04] p-0.5 ring-1 ring-inset ring-veil/[0.07]"
+        className="flex gap-1 border-b border-ink-300"
       >
         {(['received', 'sent'] as Tab[]).map((value) => (
           <button
@@ -76,15 +122,15 @@ export default function ExchangesPage() {
             aria-selected={tab === value}
             onClick={() => setTab(value)}
             className={cn(
-              'flex min-h-11 items-center gap-2 rounded-full px-5 py-2 text-sm font-medium transition',
+              '-mb-px flex min-h-11 items-center gap-2 border-b-[3px] px-4 font-display text-lg font-bold uppercase tracking-[0.02em] transition-colors',
               tab === value
-                ? 'bg-brand text-white shadow-glow'
-                : 'text-ink-700 hover:bg-veil/[0.06] hover:text-ink-900',
+                ? 'border-brand text-ink-900'
+                : 'border-transparent text-ink-600 hover:text-ink-900',
             )}
           >
             {value === 'received' ? t('Reçues') : t('Envoyées')}
             {value === 'received' && pending > 0 && (
-              <span className="rounded-full bg-white/20 px-2 py-0.5 text-xs tabular-nums">
+              <span className="rounded bg-demand-fill px-1.5 font-display text-sm leading-5 text-white tabular-nums">
                 <span aria-hidden="true">{pending}</span>
                 <span className="sr-only">{` (${t('{n} en attente', { n: pending })})`}</span>
               </span>
@@ -94,7 +140,10 @@ export default function ExchangesPage() {
       </div>
 
       {actionError && (
-        <p role="alert" className="rounded-2xl bg-danger/10 px-5 py-3 text-sm text-danger">
+        <p
+          role="alert"
+          className="rounded-card bg-danger/10 px-5 py-3 text-sm text-danger ring-1 ring-inset ring-danger/25"
+        >
           {actionError}
         </p>
       )}
@@ -141,10 +190,9 @@ export default function ExchangesPage() {
                       </Link>
                     </span>
                   </h2>
-                  <Badge tone={STATUS_TONE[exchange.status]}>
-                    {t(EXCHANGE_STATUS_LABELS[exchange.status])}
-                  </Badge>
                 </div>
+
+                <ExchangePhases status={exchange.status} />
 
                 <p className="whitespace-pre-line text-sm text-ink-700">{exchange.message}</p>
 

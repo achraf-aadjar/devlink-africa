@@ -64,7 +64,7 @@ export default function PersonalDataCard() {
   return (
     <Card className="flex flex-col gap-4">
       <div>
-        <h2 className="font-semibold text-ink-900">{t('Mes données personnelles')}</h2>
+        <h2 className="sheet-title">{t('Mes données personnelles')}</h2>
         <p className="mt-1 text-sm text-ink-600">
           {t(
             'Vous pouvez obtenir une copie de vos données ou supprimer définitivement votre compte.',
