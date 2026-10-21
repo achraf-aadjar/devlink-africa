@@ -12,6 +12,47 @@ DevLink Africa met en relation des développeurs africains selon leurs compéten
 
 **La différence avec un réseau social professionnel** : nous ne proposons pas « des gens qui vous ressemblent », mais des gens avec qui l'échange a un sens dans les deux sens. Et nous expliquons toujours pourquoi.
 
+### L'idée en 30 secondes (ouverture de l'oral, Omar)
+
+> « Sur le continent, les compétences existent, mais elles sont dispersées : sur GitHub, LinkedIn, Discord, dans des groupes WhatsApp. Celui qui bloque sur Docker à Dakar ne sait pas que quelqu'un à Accra maîtrise Docker et veut justement apprendre ce que lui sait faire. DevLink Africa les fait se trouver, échanger sans argent, et garder une trace de ce qu'ils ont appris. À force d'échanges, la plateforme dessine aussi une carte de ce que le continent sait et de ce qu'il cherche. »
+
+### Une boucle en quatre temps
+
+Chaque module du produit est une étape de la même boucle. C'est ce qui fait un produit, et pas une liste de fonctionnalités.
+
+| Temps | Ce qui se passe | Module |
+|---|---|---|
+| **1. Trouver** | Je déclare ce que je sais et ce que je veux apprendre. On me propose des personnes qui me complètent, avec la raison de chaque point. Si aucune paire ne marche, un cercle de 3 ou 4 personnes peut marcher. | Dev Match (section 2), cercles (section 9) |
+| **2. Échanger** | Je propose un mentorat, une revue de code, du pair programming. Le contact n'est révélé qu'une fois l'échange accepté. Rien ne se paie. | Échanges, Project Hub |
+| **3. Prouver** | Après l'échange, l'autre valide ce qu'il m'a vu faire. Mon profil passe de « je déclare » à « mes pairs confirment ». | Validations, preuves de compétence |
+| **4. Révéler** | Additionnées, les compétences déclarées montrent ce qui manque dans chaque pays et ce qui y est disponible ailleurs. | Observatoire (chiffres, aucun nom) |
+
+**Pourquoi la boucle se renforce.** Une validation rend un profil plus crédible, donc ses propositions d'échange plus souvent acceptées. Chaque « je veux apprendre » déclaré nourrit l'observatoire. Et chaque pont qu'il révèle (« FastAPI : recherché au Sénégal, proposé au Ghana ») est une raison de plus de chercher hors de chez soi. Le premier temps donne envie du deuxième, et ainsi de suite.
+
+### Pourquoi l'Afrique, et pourquoi le troc
+
+- **Le troc lève l'obstacle du prix.** Une formation payante, un mentor payé : beaucoup n'y ont pas accès. Ici, on paie en enseignant ce qu'on sait déjà.
+- **Les frontières linguistiques coupent le continent.** D'où l'interface en français et en anglais dès le départ, et une traduction conçue pour accueillir d'autres langues (`PRODUCT.md`).
+- **On cherche d'abord autour de soi.** Les ponts de l'observatoire et les cercles Dakar → Accra → Nairobi invitent à regarder dans le pays d'à côté, où la compétence existe peut-être déjà.
+
+### Et après le concours
+
+Trois prolongements, qui découlent de la boucle sans en changer le principe. Ce sont des pistes, pas des engagements datés :
+1. **D'autres langues** : le portugais (Angola, Mozambique), l'arabe, le swahili. Le mécanisme de traduction est prêt, il manque les traductions relues.
+2. **L'observatoire comme bien commun** : les communautés tech, les écoles et les clubs étudiants y verraient ce qui manque près de chez eux pour organiser leurs ateliers. C'est la même donnée publique et anonyme.
+3. **Des validations qui suivent le développeur** : une page de profil partageable, où chaque compétence validée porte le nom de qui l'a validée et dans quel échange.
+
+### Questions probables
+
+> **« Pourquoi quelqu'un enseignerait-il gratuitement ? »**
+> Parce qu'il apprend en retour : c'est la condition même d'un match, Dev Match ne propose que des échanges utiles dans les deux sens. Le cercle étend ce principe quand la réciprocité directe n'existe pas. Et la validation publique rend visible ce qu'il a transmis.
+
+> **« Comment démarrer sans utilisateurs ? »**
+> Honnêtement, c'est le point le plus dur, et nous n'avons pas de chiffres d'usage réel (`PRODUCT.md`). Le plan : partir de communautés qui existent déjà (clubs d'étudiants, meetups, groupes en ligne), un pays à la fois, là où l'équipe a des contacts. L'observatoire donne de la valeur même avec peu de comptes : il montre déjà, à petite échelle, qui cherche quoi.
+
+> **« En quoi c'est différent de LinkedIn ou d'un groupe Discord ? »**
+> LinkedIn rapproche des profils semblables et sert surtout au recrutement ; un groupe Discord dépend de qui est en ligne au bon moment. Ici, on cherche la complémentarité, on l'explique, et ce qu'on a appris laisse une trace vérifiable.
+
 ---
 
 ## 2. Dev Match : le cœur du produit

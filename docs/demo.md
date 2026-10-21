@@ -124,6 +124,8 @@ Montrer les trois niveaux de lecture, dans cet ordre :
 
 > « DevLink Africa ne crée pas de compétences : il révèle celles qui existent déjà sur le continent, et les met en circulation. Un développeur à Niamey peut apprendre de quelqu'un à Kigali, aujourd'hui, gratuitement. »
 
+> « Trouver, échanger, prouver, révéler : chaque échange rend un profil plus crédible et la carte du continent plus juste. » (La boucle complète : `docs/EXPLICATION_JURY.md`, section 1.)
+
 ---
 
 ## Étape 9 · Ce qui nous distingue (2 min, si le temps le permet)

@@ -13,6 +13,8 @@ Développeurs africains qui veulent apprendre : ils savent faire certaines chose
 Plateforme d'échange de compétences entre développeurs africains. Boucle : profil → compétences proposées et recherchées → recherche → Dev Match expliqué → proposition d'échange (mentorat, revue de code, pair programming…) → projet dans le Project Hub. Succès : deux développeurs qui se complètent se trouvent, échangent, et collaborent.
 
 ## Positioning
+Une boucle en quatre temps : **trouver** (Dev Match, cercles) → **échanger** (sans argent, contact après accord) → **prouver** (validations par les pairs) → **révéler** (observatoire). Détail : `docs/EXPLICATION_JURY.md`, section 1.
+
 - **Dev Match toujours expliqué** : score sur 100, six critères pondérés, chaque point justifié à l'écran.
 - **Cercles d'échange** : boucles de 3 ou 4 personnes où chacun apprend au suivant quand aucune paire ne se complète.
 - **Échange, pas recrutement** : troc entre pairs ; le moyen de contact n'est visible qu'après acceptation de l'échange.
