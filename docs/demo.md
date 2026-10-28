@@ -161,6 +161,17 @@ Revenir en français (`FR`) avant la suite.
 | L'inscription échoue | Se connecter avec un compte de démonstration existant, préparé à l'avance |
 | Aucun match n'apparaît | Vérifier que les deux compétences sont bien enregistrées ; le recalcul est immédiat |
 | Le site ne répond pas | Montrer `/api/v1/health/?detail=1` et expliquer la sonde ; basculer sur la copie locale |
+| **Avertissement de certificat dans le navigateur de la salle** | Voir ci-dessous : basculer immédiatement sur le partage de connexion 4G, sans tenter d'expliquer le certificat en direct |
 | Une question technique bloque | Renvoyer à `docs/EXPLICATION_JURY.md`, qui prépare les réponses |
 
 **Règle** : ne jamais improviser une explication technique incertaine. Dire « je vérifie et je vous réponds » vaut mieux qu'une approximation.
+
+### Risque identifié : filtrage réseau sur les domaines récents
+
+Constaté le 2026-10-28 : certains réseaux (pare-feu Fortinet/FortiGuard, répandu chez les FAI et entreprises au Sénégal, dont le wifi Onatel) **interceptent le TLS** vers `dev-link.live` et remplacent son certificat par le leur, parce que le domaine est trop récent (créé le 23 octobre) pour avoir été catégorisé. Le navigateur affiche alors un avertissement de certificat invalide. **Le certificat du site lui-même est valide** (Let's Encrypt, vérifié depuis le serveur) : rien n'est cassé côté DevLink.
+
+**Avant la démo** :
+- Demander la reclassification du domaine sur `https://www.fortiguard.com/contactus?area=web` (formulaire *Web Filter Classification Rating Request*), depuis un réseau non filtré.
+- Tester l'accès au site depuis le wifi probable de la salle de démo, si on peut le connaître à l'avance.
+
+**Le jour J, si l'avertissement apparaît** : basculer immédiatement sur un partage de connexion 4G (téléphone d'un membre de l'équipe) plutôt que de tenter une explication technique en direct — voir `docs/EXPLICATION_JURY.md` si la question revient malgré tout.

@@ -228,9 +228,10 @@ Liste à cocher, par personne et par date : **[AVANT_SOUMISSION.md](AVANT_SOUMIS
 
 ### Ensuite
 
-- **DL-05** (Achraf) : commander le VPS **à Dakar** (le code promotionnel n'est valable que là), suivre `deploy/README.md`.
+- ~~**DL-05** (Achraf) : commander le VPS à Dakar, suivre `deploy/README.md`.~~ **Terminé le 2026-10-28**, voir ci-dessus.
 - **DL-09** (Emmanuel) : maquettes des 4 écrans. Les écrans existent déjà : les maquettes serviraient à les améliorer, pas à les créer.
-- **DL-30** (Achraf) : installer les sauvegardes et **tester une restauration**.
+- ~~**DL-30** (Achraf) : installer les sauvegardes et tester une restauration.~~ **Terminé le 2026-10-28**, voir ci-dessus.
+- **Risque identifié le 2026-10-28** (Achraf) : certains réseaux (pare-feu Fortinet/FortiGuard, dont le wifi Onatel constaté) classent `dev-link.live` comme domaine suspect (trop récent) et interceptent son TLS, affichant un avertissement de certificat dans le navigateur — le certificat du site est pourtant valide. **Avant la démo** : soumettre `dev-link.live` à la reclassification sur `https://www.fortiguard.com/contactus?area=web`, et tester l'accès au site sur plusieurs réseaux. Palliatif prêt : partage de connexion 4G. Détail dans `docs/demo.md`.
 - **DL-52, DL-57, DL-61** : chacun répète sa partie, deux fois au minimum. `docs/EXPLICATION_JURY.md` prépare les réponses.
 - **DL-53, DL-58, DL-62** : déclarations de titularité.
 - **DL-63, DL-64, DL-65** : voter entre le 25 octobre 18 h et le 26 octobre 23 h 59. **Un seul oubli exclut toute l'équipe.**
