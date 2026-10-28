@@ -1,0 +1,31 @@
+name: Surveillance production
+
+# DL-30 : alerte si https://dev-link.live ne répond plus. Tourne sur les
+# serveurs GitHub, donc indépendante du serveur lui-même et du réseau
+# d'Achraf (dont le pare-feu intercepte le TLS vers ce domaine — voir
+# docs/PROGRESS.md, DL-30). Un run qui échoue envoie un e-mail automatique
+# aux destinataires de notifications du dépôt.
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch: {}
+
+jobs:
+  health:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Vérifier /api/v1/health/?detail=1
+        run: |
+          response=$(curl -sS -m 10 -o body.json -w '%{http_code}' \
+            "https://dev-link.live/api/v1/health/?detail=1" || echo "000")
+          echo "Code HTTP : $response"
+          cat body.json 2>/dev/null || true
+          if [ "$response" != "200" ]; then
+            echo "::error::DevLink Africa ne répond pas (code $response)"
+            exit 1
+          fi
+          if ! grep -q '"status":"ok"' body.json; then
+            echo "::error::Réponse inattendue : $(cat body.json)"
+            exit 1
+          fi

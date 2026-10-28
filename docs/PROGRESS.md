@@ -62,9 +62,13 @@ Jetons Tailwind, douze composants dans `components/ui/`, navigation responsive, 
 
 Contexte de session, client d'API avec renouvellement automatique du jeton, garde de routes, erreurs serveur affichées champ par champ.
 
-### DL-05 · Fichiers de déploiement — préparés
+### DL-05 · Fichiers de déploiement — terminé, en ligne
 
-`backend/Dockerfile`, `frontend/Dockerfile`, `deploy/nginx.conf` (avec CSP), `docker-compose.prod.yml`, `deploy/README.md`, `deploy/backup.sh`, `deploy/healthcheck.sh`. **La commande du VPS et la mise en ligne restent à Achraf.**
+`backend/Dockerfile`, `frontend/Dockerfile`, `deploy/nginx.conf` (avec CSP), `docker-compose.prod.yml`, `deploy/README.md`, `deploy/backup.sh`, `deploy/healthcheck.sh`.
+
+**Mis en ligne le 2026-10-28** : VPS Datacloud/Systalink (Ubuntu 24.04, 87.58.156.50), domaine `dev-link.live` (Systalink), certificat Let's Encrypt (expire le 2027-01-26), utilisateur `devlink` avec accès SSH par clé uniquement (root et mot de passe désactivés), pare-feu UFW (22/80/443). `https://dev-link.live/api/v1/health/?detail=1` répond `{"status":"ok",...}` avec base et migrations OK.
+
+**Écart** : la clé privée du premier accès (générée par Datacloud au provisioning) n'était pas évidente à trouver — elle se télécharge automatiquement dans le dossier Téléchargements du navigateur, sans message explicite dans l'interface. Une fois identifiée, le reste de la procédure `deploy/README.md` s'est déroulé sans écart.
 
 ---
 
@@ -125,11 +129,13 @@ Un seul appel renvoie tout l'écran. Nombre de requêtes stable quel que soit le
 
 **Défaut trouvé dans notre propre outillage** : le scan de secrets ne détectait rien, ses motifs étant écrits en syntaxe BRE alors que `git grep -E` attend de l'ERE. Corrigé et vérifié sur de faux secrets.
 
-### DL-30 · Surveillance et sauvegardes — préparé
+### DL-30 · Surveillance et sauvegardes — terminé
 
 `/health/?detail=1` vérifie la base et les migrations. `deploy/backup.sh` (14 jours de rétention, échoue si la sauvegarde est anormalement petite) et `deploy/healthcheck.sh` (une seule alerte par panne).
 
-**Reste à faire par Achraf, sur le serveur** : installer la crontab, et **tester une restauration** (critère d'acceptation). Procédure dans `deploy/README.md`.
+**Installé le 2026-10-28** : `deploy/backup.sh` dans la crontab du serveur (`0 3 * * *`, journal dans `/var/log/devlink-backup.log`). **Restauration testée avec succès** : sauvegarde de 24 Ko rejouée dans une base `restore_test`, les 23 utilisateurs (22 démo + 1 admin) retrouvés, base de test supprimée ensuite.
+
+**Écart** : `deploy/healthcheck.sh` n'a **pas** été installé sur le poste local d'Achraf comme prévu — son réseau (pare-feu Fortinet avec inspection TLS) intercepte les requêtes HTTPS vers `dev-link.live` et aurait généré de fausses alertes. Remplacé par une **GitHub Action planifiée** (`.github/workflows/healthcheck.yml`, toutes les 5 minutes), qui tourne hors de ce réseau et alerte par e-mail via l'échec du workflow — même garantie d'indépendance (DL-30 l'exige), sans dépendre d'une machine qu'il faut laisser allumée.
 
 ### DL-31, DL-32, DL-34, DL-35, DL-37, DL-40 · Compléments — terminés
 
