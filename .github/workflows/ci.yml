@@ -93,7 +93,8 @@ jobs:
   # Le parcours de démonstration (docs/demo.md) rejoué dans Chromium : si ce
   # job échoue, la démonstration devant le jury est cassée.
   e2e:
-    runs-on: ubuntu-latest
+    # Playwright 1.56 ne prend pas en charge Ubuntu 26.04 (ubuntu-latest) : version fixée.
+    runs-on: ubuntu-24.04
     needs: [backend, frontend]
     env:
       PYTHON: python
